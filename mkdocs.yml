@@ -1,8 +1,6 @@
 site_name: Brine2D Documentation
 theme:
   name: material
-  palette:
-   scheme: slate
 
 nav:
   - Home: index.md
