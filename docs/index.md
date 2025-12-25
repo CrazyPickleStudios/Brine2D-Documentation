@@ -157,6 +157,73 @@ Here's a complete game in ~30 lines of code:
 &nbsp;&nbsp;&nbsp;&nbsp;}
 }</pre>
 
+<div style="display: none">
+    using Brine2D.Core;
+using Brine2D.Engine;
+using Brine2D.Hosting;
+using Brine2D.Input;
+using Brine2D.Input.SDL;
+using Brine2D.Rendering;
+using Brine2D.Rendering.SDL;
+using Microsoft.Extensions.Logging;
+
+// Create builder (like ASP.NET's WebApplication.CreateBuilder)
+var builder = GameApplication.CreateBuilder(args);
+
+// Configure services
+builder.Services.AddSDL3Rendering(options =>
+{
+    options.WindowTitle = "My Game";
+    options.WindowWidth = 1280;
+    options.WindowHeight = 720;
+});
+
+builder.Services.AddSDL3Input();
+builder.Services.AddScene<GameScene>();
+
+// Build and run
+var game = builder.Build();
+
+await game.RunAsync<GameScene>();
+
+// Define your scene (like an ASP.NET controller)
+public class GameScene : Scene
+{
+    private readonly IInputService _input;
+    private readonly IRenderer _renderer;
+    private readonly IGameContext _gameContext;
+
+    public GameScene
+    (
+        IRenderer renderer,
+        IInputService input,
+        IGameContext gameContext,
+        ILogger<GameScene> logger
+    ) : base(logger)
+    {
+        _renderer = renderer;
+        _input = input;
+        _gameContext = gameContext;
+    }
+
+    protected override void OnRender(GameTime gameTime)
+    {
+        _renderer.Clear(Color.CornflowerBlue);
+        _renderer.BeginFrame();
+        _renderer.DrawText("Hello, Brine2D!", 100, 100, Color.White);
+        _renderer.EndFrame();
+    }
+
+    protected override void OnUpdate(GameTime gameTime)
+    {
+        if (_input.IsKeyPressed(Keys.Escape))
+        {
+            _gameContext.RequestExit();
+        }
+    }
+}
+</div>
+
 That's it! A complete game window with input handling and rendering.
 
 ## Core Features
