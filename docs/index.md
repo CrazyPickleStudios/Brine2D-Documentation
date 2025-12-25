@@ -92,69 +92,70 @@ public class GameScene : Scene
 
 Here's a complete game in ~30 lines of code:
 
-```csharp
-using Brine2D.Core;
-using Brine2D.Engine;
-using Brine2D.Hosting;
-using Brine2D.Input;
-using Brine2D.Input.SDL;
-using Brine2D.Rendering;
-using Brine2D.Rendering.SDL;
-using Microsoft.Extensions.Logging;
-
-// Create builder (like ASP.NET's WebApplication.CreateBuilder)
-var builder = GameApplication.CreateBuilder(args);
-
-// Configure services
-builder.Services.AddSDL3Rendering(options =>
+<pre style="font-family:Cascadia Mono;font-size:13px;color:gainsboro;background:#1e1e1e;"><span style="color:#569cd6;">using</span>&nbsp;Brine2D<span style="color:#b4b4b4;">.</span>Core;
+<span style="color:#569cd6;">using</span>&nbsp;Brine2D<span style="color:#b4b4b4;">.</span>Engine;
+<span style="color:#569cd6;">using</span>&nbsp;Brine2D<span style="color:#b4b4b4;">.</span>Hosting;
+<span style="color:#569cd6;">using</span>&nbsp;Brine2D<span style="color:#b4b4b4;">.</span>Input;
+<span style="color:#569cd6;">using</span>&nbsp;Brine2D<span style="color:#b4b4b4;">.</span>Input<span style="color:#b4b4b4;">.</span>SDL;
+<span style="color:#569cd6;">using</span>&nbsp;Brine2D<span style="color:#b4b4b4;">.</span>Rendering;
+<span style="color:#569cd6;">using</span>&nbsp;Brine2D<span style="color:#b4b4b4;">.</span>Rendering<span style="color:#b4b4b4;">.</span>SDL;
+<span style="color:#569cd6;">using</span>&nbsp;Microsoft<span style="color:#b4b4b4;">.</span>Extensions<span style="color:#b4b4b4;">.</span>Logging;
+ 
+<span style="color:#57a64a;">//&nbsp;Create&nbsp;builder&nbsp;(like&nbsp;ASP.NET&#39;s&nbsp;WebApplication.CreateBuilder)</span>
+<span style="color:#569cd6;">var</span>&nbsp;<span style="color:#9cdcfe;">builder</span>&nbsp;<span style="color:#b4b4b4;">=</span>&nbsp;<span style="color:#4ec9b0;">GameApplication</span><span style="color:#b4b4b4;">.</span><span style="color:#dcdcaa;">CreateBuilder</span>(<span style="color:#569cd6;">args</span>);
+ 
+<span style="color:#57a64a;">//&nbsp;Configure&nbsp;services</span>
+<span style="color:#9cdcfe;">builder</span><span style="color:#b4b4b4;">.</span>Services<span style="color:#b4b4b4;">.</span><span style="color:#dcdcaa;">AddSDL3Rendering</span>(<span style="color:#9cdcfe;">options</span>&nbsp;<span style="color:#b4b4b4;">=&gt;</span>
 {
-    options.WindowTitle = "My Game";
-    options.WindowWidth = 1280;
-    options.WindowHeight = 720;
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#9cdcfe;">options</span><span style="color:#b4b4b4;">.</span>WindowTitle&nbsp;<span style="color:#b4b4b4;">=</span>&nbsp;<span style="color:#d69d85;">&quot;My&nbsp;Game&quot;</span>;
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#9cdcfe;">options</span><span style="color:#b4b4b4;">.</span>WindowWidth&nbsp;<span style="color:#b4b4b4;">=</span>&nbsp;<span style="color:#b5cea8;">1280</span>;
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#9cdcfe;">options</span><span style="color:#b4b4b4;">.</span>WindowHeight&nbsp;<span style="color:#b4b4b4;">=</span>&nbsp;<span style="color:#b5cea8;">720</span>;
 });
-
-builder.Services.AddSDL3Input();
-builder.Services.AddScene<GameScene>();
-
-// Build and run
-var game = builder.Build();
-
-await game.RunAsync<GameScene>();
-
-// Define your scene (like an ASP.NET controller)
-public class GameScene : Scene
+ 
+<span style="color:#9cdcfe;">builder</span><span style="color:#b4b4b4;">.</span>Services<span style="color:#b4b4b4;">.</span><span style="color:#dcdcaa;">AddSDL3Input</span>();
+<span style="color:#9cdcfe;">builder</span><span style="color:#b4b4b4;">.</span>Services<span style="color:#b4b4b4;">.</span><span style="color:#dcdcaa;">AddScene</span>&lt;<span style="color:#4ec9b0;">GameScene</span>&gt;();
+ 
+<span style="color:#57a64a;">//&nbsp;Build&nbsp;and&nbsp;run</span>
+<span style="color:#569cd6;">var</span>&nbsp;<span style="color:#9cdcfe;">game</span>&nbsp;<span style="color:#b4b4b4;">=</span>&nbsp;<span style="color:#9cdcfe;">builder</span><span style="color:#b4b4b4;">.</span><span style="color:#dcdcaa;">Build</span>();
+ 
+<span style="color:#d8a0df;">await</span>&nbsp;<span style="color:#9cdcfe;">game</span><span style="color:#b4b4b4;">.</span><span style="color:#dcdcaa;">RunAsync</span>&lt;<span style="color:#4ec9b0;">GameScene</span>&gt;();
+ 
+<span style="color:#57a64a;">//&nbsp;Define&nbsp;your&nbsp;scene&nbsp;(like&nbsp;an&nbsp;ASP.NET&nbsp;controller)</span>
+<span style="color:#569cd6;">public</span>&nbsp;<span style="color:#569cd6;">class</span>&nbsp;<span style="color:#4ec9b0;">GameScene</span>&nbsp;:&nbsp;<span style="color:#4ec9b0;">Scene</span>
 {
-    private readonly IInputService _input;
-    private readonly IRenderer _renderer;
-
-    public GameScene
-    (
-        IRenderer renderer,
-        IInputService input,
-        ILogger<GameScene> logger
-    ) : base(logger)
-    {
-        _renderer = renderer;
-        _input = input;
-    }
-
-    protected override void OnRender(GameTime gameTime)
-    {
-        _renderer.Clear(Color.CornflowerBlue);
-        _renderer.BeginFrame();
-        _renderer.DrawText("Hello, Brine2D!", 100, 100, Color.White);
-        _renderer.EndFrame();
-    }
-
-    protected override void OnUpdate(GameTime gameTime)
-    {
-        if (_input.IsKeyPressed(Keys.Escape))
-        {
-            _gameContext.RequestExit();
-        }
-    }
-}
-```
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">private</span>&nbsp;<span style="color:#569cd6;">readonly</span>&nbsp;<span style="color:#b8d7a3;">IInputService</span>&nbsp;_input;
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">private</span>&nbsp;<span style="color:#569cd6;">readonly</span>&nbsp;<span style="color:#b8d7a3;">IRenderer</span>&nbsp;_renderer;
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">private</span>&nbsp;<span style="color:#569cd6;">readonly</span>&nbsp;<span style="color:#b8d7a3;">IGameContext</span>&nbsp;_gameContext;
+ 
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">public</span>&nbsp;<span style="color:#4ec9b0;">GameScene</span>
+&nbsp;&nbsp;&nbsp;&nbsp;(
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#b8d7a3;">IRenderer</span>&nbsp;<span style="color:#9cdcfe;">renderer</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#b8d7a3;">IInputService</span>&nbsp;<span style="color:#9cdcfe;">input</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#b8d7a3;">IGameContext</span>&nbsp;<span style="color:#9cdcfe;">gameContext</span>,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#b8d7a3;">ILogger</span>&lt;<span style="color:#4ec9b0;">GameScene</span>&gt;&nbsp;<span style="color:#9cdcfe;">logger</span>
+&nbsp;&nbsp;&nbsp;&nbsp;)&nbsp;:&nbsp;<span style="color:#569cd6;">base</span>(<span style="color:#9cdcfe;">logger</span>)
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_renderer&nbsp;<span style="color:#b4b4b4;">=</span>&nbsp;<span style="color:#9cdcfe;">renderer</span>;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_input&nbsp;<span style="color:#b4b4b4;">=</span>&nbsp;<span style="color:#9cdcfe;">input</span>;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_gameContext&nbsp;<span style="color:#b4b4b4;">=</span>&nbsp;<span style="color:#9cdcfe;">gameContext</span>;
+&nbsp;&nbsp;&nbsp;&nbsp;}
+ 
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">protected</span>&nbsp;<span style="color:#569cd6;">override</span>&nbsp;<span style="color:#569cd6;">void</span>&nbsp;<span style="color:#dcdcaa;">OnRender</span>(<span style="color:#86c691;">GameTime</span>&nbsp;<span style="color:#9cdcfe;">gameTime</span>)
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_renderer<span style="color:#b4b4b4;">.</span><span style="color:#dcdcaa;">Clear</span>(<span style="color:#86c691;">Color</span><span style="color:#b4b4b4;">.</span>CornflowerBlue);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_renderer<span style="color:#b4b4b4;">.</span><span style="color:#dcdcaa;">BeginFrame</span>();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_renderer<span style="color:#b4b4b4;">.</span><span style="color:#dcdcaa;">DrawText</span>(<span style="color:#d69d85;">&quot;Hello,&nbsp;Brine2D!&quot;</span>,&nbsp;<span style="color:#b5cea8;">100</span>,&nbsp;<span style="color:#b5cea8;">100</span>,&nbsp;<span style="color:#86c691;">Color</span><span style="color:#b4b4b4;">.</span>White);
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_renderer<span style="color:#b4b4b4;">.</span><span style="color:#dcdcaa;">EndFrame</span>();
+&nbsp;&nbsp;&nbsp;&nbsp;}
+ 
+&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#569cd6;">protected</span>&nbsp;<span style="color:#569cd6;">override</span>&nbsp;<span style="color:#569cd6;">void</span>&nbsp;<span style="color:#dcdcaa;">OnUpdate</span>(<span style="color:#86c691;">GameTime</span>&nbsp;<span style="color:#9cdcfe;">gameTime</span>)
+&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#d8a0df;">if</span>&nbsp;(_input<span style="color:#b4b4b4;">.</span><span style="color:#dcdcaa;">IsKeyPressed</span>(<span style="color:#b8d7a3;">Keys</span><span style="color:#b4b4b4;">.</span>Escape))
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;_gameContext<span style="color:#b4b4b4;">.</span><span style="color:#dcdcaa;">RequestExit</span>();
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}
+&nbsp;&nbsp;&nbsp;&nbsp;}
+}</pre>
 
 That's it! A complete game window with input handling and rendering.
 
