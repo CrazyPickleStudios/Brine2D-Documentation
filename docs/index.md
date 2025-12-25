@@ -158,7 +158,8 @@ Here's a complete game in ~30 lines of code:
 }</pre>
 
 <div class="search-only">
-    using Brine2D.Core;
+```text
+using Brine2D.Core;
 using Brine2D.Engine;
 using Brine2D.Hosting;
 using Brine2D.Input;
@@ -222,6 +223,7 @@ public class GameScene : Scene
         }
     }
 }
+```
 </div>
 
 That's it! A complete game window with input handling and rendering.
