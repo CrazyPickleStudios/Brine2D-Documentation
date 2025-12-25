@@ -7,12 +7,10 @@ theme:
   features:
     - content.code.copy
     - content.code.select
-  highlightjs: true
+   
+extra_css:
+  - styles/extra.css
 
-extra_javascript:
-  - https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js
-  - https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js
-  - https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js
 nav:
   - Home: index.md
   

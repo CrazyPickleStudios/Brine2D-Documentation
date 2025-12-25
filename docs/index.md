@@ -157,7 +157,7 @@ Here's a complete game in ~30 lines of code:
 &nbsp;&nbsp;&nbsp;&nbsp;}
 }</pre>
 
-<div style="display: none">
+<div class="search-only">
     using Brine2D.Core;
 using Brine2D.Engine;
 using Brine2D.Hosting;
