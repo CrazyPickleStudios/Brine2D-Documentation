@@ -9,6 +9,8 @@ theme:
   highlightjs: true
 extra_javascript:
   - https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js
+  - https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-yaml.min.js
+  - https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-json.min.js
 nav:
   - Home: index.md
   
@@ -81,13 +83,16 @@ nav:
 plugins:
   - search
 markdown_extensions:  
+  - admonition
   - attr_list
-  - md_in_html
+  - toc:
+      permalink: true
   - pymdownx.superfences
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.tabbed
   - pymdownx.details
+  - md_in_html
   - pymdownx.emoji:
       emoji_index: !!python/name:material.extensions.emoji.twemoji
       emoji_generator: !!python/name:material.extensions.emoji.to_svg
