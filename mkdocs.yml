@@ -11,15 +11,73 @@ extra_javascript:
   - https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js
 nav:
   - Home: index.md
+  
   - Getting Started:
+      - Quick Start: getting-started/quickstart.md
       - Installation: getting-started/installation.md
-      - Your First Game: getting-started/your-first-game.md
-  - Engine:
-      - Scenes: engine/scenes.md
-      - Sprites: engine/sprites.md
-      - Input: engine/input.md
-      - Rendering: engine/rendering.md
-      - Shaders: engine/shaders.md
+      - Your First Game: getting-started/first-game.md
+      - Project Structure: getting-started/project-structure.md
+      - Configuration: getting-started/configuration.md
+  
+  - Tutorials:
+      - Overview: tutorials/index.md
+      - Moving Sprites: tutorials/moving-sprites.md
+      - Animation System: tutorials/animations.md
+      - Collision Detection: tutorials/collision.md
+      - Building a Platformer: tutorials/platformer.md
+      - Top-Down Adventure: tutorials/top-down.md
+  
+  - Guides:
+      - Overview: guides/index.md
+      - Rendering:
+          - Sprites & Textures: guides/rendering/sprites.md
+          - Cameras: guides/rendering/cameras.md
+          - Drawing Primitives: guides/rendering/primitives.md
+      - Input:
+          - Keyboard & Mouse: guides/input/keyboard-mouse.md
+          - Gamepad Support: guides/input/gamepad.md
+          - Input Layers: guides/input/layers.md
+      - Audio:
+          - Sound Effects: guides/audio/sound-effects.md
+          - Music Playback: guides/audio/music.md
+      - Scenes:
+          - Scene Lifecycle: guides/scenes/lifecycle.md
+          - Scene Transitions: guides/scenes/transitions.md
+      - Collision:
+          - Collision System: guides/collision/system.md
+          - Colliders: guides/collision/colliders.md
+      - Tilemaps:
+          - Loading Tilemaps: guides/tilemaps/loading.md
+          - Rendering Tiles: guides/tilemaps/rendering.md
+      - UI Framework:
+          - UI Components: guides/ui/components.md
+          - Custom UI: guides/ui/custom.md
+  
+  - Concepts:
+      - Overview: concepts/index.md
+      - Architecture: concepts/architecture.md
+      - Dependency Injection: concepts/dependency-injection.md
+      - Game Loop: concepts/game-loop.md
+      - Builder Pattern: concepts/builder-pattern.md
+      - Scene Management: concepts/scenes.md
+  
+  - API Reference:
+      - Overview: api/index.md
+      - Brine2D.Core: api/core.md
+      - Brine2D.Rendering: api/rendering.md
+      - Brine2D.Input: api/input.md
+      - Brine2D.Audio: api/audio.md
+  
+  - Samples:
+      - Overview: samples/index.md
+      - Basic Game: samples/basic-game.md
+      - Animation Demo: samples/animation-demo.md
+      - Collision Demo: samples/collision-demo.md
+  
+  - Contributing:
+      - How to Contribute: contributing/index.md
+      - Code Style: contributing/code-style.md
+      - Building from Source: contributing/building.md
 plugins:
   - search
 markdown_extensions:  
