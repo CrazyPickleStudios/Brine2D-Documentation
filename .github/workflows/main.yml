@@ -40,7 +40,6 @@ jobs:
       - name: Install MkDocs + Material + Extensions
         run: |
           pip install --upgrade pip
-          pip install --upgrade mkdocs-material pymdownx
           pip install "mkdocs-material[imaging]"
 
       - name: Deploy to GitHub Pages
