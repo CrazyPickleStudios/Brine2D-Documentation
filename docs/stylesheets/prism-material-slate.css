@@ -21,16 +21,13 @@ pre[class*="language-"] {
 }
 
 /* Code blocks */
-pre[class*="language-"] {    
+pre[class*="language-"] {
+    padding: .7720588235em 1.1764705882em;
     margin: 0.5em 0;
     overflow: auto;
     border-radius: 0.3em;
     background: hsla(var(--md-hue),15%,18%,1);
 }
-
-    pre[class*="language-"] > code {
-        padding: .7720588235em 1.1764705882em;
-    }
 
 :not(pre) > code[class*="language-"],
 pre[class*="language-"] {
@@ -142,7 +139,6 @@ pre[class*="language-"] {
 /* Line highlighting */
 pre[class*="language-"] > code[class*="language-"] {
     position: relative;
-    z-index: 1;
 }
 
 .line-highlight {
