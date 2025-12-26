@@ -223,7 +223,7 @@ code[class*="language-"] ::selection {
 }
 
 .language-json .token.string {
-    color: #a31515;
+    color: #ce9178;
 }
 
 .language-json .token.number {
