@@ -12,10 +12,10 @@ extra_javascript:
   - https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js
   - https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js
   - https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js
+  - javascripts/prism-override.js
 
 extra_css:
   - stylesheets/prism-material-slate.css
-  - stylesheets/copy-button-fix.css
 
 nav:
   - Home: index.md
@@ -96,7 +96,7 @@ markdown_extensions:
   - toc:
       permalink: true
   - pymdownx.highlight:
-      use_pygments: false
+      linenums: false
   - pymdownx.superfences
   - pymdownx.inlinehilite
   - pymdownx.snippets
