@@ -11,9 +11,11 @@ theme:
 extra_javascript:
   - https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js
   - https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js
+  - https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js
 
 extra_css:
-  - https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-vs.min.css
+  # Use the dark theme since you have scheme: slate
+  - https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css
 
 nav:
   - Home: index.md
@@ -84,17 +86,22 @@ nav:
       - How to Contribute: contributing/index.md
       - Code Style: contributing/code-style.md
       - Building from Source: contributing/building.md
+
 plugins:
   - search
+
 markdown_extensions:  
   - admonition
   - attr_list
   - toc:
       permalink: true
-  - pymdownx.superfences
+  - pymdownx.superfences:
+      # Disable Pygments, use plain code blocks for Prism
+      disable_indented_code_blocks: false
   - pymdownx.inlinehilite
   - pymdownx.snippets
-  - pymdownx.tabbed
+  - pymdownx.tabbed:
+      alternate_style: true
   - pymdownx.details
   - md_in_html
   - pymdownx.emoji:
