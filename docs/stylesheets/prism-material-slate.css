@@ -217,3 +217,31 @@ code[class*="language-"]::selection,
 code[class*="language-"] ::selection {
     background: rgba(124, 175, 194, 0.2);
 }
+
+.language-json .token.property {
+    color: #d7ba7d;
+}
+
+.language-json .token.string {
+    color: #a31515;
+}
+
+.language-json .token.number {
+    color: #b5cea8;
+}
+
+.language-json .token.boolean {
+    color: #569cd6;
+}
+
+.language-json .token.null {
+    color: #569cd6; 
+}
+
+.language-json .token.operator {
+    color: #b4b4b4;
+}
+
+.language-json .token.comment {
+    color: #57a64a;
+}
