@@ -1,8 +1,18 @@
-.search-only {
-    position: absolute;
-    left: -9999px;
-    top: -9999px;
-    height: 1px;
-    width: 1px;
-    overflow: hidden;
+.vs-code {
+    font-family: Cascadia Mono;
+    font-size: 13px;
+    color: gainsboro;
+    background: #1e1e1e;
 }
+
+    .vs-code .keyword {
+        color: #569cd6;
+    }
+
+    .vs-code .operator {
+        color: #b4b4b4;
+    }
+
+    .vs-code .local.name {
+        color: #9cdcfe;
+    }
