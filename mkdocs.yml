@@ -14,7 +14,6 @@ extra_javascript:
   - https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js
 
 extra_css:
-  # Use the dark theme since you have scheme: slate
   - https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css
 
 nav:
@@ -95,9 +94,9 @@ markdown_extensions:
   - attr_list
   - toc:
       permalink: true
-  - pymdownx.superfences:
-      # Disable Pygments, use plain code blocks for Prism
-      disable_indented_code_blocks: false
+  - pymdownx.highlight:
+      use_pygments: false
+  - pymdownx.superfences
   - pymdownx.inlinehilite
   - pymdownx.snippets
   - pymdownx.tabbed:
