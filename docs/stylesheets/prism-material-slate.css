@@ -8,8 +8,7 @@ pre[class*="language-"] {
     color: #e0e0e0;
     background: none;
     font-feature-settings: "kern";
-    font-family: var(--md-code-font-family);
-    font-size: 0.85em;
+    font-family: var(--md-code-font-family);    
     text-align: left;
     white-space: pre;
     word-spacing: normal;
@@ -25,9 +24,14 @@ pre[class*="language-"] {
     padding: .7720588235em 1.1764705882em;
     margin: 0.5em 0;
     overflow: auto;
+    font-size: .8rem;
     border-radius: 0.3em;
     background: hsla(var(--md-hue),15%,18%,1);
 }
+
+    pre[class*="language-"] code[class*="language-"] {
+        font-size: 0.85em;
+    }
 
 :not(pre) > code[class*="language-"],
 pre[class*="language-"] {
