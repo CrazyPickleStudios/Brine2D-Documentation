@@ -16,7 +16,7 @@ extra_css:
   - stylesheets/prism-material-slate.css
 
 nav:
-  - Home: index.md
+  - Overview: index.md
   
   - Getting Started:
       - Quick Start: getting-started/quickstart.md
