@@ -48,18 +48,6 @@ graph TB
     Rendering --> Core
     Input --> Core
     Audio -.-> Core
-    
-    style Game fill:#4a90e2,stroke:#2e5c8a,stroke-width:4px,color:#fff
-    style Hosting fill:#7b68ee,stroke:#5a4cbb,stroke-width:2px,color:#fff
-    style RenderingSDL fill:#95e1d3,stroke:#6fb8aa,stroke-width:2px,color:#000
-    style InputSDL fill:#95e1d3,stroke:#6fb8aa,stroke-width:2px,color:#000
-    style AudioSDL fill:#95e1d3,stroke:#6fb8aa,stroke-width:2px,color:#000
-    style UI fill:#ff6b6b,stroke:#cc5555,stroke-width:2px,color:#fff
-    style Engine fill:#50c878,stroke:#3a9b5c,stroke-width:2px,color:#fff
-    style Rendering fill:#ff6b6b,stroke:#cc5555,stroke-width:1px,color:#fff
-    style Input fill:#ff6b6b,stroke:#cc5555,stroke-width:1px,color:#fff
-    style Audio fill:#ff6b6b,stroke:#cc5555,stroke-width:1px,color:#fff
-    style Core fill:#ffd700,stroke:#ccaa00,stroke-width:3px,color:#000
 ```
 
 This design follows the **Dependency Inversion Principle**: high-level modules (your game) depend on abstractions (interfaces), not concrete implementations.
