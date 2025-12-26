@@ -15,6 +15,7 @@ extra_javascript:
 
 extra_css:
   - stylesheets/prism-material-slate.css
+  - stylesheets/copy-button-fix.css
 
 nav:
   - Home: index.md
