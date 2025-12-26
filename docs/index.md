@@ -92,73 +92,72 @@ public class GameScene : Scene
 
 Here's a complete game in ~30 lines of code:
 
-<pre class="vs-code"><code><span class="keyword">using</span> <span class="namespace name;Semantic - namespace name;Semantic - (TRANSIENT)">Brine2D</span><span class="operator">.</span><span class="namespace name;Semantic - namespace name;Semantic - (TRANSIENT)">Core</span><span class="punctuation">;</span>
-<span class="keyword">using</span> <span class="namespace name;Semantic - namespace name;Semantic - (TRANSIENT)">Brine2D</span><span class="operator">.</span><span class="namespace name;Semantic - namespace name;Semantic - (TRANSIENT)">Engine</span><span class="punctuation">;</span>
-<span class="keyword">using</span> <span class="namespace name;Semantic - namespace name;Semantic - (TRANSIENT)">Brine2D</span><span class="operator">.</span><span class="namespace name;Semantic - namespace name;Semantic - (TRANSIENT)">Hosting</span><span class="punctuation">;</span>
-<span class="keyword">using</span> <span class="namespace name;Semantic - namespace name;Semantic - (TRANSIENT)">Brine2D</span><span class="operator">.</span><span class="namespace name;Semantic - namespace name;Semantic - (TRANSIENT)">Input</span><span class="punctuation">;</span>
-<span class="keyword">using</span> <span class="namespace name;Semantic - namespace name;Semantic - (TRANSIENT)">Brine2D</span><span class="operator">.</span><span class="namespace name;Semantic - namespace name;Semantic - (TRANSIENT)">Input</span><span class="operator">.</span><span class="namespace name;Semantic - namespace name;Semantic - (TRANSIENT)">SDL</span><span class="punctuation">;</span>
-<span class="keyword">using</span> <span class="namespace name;Semantic - namespace name;Semantic - (TRANSIENT)">Brine2D</span><span class="operator">.</span><span class="namespace name;Semantic - namespace name;Semantic - (TRANSIENT)">Rendering</span><span class="punctuation">;</span>
-<span class="keyword">using</span> <span class="namespace name;Semantic - namespace name;Semantic - (TRANSIENT)">Brine2D</span><span class="operator">.</span><span class="namespace name;Semantic - namespace name;Semantic - (TRANSIENT)">Rendering</span><span class="operator">.</span><span class="namespace name;Semantic - namespace name;Semantic - (TRANSIENT)">SDL</span><span class="punctuation">;</span>
-<span class="keyword">using</span> <span class="namespace name;Semantic - namespace name;Semantic - (TRANSIENT)">Microsoft</span><span class="operator">.</span><span class="namespace name;Semantic - namespace name;Semantic - (TRANSIENT)">Extensions</span><span class="operator">.</span><span class="namespace name;Semantic - namespace name;Semantic - (TRANSIENT)">Logging</span><span class="punctuation">;</span>
- 
-<span class="comment">// Create builder (like ASP.NET&#39;s WebApplication.CreateBuilder)</span>
-<span class="keyword">var</span> <span class="local name">builder</span> <span class="operator">=</span> <span class="class name">GameApplication</span><span class="operator">.</span><span class="method name;Semantic - static symbol;Semantic - (TRANSIENT)">CreateBuilder</span><span class="punctuation">(</span><span class="identifier;Semantic - keyword;Semantic - (TRANSIENT)">args</span><span class="punctuation">)</span><span class="punctuation">;</span>
- 
-<span class="comment">// Configure services</span>
-<span class="local name">builder</span><span class="operator">.</span><span class="property name">Services</span><span class="operator">.</span><span class="extension method name">AddSDL3Rendering</span><span class="punctuation">(</span><span class="parameter name">options</span> <span class="operator">=&gt;</span>
-<span class="punctuation">{</span>
-    <span class="parameter name">options</span><span class="operator">.</span><span class="property name">WindowTitle</span> <span class="operator">=</span> <span class="string">&quot;My First Game&quot;</span><span class="punctuation">;</span>
-    <span class="parameter name">options</span><span class="operator">.</span><span class="property name">WindowWidth</span> <span class="operator">=</span> <span class="number">1280</span><span class="punctuation">;</span>
-    <span class="parameter name">options</span><span class="operator">.</span><span class="property name">WindowHeight</span> <span class="operator">=</span> <span class="number">720</span><span class="punctuation">;</span>
-<span class="punctuation">}</span><span class="punctuation">)</span><span class="punctuation">;</span>
- 
-<span class="local name">builder</span><span class="operator">.</span><span class="property name">Services</span><span class="operator">.</span><span class="extension method name">AddSDL3Input</span><span class="punctuation">(</span><span class="punctuation">)</span><span class="punctuation">;</span>
-<span class="local name">builder</span><span class="operator">.</span><span class="property name">Services</span><span class="operator">.</span><span class="extension method name">AddScene</span><span class="punctuation">&lt;</span><span class="class name">GameScene</span><span class="punctuation">&gt;</span><span class="punctuation">(</span><span class="punctuation">)</span><span class="punctuation">;</span>
- 
-<span class="comment">// Build and run</span>
-<span class="keyword">var</span> <span class="local name">game</span> <span class="operator">=</span> <span class="local name">builder</span><span class="operator">.</span><span class="method name">Build</span><span class="punctuation">(</span><span class="punctuation">)</span><span class="punctuation">;</span>
- 
-<span class="keyword - control">await</span> <span class="local name">game</span><span class="operator">.</span><span class="method name">RunAsync</span><span class="punctuation">&lt;</span><span class="class name">GameScene</span><span class="punctuation">&gt;</span><span class="punctuation">(</span><span class="punctuation">)</span><span class="punctuation">;</span>
- 
-<span class="comment">// Define your scene (like an ASP.NET controller)</span>
-<span class="keyword">public</span> <span class="keyword">class</span> <span class="class name">GameScene</span> <span class="punctuation">:</span> <span class="class name">Scene</span>
-<span class="punctuation">{</span>
-    <span class="keyword">private</span> <span class="keyword">readonly</span> <span class="interface name">IGameContext</span> <span class="field name">_gameContext</span><span class="punctuation">;</span>
-    <span class="keyword">private</span> <span class="keyword">readonly</span> <span class="interface name">IInputService</span> <span class="field name">_input</span><span class="punctuation">;</span>
-    <span class="keyword">private</span> <span class="keyword">readonly</span> <span class="interface name">IRenderer</span> <span class="field name">_renderer</span><span class="punctuation">;</span>
- 
-    <span class="keyword">public</span> <span class="class name">GameScene</span>
-    <span class="punctuation">(</span>
-        <span class="interface name">IRenderer</span> <span class="parameter name">renderer</span><span class="punctuation">,</span>
-        <span class="interface name">IInputService</span> <span class="parameter name">input</span><span class="punctuation">,</span>
-        <span class="interface name">IGameContext</span> <span class="parameter name">gameContext</span><span class="punctuation">,</span>
-        <span class="interface name">ILogger</span><span class="punctuation">&lt;</span><span class="class name">GameScene</span><span class="punctuation">&gt;</span> <span class="parameter name">logger</span>
-    <span class="punctuation">)</span> <span class="punctuation">:</span> <span class="keyword">base</span><span class="punctuation">(</span><span class="parameter name">logger</span><span class="punctuation">)</span>
-    <span class="punctuation">{</span>
-        <span class="field name">_renderer</span> <span class="operator">=</span> <span class="parameter name">renderer</span><span class="punctuation">;</span>
-        <span class="field name">_input</span> <span class="operator">=</span> <span class="parameter name">input</span><span class="punctuation">;</span>
-        <span class="field name">_gameContext</span> <span class="operator">=</span> <span class="parameter name">gameContext</span><span class="punctuation">;</span>
-    <span class="punctuation">}</span>
- 
-    <span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="method name">OnRender</span><span class="punctuation">(</span><span class="struct name">GameTime</span> <span class="parameter name">gameTime</span><span class="punctuation">)</span>
-    <span class="punctuation">{</span>
-        <span class="field name">_renderer</span><span class="operator">.</span><span class="method name">Clear</span><span class="punctuation">(</span><span class="struct name">Color</span><span class="operator">.</span><span class="property name;Semantic - static symbol;Semantic - (TRANSIENT)">CornflowerBlue</span><span class="punctuation">)</span><span class="punctuation">;</span>
- 
-        <span class="field name">_renderer</span><span class="operator">.</span><span class="method name">BeginFrame</span><span class="punctuation">(</span><span class="punctuation">)</span><span class="punctuation">;</span>
- 
-        <span class="field name">_renderer</span><span class="operator">.</span><span class="method name">DrawText</span><span class="punctuation">(</span><span class="string">&quot;Hello, Brine2D!&quot;</span><span class="punctuation">,</span> <span class="number">100</span><span class="punctuation">,</span> <span class="number">100</span><span class="punctuation">,</span> <span class="struct name">Color</span><span class="operator">.</span><span class="property name;Semantic - static symbol;Semantic - (TRANSIENT)">White</span><span class="punctuation">)</span><span class="punctuation">;</span>
- 
-        <span class="field name">_renderer</span><span class="operator">.</span><span class="method name">EndFrame</span><span class="punctuation">(</span><span class="punctuation">)</span><span class="punctuation">;</span>
-    <span class="punctuation">}</span>
- 
-    <span class="keyword">protected</span> <span class="keyword">override</span> <span class="keyword">void</span> <span class="method name">OnUpdate</span><span class="punctuation">(</span><span class="struct name">GameTime</span> <span class="parameter name">gameTime</span><span class="punctuation">)</span>
-    <span class="punctuation">{</span>
-        <span class="keyword - control">if</span> <span class="punctuation">(</span><span class="field name">_input</span><span class="operator">.</span><span class="method name">IsKeyPressed</span><span class="punctuation">(</span><span class="enum name">Keys</span><span class="operator">.</span><span class="enum member name">Escape</span><span class="punctuation">)</span><span class="punctuation">)</span>
-        <span class="punctuation">{</span>
-            <span class="field name">_gameContext</span><span class="operator">.</span><span class="method name">RequestExit</span><span class="punctuation">(</span><span class="punctuation">)</span><span class="punctuation">;</span>
-        <span class="punctuation">}</span>
-    <span class="punctuation">}</span>
-<span class="punctuation">}</span></code></pre>
+```csharp
+using Brine2D.Core;
+using Brine2D.Engine;
+using Brine2D.Hosting;
+using Brine2D.Input;
+using Brine2D.Input.SDL;
+using Brine2D.Rendering;
+using Brine2D.Rendering.SDL;
+using Microsoft.Extensions.Logging;
+
+// Create builder (like ASP.NET's WebApplication.CreateBuilder)
+var builder = GameApplication.CreateBuilder(args);
+
+// Configure services
+builder.Services.AddSDL3Rendering(options =>
+{
+    options.WindowTitle = "My Game";
+    options.WindowWidth = 1280;
+    options.WindowHeight = 720;
+});
+
+builder.Services.AddSDL3Input();
+builder.Services.AddScene<GameScene>();
+
+// Build and run
+var game = builder.Build();
+
+await game.RunAsync<GameScene>();
+
+// Define your scene (like an ASP.NET controller)
+public class GameScene : Scene
+{
+    private readonly IInputService _input;
+    private readonly IRenderer _renderer;
+    private readonly IGameContext _gameContext;
+
+    public GameScene
+    (
+        IRenderer renderer,
+        IInputService input,
+        IGameContext gameContext,
+        ILogger<GameScene> logger
+    ) : base(logger)
+    {
+        _renderer = renderer;
+        _input = input;
+        _gameContext = gameContext;
+    }
+
+    protected override void OnRender(GameTime gameTime)
+    {
+        _renderer.Clear(Color.CornflowerBlue);
+        _renderer.BeginFrame();
+        _renderer.DrawText("Hello, Brine2D!", 100, 100, Color.White);
+        _renderer.EndFrame();
+    }
+
+    protected override void OnUpdate(GameTime gameTime)
+    {
+        if (_input.IsKeyPressed(Keys.Escape))
+        {
+            _gameContext.RequestExit();
+        }
+    }
+}
+```
 
 That's it! A complete game window with input handling and rendering.
 
