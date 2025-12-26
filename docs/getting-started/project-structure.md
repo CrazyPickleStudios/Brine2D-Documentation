@@ -9,37 +9,57 @@ Brine2D follows a **clean, modular architecture** inspired by ASP.NET Core's des
 
 ## Architecture Overview
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                     Your Game Project                        │
-│                   (references Brine2D)                       │
-└──────────────────────┬──────────────────────────────────────┘
-                       │
-┌──────────────────────▼──────────────────────────────────────┐
-│                   Brine2D.Hosting                            │
-│           (ASP.NET-style builder pattern)                    │
-└──────────────────────┬──────────────────────────────────────┘
-                       │
-        ┌──────────────┼──────────────┐
-        │              │              │
-┌───────▼──────┐ ┌────▼─────┐ ┌──────▼──────┐
-│ Brine2D.Core │ │Brine2D   │ │  Microsoft  │
-│ (Interfaces) │ │.Engine   │ │  Extensions │
-└───────┬──────┘ └────┬─────┘ └──────┬──────┘
-        │              │              │
-        └──────────────┼──────────────┘
-                       │
-        ┌──────────────┼──────────────┬────────────┐
-        │              │              │            │
-┌───────▼──────┐ ┌────▼─────┐ ┌──────▼──────┐ ┌──▼────┐
-│  Rendering   │ │  Input   │ │   Audio     │ │  UI   │
-│ (Abstract)   │ │(Abstract)│ │  (Abstract) │ │       │
-└───────┬──────┘ └────┬─────┘ └──────┬──────┘ └───────┘
-        │              │              │
-┌───────▼──────┐ ┌────▼─────┐ ┌──────▼──────┐
-│ Rendering.SDL│ │Input.SDL │ │ Audio.SDL   │
-│ (SDL3 Impl)  │ │(SDL3 Impl│ │(SDL3_mixer) │
-└──────────────┘ └──────────┘ └─────────────┘
+```mermaid
+graph TB
+    Game["<b>Your Game Project</b><br/><i>BasicGame.csproj</i>"]
+    
+    subgraph "Direct References"
+        Hosting["<b>Brine2D.Hosting</b>"]
+        RenderingSDL["<b>Brine2D.Rendering.SDL</b>"]
+        InputSDL["<b>Brine2D.Input.SDL</b>"]
+        AudioSDL["<b>Brine2D.Audio.SDL</b>"]
+        UI["<b>Brine2D.UI</b>"]
+    end
+    
+    subgraph "Transitive Dependencies"
+        Engine["<b>Brine2D.Engine</b>"]
+        Rendering["<b>Brine2D.Rendering</b>"]
+        Input["<b>Brine2D.Input</b>"]
+        Audio["<b>Brine2D.Audio</b>"]
+        Core["<b>Brine2D.Core</b>"]
+    end
+    
+    Game --> Hosting
+    Game --> RenderingSDL
+    Game --> InputSDL
+    Game --> AudioSDL
+    Game --> UI
+    
+    Hosting --> Engine
+    Engine --> Core
+    
+    RenderingSDL --> Rendering
+    InputSDL --> Input
+    AudioSDL --> Audio
+    UI --> Core
+    UI --> Rendering
+    UI --> Input
+    
+    Rendering --> Core
+    Input --> Core
+    Audio -.-> Core
+    
+    style Game fill:#4a90e2,stroke:#2e5c8a,stroke-width:4px,color:#fff
+    style Hosting fill:#7b68ee,stroke:#5a4cbb,stroke-width:2px,color:#fff
+    style RenderingSDL fill:#95e1d3,stroke:#6fb8aa,stroke-width:2px,color:#000
+    style InputSDL fill:#95e1d3,stroke:#6fb8aa,stroke-width:2px,color:#000
+    style AudioSDL fill:#95e1d3,stroke:#6fb8aa,stroke-width:2px,color:#000
+    style UI fill:#ff6b6b,stroke:#cc5555,stroke-width:2px,color:#fff
+    style Engine fill:#50c878,stroke:#3a9b5c,stroke-width:2px,color:#fff
+    style Rendering fill:#ff6b6b,stroke:#cc5555,stroke-width:1px,color:#fff
+    style Input fill:#ff6b6b,stroke:#cc5555,stroke-width:1px,color:#fff
+    style Audio fill:#ff6b6b,stroke:#cc5555,stroke-width:1px,color:#fff
+    style Core fill:#ffd700,stroke:#ccaa00,stroke-width:3px,color:#000
 ```
 
 This design follows the **Dependency Inversion Principle**: high-level modules (your game) depend on abstractions (interfaces), not concrete implementations.
