@@ -1,0 +1,216 @@
+/**
+ * Custom Prism theme matching Material for MkDocs (Slate scheme)
+ * Based on Material Design colors and VS Code's Dark+ theme
+ */
+
+code[class*="language-"],
+pre[class*="language-"] {
+    color: #e0e0e0;
+    background: none;
+    font-family: 'Roboto Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-size: 0.85em;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.6;
+    tab-size: 4;
+    hyphens: none;
+}
+
+/* Code blocks */
+pre[class*="language-"] {
+    padding: 1em;
+    margin: 0.5em 0;
+    overflow: auto;
+    border-radius: 0.3em;
+    background: #2e2e2e;
+}
+
+:not(pre) > code[class*="language-"],
+pre[class*="language-"] {
+    background: #2e2e2e;
+}
+
+/* Inline code */
+:not(pre) > code[class*="language-"] {
+    padding: 0.1em 0.3em;
+    border-radius: 0.3em;
+    white-space: normal;
+}
+
+/* Tokens */
+.token.comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+    color: #6a9955;
+    font-style: italic;
+}
+
+.token.punctuation {
+    color: #d4d4d4;
+}
+
+.token.namespace {
+    opacity: 0.7;
+}
+
+.token.property,
+.token.tag,
+.token.boolean,
+.token.constant,
+.token.symbol,
+.token.deleted {
+    color: #9cdcfe;
+}
+
+.token.number {
+    color: #b5cea8;
+}
+
+.token.selector,
+.token.attr-name,
+.token.string,
+.token.char,
+.token.builtin,
+.token.inserted {
+    color: #ce9178;
+}
+
+.token.operator,
+.token.entity,
+.token.url,
+.language-css .token.string,
+.style .token.string {
+    color: #d4d4d4;
+}
+
+.token.atrule,
+.token.attr-value,
+.token.keyword {
+    color: #569cd6;
+}
+
+.token.function,
+.token.class-name {
+    color: #4ec9b0;
+}
+
+.token.regex,
+.token.important,
+.token.variable {
+    color: #d16969;
+}
+
+.token.important,
+.token.bold {
+    font-weight: bold;
+}
+
+.token.italic {
+    font-style: italic;
+}
+
+.token.entity {
+    cursor: help;
+}
+
+/* C# specific enhancements */
+.language-csharp .token.keyword {
+    color: #569cd6;
+    font-weight: 500;
+}
+
+.language-csharp .token.class-name {
+    color: #4ec9b0;
+}
+
+.language-csharp .token.function {
+    color: #dcdcaa;
+}
+
+.language-csharp .token.property {
+    color: #9cdcfe;
+}
+
+/* Line highlighting */
+pre[class*="language-"] > code[class*="language-"] {
+    position: relative;
+    z-index: 1;
+}
+
+.line-highlight {
+    background: rgba(255, 255, 255, 0.08);
+    position: absolute;
+    left: 0;
+    right: 0;
+    padding: inherit 0;
+    margin-top: 1em;
+    pointer-events: none;
+    line-height: inherit;
+    white-space: pre;
+}
+
+/* Make it integrate seamlessly with Material theme */
+.md-typeset pre > code {
+    background-color: transparent;
+}
+
+.md-typeset code {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 0.2em;
+}
+
+/* Scrollbar styling for code blocks */
+pre[class*="language-"]::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+pre[class*="language-"]::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+
+pre[class*="language-"]::-webkit-scrollbar-thumb {
+    background: #424242;
+    border-radius: 4px;
+}
+
+    pre[class*="language-"]::-webkit-scrollbar-thumb:hover {
+        background: #4a4a4a;
+    }
+
+/* Copy button integration */
+.md-clipboard {
+    color: #9e9e9e;
+}
+
+    .md-clipboard:hover {
+        color: #e0e0e0;
+    }
+
+/* Line numbers (if enabled) */
+.line-numbers .line-numbers-rows {
+    border-right: 1px solid #424242;
+}
+
+.line-numbers-rows > span:before {
+    color: #858585;
+}
+
+/* Selection */
+pre[class*="language-"]::-moz-selection,
+pre[class*="language-"] ::-moz-selection,
+code[class*="language-"]::-moz-selection,
+code[class*="language-"] ::-moz-selection {
+    background: rgba(124, 175, 194, 0.2);
+}
+
+pre[class*="language-"]::selection,
+pre[class*="language-"] ::selection,
+code[class*="language-"]::selection,
+code[class*="language-"] ::selection {
+    background: rgba(124, 175, 194, 0.2);
+}

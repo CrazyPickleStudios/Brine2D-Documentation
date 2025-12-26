@@ -14,7 +14,7 @@ extra_javascript:
   - https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js
 
 extra_css:
-  - https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css
+  - stylesheets/prism-material-slate.css
 
 nav:
   - Home: index.md
