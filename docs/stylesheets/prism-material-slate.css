@@ -7,7 +7,8 @@ code[class*="language-"],
 pre[class*="language-"] {
     color: #e0e0e0;
     background: none;
-    font-family: 'Roboto Mono', 'Consolas', 'Monaco', 'Courier New', monospace;
+    font-feature-settings: "kern";
+    font-family: var(--md-code-font-family);
     font-size: 0.85em;
     text-align: left;
     white-space: pre;
@@ -25,12 +26,12 @@ pre[class*="language-"] {
     margin: 0.5em 0;
     overflow: auto;
     border-radius: 0.3em;
-    background: #2e2e2e;
+    background: hsla(var(--md-hue),15%,18%,1);
 }
 
 :not(pre) > code[class*="language-"],
 pre[class*="language-"] {
-    background: #2e2e2e;
+    background: hsla(var(--md-hue),15%,18%,1);
 }
 
 /* Inline code */
