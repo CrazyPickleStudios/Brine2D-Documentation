@@ -113,68 +113,66 @@
 }
 
 /* JSON-specific token styling */
+
 .language-json .token.property {
-    color: #9cdcfe; /* Light blue for property names */
+    color: #d7ba7d;
 }
 
 .language-json .token.string {
-    color: #ce9178; /* Orange for string values */
+    color: #d69d85; 
 }
 
 .language-json .token.number {
-    color: #b5cea8; /* Light green for numbers */
+    color: #b5cea8; 
 }
 
 .language-json .token.boolean {
-    color: #569cd6; /* Blue for true/false */
+    color: #569cd6; 
 }
 
 .language-json .token.null {
-    color: #569cd6; /* Blue for null */
+    color: #569cd6;
 }
 
 .language-json .token.punctuation {
-    color: #d4d4d4; /* Light gray for braces, brackets, colons, commas */
+    color: #d4d4d4; 
 }
 
 .language-json .token.operator {
-    color: #d4d4d4; /* Light gray for operators */
+    color: #b4b4b4; 
 }
 
-/* Nested object property highlighting */
 .language-json .token.property.string {
-    color: #9cdcfe; /* Ensure property names stay light blue */
+    color: #d7ba7d;
 }
 
-/* Comments in JSON (technically invalid, but some parsers allow) */
 .language-json .token.comment {
-    color: #6a9955; /* Green for comments */
+    color: #57a64a;
     font-style: italic;
 }
 
-/* XML-specific token styling */
 .language-xml .token.tag {
-    color: #569cd6; /* Blue for tag names */
+    color: #569cd6;
 }
 
     .language-xml .token.tag .token.tag {
-        color: #569cd6; /* Blue for opening/closing brackets */
+        color: #569cd6;
     }
 
     .language-xml .token.tag .token.punctuation {
-        color: #808080; /* Gray for < > / */
+        color: gray;
     }
 
 .language-xml .token.attr-name {
-    color: #9cdcfe; /* Light blue for attribute names */
+    color: #92caf4;
 }
 
 .language-xml .token.attr-value {
-    color: #ce9178; /* Orange for attribute values */
+    color: #c8c8c8;
 }
 
     .language-xml .token.attr-value .token.punctuation {
-        color: #ce9178; /* Orange for quotes around attribute values */
+        color: gray;
     }
 
 .language-xml .token.punctuation {
