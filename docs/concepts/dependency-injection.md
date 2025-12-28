@@ -15,18 +15,11 @@ graph LR
     B["Testability"] --> D
     C["Maintainability"] --> D
     E["Flexibility"] --> D
-    
     D --> F["Better Code"]
-    
-    style A fill:#4ec9b0,color:#000
-    style B fill:#4ec9b0,color:#000
-    style C fill:#4ec9b0,color:#000
-    style E fill:#4ec9b0,color:#000
-    style D fill:#569cd6,color:#fff
-    style F fill:#dcdcaa,color:#000
 ```
 
 **Benefits:**
+
 - ✅ **Testability** - Easily mock dependencies in tests
 - ✅ **Loose Coupling** - Classes don't create their dependencies
 - ✅ **Flexibility** - Swap implementations without changing code
