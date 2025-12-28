@@ -53,14 +53,16 @@ graph LR
         F4 --- F5
         F5 --- F6
         F6 --- F23
+
+        style F0 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style F1 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style F2 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style F3 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style F4 fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+style F5 fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+style F6 fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+style F23 fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
     end
-    
-    style F0 fill:#4ec9b0,color:#000
-    style F1 fill:#4ec9b0,color:#000
-    style F2 fill:#4ec9b0,color:#000
-    style F3 fill:#4ec9b0,color:#000
-    style F4 fill:#569cd6,color:#fff
-    style F5 fill:#569cd6,color:#fff
 ```
 
 Each frame is 24x24 pixels, arranged horizontally in one row.
@@ -82,14 +84,14 @@ graph TD
         C2 -.->|"+24px"| C3
         C3 -.->|"+24px"| C4
         C4 -.->|"+24px"| C5
+
+        style C0 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style C1 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style C2 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style C3 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style C4 fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+style C5 fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
     end
-    
-    style C0 fill:#4ec9b0,color:#000
-    style C1 fill:#4ec9b0,color:#000
-    style C2 fill:#4ec9b0,color:#000
-    style C3 fill:#4ec9b0,color:#000
-    style C4 fill:#569cd6,color:#fff
-    style C5 fill:#569cd6,color:#fff
 ```
 
 ### Frame to Rectangle Mapping
@@ -110,12 +112,12 @@ graph LR
     A --> C["✅ Better Performance"]
     A --> D["✅ Easier Organization"]
     A --> E["✅ GPU-Friendly"]
-    
-    style A fill:#4ec9b0,color:#000
-    style B fill:#95e1d3,color:#000
-    style C fill:#95e1d3,color:#000
-    style D fill:#95e1d3,color:#000
-    style E fill:#95e1d3,color:#000
+
+    style A fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+style B fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style C fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style D fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style E fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
 ```
 
 **Key Points:**

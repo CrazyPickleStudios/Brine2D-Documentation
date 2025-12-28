@@ -39,6 +39,24 @@ graph TD
     E --> O["Tilemap Loading"]
     E --> P["Tile Rendering"]
     E --> Q["Collision Generation"]
+
+    style A fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+style B fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style C fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style D fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style E fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style F fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+style G fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+style H fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
+style I fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
+style J fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
+style K fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+style L fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+style M fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+style N fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+style O fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
+style P fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
+style Q fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
 ```
 
 

@@ -16,6 +16,13 @@ graph LR
     C["Maintainability"] --> D
     E["Flexibility"] --> D
     D --> F["Better Code"]
+
+    style A fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style B fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style C fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style E fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style D fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+style F fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
 ```
 
 **Benefits:**
@@ -59,12 +66,12 @@ graph TD
     SINGLETON --> SCOPED2
     SCOPED1 --> TRANSIENT1
     SCOPED2 --> TRANSIENT2
-    
-    style SINGLETON fill:#4ec9b0,color:#000
-    style SCOPED1 fill:#569cd6,color:#fff
-    style SCOPED2 fill:#569cd6,color:#fff
-    style TRANSIENT1 fill:#dcdcaa,color:#000
-    style TRANSIENT2 fill:#dcdcaa,color:#000
+
+    style SINGLETON fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style SCOPED1 fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+style SCOPED2 fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+style TRANSIENT1 fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+style TRANSIENT2 fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
 ```
 
 ---

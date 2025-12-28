@@ -17,6 +17,12 @@ graph LR
     B --> C["Collision Detection"]
     C --> D["Platformer"]
     C --> E["Top-Down Adventure"]
+
+    style A fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+style B fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style C fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style D fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style E fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
 ```
 
 ---

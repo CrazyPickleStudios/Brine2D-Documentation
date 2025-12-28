@@ -68,6 +68,25 @@ graph TB
     SCENES --> ANIMATION
     SCENES --> TILEMAP
     SCENES --> UI
+
+    style APP fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+style BUILDER fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+style ENGINE fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style LOOP fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style SCENEMGR fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style CONTEXT fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style ISCENE fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+style IRENDERER fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+style IINPUT fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+style IAUDIO fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+style SDL_RENDER fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+style SDL_INPUT fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+style SDL_AUDIO fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+style COLLISION fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
+style ANIMATION fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
+style TILEMAP fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
+style UI fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
+style SCENES fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
 ```
 
 ---
@@ -151,6 +170,17 @@ graph LR
     GAME --> RENDERING
     GAME --> INPUT
     GAME --> AUDIO
+
+    style CORE fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+style RENDERING fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+style INPUT fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+style AUDIO fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+style SDL_RENDER fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+style SDL_INPUT fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+style SDL_AUDIO fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+style HOSTING fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+style ENGINE fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style GAME fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
 ```
 
 **Key Principle:** Abstractions (interfaces) never depend on implementations. Implementations depend on abstractions. This enables **pluggable backends** (SDL3, MonoGame, custom implementations).
