@@ -12,6 +12,7 @@ Learn how to load images, draw sprites, work with sprite sheets, and create anim
 Textures are images loaded into memory for rendering. Sprites are textures (or portions of textures) displayed in your game.
 
 **What you'll learn:**
+
 - ✅ **Loading textures** from image files
 - ✅ **Drawing sprites** at any position/size
 - ✅ **Sprite sheets** for efficient texture atlases

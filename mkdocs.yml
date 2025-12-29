@@ -40,7 +40,8 @@ nav:
           - Cameras: guides/rendering/cameras.md
           - Drawing Primitives: guides/rendering/primitives.md
       - Input:
-          - Keyboard & Mouse: guides/input/keyboard-mouse.md
+          - Keyboard : guides/input/keyboard.md
+          - Mouse: guides/input/mouse.md
           - Gamepad Support: guides/input/gamepad.md
           - Input Layers: guides/input/layers.md
       - Audio:

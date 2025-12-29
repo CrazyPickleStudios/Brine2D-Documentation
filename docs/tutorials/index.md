@@ -35,6 +35,7 @@ style E fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
 Learn the fundamentals of sprite rendering in Brine2D. You'll load textures, draw sprites, and create smooth movement with delta time.
 
 **What you'll learn:**
+
 - Loading textures with `ITextureLoader`
 - Drawing sprites at screen positions
 - Handling keyboard input for movement
@@ -46,11 +47,13 @@ Learn the fundamentals of sprite rendering in Brine2D. You'll load textures, dra
 ---
 
 ### [Animation System](animations.md)
+
 **Difficulty:** Beginner | **Time:** 20 minutes
 
 Master Brine2D's sprite animation system. Create walking, running, and action animations from sprite sheets.
 
 **What you'll learn:**
+
 - Loading sprite sheets
 - Creating `AnimationClip` objects
 - Using `SpriteAnimator` to play animations
@@ -60,6 +63,7 @@ Master Brine2D's sprite animation system. Create walking, running, and action an
 **Prerequisites:** [Moving Sprites](moving-sprites.md)
 
 **Key Concepts:**
+
 - Sprite sheets and frame extraction
 - Animation clips with multiple frames
 - Frame duration and timing
@@ -73,6 +77,7 @@ Master Brine2D's sprite animation system. Create walking, running, and action an
 Implement collision detection and response using Brine2D's collision system. Build interactive objects and solid walls.
 
 **What you'll learn:**
+
 - Understanding `CollisionSystem`
 - Creating `BoxCollider` and `CircleCollider` shapes
 - Detecting collisions between objects
@@ -82,6 +87,7 @@ Implement collision detection and response using Brine2D's collision system. Bui
 **Prerequisites:** [Animation System](animations.md)
 
 **Key Concepts:**
+
 - Collision shapes (boxes and circles)
 - Collision detection algorithms
 - Separation and penetration
@@ -95,6 +101,7 @@ Implement collision detection and response using Brine2D's collision system. Bui
 Create a complete 2D platformer with jumping, gravity, and platform collision. This tutorial combines everything you've learned.
 
 **What you'll learn:**
+
 - Implementing gravity and jumping
 - Platform collision (top-only platforms)
 - Tilemap loading with Tiled
@@ -105,6 +112,7 @@ Create a complete 2D platformer with jumping, gravity, and platform collision. T
 **Prerequisites:** [Collision Detection](collision.md)
 
 **Covers:**
+
 - Physics simulation (gravity, velocity, acceleration)
 - Tilemap rendering and collision
 - Camera systems with `Camera2D`
@@ -118,6 +126,7 @@ Create a complete 2D platformer with jumping, gravity, and platform collision. T
 Build a top-down adventure game with 8-directional movement, NPCs, and dialogue. Perfect for RPG-style games.
 
 **What you'll learn:**
+
 - 8-directional movement and animation
 - NPC interaction system
 - Dialogue boxes with text rendering
@@ -128,6 +137,7 @@ Build a top-down adventure game with 8-directional movement, NPCs, and dialogue.
 **Prerequisites:** [Collision Detection](collision.md)
 
 **Covers:**
+
 - Grid-based movement
 - State machines for NPCs
 - UI system for dialogue
