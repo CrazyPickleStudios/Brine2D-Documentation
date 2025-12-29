@@ -599,7 +599,7 @@ public class MyCustomWidget : IUIComponent
 
 ## Best Practices
 
-### ✅ **DO: Depend on Interfaces**
+### **DO: Depend on Interfaces**
 
 ```csharp
 // Good
@@ -609,7 +609,7 @@ private readonly IRenderer _renderer;
 private readonly SDL3Renderer _renderer;
 ```
 
-### ✅ **DO: Use Constructor Injection**
+### **DO: Use Constructor Injection**
 
 ```csharp
 public MyScene(IRenderer renderer, IInputService input, ILogger<MyScene> logger)
@@ -620,11 +620,11 @@ public MyScene(IRenderer renderer, IInputService input, ILogger<MyScene> logger)
 }
 ```
 
-### ✅ **DO: Keep Scenes Focused**
+### **DO: Keep Scenes Focused**
 
 Each scene should represent one game state (Menu, Gameplay, GameOver, etc.).
 
-### ✅ **DO: Use Async for Loading**
+### **DO: Use Async for Loading**
 
 ```csharp
 protected override async Task OnLoadAsync(CancellationToken cancellationToken)
@@ -633,11 +633,11 @@ protected override async Task OnLoadAsync(CancellationToken cancellationToken)
 }
 ```
 
-### ❌ **DON'T: Directly Reference SDL3**
+### **DON'T: Directly Reference SDL3**
 
 Let the SDL implementations handle SDL—your game should only use Brine2D abstractions.
 
-### ❌ **DON'T: Use Static State**
+### **DON'T: Use Static State**
 
 Use DI instead of singletons or static classes.
 
@@ -652,4 +652,4 @@ Use DI instead of singletons or static classes.
 
 ---
 
-Understanding Brine2D's structure makes it easy to navigate, extend, and maintain. The modular design means you can swap out any piece—just like ASP.NET! 🎯
+Understanding Brine2D's structure makes it easy to navigate, extend, and maintain. The modular design means you can swap out any piece—just like ASP.NET!

@@ -7,7 +7,7 @@ description: Handle mouse clicks, movement, and scroll wheel in Brine2D
 
 Master mouse input handling in Brine2D for point-and-click gameplay, UI interaction, and camera control.
 
-## 📖 Overview
+## Overview
 
 Brine2D provides comprehensive mouse input via `IInputService`:
 - ✅ **Mouse buttons** - Left, right, middle, X1, X2
@@ -15,7 +15,7 @@ Brine2D provides comprehensive mouse input via `IInputService`:
 - ✅ **Mouse delta** - Movement since last frame
 - ✅ **Scroll wheel** - Zoom, scroll, etc.
 
-~~~mermaid
+```mermaid
 sequenceDiagram
     participant Game as Your Scene
     participant Input as IInputService
@@ -45,20 +45,20 @@ sequenceDiagram
     
     Game->>Input: ScrollWheelDelta?
     Input->>Game: 1.0 (scroll up)
-~~~
+```
 
 ---
 
-## 🎯 Prerequisites
+## Prerequisites
 
 - ✅ [Quick Start](../getting-started/quickstart.md) - Basic scene setup
 - ✅ [Keyboard Input](keyboard.md) - Understanding input basics
 
 ---
 
-## 🚀 Quick Example
+## Quick Example
 
-~~~csharp MouseExample.cs
+```csharp MouseExample.cs
 using Brine2D.Core;
 using Brine2D.Input;
 using Brine2D.Rendering;
@@ -110,17 +110,17 @@ public class MouseScene : Scene
         _renderer.EndFrame();
     }
 }
-~~~
+```
 
 **Result:** Red circle follows cursor, displays coordinates! 🖱️
 
 ---
 
-## 🖱️ Mouse Position
+## Mouse Position
 
 ### Get Current Position
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     // Get current mouse position (screen coordinates)
@@ -128,14 +128,14 @@ protected override void OnUpdate(GameTime gameTime)
     
     Logger.LogInformation("Mouse at: X={X}, Y={Y}", mousePos.X, mousePos.Y);
 }
-~~~
+```
 
 **Coordinates:**
 - Origin `(0, 0)` = top-left corner
 - X increases → right
 - Y increases → down
 
-~~~
+```
 Screen Coordinates:
 (0,0) ───────────────► X
   │
@@ -145,13 +145,13 @@ Screen Coordinates:
   │
   ▼
   Y
-~~~
+```
 
 ---
 
 ### Mouse Delta (Movement)
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     // Get movement since last frame
@@ -163,7 +163,7 @@ protected override void OnUpdate(GameTime gameTime)
             mouseDelta.X, mouseDelta.Y);
     }
 }
-~~~
+```
 
 **Use for:**
 - Camera rotation (first-person)
@@ -172,17 +172,17 @@ protected override void OnUpdate(GameTime gameTime)
 
 ---
 
-## 🖲️ Mouse Buttons
+## Mouse Buttons
 
 ### Available Buttons
 
-~~~csharp
+```csharp
 MouseButton.Left     // Primary button (left)
 MouseButton.Right    // Secondary button (right)
 MouseButton.Middle   // Scroll wheel click
 MouseButton.X1       // Extra button 1 (back)
 MouseButton.X2       // Extra button 2 (forward)
-~~~
+```
 
 ---
 
@@ -190,7 +190,7 @@ MouseButton.X2       // Extra button 2 (forward)
 
 **Use for:** Clicking UI, shooting, selecting
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     // Returns TRUE only on first frame of press
@@ -205,7 +205,7 @@ protected override void OnUpdate(GameTime gameTime)
         ShowContextMenu();
     }
 }
-~~~
+```
 
 ---
 
@@ -213,7 +213,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 **Use for:** Dragging, continuous shooting
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     // Returns TRUE every frame while held
@@ -223,7 +223,7 @@ protected override void OnUpdate(GameTime gameTime)
         ContinuousPaint(mousePos);
     }
 }
-~~~
+```
 
 ---
 
@@ -231,7 +231,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 **Use for:** Drag-and-drop, charge attacks
 
-~~~csharp
+```csharp
 private Vector2? _dragStart = null;
 
 protected override void OnUpdate(GameTime gameTime)
@@ -253,15 +253,15 @@ protected override void OnUpdate(GameTime gameTime)
         }
     }
 }
-~~~
+```
 
 ---
 
-## 🎡 Scroll Wheel
+## Scroll Wheel
 
 ### Get Scroll Delta
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     var scroll = _input.ScrollWheelDelta;
@@ -277,7 +277,7 @@ protected override void OnUpdate(GameTime gameTime)
         ZoomOut();
     }
 }
-~~~
+```
 
 **Values:**
 - `> 0` = Scroll up
@@ -286,11 +286,11 @@ protected override void OnUpdate(GameTime gameTime)
 
 ---
 
-## 🎮 Common Patterns
+## Common Patterns
 
 ### Pattern 1: Point-and-Click Movement
 
-~~~csharp
+```csharp
 private Vector2 _playerPosition = new Vector2(400, 300);
 private Vector2? _targetPosition = null;
 private float _moveSpeed = 200f;
@@ -322,13 +322,13 @@ protected override void OnUpdate(GameTime gameTime)
         }
     }
 }
-~~~
+```
 
 ---
 
 ### Pattern 2: Click Detection on Objects
 
-~~~csharp
+```csharp
 public class ClickableObject
 {
     public Vector2 Position { get; set; }
@@ -359,13 +359,13 @@ protected override void OnUpdate(GameTime gameTime)
         }
     }
 }
-~~~
+```
 
 ---
 
 ### Pattern 3: Drag and Drop
 
-~~~csharp
+```csharp
 private object? _draggedObject = null;
 private Vector2 _dragOffset;
 
@@ -400,13 +400,13 @@ protected override void OnUpdate(GameTime gameTime)
         }
     }
 }
-~~~
+```
 
 ---
 
 ### Pattern 4: Camera Zoom with Scroll
 
-~~~csharp
+```csharp
 private float _cameraZoom = 1.0f;
 
 protected override void OnUpdate(GameTime gameTime)
@@ -425,13 +425,13 @@ protected override void OnUpdate(GameTime gameTime)
         }
     }
 }
-~~~
+```
 
 ---
 
 ### Pattern 5: Right-Click Context Menu
 
-~~~csharp
+```csharp
 private bool _showContextMenu = false;
 private Vector2 _contextMenuPosition;
 
@@ -460,15 +460,15 @@ protected override void OnRender(GameTime gameTime)
         DrawContextMenu(_contextMenuPosition);
     }
 }
-~~~
+```
 
 ---
 
-## 🗺️ World Space Conversion
+## World Space Conversion
 
 When using a camera, convert mouse position from screen to world:
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     // Mouse position in screen space
@@ -483,17 +483,17 @@ protected override void OnUpdate(GameTime gameTime)
         SpawnObjectInWorld(mouseWorld);
     }
 }
-~~~
+```
 
 **[See Camera Guide](../rendering/camera.md) for details**
 
 ---
 
-## 🎯 Advanced Techniques
+## Advanced Techniques
 
 ### Double-Click Detection
 
-~~~csharp
+```csharp
 private float _lastClickTime = 0f;
 private const float DoubleClickThreshold = 0.3f; // seconds
 
@@ -514,13 +514,13 @@ protected override void OnUpdate(GameTime gameTime)
         _lastClickTime = currentTime;
     }
 }
-~~~
+```
 
 ---
 
 ### Mouse Hover Detection
 
-~~~csharp
+```csharp
 private IUIComponent? _hoveredComponent = null;
 
 protected override void OnUpdate(GameTime gameTime)
@@ -547,13 +547,13 @@ protected override void OnUpdate(GameTime gameTime)
         _hoveredComponent = newHovered;
     }
 }
-~~~
+```
 
 ---
 
 ### Mouse Lock (FPS Camera)
 
-~~~csharp
+```csharp
 private bool _mouseLocked = false;
 private Vector2 _cameraRotation;
 
@@ -585,11 +585,11 @@ protected override void OnUpdate(GameTime gameTime)
         ApplyCameraRotation(_cameraRotation);
     }
 }
-~~~
+```
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Problem: Wrong Mouse Coordinates
 
@@ -598,7 +598,7 @@ protected override void OnUpdate(GameTime gameTime)
 **Causes & Solutions:**
 
 1. **Camera active**
-   ~~~csharp
+   ```csharp
    // ❌ Problem: Using screen coords with camera
    var mousePos = _input.MousePosition;
    SpawnAt(mousePos); // Wrong when camera moved!
@@ -606,7 +606,7 @@ protected override void OnUpdate(GameTime gameTime)
    // ✅ Solution: Convert to world space
    var mouseWorld = _camera.ScreenToWorld(_input.MousePosition);
    SpawnAt(mouseWorld);
-   ~~~
+   ```
 
 2. **Window scaling/DPI**
    - Usually handled automatically by SDL3
@@ -621,16 +621,16 @@ protected override void OnUpdate(GameTime gameTime)
 **Solutions:**
 
 1. **Check correct button**
-   ~~~csharp
+   ```csharp
    // ❌ Wrong button
    if (_input.IsMouseButtonPressed(MouseButton.Middle))
    
    // ✅ Left button
    if (_input.IsMouseButtonPressed(MouseButton.Left))
-   ~~~
+   ```
 
 2. **UI consuming clicks**
-   ~~~csharp
+   ```csharp
    // Check if UI consumed the click
    if (!_inputLayerManager.MouseConsumed)
    {
@@ -640,7 +640,7 @@ protected override void OnUpdate(GameTime gameTime)
            // Handle game click
        }
    }
-   ~~~
+   ```
 
 ---
 
@@ -651,7 +651,7 @@ protected override void OnUpdate(GameTime gameTime)
 **Solutions:**
 
 1. **Check each frame**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - only true for one frame
    if (_input.ScrollWheelDelta != 0)
    
@@ -659,53 +659,53 @@ protected override void OnUpdate(GameTime gameTime)
    var scroll = _input.ScrollWheelDelta;
    if (scroll > 0) ZoomIn();
    else if (scroll < 0) ZoomOut();
-   ~~~
+   ```
 
 2. **Verify window has focus**
    - Scroll only works when window is focused
 
 ---
 
-## ✅ Best Practices
+## Best Practices
 
 ### DO
 
 1. **Use `IsMouseButtonPressed` for clicks**
-   ~~~csharp
+   ```csharp
    if (_input.IsMouseButtonPressed(MouseButton.Left))
        HandleClick();
-   ~~~
+   ```
 
 2. **Convert to world space when using camera**
-   ~~~csharp
+   ```csharp
    var worldPos = _camera.ScreenToWorld(_input.MousePosition);
-   ~~~
+   ```
 
 3. **Respect UI input consumption**
-   ~~~csharp
+   ```csharp
    if (!_inputLayerManager.MouseConsumed)
    {
        // Game input here
    }
-   ~~~
+   ```
 
 4. **Use smooth scrolling**
-   ~~~csharp
+   ```csharp
    _targetZoom += _input.ScrollWheelDelta * 0.1f;
    _currentZoom = Lerp(_currentZoom, _targetZoom, 10f * deltaTime);
-   ~~~
+   ```
 
 5. **Provide visual feedback**
-   ~~~csharp
+   ```csharp
    // Change cursor appearance on hover
    if (IsHoveringButton())
        DrawHighlightedCursor();
-   ~~~
+   ```
 
 ### DON'T
 
 1. **Don't ignore UI layers**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - clicks UI AND game
    if (_input.IsMouseButtonPressed(MouseButton.Left))
        SpawnUnit(); // Spawns even when clicking UI!
@@ -714,29 +714,29 @@ protected override void OnUpdate(GameTime gameTime)
    if (!_inputLayerManager.MouseConsumed && 
        _input.IsMouseButtonPressed(MouseButton.Left))
        SpawnUnit();
-   ~~~
+   ```
 
 2. **Don't forget camera transform**
-   ~~~csharp
+   ```csharp
    // ❌ Bad with camera
    var mousePos = _input.MousePosition;
    
    // ✅ Good
    var mousePos = _camera.ScreenToWorld(_input.MousePosition);
-   ~~~
+   ```
 
 3. **Don't hardcode button checks**
-   ~~~csharp
+   ```csharp
    // ❌ Hard to rebind
    if (_input.IsMouseButtonPressed(MouseButton.Left))
    
    // ✅ Use action mapping
    if (_inputMapper.IsActionPressed("PrimaryAction"))
-   ~~~
+   ```
 
 ---
 
-## 📊 Summary
+## Summary
 
 | Method | Returns | Use For |
 |--------|---------|---------|
@@ -749,7 +749,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 ---
 
-## 🔗 Next Steps
+## Next Steps
 
 - **[Input Layers](input-layers.md)** - Priority-based input routing
 - **[Gamepad Support](gamepad.md)** - Add controller support
@@ -758,4 +758,4 @@ protected override void OnUpdate(GameTime gameTime)
 
 ---
 
-Ready to support controllers? Check out [Gamepad Support](gamepad.md)! 🎮
+Ready to support controllers? Check out [Gamepad Support](gamepad.md)!

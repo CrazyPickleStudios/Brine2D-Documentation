@@ -648,4 +648,4 @@ Brine2D's architecture is:
 - ✅ **Familiar** - ASP.NET patterns throughout
 - ✅ **Performant** - Designed for real-time games
 
-Ready to dive deeper? Explore [Dependency Injection](dependency-injection.md) next! 🚀
+Ready to dive deeper? Explore [Dependency Injection](dependency-injection.md) next!

@@ -315,7 +315,7 @@ position += velocity * speed * deltaTime;
 | 60 | 0.0166s | 200 * 0.0166 = 3.33 | 200 pixels |
 | 120 | 0.0083s | 200 * 0.0083 = 1.67 | 200 pixels |
 
-Speed is **always 200 pixels/second** regardless of frame rate! ✅
+Speed is **always 200 pixels/second** regardless of frame rate!
 
 ---
 
@@ -563,7 +563,7 @@ var renderPosition = Vector2.Lerp(_previousPosition, _currentPosition, (float)al
 
 ## Best Practices
 
-### ✅ DO
+### DO
 
 1. **Always use delta time** for movement/animation
    ```csharp
@@ -586,7 +586,7 @@ var renderPosition = Vector2.Lerp(_previousPosition, _currentPosition, (float)al
    _gameContext.RequestExit(); // ✅ Clean shutdown
    ```
 
-### ❌ DON'T
+### DON'T
 
 1. **Don't use fixed values**
    ```csharp
@@ -699,4 +699,4 @@ var renderPosition = Vector2.Lerp(_previousPosition, _currentPosition, (float)al
 
 ---
 
-Master the game loop and you master game development! 🎮🚀
+Master the game loop and you master game development!

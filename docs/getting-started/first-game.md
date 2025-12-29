@@ -541,4 +541,4 @@ You can find the complete source code for this tutorial in the [samples/BasicGam
 
 ---
 
-**Congratulations!** 🎉 You've built your first complete game with Brine2D. You now understand the core concepts and are ready to build more complex games.
+**Congratulations!** You've built your first complete game with Brine2D. You now understand the core concepts and are ready to build more complex games.

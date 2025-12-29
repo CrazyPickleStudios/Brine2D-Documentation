@@ -7,7 +7,7 @@ description: Load images, draw sprites, and work with sprite sheets in Brine2D
 
 Learn how to load images, draw sprites, work with sprite sheets, and create animations for your 2D games.
 
-## 📖 Overview
+## Overview
 
 Textures are images loaded into memory for rendering. Sprites are textures (or portions of textures) displayed in your game.
 
@@ -19,7 +19,7 @@ Textures are images loaded into memory for rendering. Sprites are textures (or p
 - ✅ **Scale modes** for pixel art vs smooth graphics
 - ✅ **Memory management** (loading/unloading)
 
-~~~mermaid
+```mermaid
 graph LR
     A["Image File<br/>(PNG, JPG, BMP)"] --> B["ITextureLoader"]
     B --> C["ITexture<br/>(GPU Memory)"]
@@ -27,11 +27,11 @@ graph LR
     D --> E["Screen"]
     
     F["Sprite Sheet<br/>(Multiple Sprites)"] --> B
-~~~
+```
 
 ---
 
-## 🎯 Prerequisites
+## Prerequisites
 
 - ✅ [Drawing Basics](drawing-basics.md) - Understanding rendering
 - ✅ [Quick Start](../getting-started/quick-start.md) - Scene setup
@@ -39,11 +39,11 @@ graph LR
 
 ---
 
-## 🚀 Quick Example
+## Quick Example
 
 ### Load and Draw a Sprite
 
-~~~csharp SpriteExample.cs
+```csharp SpriteExample.cs
 using Brine2D.Core;
 using Brine2D.Rendering;
 using Microsoft.Extensions.Logging;
@@ -99,17 +99,17 @@ public class SpriteScene : Scene
         return Task.CompletedTask;
     }
 }
-~~~
+```
 
-**Result:** Your sprite appears on screen! 🖼️
+**Result:** Your sprite appears on screen!
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 Organize your assets:
 
-~~~
+```
 YourGame/
 ├── Program.cs
 ├── GameScene.cs
@@ -124,25 +124,25 @@ YourGame/
     │   └── background.png
     └── ui/
         └── button.png
-~~~
+```
 
 **In `.csproj`, copy assets to output:**
 
-~~~xml YourGame.csproj
+```xml YourGame.csproj
 <ItemGroup>
   <None Update="assets\**\*">
     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
   </None>
 </ItemGroup>
-~~~
+```
 
 ---
 
-## 🔧 Loading Textures
+## Loading Textures
 
 ### Async Loading (Recommended)
 
-~~~csharp
+```csharp
 protected override async Task OnLoadAsync(CancellationToken cancellationToken)
 {
     // Load texture asynchronously
@@ -154,7 +154,7 @@ protected override async Task OnLoadAsync(CancellationToken cancellationToken)
     Logger.LogInformation("Texture loaded: {Width}x{Height}", 
         _texture.Width, _texture.Height);
 }
-~~~
+```
 
 **Parameters:**
 - `path` - Relative path to image file
@@ -165,7 +165,7 @@ protected override async Task OnLoadAsync(CancellationToken cancellationToken)
 
 ### Synchronous Loading
 
-~~~csharp
+```csharp
 protected override void OnInitialize()
 {
     // Load synchronously (blocks thread)
@@ -173,7 +173,7 @@ protected override void OnInitialize()
         "assets/player.png",
         TextureScaleMode.Nearest);
 }
-~~~
+```
 
 **⚠️ Warning:** Blocks the thread. Use async loading when possible!
 
@@ -188,7 +188,7 @@ protected override void OnInitialize()
 
 **Visual Comparison:**
 
-~~~
+```
 Nearest (Pixel Art):        Linear (Smooth):
 ┌────┬────┐                ┌─────────┐
 │ ██ │ ██ │                │░░░░░░░░░│
@@ -196,7 +196,7 @@ Nearest (Pixel Art):        Linear (Smooth):
 │ ██ │ ██ │   2x           │░░░░░░░░░│
 └────┴────┘                └─────────┘
  Sharp edges!               Blended edges!
-~~~
+```
 
 **Choose:**
 - **Nearest** - Pixel art, 8-bit style, sharp edges
@@ -217,14 +217,14 @@ Brine2D supports common image formats via SDL3_image:
 
 ---
 
-## 🎨 Drawing Textures
+## Drawing Textures
 
 ### Method 1: Draw at Position
 
-~~~csharp
+```csharp
 // Draw at (x, y) with original size
 _renderer.DrawTexture(_texture, 100, 100);
-~~~
+```
 
 **Result:** Texture drawn at position, original dimensions.
 
@@ -232,10 +232,10 @@ _renderer.DrawTexture(_texture, 100, 100);
 
 ### Method 2: Draw with Scaling
 
-~~~csharp
+```csharp
 // Draw at (x, y) with custom width/height
 _renderer.DrawTexture(_texture, 100, 100, 200, 200);
-~~~
+```
 
 **Parameters:**
 - `x, y` - Position
@@ -243,7 +243,7 @@ _renderer.DrawTexture(_texture, 100, 100, 200, 200);
 
 **Example:**
 
-~~~csharp
+```csharp
 // Double size
 _renderer.DrawTexture(_texture, 100, 100, 
     _texture.Width * 2, _texture.Height * 2);
@@ -251,19 +251,19 @@ _renderer.DrawTexture(_texture, 100, 100,
 // Half size
 _renderer.DrawTexture(_texture, 100, 100, 
     _texture.Width / 2, _texture.Height / 2);
-~~~
+```
 
 ---
 
 ### Method 3: Sprite Sheet (Partial Draw)
 
-~~~csharp
+```csharp
 // Draw a portion of texture (for sprite sheets)
 _renderer.DrawTexture(
     _texture,
     sourceX, sourceY, sourceWidth, sourceHeight, // Source rectangle in texture
     destX, destY, destWidth, destHeight);        // Destination on screen
-~~~
+```
 
 **Use for:**
 - Sprite sheets/texture atlases
@@ -272,23 +272,23 @@ _renderer.DrawTexture(
 
 **Example:**
 
-~~~csharp
+```csharp
 // Draw top-left 32x32 region from sprite sheet
 _renderer.DrawTexture(
     _spriteSheet,
     0, 0, 32, 32,      // Source: top-left 32x32 pixels
     100, 100, 64, 64); // Draw at (100,100) scaled to 64x64
-~~~
+```
 
 ---
 
-## 🗺️ Sprite Sheets
+## Sprite Sheets
 
 A **sprite sheet** (texture atlas) combines multiple sprites into one image for efficiency.
 
 ### What is a Sprite Sheet?
 
-~~~
+```
 character_sheet.png (256x256):
 ┌────────┬────────┬────────┬────────┐
 │ Frame 1│ Frame 2│ Frame 3│ Frame 4│  ← Walk animation
@@ -298,7 +298,7 @@ character_sheet.png (256x256):
 │  32x32 │  32x32 │  32x32 │  32x32 │
 └────────┴────────┴────────┴────────┘
 8 sprites in 1 texture!
-~~~
+```
 
 **Benefits:**
 - ✅ **Fewer draw calls** (faster rendering)
@@ -309,7 +309,7 @@ character_sheet.png (256x256):
 
 ### Drawing from Sprite Sheet
 
-~~~csharp SpriteShe etExample.cs
+```csharp SpriteShe etExample.cs
 public class SpriteSheetScene : Scene
 {
     private readonly IRenderer _renderer;
@@ -358,15 +358,15 @@ public class SpriteSheetScene : Scene
         _currentFrame = (_currentFrame + 1) % (FramesPerRow * 2); // 16 frames total
     }
 }
-~~~
+```
 
 ---
 
-## 🎬 Complete Sprite Example
+## Complete Sprite Example
 
 Here's a full scene with player movement:
 
-~~~csharp PlayerSpriteScene.cs
+```csharp PlayerSpriteScene.cs
 using Brine2D.Core;
 using Brine2D.Input;
 using Brine2D.Rendering;
@@ -485,17 +485,17 @@ public class PlayerSpriteScene : Scene
         return Task.CompletedTask;
     }
 }
-~~~
+```
 
 ---
 
-## 🎞️ Sprite Animations
+## Sprite Animations
 
 For frame-by-frame animations, see [Animation Guide](animation.md).
 
 **Quick preview:**
 
-~~~csharp
+```csharp
 // Load sprite sheet
 _spriteSheet = await _textureLoader.LoadTextureAsync(
     "assets/character.png",
@@ -530,19 +530,19 @@ if (_animator.CurrentFrame != null)
         frame.X, frame.Y, frame.Width, frame.Height,
         playerX, playerY, 64, 64);
 }
-~~~
+```
 
 **[Full Animation Tutorial →](animation.md)**
 
 ---
 
-## 🧹 Memory Management
+## Memory Management
 
 ### Textures Use GPU Memory!
 
 **ALWAYS unload textures when done:**
 
-~~~csharp
+```csharp
 protected override Task OnUnloadAsync(CancellationToken cancellationToken)
 {
     if (_playerTexture != null)
@@ -557,7 +557,7 @@ protected override Task OnUnloadAsync(CancellationToken cancellationToken)
     
     return Task.CompletedTask;
 }
-~~~
+```
 
 **Why?**
 - Textures live in GPU memory
@@ -568,7 +568,7 @@ protected override Task OnUnloadAsync(CancellationToken cancellationToken)
 
 ### Texture Lifecycle
 
-~~~mermaid
+```mermaid
 stateDiagram-v2
     [*] --> Loading: LoadTextureAsync()
     Loading --> Loaded: Success
@@ -589,11 +589,11 @@ stateDiagram-v2
         Memory freed
         No longer usable
     end note
-~~~
+```
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Problem: Texture Not Found
 
@@ -602,30 +602,30 @@ stateDiagram-v2
 **Solutions:**
 
 1. **Check file path**
-   ~~~csharp
+   ```csharp
    // ❌ Wrong - absolute path
    "C:/MyGame/assets/player.png"
    
    // ✅ Correct - relative path
    "assets/player.png"
-   ~~~
+   ```
 
 2. **Verify file exists**
-   ~~~csharp
+   ```csharp
    if (!File.Exists("assets/player.png"))
    {
        Logger.LogError("Texture not found!");
    }
-   ~~~
+   ```
 
 3. **Check `.csproj` copy settings**
-   ~~~xml
+   ```xml
    <ItemGroup>
      <None Update="assets\**\*">
        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
      </None>
    </ItemGroup>
-   ~~~
+   ```
 
 ---
 
@@ -635,7 +635,7 @@ stateDiagram-v2
 
 **Solution:** Use `TextureScaleMode.Nearest`:
 
-~~~csharp
+```csharp
 // ❌ Bad - blurry pixel art
 _texture = await _textureLoader.LoadTextureAsync(
     "assets/player.png",
@@ -645,7 +645,7 @@ _texture = await _textureLoader.LoadTextureAsync(
 _texture = await _textureLoader.LoadTextureAsync(
     "assets/player.png",
     TextureScaleMode.Nearest); // CORRECT for pixel art
-~~~
+```
 
 ---
 
@@ -657,7 +657,7 @@ _texture = await _textureLoader.LoadTextureAsync(
 
 **Solution:**
 
-~~~csharp
+```csharp
 // ❌ Bad - memory leak!
 protected override Task OnUnloadAsync(CancellationToken cancellationToken)
 {
@@ -674,7 +674,7 @@ protected override Task OnUnloadAsync(CancellationToken cancellationToken)
     
     return Task.CompletedTask;
 }
-~~~
+```
 
 ---
 
@@ -693,53 +693,53 @@ protected override Task OnUnloadAsync(CancellationToken cancellationToken)
    - Avoid grayscale/indexed color
 
 3. **Texture not loaded**
-   ~~~csharp
+   ```csharp
    if (_texture != null && _texture.IsLoaded)
    {
        _renderer.DrawTexture(_texture, x, y);
    }
-   ~~~
+   ```
 
 ---
 
-## ✅ Best Practices
+## Best Practices
 
 ### DO
 
 1. **Use PNG for sprites**
-   ~~~csharp
+   ```csharp
    // ✅ PNG - transparency, lossless
    "assets/player.png"
-   ~~~
+   ```
 
 2. **Load async in OnLoadAsync**
-   ~~~csharp
+   ```csharp
    protected override async Task OnLoadAsync(CancellationToken ct)
    {
        _texture = await _textureLoader.LoadTextureAsync(..., ct);
    }
-   ~~~
+   ```
 
 3. **Use Nearest for pixel art**
-   ~~~csharp
+   ```csharp
    TextureScaleMode.Nearest // Sharp scaling
-   ~~~
+   ```
 
 4. **Always unload**
-   ~~~csharp
+   ```csharp
    protected override Task OnUnloadAsync(CancellationToken ct)
    {
        _textureLoader.UnloadTexture(_texture);
        return Task.CompletedTask;
    }
-   ~~~
+   ```
 
 5. **Use sprite sheets**
    - One texture vs many = faster rendering
    - Less texture switches
 
 6. **Cache texture references**
-   ~~~csharp
+   ```csharp
    private ITexture? _cachedTexture;
    
    // ✅ Load once, use many times
@@ -747,54 +747,54 @@ protected override Task OnUnloadAsync(CancellationToken cancellationToken)
    {
        _cachedTexture = await _textureLoader.LoadTextureAsync(..., ct);
    }
-   ~~~
+   ```
 
 ### DON'T
 
 1. **Don't load every frame**
-   ~~~csharp
+   ```csharp
    // ❌ TERRIBLE - loads every frame!
    protected override void OnRender(GameTime gt)
    {
        var texture = _textureLoader.LoadTexture(...); // NO!
        _renderer.DrawTexture(texture, x, y);
    }
-   ~~~
+   ```
 
 2. **Don't use absolute paths**
-   ~~~csharp
+   ```csharp
    // ❌ Bad
    "C:/Users/Me/Game/assets/player.png"
    
    // ✅ Good
    "assets/player.png"
-   ~~~
+   ```
 
 3. **Don't forget to unload**
-   ~~~csharp
+   ```csharp
    // ❌ Memory leak!
    protected override Task OnUnloadAsync(CancellationToken ct)
    {
        // Forgot _textureLoader.UnloadTexture(_texture);
        return Task.CompletedTask;
    }
-   ~~~
+   ```
 
 4. **Don't use Linear for pixel art**
-   ~~~csharp
+   ```csharp
    // ❌ Blurry pixel art
    TextureScaleMode.Linear
    
    // ✅ Sharp pixel art
    TextureScaleMode.Nearest
-   ~~~
+   ```
 
 ---
 
-## 📊 Performance Tips
+## Performance Tips
 
 1. **Batch sprites by texture**
-   ~~~csharp
+   ```csharp
    // Draw all enemies (same texture) together
    foreach (var enemy in _enemies)
    {
@@ -806,7 +806,7 @@ protected override Task OnUnloadAsync(CancellationToken cancellationToken)
    {
        _renderer.DrawTexture(_coinTexture, coin.X, coin.Y);
    }
-   ~~~
+   ```
 
 2. **Use sprite sheets**
    - Reduces texture switches
@@ -822,7 +822,7 @@ protected override Task OnUnloadAsync(CancellationToken cancellationToken)
 
 ---
 
-## 🎓 Summary
+## Summary
 
 | Task | Code | Notes |
 |------|------|-------|
@@ -836,7 +836,7 @@ protected override Task OnUnloadAsync(CancellationToken cancellationToken)
 
 ---
 
-## 🔗 Next Steps
+## Next Steps
 
 - **[Animation](animation.md)** - Animate sprites frame-by-frame
 - **[Camera](camera.md)** - Follow sprites with camera
@@ -845,4 +845,4 @@ protected override Task OnUnloadAsync(CancellationToken cancellationToken)
 
 ---
 
-Ready to bring sprites to life? Try [Sprite Animation](animation.md)! 🎬✨
+Ready to bring sprites to life? Try [Sprite Animation](animation.md)!

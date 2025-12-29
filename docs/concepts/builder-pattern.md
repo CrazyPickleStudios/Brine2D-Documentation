@@ -55,7 +55,7 @@ var game = builder.Build();
 await game.RunAsync<GameScene>();
 ```
 
-**That's it!** Four simple steps to a working game. 🎮
+**That's it!** Four simple steps to a working game.
 
 ---
 
@@ -540,7 +540,7 @@ await game.RunAsync<MenuScene>();
 | `builder.Build()` | `builder.Build()` | Create application |
 | `app.Run()` | `game.RunAsync<Scene>()` | Start application |
 
-**Nearly identical API!** 🎉
+**Nearly identical API!**
 
 ---
 
@@ -626,7 +626,7 @@ if (renderingOptions.WindowHeight < 480)
 
 ## Best Practices
 
-### ✅ DO
+### DO
 
 1. **Use environment-specific configs**
    ```csharp
@@ -652,7 +652,7 @@ if (renderingOptions.WindowHeight < 480)
        .AddSDL3Input();
    ```
 
-### ❌ DON'T
+### DON'T
 
 1. **Don't modify builder after Build()**
    ```csharp
@@ -756,4 +756,4 @@ export DOTNET_ENVIRONMENT=Development
 
 ---
 
-The builder pattern makes configuration clean, discoverable, and maintainable! 🏗️✨
+The builder pattern makes configuration clean, discoverable, and maintainable!

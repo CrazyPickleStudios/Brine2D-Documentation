@@ -901,4 +901,4 @@ Ready for more? Check out:
 
 ---
 
-Great job! You've mastered sprite animation in Brine2D. Your characters are now ready to come alive! 🎬
+Great job! You've mastered sprite animation in Brine2D. Your characters are now ready to come alive!

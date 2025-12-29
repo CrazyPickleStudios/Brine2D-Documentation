@@ -7,7 +7,7 @@ description: Step-by-step tutorials to master Brine2D game development
 
 Welcome to the Brine2D tutorials! These hands-on guides will take you from basic concepts to building complete game systems. Each tutorial includes working code examples and explains the "why" behind each step.
 
-## 🎯 Learning Path
+## Learning Path
 
 We recommend following these tutorials in order, but feel free to jump to topics that interest you most.
 
@@ -27,7 +27,7 @@ style E fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
 
 ---
 
-## 📚 Available Tutorials
+## Available Tutorials
 
 ### [Moving Sprites](moving-sprites.md)
 **Difficulty:** Beginner | **Time:** 15 minutes
@@ -145,7 +145,7 @@ Build a top-down adventure game with 8-directional movement, NPCs, and dialogue.
 
 ---
 
-## 🔧 Tutorial Code
+## Tutorial Code
 
 All tutorial code is available in the [samples/BasicGame](https://github.com/CrazyPickleStudios/Brine2D/tree/main/samples/BasicGame) directory:
 
@@ -157,7 +157,7 @@ You can run these demos to see the final results before starting each tutorial.
 
 ---
 
-## 💡 Tips for Learning
+## Tips for Learning
 
 ### 1. **Run the Code First**
 Before reading each tutorial, run the demo scene to see what you're building. Understanding the end goal helps you learn faster.
@@ -191,7 +191,7 @@ Stuck? Check out:
 
 ---
 
-## 🎓 After the Tutorials
+## After the Tutorials
 
 Once you've completed these tutorials, you'll be ready to:
 
@@ -202,7 +202,7 @@ Once you've completed these tutorials, you'll be ready to:
 
 ---
 
-## 📦 What's Included in Each Tutorial
+## What's Included in Each Tutorial
 
 Every tutorial follows the same structure:
 
@@ -218,8 +218,8 @@ Every tutorial follows the same structure:
 
 ---
 
-## 🚀 Ready to Start?
+## Ready to Start?
 
 Jump into [Moving Sprites](moving-sprites.md) to begin your Brine2D journey, or pick any tutorial that interests you!
 
-Happy game dev! 🎮
+Happy game dev!

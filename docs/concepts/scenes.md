@@ -598,7 +598,7 @@ public interface ISceneManager
 
 ## Best Practices
 
-### ✅ DO
+### DO
 
 1. **Use dependency injection**
    ```csharp
@@ -639,7 +639,7 @@ public interface ISceneManager
    }
    ```
 
-### ❌ DON'T
+### DON'T
 
 1. **Don't load assets in constructor**
    ```csharp
@@ -806,4 +806,4 @@ protected override Task OnUnloadAsync(CancellationToken ct)
 
 ---
 
-Scenes keep your game organized and maintainable! 🎬✨
+Scenes keep your game organized and maintainable!

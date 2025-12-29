@@ -612,4 +612,4 @@ Ready for more? Check out:
 
 ---
 
-Great job! You've mastered the basics of sprite rendering and movement in Brine2D. 🎮
+Great job! You've mastered the basics of sprite rendering and movement in Brine2D.

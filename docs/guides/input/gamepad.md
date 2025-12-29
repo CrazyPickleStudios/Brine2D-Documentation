@@ -7,7 +7,7 @@ description: Add controller support with analog sticks, triggers, and buttons in
 
 Add full controller support to your game with Xbox, PlayStation, and generic gamepad compatibility.
 
-## 📖 Overview
+## Overview
 
 Brine2D provides comprehensive gamepad support via `IInputService`:
 - ✅ **Universal compatibility** - Xbox, PlayStation, Switch Pro, generic
@@ -17,7 +17,7 @@ Brine2D provides comprehensive gamepad support via `IInputService`:
 - ✅ **Hot-plug** - Automatic connect/disconnect detection
 - ✅ **Multiple controllers** - Support up to 4 gamepads
 
-~~~mermaid
+```mermaid
 graph TB
     subgraph Controllers
         A["Xbox Controller"]
@@ -50,11 +50,11 @@ graph TB
     style E fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
     style F fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
     style G fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
-~~~
+```
 
 ---
 
-## 🎯 Prerequisites
+## Prerequisites
 
 - ✅ [Quick Start](../getting-started/quick-start.md) - Basic scene setup
 - ✅ [Keyboard Input](keyboard.md) - Understanding input basics
@@ -62,9 +62,9 @@ graph TB
 
 ---
 
-## 🚀 Quick Example
+## Quick Example
 
-~~~csharp GamepadExample.cs
+```csharp GamepadExample.cs
 using Brine2D.Core;
 using Brine2D.Input;
 using Brine2D.Rendering;
@@ -138,19 +138,19 @@ public class GamepadScene : Scene
         _renderer.EndFrame();
     }
 }
-~~~
+```
 
 **Result:** Move with left stick, jump with A, exit with Start! 🎮
 
 ---
 
-## 🎮 Controller Layout
+## Controller Layout
 
 ### Universal Button Mapping
 
 Brine2D uses **Xbox-style naming** that maps correctly to all controllers:
 
-~~~
+```
          [LB]              [RB]          ← Shoulder Buttons
          
     [LT]                      [RT]       ← Triggers (analog)
@@ -165,7 +165,7 @@ Brine2D uses **Xbox-style naming** that maps correctly to all controllers:
     
     [Left Stick]    [Right Stick]       ← Analog Sticks (clickable)
          (⊙)             (⊙)
-~~~
+```
 
 | Xbox | PlayStation | Nintendo Switch |
 |------|-------------|-----------------|
@@ -185,11 +185,11 @@ Brine2D uses **Xbox-style naming** that maps correctly to all controllers:
 
 ---
 
-## 🔌 Connection Detection
+## Connection Detection
 
 ### Check if Gamepad is Connected
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     // Check if any gamepad is connected
@@ -204,13 +204,13 @@ protected override void OnUpdate(GameTime gameTime)
         HandleKeyboardInput();
     }
 }
-~~~
+```
 
 ---
 
 ### Multiple Gamepads
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     // Check specific gamepad indices (0-3)
@@ -224,7 +224,7 @@ protected override void OnUpdate(GameTime gameTime)
         HandlePlayer2Input(1);
     }
 }
-~~~
+```
 
 **Indices:**
 - `0` = Player 1 (default)
@@ -234,11 +234,11 @@ protected override void OnUpdate(GameTime gameTime)
 
 ---
 
-## 🕹️ Buttons
+## Buttons
 
 ### Available Buttons
 
-~~~csharp
+```csharp
 // Face buttons (right side)
 GamepadButton.A        // Bottom (Xbox A, PS Cross)
 GamepadButton.B        // Right (Xbox B, PS Circle)
@@ -263,7 +263,7 @@ GamepadButton.DPadRight
 GamepadButton.Start          // Start, Options, Plus
 GamepadButton.Back           // Back, Select, Minus
 GamepadButton.Guide          // Xbox/PS/Home button
-~~~
+```
 
 ---
 
@@ -271,7 +271,7 @@ GamepadButton.Guide          // Xbox/PS/Home button
 
 #### IsGamepadButtonDown - Held Detection
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     // Returns TRUE while button is held
@@ -280,13 +280,13 @@ protected override void OnUpdate(GameTime gameTime)
         ChargeAttack(); // Continuous charging
     }
 }
-~~~
+```
 
 ---
 
 #### IsGamepadButtonPressed - Press Detection
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     // Returns TRUE only on first frame of press
@@ -300,13 +300,13 @@ protected override void OnUpdate(GameTime gameTime)
         Attack(); // One attack per press
     }
 }
-~~~
+```
 
 ---
 
 #### IsGamepadButtonReleased - Release Detection
 
-~~~csharp
+```csharp
 private bool _isChargingAttack = false;
 private float _chargeTime = 0f;
 
@@ -337,15 +337,15 @@ protected override void OnUpdate(GameTime gameTime)
         }
     }
 }
-~~~
+```
 
 ---
 
-## 🕹️ Analog Sticks
+## Analog Sticks
 
 ### Get Stick Input
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     var deltaTime = (float)gameTime.DeltaTime;
@@ -368,14 +368,14 @@ protected override void OnUpdate(GameTime gameTime)
         _cameraRotation += rightStick * _cameraSensitivity * deltaTime;
     }
 }
-~~~
+```
 
 **Returns:**
 - `Vector2(-1 to 1, -1 to 1)`
 - `X` axis: -1 = left, +1 = right
 - `Y` axis: -1 = up, +1 = down
 
-~~~
+```
 Stick Coordinates:
        Y-
        |
@@ -387,13 +387,13 @@ Stick Coordinates:
        
 Center = (0, 0)
 Fully pushed = (±1, ±1)
-~~~
+```
 
 ---
 
 ### Individual Axes
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     // Get individual axis values
@@ -402,7 +402,7 @@ protected override void OnUpdate(GameTime gameTime)
     var rightX = _input.GetGamepadAxis(GamepadAxis.RightX); // -1 to 1
     var rightY = _input.GetGamepadAxis(GamepadAxis.RightY); // -1 to 1
 }
-~~~
+```
 
 ---
 
@@ -410,7 +410,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 Apply deadzone to avoid stick drift:
 
-~~~csharp
+```csharp
 public static Vector2 ApplyDeadzone(Vector2 stick, float deadzone = 0.15f)
 {
     var magnitude = stick.Length();
@@ -429,17 +429,17 @@ public static Vector2 ApplyDeadzone(Vector2 stick, float deadzone = 0.15f)
 
 // Usage
 var leftStick = ApplyDeadzone(_input.GetGamepadLeftStick(), 0.15f);
-~~~
+```
 
 **Why?** Controllers have slight drift near center. Deadzone prevents unwanted movement.
 
 ---
 
-## 🎯 Triggers
+## Triggers
 
 ### Get Trigger Values
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     // Get trigger values (0 to 1)
@@ -457,7 +457,7 @@ protected override void OnUpdate(GameTime gameTime)
         Accelerate(rightTrigger); // Accelerate proportional to trigger
     }
 }
-~~~
+```
 
 **Returns:**
 - `0.0f` = Not pressed
@@ -468,7 +468,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 ### Trigger as Button
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     var rightTrigger = _input.GetGamepadAxis(GamepadAxis.RightTrigger);
@@ -479,15 +479,15 @@ protected override void OnUpdate(GameTime gameTime)
         Shoot();
     }
 }
-~~~
+```
 
 ---
 
-## 🎮 Common Patterns
+## Common Patterns
 
 ### Pattern 1: Stick Movement
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     if (!_input.IsGamepadConnected()) return;
@@ -504,13 +504,13 @@ protected override void OnUpdate(GameTime gameTime)
     // Apply movement
     _playerPosition += leftStick * _speed * deltaTime;
 }
-~~~
+```
 
 ---
 
 ### Pattern 2: D-Pad Menu Navigation
 
-~~~csharp
+```csharp
 private int _selectedIndex = 0;
 
 protected override void OnUpdate(GameTime gameTime)
@@ -532,13 +532,13 @@ protected override void OnUpdate(GameTime gameTime)
         SelectMenuItem(_selectedIndex);
     }
 }
-~~~
+```
 
 ---
 
 ### Pattern 3: Twin-Stick Shooter
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     if (!_input.IsGamepadConnected()) return;
@@ -562,13 +562,13 @@ protected override void OnUpdate(GameTime gameTime)
         FireBullet(_aimDirection);
     }
 }
-~~~
+```
 
 ---
 
 ### Pattern 4: Racing Game Controls
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     if (!_input.IsGamepadConnected()) return;
@@ -589,13 +589,13 @@ protected override void OnUpdate(GameTime gameTime)
     
     _carSpeed = Math.Max(0, _carSpeed); // No reverse
 }
-~~~
+```
 
 ---
 
 ### Pattern 5: Combo Input (Fighting Game)
 
-~~~csharp
+```csharp
 private readonly Queue<GamepadButton> _inputBuffer = new();
 private const int BufferSize = 5;
 
@@ -634,20 +634,20 @@ private void CheckCombo()
         _inputBuffer.Clear();
     }
 }
-~~~
+```
 
 ---
 
-## 🎯 Advanced Techniques
+## Advanced Techniques
 
 ### Rumble/Vibration
 
 **Note:** SDL3 supports rumble, but not yet exposed in Brine2D API. Coming soon!
 
-~~~csharp
+```csharp
 // Future API:
 _input.GamepadRumble(0, lowFreq: 0.5f, highFreq: 1.0f, duration: 0.3f);
-~~~
+```
 
 ---
 
@@ -655,7 +655,7 @@ _input.GamepadRumble(0, lowFreq: 0.5f, highFreq: 1.0f, duration: 0.3f);
 
 Display correct button icons for detected controller:
 
-~~~csharp
+```csharp
 public class GamepadPrompts
 {
     public enum ControllerType
@@ -689,7 +689,7 @@ public class GamepadPrompts
         };
     }
 }
-~~~
+```
 
 ---
 
@@ -697,7 +697,7 @@ public class GamepadPrompts
 
 Map gamepad and keyboard to actions:
 
-~~~csharp
+```csharp
 public class InputMapper
 {
     private readonly IInputService _input;
@@ -731,11 +731,11 @@ public class InputMapper
         return movement;
     }
 }
-~~~
+```
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Problem: Gamepad Not Detected
 
@@ -749,10 +749,10 @@ public class InputMapper
    - Try different USB port
 
 2. **Check logs**
-   ~~~csharp
+   ```csharp
    // Brine2D logs gamepad detection
    // Look for: "Found X gamepad(s)" or "Gamepad X connected"
-   ~~~
+   ```
 
 3. **Test with other software**
    - Verify controller works in other games
@@ -766,7 +766,7 @@ public class InputMapper
 
 **Solution:** Apply deadzone:
 
-~~~csharp
+```csharp
 private const float Deadzone = 0.15f;
 
 var stick = _input.GetGamepadLeftStick();
@@ -775,7 +775,7 @@ if (stick.Length() < Deadzone)
 {
     stick = Vector2.Zero; // Ignore drift
 }
-~~~
+```
 
 ---
 
@@ -799,53 +799,53 @@ if (stick.Length() < Deadzone)
 **Solution:**
 
 1. **Check axis range**
-   ~~~csharp
+   ```csharp
    var trigger = _input.GetGamepadAxis(GamepadAxis.RightTrigger);
    Logger.LogInformation("Trigger value: {Value}", trigger);
-   ~~~
+   ```
 
 2. **Apply threshold**
-   ~~~csharp
+   ```csharp
    // Some controllers have resting values > 0
    if (trigger > 0.1f) // 10% deadzone
    {
        // Trigger actually pressed
    }
-   ~~~
+   ```
 
 ---
 
-## ✅ Best Practices
+## Best Practices
 
 ### DO
 
 1. **Always check connection first**
-   ~~~csharp
+   ```csharp
    if (_input.IsGamepadConnected())
    {
        HandleGamepadInput();
    }
-   ~~~
+   ```
 
 2. **Apply deadzones**
-   ~~~csharp
+   ```csharp
    if (stick.Length() < 0.15f)
        stick = Vector2.Zero;
-   ~~~
+   ```
 
 3. **Support both gamepad AND keyboard**
-   ~~~csharp
+   ```csharp
    // Gamepad primary, keyboard fallback
    var input = _input.IsGamepadConnected() 
        ? GetGamepadInput()
        : GetKeyboardInput();
-   ~~~
+   ```
 
 4. **Use IsButtonPressed for discrete actions**
-   ~~~csharp
+   ```csharp
    if (_input.IsGamepadButtonPressed(GamepadButton.A))
        Jump();
-   ~~~
+   ```
 
 5. **Show button prompts**
    - Display "(A) Jump" or visual icons
@@ -860,7 +860,7 @@ if (stick.Length() < Deadzone)
 ### DON'T
 
 1. **Don't assume gamepad is always connected**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - crashes if no gamepad!
    var stick = _input.GetGamepadLeftStick();
    
@@ -869,10 +869,10 @@ if (stick.Length() < Deadzone)
    {
        var stick = _input.GetGamepadLeftStick();
    }
-   ~~~
+   ```
 
 2. **Don't ignore deadzone**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - stick drift!
    _playerPosition += _input.GetGamepadLeftStick() * speed * dt;
    
@@ -882,10 +882,10 @@ if (stick.Length() < Deadzone)
    {
        _playerPosition += stick * speed * dt;
    }
-   ~~~
+   ```
 
 3. **Don't use button DOWN for menus**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - scrolls too fast!
    if (_input.IsGamepadButtonDown(GamepadButton.DPadDown))
        ScrollMenu();
@@ -893,11 +893,11 @@ if (stick.Length() < Deadzone)
    // ✅ Good
    if (_input.IsGamepadButtonPressed(GamepadButton.DPadDown))
        ScrollMenu();
-   ~~~
+   ```
 
 ---
 
-## 📊 Summary
+## Summary
 
 | Method | Returns | Use For |
 |--------|---------|---------|
@@ -916,7 +916,7 @@ if (stick.Length() < Deadzone)
 
 ---
 
-## 🔗 Next Steps
+## Next Steps
 
 - **[Input Layers](input-layers.md)** - Priority-based input routing
 - **[Player Movement](../mechanics/movement.md)** - Complete movement system
@@ -925,4 +925,4 @@ if (stick.Length() < Deadzone)
 
 ---
 
-Ready to layer your input? Check out [Input Layers](input-layers.md)! 🎮✨
+Ready to layer your input? Check out [Input Layers](input-layers.md)!

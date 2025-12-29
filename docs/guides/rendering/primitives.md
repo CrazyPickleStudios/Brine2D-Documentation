@@ -7,7 +7,7 @@ description: Learn to draw shapes, colors, and primitives in Brine2D
 
 Master the fundamentals of rendering in Brine2D by learning to draw shapes, set colors, and understand the rendering pipeline.
 
-## 📖 Overview
+## Overview
 
 Brine2D's rendering system provides simple, immediate-mode drawing APIs for 2D graphics:
 - ✅ **Rectangles** - Filled squares and rectangles
@@ -15,7 +15,7 @@ Brine2D's rendering system provides simple, immediate-mode drawing APIs for 2D g
 - ✅ **Text** - String rendering with fonts
 - ✅ **Textures** - Images and sprites (covered in [Textures](textures.md))
 
-~~~mermaid
+```mermaid
 sequenceDiagram
     participant Scene as Your Scene
     participant Renderer as IRenderer
@@ -41,22 +41,22 @@ sequenceDiagram
     Scene->>Renderer: EndFrame()
     Renderer->>SDL: SDL_RenderPresent
     Note over SDL: Display on screen
-~~~
+```
 
 ---
 
-## 🎯 Prerequisites
+## Prerequisites
 
 - ✅ [Quick Start](../getting-started/quick-start.md) - Basic scene setup
 - ✅ Basic C# knowledge
 
 ---
 
-## 🚀 Your First Drawing
+## Your First Drawing
 
 ### Minimal Example
 
-~~~csharp MinimalDrawing.cs
+```csharp MinimalDrawing.cs
 using Brine2D.Core;
 using Brine2D.Rendering;
 using Microsoft.Extensions.Logging;
@@ -86,19 +86,19 @@ public class DrawingScene : Scene
         _renderer.EndFrame();
     }
 }
-~~~
+```
 
-**Result:** A red rectangle on a blue background! 🎨
+**Result:** A red rectangle on a blue background!
 
 ---
 
-## 🎨 The Rendering Pipeline
+## The Rendering Pipeline
 
 ### Frame Structure
 
 Every frame **MUST** follow this pattern:
 
-~~~csharp
+```csharp
 protected override void OnRender(GameTime gameTime)
 {
     // Step 1: Clear screen
@@ -115,7 +115,7 @@ protected override void OnRender(GameTime gameTime)
     // Step 4: End frame (displays on screen)
     _renderer.EndFrame();
 }
-~~~
+```
 
 **Why this order?**
 - `Clear()` - Wipes previous frame
@@ -125,14 +125,14 @@ protected override void OnRender(GameTime gameTime)
 
 ---
 
-## 🔵 Drawing Rectangles
+## Drawing Rectangles
 
 ### Basic Rectangle
 
-~~~csharp
+```csharp
 // DrawRectangle(x, y, width, height, color)
 _renderer.DrawRectangle(100, 100, 50, 50, Color.Red);
-~~~
+```
 
 **Parameters:**
 - `x` - Left edge position
@@ -141,7 +141,7 @@ _renderer.DrawRectangle(100, 100, 50, 50, Color.Red);
 - `height` - Rectangle height
 - `color` - Fill color
 
-~~~
+```
 Screen Coordinates:
 (0,0) ───────► X
   │
@@ -152,7 +152,7 @@ Screen Coordinates:
   │      └──────────┘
   ▼
   Y
-~~~
+```
 
 ---
 
@@ -160,7 +160,7 @@ Screen Coordinates:
 
 **Centered Rectangle**
 
-~~~csharp
+```csharp
 private void DrawCenteredRect(float centerX, float centerY, float size, Color color)
 {
     _renderer.DrawRectangle(
@@ -170,11 +170,11 @@ private void DrawCenteredRect(float centerX, float centerY, float size, Color co
         size,
         color);
 }
-~~~
+```
 
 **Outlined Rectangle** (draw 4 thin rectangles)
 
-~~~csharp
+```csharp
 private void DrawRectangleOutline(float x, float y, float w, float h, Color color, float thickness = 2)
 {
     // Top
@@ -186,11 +186,11 @@ private void DrawRectangleOutline(float x, float y, float w, float h, Color colo
     // Right
     _renderer.DrawRectangle(x + w - thickness, y, thickness, h, color);
 }
-~~~
+```
 
 **Grid Pattern**
 
-~~~csharp
+```csharp
 private void DrawGrid(int gridSize, Color gridColor)
 {
     // Vertical lines
@@ -205,18 +205,18 @@ private void DrawGrid(int gridSize, Color gridColor)
         _renderer.DrawRectangle(0, y, 1280, 2, gridColor);
     }
 }
-~~~
+```
 
 ---
 
-## ⭕ Drawing Circles
+## Drawing Circles
 
 ### Basic Circle
 
-~~~csharp
+```csharp
 // DrawCircle(centerX, centerY, radius, color)
 _renderer.DrawCircle(400, 300, 50, Color.Blue);
-~~~
+```
 
 **Parameters:**
 - `centerX` - Circle center X
@@ -232,7 +232,7 @@ _renderer.DrawCircle(400, 300, 50, Color.Blue);
 
 **Particle Effect**
 
-~~~csharp
+```csharp
 private void DrawParticles()
 {
     var random = new Random();
@@ -246,11 +246,11 @@ private void DrawParticles()
         _renderer.DrawCircle(x, y, radius, Color.White);
     }
 }
-~~~
+```
 
 **Ripple Effect**
 
-~~~csharp
+```csharp
 private float _rippleRadius = 0f;
 
 protected override void OnUpdate(GameTime gameTime)
@@ -270,15 +270,15 @@ protected override void OnRender(GameTime gameTime)
     
     _renderer.EndFrame();
 }
-~~~
+```
 
 ---
 
-## 🎨 Working with Colors
+## Working with Colors
 
 ### Predefined Colors
 
-~~~csharp
+```csharp
 Color.White           // (255, 255, 255)
 Color.Black           // (0, 0, 0)
 Color.Red             // (255, 0, 0)
@@ -287,7 +287,7 @@ Color.Blue            // (0, 0, 255)
 Color.Yellow          // (255, 255, 0)
 Color.CornflowerBlue  // (100, 149, 237)
 Color.Transparent     // (0, 0, 0, 0)
-~~~
+```
 
 ---
 
@@ -295,22 +295,22 @@ Color.Transparent     // (0, 0, 0, 0)
 
 **RGB Color**
 
-~~~csharp
+```csharp
 var purple = new Color(128, 0, 128);
-~~~
+```
 
 **RGBA Color (with transparency)**
 
-~~~csharp
+```csharp
 var semiTransparentRed = new Color(255, 0, 0, 128); // 50% transparent
-~~~
+```
 
 **Helper Methods**
 
-~~~csharp
+```csharp
 var color1 = Color.FromRgb(100, 150, 200);
 var color2 = Color.FromRgba(100, 150, 200, 128);
-~~~
+```
 
 ---
 
@@ -318,7 +318,7 @@ var color2 = Color.FromRgba(100, 150, 200, 128);
 
 **Lighten/Darken**
 
-~~~csharp
+```csharp
 public static Color Lighten(Color color, float amount)
 {
     return new Color(
@@ -336,11 +336,11 @@ public static Color Darken(Color color, float amount)
         (byte)(color.B * (1 - amount)),
         color.A);
 }
-~~~
+```
 
 **Blend/Mix Colors**
 
-~~~csharp
+```csharp
 public static Color Lerp(Color a, Color b, float t)
 {
     return new Color(
@@ -349,11 +349,11 @@ public static Color Lerp(Color a, Color b, float t)
         (byte)(a.B + (b.B - a.B) * t),
         (byte)(a.A + (b.A - a.A) * t));
 }
-~~~
+```
 
 **Pulsing Color**
 
-~~~csharp
+```csharp
 private float _pulse = 0f;
 
 protected override void OnUpdate(GameTime gameTime)
@@ -368,17 +368,17 @@ protected override void OnRender(GameTime gameTime)
     
     _renderer.DrawRectangle(100, 100, 100, 100, color);
 }
-~~~
+```
 
 ---
 
-## 📝 Drawing Text
+## Drawing Text
 
 ### Basic Text
 
-~~~csharp
+```csharp
 _renderer.DrawText("Hello, World!", 100, 100, Color.White);
-~~~
+```
 
 **Parameters:**
 - `text` - String to display
@@ -394,19 +394,19 @@ _renderer.DrawText("Hello, World!", 100, 100, Color.White);
 
 If no font is loaded, Brine2D renders text as rectangles:
 
-~~~csharp
+```csharp
 // Fallback rendering (automatic)
 _renderer.DrawText("TEST", 100, 100, Color.White);
 // Each character = 8x12 rectangle
-~~~
+```
 
 ---
 
-## 📊 Complete Drawing Example
+## Complete Drawing Example
 
 Here's a scene with all drawing primitives:
 
-~~~csharp DrawingDemoScene.cs
+```csharp DrawingDemoScene.cs
 using Brine2D.Core;
 using Brine2D.Input;
 using Brine2D.Rendering;
@@ -559,20 +559,20 @@ public class DrawingDemoScene : Scene
         _renderer.DrawRectangle(x + w - thickness, y, thickness, h, color);
     }
 }
-~~~
+```
 
 ---
 
-## 🎯 Advanced Techniques
+## Advanced Techniques
 
 ### Alpha Blending
 
-~~~csharp
+```csharp
 // Transparent rectangles automatically blend
 _renderer.DrawRectangle(100, 100, 100, 100, new Color(255, 0, 0, 128));
 _renderer.DrawRectangle(150, 150, 100, 100, new Color(0, 0, 255, 128));
 // Result: Purple overlap!
-~~~
+```
 
 **How it works:**
 - SDL automatically enables alpha blending when `color.A < 255`
@@ -582,7 +582,7 @@ _renderer.DrawRectangle(150, 150, 100, 100, new Color(0, 0, 255, 128));
 
 ### Gradient Effect (Fake)
 
-~~~csharp
+```csharp
 private void DrawVerticalGradient(float x, float y, float w, float h, 
     Color topColor, Color bottomColor)
 {
@@ -605,13 +605,13 @@ private Color ColorLerp(Color a, Color b, float t)
         (byte)(a.B + (b.B - a.B) * t),
         (byte)(a.A + (b.A - a.A) * t));
 }
-~~~
+```
 
 ---
 
 ### Progress Bar
 
-~~~csharp
+```csharp
 private void DrawProgressBar(float x, float y, float width, float height, 
     float progress, Color fillColor, Color bgColor)
 {
@@ -628,13 +628,13 @@ private void DrawProgressBar(float x, float y, float width, float height,
 
 // Usage
 DrawProgressBar(100, 500, 200, 30, 0.75f, Color.Green, Color.Black);
-~~~
+```
 
 ---
 
 ### Health Bar
 
-~~~csharp
+```csharp
 private void DrawHealthBar(float x, float y, float width, float height, 
     float current, float max)
 {
@@ -649,11 +649,11 @@ private void DrawHealthBar(float x, float y, float width, float height,
     DrawProgressBar(x, y, width, height, percentage, fillColor, 
         new Color(40, 40, 40));
 }
-~~~
+```
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Problem: Nothing Draws
 
@@ -662,7 +662,7 @@ private void DrawHealthBar(float x, float y, float width, float height,
 **Causes & Solutions:**
 
 1. **Forgot `BeginFrame()` or `EndFrame()`**
-   ~~~csharp
+   ```csharp
    // ❌ Bad
    _renderer.Clear(Color.Blue);
    _renderer.DrawRectangle(...);
@@ -672,19 +672,19 @@ private void DrawHealthBar(float x, float y, float width, float height,
    _renderer.BeginFrame();
    _renderer.DrawRectangle(...);
    _renderer.EndFrame();
-   ~~~
+   ```
 
 2. **Drawing outside screen bounds**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - off screen
    _renderer.DrawRectangle(2000, 2000, 100, 100, Color.Red);
    
    // ✅ Good - visible
    _renderer.DrawRectangle(100, 100, 100, 100, Color.Red);
-   ~~~
+   ```
 
 3. **Alpha = 0 (fully transparent)**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - invisible
    _renderer.DrawRectangle(100, 100, 100, 100, 
        new Color(255, 0, 0, 0));
@@ -692,7 +692,7 @@ private void DrawHealthBar(float x, float y, float width, float height,
    // ✅ Good - visible
    _renderer.DrawRectangle(100, 100, 100, 100, 
        new Color(255, 0, 0, 255));
-   ~~~
+   ```
 
 ---
 
@@ -702,7 +702,7 @@ private void DrawHealthBar(float x, float y, float width, float height,
 
 **Solution:** Draw in order (back to front):
 
-~~~csharp
+```csharp
 protected override void OnRender(GameTime gameTime)
 {
     _renderer.Clear(Color.Black);
@@ -715,7 +715,7 @@ protected override void OnRender(GameTime gameTime)
     
     _renderer.EndFrame();
 }
-~~~
+```
 
 **No Z-buffer in 2D!** Last drawn = on top.
 
@@ -731,7 +731,7 @@ protected override void OnRender(GameTime gameTime)
 2. **Cull off-screen** - Don't draw invisible shapes
 3. **Use textures** - Faster than many primitives
 
-~~~csharp
+```csharp
 // ❌ Bad - 1000 draw calls
 for (int i = 0; i < 1000; i++)
 {
@@ -747,62 +747,62 @@ for (int i = 0; i < 1000; i++)
         _renderer.DrawCircle(x, 100, 5, Color.White);
     }
 }
-~~~
+```
 
 ---
 
-## ✅ Best Practices
+## Best Practices
 
 ### DO
 
 1. **Always Clear, Begin, End**
-   ~~~csharp
+   ```csharp
    _renderer.Clear(bgColor);
    _renderer.BeginFrame();
    // ... draw ...
    _renderer.EndFrame();
-   ~~~
+   ```
 
 2. **Use constants for repeated values**
-   ~~~csharp
+   ```csharp
    const float PLAYER_SIZE = 50f;
    _renderer.DrawRectangle(x, y, PLAYER_SIZE, PLAYER_SIZE, Color.Red);
-   ~~~
+   ```
 
 3. **Extract drawing logic to methods**
-   ~~~csharp
+   ```csharp
    private void DrawPlayer() { ... }
    private void DrawEnemies() { ... }
-   ~~~
+   ```
 
 4. **Use delta time for animations**
-   ~~~csharp
+   ```csharp
    _pulse += (float)gameTime.DeltaTime * 2f;
-   ~~~
+   ```
 
 ### DON'T
 
 1. **Don't call Clear/Begin/End multiple times per frame**
-   ~~~csharp
+   ```csharp
    // ❌ Bad
    _renderer.BeginFrame();
    DrawStuff();
    _renderer.EndFrame();
    _renderer.BeginFrame(); // Wrong!
-   ~~~
+   ```
 
 2. **Don't create colors every frame**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - allocates every frame
    _renderer.DrawRectangle(x, y, 100, 100, new Color(255, 0, 0));
    
    // ✅ Good - reuse
    private static readonly Color Red = new Color(255, 0, 0);
    _renderer.DrawRectangle(x, y, 100, 100, Red);
-   ~~~
+   ```
 
 3. **Don't draw invisible shapes**
-   ~~~csharp
+   ```csharp
    // ❌ Bad
    if (!isVisible)
        return;
@@ -813,11 +813,11 @@ for (int i = 0; i < 1000; i++)
    {
        _renderer.DrawRectangle(...);
    }
-   ~~~
+   ```
 
 ---
 
-## 📊 Performance Tips
+## Performance Tips
 
 1. **Minimize draw calls** - Combine shapes when possible
 2. **Cull off-screen** - Don't draw invisible objects
@@ -827,7 +827,7 @@ for (int i = 0; i < 1000; i++)
 
 ---
 
-## 🎓 Summary
+## Summary
 
 | Shape | Method | Parameters |
 |-------|--------|------------|
@@ -839,7 +839,7 @@ for (int i = 0; i < 1000; i++)
 
 ---
 
-## 🔗 Next Steps
+## Next Steps
 
 - **[Textures](textures.md)** - Load and draw images
 - **[Sprites](sprites.md)** - Work with sprite sheets
@@ -849,4 +849,4 @@ for (int i = 0; i < 1000; i++)
 
 ---
 
-Ready to add images? Move on to [Loading Textures](textures.md)! 🖼️
+Ready to add images? Move on to [Loading Textures](textures.md)!

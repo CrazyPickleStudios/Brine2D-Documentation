@@ -7,15 +7,15 @@ description: Practical guides for building games with Brine2D
 
 Welcome to the **Brine2D Guides**! These practical, task-focused tutorials will help you build real game features step-by-step.
 
-## 🎯 What You'll Learn
+## What You'll Learn
 
 Guides are organized by feature area, each with complete working examples you can copy and adapt for your games.
 
 ---
 
-## 📚 Guide Categories
+## Guide Categories
 
-### 🚀 Getting Started
+### Getting Started
 
 | Guide | Description | Difficulty |
 |-------|-------------|------------|
@@ -25,7 +25,7 @@ Guides are organized by feature area, each with complete working examples you ca
 
 ---
 
-### 🎮 Input Handling
+### Input Handling
 
 | Guide | Description | Difficulty |
 |-------|-------------|------------|
@@ -37,7 +37,7 @@ Guides are organized by feature area, each with complete working examples you ca
 
 ---
 
-### 🎨 Rendering & Graphics
+### Rendering & Graphics
 
 | Guide | Description | Difficulty |
 |-------|-------------|------------|
@@ -51,7 +51,7 @@ Guides are organized by feature area, each with complete working examples you ca
 
 ---
 
-### 🔊 Audio & Sound
+### Audio & Sound
 
 | Guide | Description | Difficulty |
 |-------|-------------|------------|
@@ -62,7 +62,7 @@ Guides are organized by feature area, each with complete working examples you ca
 
 ---
 
-### 💥 Collision Detection
+### Collision Detection
 
 | Guide | Description | Difficulty |
 |-------|-------------|------------|
@@ -73,7 +73,7 @@ Guides are organized by feature area, each with complete working examples you ca
 
 ---
 
-### 🗺️ Tilemaps & Levels
+### Tilemaps & Levels
 
 | Guide | Description | Difficulty |
 |-------|-------------|------------|
@@ -84,7 +84,7 @@ Guides are organized by feature area, each with complete working examples you ca
 
 ---
 
-### 🎭 UI & Menus
+### UI & Menus
 
 | Guide | Description | Difficulty |
 |-------|-------------|------------|
@@ -98,7 +98,7 @@ Guides are organized by feature area, each with complete working examples you ca
 
 ---
 
-### ⚙️ Game Mechanics
+### Game Mechanics
 
 | Guide | Description | Difficulty |
 |-------|-------------|------------|
@@ -112,7 +112,7 @@ Guides are organized by feature area, each with complete working examples you ca
 
 ---
 
-### 🏗️ Architecture & Patterns
+### Architecture & Patterns
 
 | Guide | Description | Difficulty |
 |-------|-------------|------------|
@@ -123,7 +123,7 @@ Guides are organized by feature area, each with complete working examples you ca
 
 ---
 
-### 🚀 Performance & Optimization
+### Performance & Optimization
 
 | Guide | Description | Difficulty |
 |-------|-------------|------------|
@@ -134,7 +134,7 @@ Guides are organized by feature area, each with complete working examples you ca
 
 ---
 
-### 🧪 Testing & Debugging
+### Testing & Debugging
 
 | Guide | Description | Difficulty |
 |-------|-------------|------------|
@@ -145,7 +145,7 @@ Guides are organized by feature area, each with complete working examples you ca
 
 ---
 
-### 📦 Packaging & Distribution
+### Packaging & Distribution
 
 | Guide | Description | Difficulty |
 |-------|-------------|------------|
@@ -155,7 +155,7 @@ Guides are organized by feature area, each with complete working examples you ca
 
 ---
 
-## 🎓 Learning Paths
+## Learning Paths
 
 ### Path 1: Complete Beginner
 
@@ -199,7 +199,7 @@ You want to optimize and polish:
 
 ---
 
-## 📖 How to Use These Guides
+## How to Use These Guides
 
 ### Structure
 
@@ -235,7 +235,7 @@ All code examples are:
 
 ---
 
-## 🎮 Complete Examples
+## Complete Examples
 
 ### Example 1: Simple Platformer
 
@@ -276,7 +276,7 @@ Combines these guides:
 
 ---
 
-## 🔍 Find What You Need
+## Find What You Need
 
 ### By Feature
 
@@ -293,7 +293,7 @@ Combines these guides:
 
 ---
 
-## 💡 Contributing
+## Contributing
 
 Found something unclear? Want to add a guide?
 
@@ -306,7 +306,7 @@ Found something unclear? Want to add a guide?
 
 ---
 
-## 🆘 Need Help?
+## Need Help?
 
 - **Discord:** Join our community
 - **GitHub Issues:** Report problems
@@ -315,7 +315,7 @@ Found something unclear? Want to add a guide?
 
 ---
 
-## 📝 Quick Reference
+## Quick Reference
 
 | I want to... | Go to... |
 |-------------|----------|
@@ -332,6 +332,6 @@ Found something unclear? Want to add a guide?
 
 ---
 
-Ready to start building? Pick a guide and let's code! 🚀
+Ready to start building? Pick a guide and let's code!
 
 **[Begin with Quick Start →](getting-started/quick-start.md)**

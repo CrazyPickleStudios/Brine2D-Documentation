@@ -222,16 +222,16 @@ Each package is focused, testable, and can be swapped with custom implementation
 
 ## Who Is This For?
 
-### :man_technologist: **ASP.NET Developers**
+### **ASP.NET Developers**
 You already know the patterns. Now build games with them.
 
-### :video_game: **Game Developers**
+### **Game Developers**
 Get enterprise-grade architecture without the boilerplate.
 
-### :mortar_board: **Students & Educators**
+### **Students & Educators**
 Learn game development with familiar .NET patterns.
 
-### :office: **Enterprise Teams**
+### **Enterprise Teams**
 Build internal tools and games with maintainable code.
 
 ## Requirements

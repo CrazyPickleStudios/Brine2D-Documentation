@@ -7,17 +7,18 @@ description: Priority-based input routing to prevent UI and game from receiving 
 
 Master priority-based input routing to handle UI overlays, pause menus, and complex input scenarios in Brine2D.
 
-## 📖 Overview
+## Overview
 
 **Input Layers** solve a common problem: when a player clicks a button on a pause menu, the game world shouldn't also react to that click!
 
 Brine2D's `InputLayerManager` routes input through **priority-based layers**:
+
 - ✅ **UI Layer** (Priority 1000) - Menus, dialogs, HUD
 - ✅ **Game Layer** (Priority 0) - Game world, player controls
 - ✅ **Input consumption** - Higher priority layers can block lower ones
 - ✅ **Automatic routing** - No manual checks needed
 
-~~~mermaid
+```mermaid
 graph TB
     A["Player Input<br/>(Keyboard/Mouse)"] --> B["InputLayerManager"]
     
@@ -33,7 +34,7 @@ graph TB
     style D fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
     style E fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
     style F fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
-~~~
+```
 
 **Example Scenario:**
 1. Player opens pause menu (UI layer)
@@ -43,7 +44,7 @@ graph TB
 
 ---
 
-## 🎯 Prerequisites
+## Prerequisites
 
 - ✅ [Keyboard Input](keyboard.md) - Basic input handling
 - ✅ [Mouse Input](mouse.md) - Mouse handling
@@ -51,11 +52,11 @@ graph TB
 
 ---
 
-## 🚀 Quick Example
+## Quick Example
 
 ### Problem: UI Clicks Affect Game
 
-~~~csharp
+```csharp
 // ❌ BAD - Both UI and game handle the same click!
 protected override void OnUpdate(GameTime gameTime)
 {
@@ -71,11 +72,11 @@ protected override void OnUpdate(GameTime gameTime)
         SpawnUnitAtMouse(); // Oops! Spawned unit under button!
     }
 }
-~~~
+```
 
 ### Solution: Input Layers
 
-~~~csharp InputLayerExample.cs
+```csharp InputLayerExample.cs
 using Brine2D.Core;
 using Brine2D.Input;
 using Brine2D.Rendering;
@@ -134,17 +135,17 @@ public class InputLayerScene : Scene
         }
     }
 }
-~~~
+```
 
 **Result:** Clicking button doesn't affect game world! 🎯
 
 ---
 
-## 🏗️ Setup
+## Setup
 
 ### 1. Register Service
 
-~~~csharp Program.cs
+```csharp Program.cs
 using Brine2D.Hosting;
 using Brine2D.Input;
 using Brine2D.UI;
@@ -161,13 +162,13 @@ builder.Services.AddSingleton<UICanvas>();
 
 var game = builder.Build();
 await game.RunAsync<MyScene>();
-~~~
+```
 
 ---
 
 ### 2. Inject Dependencies
 
-~~~csharp MyScene.cs
+```csharp MyScene.cs
 public class MyScene : Scene
 {
     private readonly IInputService _input;
@@ -186,13 +187,13 @@ public class MyScene : Scene
         _uiCanvas = uiCanvas;
     }
 }
-~~~
+```
 
 ---
 
 ### 3. Register Layers
 
-~~~csharp
+```csharp
 protected override void OnInitialize()
 {
     // Register UI layer (priority 1000)
@@ -201,13 +202,13 @@ protected override void OnInitialize()
     // Can register custom layers too
     // _layerManager.RegisterLayer(myCustomLayer);
 }
-~~~
+```
 
 ---
 
 ### 4. Process Input Every Frame
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     // IMPORTANT: Call this BEFORE checking input!
@@ -224,17 +225,17 @@ protected override void OnUpdate(GameTime gameTime)
         HandleGameKeyboardInput();
     }
 }
-~~~
+```
 
 ---
 
-## 🎛️ Input Layer Interface
+## Input Layer Interface
 
 ### IInputLayer
 
 Implement this interface to create custom layers:
 
-~~~csharp
+```csharp
 public interface IInputLayer
 {
     /// <summary>
@@ -255,7 +256,7 @@ public interface IInputLayer
     /// </summary>
     bool ProcessMouseInput(IInputService input);
 }
-~~~
+```
 
 ---
 
@@ -273,11 +274,11 @@ public interface IInputLayer
 
 ---
 
-## 🎯 Consumption Flags
+## Consumption Flags
 
 ### Check Consumption
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     _layerManager.ProcessInput();
@@ -299,7 +300,7 @@ protected override void OnUpdate(GameTime gameTime)
     // Safe to process game input
     HandleGameInput();
 }
-~~~
+```
 
 ---
 
@@ -318,11 +319,11 @@ protected override void OnUpdate(GameTime gameTime)
 
 ---
 
-## 🎮 Common Patterns
+## Common Patterns
 
 ### Pattern 1: Game with UI Overlay
 
-~~~csharp
+```csharp
 public class GameWithUIScene : Scene
 {
     private readonly IInputService _input;
@@ -376,13 +377,13 @@ public class GameWithUIScene : Scene
         }
     }
 }
-~~~
+```
 
 ---
 
 ### Pattern 2: Pause Menu
 
-~~~csharp
+```csharp
 public class PauseMenuLayer : IInputLayer
 {
     private readonly IInputService _input;
@@ -415,13 +416,13 @@ protected override void OnInitialize()
     var pauseLayer = new PauseMenuLayer(_input);
     _layerManager.RegisterLayer(pauseLayer);
 }
-~~~
+```
 
 ---
 
 ### Pattern 3: Console Overlay
 
-~~~csharp
+```csharp
 public class DebugConsoleLayer : IInputLayer
 {
     private bool _consoleOpen = false;
@@ -453,13 +454,13 @@ public class DebugConsoleLayer : IInputLayer
         return false;
     }
 }
-~~~
+```
 
 ---
 
 ### Pattern 4: Multiple UI Layers
 
-~~~csharp
+```csharp
 protected override void OnInitialize()
 {
     // Layer 1: Modal dialog (highest priority)
@@ -478,7 +479,7 @@ protected override void OnInitialize()
 // 1. Dialog (if active, blocks everything else)
 // 2. Main UI (if clicking buttons, blocks game)
 // 3. Game (only if neither dialog nor UI consumed input)
-~~~
+```
 
 ---
 
@@ -486,7 +487,7 @@ protected override void OnInitialize()
 
 ### Create Custom Layer
 
-~~~csharp CustomLayer.cs
+```csharp CustomLayer.cs
 using Brine2D.Input;
 using System.Numerics;
 
@@ -523,13 +524,13 @@ public class GameInputLayer : IInputLayer
         return false;
     }
 }
-~~~
+```
 
 ---
 
 ### Use Custom Layer
 
-~~~csharp
+```csharp
 protected override void OnInitialize()
 {
     // Create custom game layer
@@ -544,17 +545,17 @@ private void OnWorldClick(Vector2 position)
 {
     Logger.LogInformation("Clicked world at: {Pos}", position);
 }
-~~~
+```
 
 ---
 
-## 🎯 Advanced Techniques
+## Advanced Techniques
 
 ### Conditional Consumption
 
 Only consume input under certain conditions:
 
-~~~csharp
+```csharp
 public class ConditionalUILayer : IInputLayer
 {
     private readonly UICanvas _canvas;
@@ -589,7 +590,7 @@ public class ConditionalUILayer : IInputLayer
         return false; // Don't consume, game can handle
     }
 }
-~~~
+```
 
 ---
 
@@ -597,7 +598,7 @@ public class ConditionalUILayer : IInputLayer
 
 Change priority at runtime:
 
-~~~csharp
+```csharp
 public class DynamicPriorityLayer : IInputLayer
 {
     private int _priority = 0;
@@ -612,7 +613,7 @@ public class DynamicPriorityLayer : IInputLayer
     
     // ... ProcessInput methods ...
 }
-~~~
+```
 
 ---
 
@@ -620,7 +621,7 @@ public class DynamicPriorityLayer : IInputLayer
 
 Log all input through layers:
 
-~~~csharp
+```csharp
 public class InputRecorderLayer : IInputLayer
 {
     private readonly ILogger _logger;
@@ -643,11 +644,11 @@ public class InputRecorderLayer : IInputLayer
         return false; // Never consume
     }
 }
-~~~
+```
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Problem: Game Still Receives UI Clicks
 
@@ -656,7 +657,7 @@ public class InputRecorderLayer : IInputLayer
 **Solutions:**
 
 1. **Check ProcessInput is called**
-   ~~~csharp
+   ```csharp
    protected override void OnUpdate(GameTime gameTime)
    {
        // ❌ Forgot this!
@@ -670,10 +671,10 @@ public class InputRecorderLayer : IInputLayer
            HandleGameInput();
        }
    }
-   ~~~
+   ```
 
 2. **Check consumption flag**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - ignores consumption
    if (_input.IsMouseButtonPressed(MouseButton.Left))
    {
@@ -686,15 +687,15 @@ public class InputRecorderLayer : IInputLayer
    {
        SpawnUnit();
    }
-   ~~~
+   ```
 
 3. **Verify layer is registered**
-   ~~~csharp
+   ```csharp
    protected override void OnInitialize()
    {
        _layerManager.RegisterLayer(_uiCanvas); // Don't forget!
    }
-   ~~~
+   ```
 
 ---
 
@@ -704,7 +705,7 @@ public class InputRecorderLayer : IInputLayer
 
 **Solution:** Ensure UICanvas returns true when appropriate:
 
-~~~csharp
+```csharp
 // UICanvas.ProcessMouseInput should return true when:
 // - Hovering over button
 // - Clicking UI element
@@ -723,7 +724,7 @@ public bool ProcessMouseInput(IInputService input)
     
     return isInteractingWithUI; // TRUE = consume
 }
-~~~
+```
 
 ---
 
@@ -733,7 +734,7 @@ public bool ProcessMouseInput(IInputService input)
 
 **Solution:** UICanvas consumes ALL keyboard when focused:
 
-~~~csharp
+```csharp
 public bool ProcessKeyboardInput(IInputService input)
 {
     // If text input is focused, consume ALL keyboard
@@ -745,16 +746,16 @@ public bool ProcessKeyboardInput(IInputService input)
     
     return false;
 }
-~~~
+```
 
 ---
 
-## ✅ Best Practices
+## Best Practices
 
 ### DO
 
 1. **Always call ProcessInput first**
-   ~~~csharp
+   ```csharp
    protected override void OnUpdate(GameTime gameTime)
    {
        _layerManager.ProcessInput(); // First!
@@ -764,15 +765,15 @@ public bool ProcessKeyboardInput(IInputService input)
            // Game keyboard
        }
    }
-   ~~~
+   ```
 
 2. **Check consumption flags**
-   ~~~csharp
+   ```csharp
    if (!_layerManager.MouseConsumed)
    {
        HandleGameMouse();
    }
-   ~~~
+   ```
 
 3. **Use appropriate priorities**
    - Critical UI: 2000+
@@ -781,7 +782,7 @@ public bool ProcessKeyboardInput(IInputService input)
    - Background: -1000
 
 4. **Return true when consuming**
-   ~~~csharp
+   ```csharp
    public bool ProcessKeyboardInput(IInputService input)
    {
        if (ShouldBlockGameInput())
@@ -791,21 +792,21 @@ public bool ProcessKeyboardInput(IInputService input)
        
        return false; // Pass through
    }
-   ~~~
+   ```
 
 5. **Unregister layers when done**
-   ~~~csharp
+   ```csharp
    protected override Task OnUnloadAsync(CancellationToken ct)
    {
        _layerManager.UnregisterLayer(_myLayer);
        return Task.CompletedTask;
    }
-   ~~~
+   ```
 
 ### DON'T
 
 1. **Don't forget ProcessInput**
-   ~~~csharp
+   ```csharp
    // ❌ Bad
    protected override void OnUpdate(GameTime gameTime)
    {
@@ -813,10 +814,10 @@ public bool ProcessKeyboardInput(IInputService input)
        
        if (_input.IsKeyDown(Keys.W)) // Wrong!
    }
-   ~~~
+   ```
 
 2. **Don't check input before ProcessInput**
-   ~~~csharp
+   ```csharp
    // ❌ Bad order
    if (_input.IsMouseButtonPressed(MouseButton.Left)) // Too early!
        SpawnUnit();
@@ -829,10 +830,10 @@ public bool ProcessKeyboardInput(IInputService input)
    if (!_layerManager.MouseConsumed && 
        _input.IsMouseButtonPressed(MouseButton.Left))
        SpawnUnit();
-   ~~~
+   ```
 
 3. **Don't ignore consumption flags**
-   ~~~csharp
+   ```csharp
    // ❌ Bad
    if (_input.IsKeyDown(Keys.W))
        MovePlayer(); // Moves even when typing!
@@ -841,21 +842,21 @@ public bool ProcessKeyboardInput(IInputService input)
    if (!_layerManager.KeyboardConsumed && 
        _input.IsKeyDown(Keys.W))
        MovePlayer();
-   ~~~
+   ```
 
 4. **Don't hardcode priorities**
-   ~~~csharp
+   ```csharp
    // ❌ Bad
    public int Priority => 1237; // Magic number!
    
    // ✅ Good
    public const int UI_PRIORITY = 1000;
    public int Priority => UI_PRIORITY;
-   ~~~
+   ```
 
 ---
 
-## 📊 Summary
+## Summary
 
 | Concept | Purpose |
 |---------|---------|
@@ -874,7 +875,7 @@ public bool ProcessKeyboardInput(IInputService input)
 
 ---
 
-## 🔗 Next Steps
+## Next Steps
 
 - **[UI Components](../ui/buttons.md)** - Build interactive UI
 - **[Text Input](text-input.md)** - Handle text fields
@@ -883,4 +884,4 @@ public bool ProcessKeyboardInput(IInputService input)
 
 ---
 
-Ready to build UI? Check out [UI Components](../ui/buttons.md)! 🎛️✨
+Ready to build UI? Check out [UI Components](../ui/buttons.md)!

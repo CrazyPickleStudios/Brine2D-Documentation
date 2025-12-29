@@ -7,7 +7,7 @@ description: Handle keyboard input for player controls, shortcuts, and text entr
 
 Master keyboard input handling in Brine2D for player movement, menu navigation, shortcuts, and text entry.
 
-## 📖 Overview
+## Overview
 
 Brine2D provides a simple, frame-based keyboard input system via `IInputService`:
 - ✅ **Key down** - Is key currently held?
@@ -15,7 +15,7 @@ Brine2D provides a simple, frame-based keyboard input system via `IInputService`
 - ✅ **Key released** - Was key just released this frame?
 - ✅ **100+ keys** supported - Letters, numbers, F-keys, arrows, modifiers, etc.
 
-~~~mermaid
+```mermaid
 sequenceDiagram
     participant Game as Your Scene
     participant Input as IInputService
@@ -36,20 +36,20 @@ sequenceDiagram
     
     Game->>Input: IsKeyReleased(Keys.Space)?
     Input->>Game: true (frame of release)
-~~~
+```
 
 ---
 
-## 🎯 Prerequisites
+## Prerequisites
 
 - ✅ [Quick Start](../getting-started/quick-start.md) - Basic scene setup
 - ✅ [Scenes](../../concepts/scenes.md) - Understanding OnUpdate
 
 ---
 
-## 🚀 Quick Example
+## Quick Example
 
-~~~csharp KeyboardExample.cs
+```csharp KeyboardExample.cs
 using Brine2D.Core;
 using Brine2D.Input;
 using Brine2D.Rendering;
@@ -120,19 +120,19 @@ public class KeyboardScene : Scene
         _renderer.EndFrame();
     }
 }
-~~~
+```
 
 **Result:** Player moves with WASD, jumps with Space, exits with ESC! ⌨️
 
 ---
 
-## 🔑 Key States
+## Key States
 
 ### IsKeyDown - Continuous Input
 
 **Use for:** Movement, aiming, holding buttons
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     var deltaTime = (float)gameTime.DeltaTime;
@@ -143,7 +143,7 @@ protected override void OnUpdate(GameTime gameTime)
         _playerY -= _speed * deltaTime; // Move up continuously
     }
 }
-~~~
+```
 
 **Behavior:**
 - ✅ Returns `true` **every frame** while key is held
@@ -156,7 +156,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 **Use for:** Jumping, shooting, menu actions
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     // Returns TRUE only on first frame of press
@@ -170,7 +170,7 @@ protected override void OnUpdate(GameTime gameTime)
         FireWeapon(); // One shot per press
     }
 }
-~~~
+```
 
 **Behavior:**
 - ✅ Returns `true` **only on first frame** of press
@@ -183,7 +183,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 **Use for:** Charge attacks, button releases
 
-~~~csharp
+```csharp
 private bool _isCharging = false;
 private float _chargeTime = 0f;
 
@@ -214,7 +214,7 @@ protected override void OnUpdate(GameTime gameTime)
         }
     }
 }
-~~~
+```
 
 **Behavior:**
 - ✅ Returns `true` **on frame of release**
@@ -222,75 +222,75 @@ protected override void OnUpdate(GameTime gameTime)
 
 ---
 
-## 🗝️ Available Keys
+## Available Keys
 
 ### Letters (A-Z)
 
-~~~csharp
+```csharp
 Keys.A, Keys.B, Keys.C, ... Keys.Z
-~~~
+```
 
 **Example:**
 
-~~~csharp
+```csharp
 if (_input.IsKeyPressed(Keys.P))
 {
     TogglePause();
 }
-~~~
+```
 
 ---
 
 ### Numbers (0-9)
 
-~~~csharp
+```csharp
 Keys.D0, Keys.D1, Keys.D2, ... Keys.D9
-~~~
+```
 
 **Why `D` prefix?** C# enums can't start with numbers!
 
 **Example:**
 
-~~~csharp
+```csharp
 // Weapon selection
 if (_input.IsKeyPressed(Keys.D1)) SelectWeapon(1);
 if (_input.IsKeyPressed(Keys.D2)) SelectWeapon(2);
 if (_input.IsKeyPressed(Keys.D3)) SelectWeapon(3);
-~~~
+```
 
 ---
 
 ### Arrow Keys
 
-~~~csharp
+```csharp
 Keys.Up, Keys.Down, Keys.Left, Keys.Right
-~~~
+```
 
 **Example:**
 
-~~~csharp
+```csharp
 // Menu navigation
 if (_input.IsKeyPressed(Keys.Up)) SelectPreviousMenuItem();
 if (_input.IsKeyPressed(Keys.Down)) SelectNextMenuItem();
 if (_input.IsKeyPressed(Keys.Enter)) ActivateMenuItem();
-~~~
+```
 
 ---
 
 ### Function Keys (F1-F12)
 
-~~~csharp
+```csharp
 Keys.F1, Keys.F2, ... Keys.F12
-~~~
+```
 
 **Example:**
 
-~~~csharp
+```csharp
 // Debug shortcuts
 if (_input.IsKeyPressed(Keys.F1)) ToggleDebugOverlay();
 if (_input.IsKeyPressed(Keys.F5)) QuickSave();
 if (_input.IsKeyPressed(Keys.F9)) QuickLoad();
-~~~
+```
 
 ---
 
@@ -309,15 +309,15 @@ if (_input.IsKeyPressed(Keys.F9)) QuickLoad();
 
 ### Modifier Keys
 
-~~~csharp
+```csharp
 Keys.LeftShift, Keys.RightShift
 Keys.LeftControl, Keys.RightControl
 Keys.LeftAlt, Keys.RightAlt
-~~~
+```
 
 **Example:**
 
-~~~csharp
+```csharp
 // Sprint (hold Shift + W)
 if (_input.IsKeyDown(Keys.W))
 {
@@ -336,16 +336,16 @@ if (_input.IsKeyDown(Keys.LeftControl) && _input.IsKeyPressed(Keys.S))
 {
     SaveGame();
 }
-~~~
+```
 
 ---
 
 ### Numpad Keys
 
-~~~csharp
+```csharp
 Keys.Numpad0, Keys.Numpad1, ... Keys.Numpad9
 Keys.NumpadEnter, Keys.NumpadPlus, Keys.NumpadMinus
-~~~
+```
 
 ---
 
@@ -353,11 +353,11 @@ Keys.NumpadEnter, Keys.NumpadPlus, Keys.NumpadMinus
 
 ---
 
-## 🎮 Common Patterns
+## Common Patterns
 
 ### Pattern 1: WASD Movement
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     var deltaTime = (float)gameTime.DeltaTime;
@@ -374,13 +374,13 @@ protected override void OnUpdate(GameTime gameTime)
         _playerPosition += movement * _speed * deltaTime;
     }
 }
-~~~
+```
 
 ---
 
 ### Pattern 2: Arrow Key Menu Navigation
 
-~~~csharp
+```csharp
 private int _selectedIndex = 0;
 private readonly string[] _menuItems = ["New Game", "Load Game", "Options", "Exit"];
 
@@ -403,13 +403,13 @@ protected override void OnUpdate(GameTime gameTime)
         ActivateMenuItem(_selectedIndex);
     }
 }
-~~~
+```
 
 ---
 
 ### Pattern 3: Number Key Hotbar
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     // Check number keys 1-9
@@ -423,13 +423,13 @@ protected override void OnUpdate(GameTime gameTime)
         }
     }
 }
-~~~
+```
 
 ---
 
 ### Pattern 4: Toggle Key
 
-~~~csharp
+```csharp
 private bool _debugMode = false;
 
 protected override void OnUpdate(GameTime gameTime)
@@ -441,13 +441,13 @@ protected override void OnUpdate(GameTime gameTime)
         Logger.LogInformation("Debug mode: {Enabled}", _debugMode);
     }
 }
-~~~
+```
 
 ---
 
 ### Pattern 5: Combo Keys (Modifiers)
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     var ctrl = _input.IsKeyDown(Keys.LeftControl) || 
@@ -467,17 +467,17 @@ protected override void OnUpdate(GameTime gameTime)
         SaveDebugInfo();
     }
 }
-~~~
+```
 
 ---
 
-## 🎯 Advanced Techniques
+## Advanced Techniques
 
 ### Input Buffering
 
 Store recent inputs for combo systems:
 
-~~~csharp
+```csharp
 private readonly Queue<Keys> _inputBuffer = new();
 private const int BufferSize = 5;
 
@@ -515,7 +515,7 @@ private void CheckCombo()
         _inputBuffer.Clear();
     }
 }
-~~~
+```
 
 ---
 
@@ -523,7 +523,7 @@ private void CheckCombo()
 
 Allow players to customize controls:
 
-~~~csharp
+```csharp
 public class InputMapper
 {
     private readonly Dictionary<string, Keys> _bindings = new()
@@ -555,11 +555,11 @@ if (_inputMapper.IsActionPressed(_input, "Jump"))
 {
     Jump();
 }
-~~~
+```
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Problem: Key Not Detected
 
@@ -568,23 +568,23 @@ if (_inputMapper.IsActionPressed(_input, "Jump"))
 **Solutions:**
 
 1. **Check key name**
-   ~~~csharp
+   ```csharp
    // ❌ Wrong
    if (_input.IsKeyPressed(Keys.0)) // Compile error!
    
    // ✅ Correct
    if (_input.IsKeyPressed(Keys.D0)) // Number keys have 'D' prefix
-   ~~~
+   ```
 
 2. **Check input service is injected**
-   ~~~csharp
+   ```csharp
    // Constructor must inject IInputService
    public MyScene(IInputService input, ILogger<MyScene> logger) 
        : base(logger)
    {
        _input = input; // Don't forget to store!
    }
-   ~~~
+   ```
 
 ---
 
@@ -594,7 +594,7 @@ if (_inputMapper.IsActionPressed(_input, "Jump"))
 
 **Solution:** Use delta time for frame-rate independence:
 
-~~~csharp
+```csharp
 // ❌ Bad - frame-rate dependent
 if (_input.IsKeyDown(Keys.W))
 {
@@ -606,7 +606,7 @@ if (_input.IsKeyDown(Keys.W))
 {
     _playerY -= _speed * deltaTime; // Moves at constant real-world speed
 }
-~~~
+```
 
 ---
 
@@ -616,7 +616,7 @@ if (_input.IsKeyDown(Keys.W))
 
 **Solution:** Normalize movement vector:
 
-~~~csharp
+```csharp
 // ❌ Bad
 if (_input.IsKeyDown(Keys.W)) _playerY -= speed * dt;
 if (_input.IsKeyDown(Keys.D)) _playerX += speed * dt;
@@ -632,7 +632,7 @@ if (movement != Vector2.Zero)
     movement = Vector2.Normalize(movement); // Length = 1
     _playerPosition += movement * speed * dt;
 }
-~~~
+```
 
 ---
 
@@ -644,73 +644,73 @@ if (movement != Vector2.Zero)
 
 ---
 
-## ✅ Best Practices
+## Best Practices
 
 ### DO
 
 1. **Use `IsKeyPressed` for discrete actions**
-   ~~~csharp
+   ```csharp
    if (_input.IsKeyPressed(Keys.Space)) Jump();
-   ~~~
+   ```
 
 2. **Use `IsKeyDown` for continuous actions**
-   ~~~csharp
+   ```csharp
    if (_input.IsKeyDown(Keys.W)) MoveForward(deltaTime);
-   ~~~
+   ```
 
 3. **Always use delta time for movement**
-   ~~~csharp
+   ```csharp
    position += velocity * deltaTime;
-   ~~~
+   ```
 
 4. **Normalize movement vectors**
-   ~~~csharp
+   ```csharp
    if (movement != Vector2.Zero)
        movement = Vector2.Normalize(movement);
-   ~~~
+   ```
 
 5. **Provide key rebinding**
    - Let players customize controls
    - Store in config file
 
 6. **Support multiple keys for same action**
-   ~~~csharp
+   ```csharp
    bool jump = _input.IsKeyPressed(Keys.Space) || 
                _input.IsKeyPressed(Keys.W);
-   ~~~
+   ```
 
 ### DON'T
 
 1. **Don't poll input outside OnUpdate**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - won't update!
    protected override void OnInitialize()
    {
        if (_input.IsKeyDown(Keys.W)) // Never true here!
    }
-   ~~~
+   ```
 
 2. **Don't forget delta time**
-   ~~~csharp
+   ```csharp
    // ❌ Bad
    _playerX += 5; // Frame-rate dependent!
    
    // ✅ Good
    _playerX += _speed * deltaTime;
-   ~~~
+   ```
 
 3. **Don't check IsKeyPressed in loops**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - only true once per frame!
    while (gameRunning)
    {
        if (_input.IsKeyPressed(Keys.Space)) // Won't work!
    }
-   ~~~
+   ```
 
 ---
 
-## 📊 Summary
+## Summary
 
 | Method | When True | Use For |
 |--------|-----------|---------|
@@ -720,7 +720,7 @@ if (movement != Vector2.Zero)
 
 ---
 
-## 🔗 Next Steps
+## Next Steps
 
 - **[Mouse Input](mouse.md)** - Handle clicks and cursor
 - **[Gamepad Support](gamepad.md)** - Add controller support
@@ -729,4 +729,4 @@ if (movement != Vector2.Zero)
 
 ---
 
-Ready to add mouse support? Check out [Mouse Input](mouse.md)! 🖱️
+Ready to add mouse support? Check out [Mouse Input](mouse.md)!

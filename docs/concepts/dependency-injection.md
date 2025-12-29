@@ -616,7 +616,7 @@ public class GameSceneTests
 
 ## Best Practices
 
-### ✅ DO
+### DO
 
 1. **Inject interfaces, not implementations**
    ```csharp
@@ -643,7 +643,7 @@ public class GameSceneTests
    private readonly IRenderer _renderer; // ✅ Good
    ```
 
-### ❌ DON'T
+### DON'T
 
 1. **Don't create dependencies manually**
    ```csharp
@@ -799,4 +799,4 @@ services.AddScoped<CollisionSystem>();    // ✅ Correct
 
 ---
 
-Ready to build your own services? Start with [Builder Pattern](builder-pattern.md)! 🚀
+Ready to build your own services? Start with [Builder Pattern](builder-pattern.md)!

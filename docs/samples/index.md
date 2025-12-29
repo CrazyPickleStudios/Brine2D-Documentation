@@ -426,4 +426,4 @@ cd Brine2D/samples/BasicGame
 dotnet run
 ```
 
-Happy coding! 🎮
+Happy coding!

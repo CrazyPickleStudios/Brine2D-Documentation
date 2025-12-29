@@ -564,15 +564,15 @@ builder.Services.AddSDL3Rendering(options =>
 
 ## Best Practices
 
-### ✅ **DO: Use JSON for User-Configurable Settings**
+### **DO: Use JSON for User-Configurable Settings**
 
 Settings players might want to change (resolution, volume, graphics quality) should be in JSON.
 
-### ✅ **DO: Use Code for Developer Settings**
+### **DO: Use Code for Developer Settings**
 
 Settings developers control (debug flags, profiling) can be in code.
 
-### ✅ **DO: Validate Configuration**
+### **DO: Validate Configuration**
 
 ```csharp
 builder.Services.AddSDL3Rendering(options =>
@@ -587,15 +587,15 @@ builder.Services.AddSDL3Rendering(options =>
 });
 ```
 
-### ✅ **DO: Use Strongly-Typed Options**
+### **DO: Use Strongly-Typed Options**
 
 Avoid magic strings—create option classes for your settings.
 
-### ❌ **DON'T: Hardcode Secrets**
+### **DON'T: Hardcode Secrets**
 
 Never put API keys, passwords, or tokens in `gamesettings.json` that gets committed to Git. Use **User Secrets** or environment variables.
 
-### ❌ **DON'T: Reload Configuration Mid-Frame**
+### **DON'T: Reload Configuration Mid-Frame**
 
 If you need to apply new settings (like resolution), do it between scenes, not during rendering.
 
@@ -670,4 +670,4 @@ await game.RunAsync<GameScene>();
 
 ---
 
-Configuration in Brine2D works exactly like ASP.NET—if you know one, you know the other! 🎯
+Configuration in Brine2D works exactly like ASP.NET—if you know one, you know the other!

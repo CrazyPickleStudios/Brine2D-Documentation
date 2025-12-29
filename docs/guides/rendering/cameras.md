@@ -7,7 +7,7 @@ description: Create smooth camera movement, zooming, and following with Brine2D
 
 Learn how to implement camera movement, zoom, rotation, and player following to create dynamic 2D worlds.
 
-## 📖 Overview
+## Overview
 
 A **camera** in 2D games defines what portion of the game world is visible on screen. Think of it like a virtual viewport that can:
 - ✅ **Move** - Pan around the world
@@ -40,7 +40,7 @@ graph TD
 
 ---
 
-## 🎯 Prerequisites
+## Prerequisites
 
 - ✅ [Quick Start](../getting-started/quick-start.md) - Basic scene setup
 - ✅ [Drawing Basics](drawing-basics.md) - Understand rendering
@@ -48,7 +48,7 @@ graph TD
 
 ---
 
-## 🚀 Quick Example
+## Quick Example
 
 ### Minimal Camera Setup
 
@@ -104,7 +104,7 @@ public class CameraScene : Scene
 
 ---
 
-## 🎬 Concept: World Space vs Screen Space
+## Concept: World Space vs Screen Space
 
 ### Without Camera (Screen Space)
 
@@ -139,7 +139,7 @@ World Space (large):           Screen Space (viewport):
 
 ---
 
-## 📦 Camera Basics
+## Camera Basics
 
 ### Create a Camera
 
@@ -177,7 +177,7 @@ protected override void OnInitialize()
 
 ---
 
-## 🎮 Camera Movement
+## Camera Movement
 
 ### Manual Movement (Arrow Keys)
 
@@ -236,7 +236,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 ---
 
-## 🔍 Zoom Control
+## Zoom Control
 
 ### Basic Zoom
 
@@ -314,7 +314,7 @@ private void SetZoom(ZoomLevel level)
 
 ---
 
-## 🗺️ World Bounds
+## World Bounds
 
 Prevent camera from showing outside the world:
 
@@ -356,7 +356,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 ---
 
-## 🎯 Following Patterns
+## Following Patterns
 
 ### Pattern 1: Direct Follow (No Smoothing)
 
@@ -459,7 +459,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 ---
 
-## 🎨 Complete Camera Example
+## Complete Camera Example
 
 Here's a full scene with all camera features:
 
@@ -652,7 +652,7 @@ public static class MathHelper
 
 ---
 
-## 🌟 Advanced Techniques
+## Advanced Techniques
 
 ### Camera Shake
 
@@ -762,7 +762,7 @@ protected override void OnRender(GameTime gameTime)
 
 ---
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Problem: Camera Jitters
 
@@ -824,7 +824,7 @@ protected override void OnRender(GameTime gameTime)
 
 ---
 
-## ✅ Best Practices
+## Best Practices
 
 ### DO
 
@@ -875,7 +875,7 @@ protected override void OnRender(GameTime gameTime)
 
 ---
 
-## 📊 Performance Tips
+## Performance Tips
 
 1. **Culling** - Only render visible objects:
    ```csharp
@@ -898,7 +898,7 @@ protected override void OnRender(GameTime gameTime)
 
 ---
 
-## 🎓 Summary
+## Summary
 
 | Feature | Code | Use Case |
 |---------|------|----------|
@@ -913,7 +913,7 @@ protected override void OnRender(GameTime gameTime)
 
 ---
 
-## 🔗 Next Steps
+## Next Steps
 
 - **[Animation](animation.md)** - Animate camera movements
 - **[Tilemaps](../tilemaps/rendering.md)** - Optimize large world rendering
@@ -922,4 +922,4 @@ protected override void OnRender(GameTime gameTime)
 
 ---
 
-Ready to add more? Try [Camera Shake and Effects](camera-effects.md)! 📹✨
+Ready to add more? Try [Camera Shake and Effects](camera-effects.md)!
