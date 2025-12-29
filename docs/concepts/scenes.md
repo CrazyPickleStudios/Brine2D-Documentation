@@ -19,7 +19,7 @@ A scene represents a distinct state or screen in your game. Common examples:
 | `GameOverScene` | End game screen |
 | `LoadingScene` | Asset loading screen |
 
-~~~mermaid
+```mermaid
 stateDiagram-v2
     [*] --> MenuScene: Game Start
     MenuScene --> GameScene: Play Button
@@ -49,7 +49,7 @@ stateDiagram-v2
     class GameScene gameStyle
     class PauseScene pauseStyle
     class GameOverScene endStyle
-~~~
+```
 
 ---
 
@@ -57,7 +57,7 @@ stateDiagram-v2
 
 Every scene goes through a **5-phase lifecycle**:
 
-~~~mermaid
+```mermaid
 sequenceDiagram
     participant SM as SceneManager
     participant S as Scene
@@ -93,13 +93,13 @@ sequenceDiagram
     S->>SM: Task completed
     
     Note over DI: Scene instance disposed
-~~~
+```
 
 ### Phase 1: Constructor (Dependency Injection)
 
 **Purpose:** Receive dependencies via constructor injection
 
-~~~csharp
+```csharp
 public class GameScene : Scene
 {
     private readonly IRenderer _renderer;
@@ -119,7 +119,7 @@ public class GameScene : Scene
         _gameContext = gameContext;
     }
 }
-~~~
+```
 
 **✅ DO:** Store dependencies in readonly fields  
 **❌ DON'T:** Initialize game state here (use `OnInitialize` instead)
@@ -130,7 +130,7 @@ public class GameScene : Scene
 
 **Purpose:** Set up initial scene state (synchronous)
 
-~~~csharp
+```csharp
 protected override void OnInitialize()
 {
     Logger.LogInformation("Game scene initialized!");
@@ -146,7 +146,7 @@ protected override void OnInitialize()
     // Register collision shapes
     _collisionSystem.AddShape(_playerCollider);
 }
-~~~
+```
 
 **When:** Called once when scene is created  
 **Use for:** 
@@ -162,7 +162,7 @@ protected override void OnInitialize()
 
 **Purpose:** Load assets and resources asynchronously
 
-~~~csharp
+```csharp
 protected override async Task OnLoadAsync(CancellationToken cancellationToken)
 {
     Logger.LogInformation("Loading assets...");
@@ -188,7 +188,7 @@ protected override async Task OnLoadAsync(CancellationToken cancellationToken)
     
     Logger.LogInformation("Assets loaded!");
 }
-~~~
+```
 
 **When:** Called once after `Initialize`  
 **Use for:**
@@ -201,7 +201,7 @@ protected override async Task OnLoadAsync(CancellationToken cancellationToken)
 **✅ DO:** Use `cancellationToken` for long operations  
 **✅ DO:** Load assets in parallel when possible
 
-~~~csharp
+```csharp
 // Parallel loading
 var loadTasks = new[]
 {
@@ -211,7 +211,7 @@ var loadTasks = new[]
 };
 
 await Task.WhenAll(loadTasks);
-~~~
+```
 
 ---
 
@@ -219,7 +219,7 @@ await Task.WhenAll(loadTasks);
 
 **Purpose:** Update game logic
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     var deltaTime = (float)gameTime.DeltaTime;
@@ -255,7 +255,7 @@ protected override void OnUpdate(GameTime gameTime)
     // Check collisions
     CheckCollisions();
 }
-~~~
+```
 
 **When:** Called every frame (~60 times per second)  
 **Use for:**
@@ -273,7 +273,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 **Purpose:** Draw graphics to screen
 
-~~~csharp
+```csharp
 protected override void OnRender(GameTime gameTime)
 {
     _renderer.Clear(new Color(40, 40, 40));
@@ -303,7 +303,7 @@ private void DrawPlayer()
             _playerPosition.Y);
     }
 }
-~~~
+```
 
 **When:** Called every frame after `Update`  
 **Use for:**
@@ -319,7 +319,7 @@ private void DrawPlayer()
 
 **Purpose:** Clean up resources
 
-~~~csharp
+```csharp
 protected override Task OnUnloadAsync(CancellationToken cancellationToken)
 {
     Logger.LogInformation("Unloading scene...");
@@ -344,7 +344,7 @@ protected override Task OnUnloadAsync(CancellationToken cancellationToken)
     Logger.LogInformation("Scene unloaded");
     return Task.CompletedTask;
 }
-~~~
+```
 
 **When:** Called when switching to another scene  
 **Use for:**
@@ -361,7 +361,7 @@ protected override Task OnUnloadAsync(CancellationToken cancellationToken)
 
 ### Step 1: Register Scene
 
-~~~csharp Program.cs
+```csharp Program.cs
 var builder = GameApplication.CreateBuilder(args);
 
 // Register scenes
@@ -371,7 +371,7 @@ builder.Services.AddScene<PauseScene>();
 builder.Services.AddScene<GameOverScene>();
 
 var game = builder.Build();
-~~~
+```
 
 **What it does:**
 - Registers scene as **transient** (new instance each time)
@@ -381,10 +381,10 @@ var game = builder.Build();
 
 ### Step 2: Set Initial Scene
 
-~~~csharp
+```csharp
 // Run with MenuScene as starting scene
 await game.RunAsync<MenuScene>();
-~~~
+```
 
 ---
 
@@ -392,7 +392,7 @@ await game.RunAsync<MenuScene>();
 
 ### Method 1: Via SceneManager (Injected)
 
-~~~csharp
+```csharp
 public class MenuScene : Scene
 {
     private readonly ISceneManager _sceneManager;
@@ -414,13 +414,13 @@ public class MenuScene : Scene
         }
     }
 }
-~~~
+```
 
 ---
 
 ### Method 2: Via Game Context (Common Pattern)
 
-~~~csharp
+```csharp
 public class GameScene : Scene
 {
     private readonly IGameContext _gameContext;
@@ -434,7 +434,7 @@ public class GameScene : Scene
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -442,7 +442,7 @@ public class GameScene : Scene
 
 Here's a full scene with all lifecycle phases:
 
-~~~csharp GameScene.cs
+```csharp GameScene.cs
 using Brine2D.Core;
 using Brine2D.Input;
 using Brine2D.Rendering;
@@ -567,7 +567,7 @@ public class GameScene : Scene
         return Task.CompletedTask;
     }
 }
-~~~
+```
 
 ---
 
@@ -575,7 +575,7 @@ public class GameScene : Scene
 
 The `SceneManager` orchestrates scene lifecycle:
 
-~~~csharp
+```csharp
 public interface ISceneManager
 {
     IScene? CurrentScene { get; }
@@ -586,7 +586,7 @@ public interface ISceneManager
     void Update(GameTime gameTime);
     void Render(GameTime gameTime);
 }
-~~~
+```
 
 **What it does:**
 1. ✅ Resolves scene from DI
@@ -601,79 +601,79 @@ public interface ISceneManager
 ### ✅ DO
 
 1. **Use dependency injection**
-   ~~~csharp
+   ```csharp
    public GameScene(IRenderer renderer, ...) : base(logger)
-   ~~~
+   ```
 
 2. **Initialize in `OnInitialize`**
-   ~~~csharp
+   ```csharp
    protected override void OnInitialize()
    {
        _player = new Player();
    }
-   ~~~
+   ```
 
 3. **Load assets in `OnLoadAsync`**
-   ~~~csharp
+   ```csharp
    protected override async Task OnLoadAsync(CancellationToken ct)
    {
        _texture = await _textureLoader.LoadTextureAsync(..., ct);
    }
-   ~~~
+   ```
 
 4. **Use delta time in `OnUpdate`**
-   ~~~csharp
+   ```csharp
    position += velocity * speed * deltaTime;
-   ~~~
+   ```
 
 5. **Separate logic from rendering**
    - Update: game logic only
    - Render: drawing only
 
 6. **Clean up in `OnUnloadAsync`**
-   ~~~csharp
+   ```csharp
    protected override Task OnUnloadAsync(CancellationToken ct)
    {
        _textureLoader.UnloadTexture(_texture);
        return Task.CompletedTask;
    }
-   ~~~
+   ```
 
 ### ❌ DON'T
 
 1. **Don't load assets in constructor**
-   ~~~csharp
+   ```csharp
    // ❌ Bad
    public GameScene(...)
    {
        _texture = LoadTexture(); // Synchronous!
    }
-   ~~~
+   ```
 
 2. **Don't update logic in `OnRender`**
-   ~~~csharp
+   ```csharp
    // ❌ Bad
    protected override void OnRender(GameTime gt)
    {
        _player.Update(); // Wrong place!
    }
-   ~~~
+   ```
 
 3. **Don't use fixed values**
-   ~~~csharp
+   ```csharp
    // ❌ Bad
    position += velocity; // Frame-rate dependent!
-   ~~~
+   ```
 
 4. **Don't forget to unload**
-   ~~~csharp
+   ```csharp
    // ❌ Memory leak!
    protected override Task OnUnloadAsync(CancellationToken ct)
    {
        // Forgot to unload _texture!
        return Task.CompletedTask;
    }
-   ~~~
+   ```
 
 ---
 
@@ -681,7 +681,7 @@ public interface ISceneManager
 
 ### Shared State Between Scenes
 
-~~~csharp
+```csharp
 // Create a shared service
 public class GameState
 {
@@ -707,13 +707,13 @@ public class GameScene : Scene
         _gameState.PlayerScore += points;
     }
 }
-~~~
+```
 
 ---
 
 ### Scene Data Transfer
 
-~~~csharp
+```csharp
 // Option 1: Via shared service
 public class SceneTransitionData
 {
@@ -735,7 +735,7 @@ public static class SceneManagerExtensions
         // Implementation specific to your needs
     }
 }
-~~~
+```
 
 ---
 
@@ -747,14 +747,14 @@ public static class SceneManagerExtensions
 
 **Solutions:**
 1. Check scene is registered:
-   ~~~csharp
+   ```csharp
    builder.Services.AddScene<GameScene>();
-   ~~~
+   ```
 
 2. Check `RunAsync` has correct type:
-   ~~~csharp
+   ```csharp
    await game.RunAsync<GameScene>(); // ✅ Correct
-   ~~~
+   ```
 
 ---
 
@@ -763,14 +763,14 @@ public static class SceneManagerExtensions
 **Symptom:** Memory usage keeps growing
 
 **Solution:** Always unload in `OnUnloadAsync`:
-~~~csharp
+```csharp
 protected override Task OnUnloadAsync(CancellationToken ct)
 {
     _textureLoader.UnloadTexture(_texture);
     _audio.UnloadMusic(_music);
     return Task.CompletedTask;
 }
-~~~
+```
 
 ---
 

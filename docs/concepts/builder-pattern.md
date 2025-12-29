@@ -9,7 +9,7 @@ The **Builder Pattern** in Brine2D provides a fluent, ASP.NET-style API for conf
 
 ## Overview
 
-~~~mermaid
+```mermaid
 graph LR
     A["GameApplication.CreateBuilder()"] --> B["GameApplicationBuilder"]
     B --> C["Configure Services"]
@@ -29,7 +29,7 @@ style E fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
 style F fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
 style G fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
 style H fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
-~~~
+```
 
 ---
 
@@ -37,7 +37,7 @@ style H fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
 
 ### Minimal Setup
 
-~~~csharp Program.cs
+```csharp Program.cs
 using Brine2D.Hosting;
 
 // Step 1: Create builder
@@ -53,7 +53,7 @@ var game = builder.Build();
 
 // Step 4: Run
 await game.RunAsync<GameScene>();
-~~~
+```
 
 **That's it!** Four simple steps to a working game. 🎮
 
@@ -65,7 +65,7 @@ The builder wraps `HostApplicationBuilder` (from `Microsoft.Extensions.Hosting`)
 
 ### Constructor (Internal)
 
-~~~csharp
+```csharp
 internal GameApplicationBuilder(string[] args)
 {
     _hostBuilder = Host.CreateApplicationBuilder(args);
@@ -81,7 +81,7 @@ internal GameApplicationBuilder(string[] args)
     Logging.AddConsole();
     Logging.SetMinimumLevel(LogLevel.Information);
 }
-~~~
+```
 
 **What it does:**
 1. ✅ Loads `gamesettings.json` automatically
@@ -97,13 +97,13 @@ internal GameApplicationBuilder(string[] args)
 
 **Purpose:** Register services for dependency injection
 
-~~~csharp
+```csharp
 public IServiceCollection Services => _hostBuilder.Services;
-~~~
+```
 
 **Usage:**
 
-~~~csharp
+```csharp
 // Register singleton services
 builder.Services.AddSDL3Rendering();
 builder.Services.AddSDL3Input();
@@ -116,7 +116,7 @@ builder.Services.AddUICanvas();
 // Register transient services (scenes)
 builder.Services.AddScene<MenuScene>();
 builder.Services.AddScene<GameScene>();
-~~~
+```
 
 **See also:** [Dependency Injection](dependency-injection.md)
 
@@ -126,13 +126,13 @@ builder.Services.AddScene<GameScene>();
 
 **Purpose:** Access configuration from JSON files, environment variables, command-line args
 
-~~~csharp
+```csharp
 public ConfigurationManager Configuration => _hostBuilder.Configuration;
-~~~
+```
 
 **Usage:**
 
-~~~csharp
+```csharp
 // Read configuration values
 var windowTitle = builder.Configuration["Rendering:WindowTitle"];
 var windowWidth = builder.Configuration.GetValue<int>("Rendering:WindowWidth");
@@ -144,7 +144,7 @@ builder.Services.Configure<RenderingOptions>(
 // Add custom configuration sources
 builder.Configuration.AddJsonFile("custom-settings.json");
 builder.Configuration.AddEnvironmentVariables("MYGAME_");
-~~~
+```
 
 **Configuration hierarchy:**
 1. `gamesettings.json` (base settings)
@@ -158,13 +158,13 @@ builder.Configuration.AddEnvironmentVariables("MYGAME_");
 
 **Purpose:** Configure logging providers and levels
 
-~~~csharp
+```csharp
 public ILoggingBuilder Logging => _hostBuilder.Logging;
-~~~
+```
 
 **Usage:**
 
-~~~csharp
+```csharp
 // Set minimum log level
 builder.Logging.SetMinimumLevel(LogLevel.Debug);
 
@@ -178,7 +178,7 @@ builder.Logging.AddDebug();
 // Filter by category
 builder.Logging.AddFilter("Brine2D", LogLevel.Trace);
 builder.Logging.AddFilter("Microsoft", LogLevel.Warning);
-~~~
+```
 
 **Log levels:**
 
@@ -197,13 +197,13 @@ builder.Logging.AddFilter("Microsoft", LogLevel.Warning);
 
 **Purpose:** Detect runtime environment (Development, Production, etc.)
 
-~~~csharp
+```csharp
 public IHostEnvironment Environment => _hostBuilder.Environment;
-~~~
+```
 
 **Usage:**
 
-~~~csharp
+```csharp
 if (builder.Environment.IsDevelopment())
 {
     // Enable debug features
@@ -219,11 +219,11 @@ if (builder.Environment.IsProduction())
 
 // Get environment name
 var envName = builder.Environment.EnvironmentName; // "Development", "Production", etc.
-~~~
+```
 
 **Set environment:**
 
-~~~bash
+```bash
 # Command line
 DOTNET_ENVIRONMENT=Development dotnet run
 
@@ -231,7 +231,7 @@ DOTNET_ENVIRONMENT=Development dotnet run
 "environmentVariables": {
   "DOTNET_ENVIRONMENT": "Development"
 }
-~~~
+```
 
 ---
 
@@ -239,13 +239,13 @@ DOTNET_ENVIRONMENT=Development dotnet run
 
 **Purpose:** Creates the final `GameApplication` instance
 
-~~~csharp
+```csharp
 public GameApplication Build()
 {
     var host = _hostBuilder.Build();
     return new GameApplication(host);
 }
-~~~
+```
 
 **What it does:**
 1. Finalizes service registrations
@@ -255,12 +255,12 @@ public GameApplication Build()
 
 **After `Build()`, you cannot modify the builder!**
 
-~~~csharp
+```csharp
 var game = builder.Build();
 
 // ❌ Too late! Container is sealed
 builder.Services.AddScene<NewScene>(); // Throws exception
-~~~
+```
 
 ---
 
@@ -268,7 +268,7 @@ builder.Services.AddScene<NewScene>(); // Throws exception
 
 ### Pattern 1: Service Registration
 
-~~~csharp
+```csharp
 var builder = GameApplication.CreateBuilder(args);
 
 // Chain service registrations
@@ -294,13 +294,13 @@ builder.Services.AddUICanvas();
 builder.Services.AddScene<MenuScene>();
 builder.Services.AddScene<GameScene>();
 builder.Services.AddScene<PauseScene>();
-~~~
+```
 
 ---
 
 ### Pattern 2: Configuration Binding
 
-~~~csharp
+```csharp
 // gamesettings.json
 {
   "Rendering": {
@@ -321,13 +321,13 @@ builder.Services.AddSDL3Rendering(options =>
     // Override specific values
     options.WindowTitle = "My Awesome Game"; // Overrides JSON value
 });
-~~~
+```
 
 ---
 
 ### Pattern 3: Environment-Specific Configuration
 
-~~~csharp
+```csharp
 var builder = GameApplication.CreateBuilder(args);
 
 if (builder.Environment.IsDevelopment())
@@ -351,17 +351,17 @@ else
     // Disable debug features
     builder.Services.Configure<RenderingOptions>(o => o.VSync = true);
 }
-~~~
+```
 
 **File structure:**
 
-~~~
+```
 MyGame/
 ├── gamesettings.json                 # Base config (all environments)
 ├── gamesettings.Development.json     # Dev overrides
 ├── gamesettings.Production.json      # Prod overrides
 └── Program.cs
-~~~
+```
 
 ---
 
@@ -369,7 +369,7 @@ MyGame/
 
 Create your own fluent API:
 
-~~~csharp
+```csharp
 // MyGameExtensions.cs
 public static class MyGameExtensions
 {
@@ -404,7 +404,7 @@ builder.Services.AddScene<GameScene>();
 
 var game = builder.Build();
 await game.RunAsync<GameScene>();
-~~~
+```
 
 ---
 
@@ -412,7 +412,7 @@ await game.RunAsync<GameScene>();
 
 Here's a real-world configuration:
 
-~~~csharp Program.cs
+```csharp Program.cs
 using Brine2D.Audio.SDL;
 using Brine2D.Core.Collision;
 using Brine2D.Core.Tilemap;
@@ -497,9 +497,9 @@ var game = builder.Build();
 // STEP 5: Run
 // ========================================
 await game.RunAsync<MenuScene>();
-~~~
+```
 
-~~~json gamesettings.json
+```json gamesettings.json
 {
   "Logging": {
     "LogLevel": {
@@ -523,7 +523,7 @@ await game.RunAsync<MenuScene>();
     "SoundVolume": 1.0
   }
 }
-~~~
+```
 
 ---
 
@@ -548,7 +548,7 @@ await game.RunAsync<MenuScene>();
 
 ### Custom Configuration Sources
 
-~~~csharp
+```csharp
 builder.Configuration.AddJsonFile("levels.json");
 builder.Configuration.AddXmlFile("achievements.xml");
 builder.Configuration.AddIniFile("controls.ini");
@@ -559,7 +559,7 @@ builder.Configuration.AddEnvironmentVariables("MYGAME_");
 // Command-line arguments
 // Example: dotnet run --WindowWidth=1920 --WindowHeight=1080
 builder.Configuration.AddCommandLine(args);
-~~~
+```
 
 **Priority** (highest to lowest):
 1. Command-line arguments
@@ -570,19 +570,19 @@ builder.Configuration.AddCommandLine(args);
 
 ### Multiple Configuration Files
 
-~~~csharp
+```csharp
 builder.Configuration
     .AddJsonFile("gamesettings.json", optional: false, reloadOnChange: true)
     .AddJsonFile($"gamesettings.{builder.Environment.EnvironmentName}.json", optional: true, reloadOnChange: true)
     .AddJsonFile("player-prefs.json", optional: true, reloadOnChange: true)
     .AddJsonFile("achievements.json", optional: true, reloadOnChange: true);
-~~~
+```
 
 ---
 
 ### Conditional Service Registration
 
-~~~csharp
+```csharp
 // Platform-specific services
 if (OperatingSystem.IsWindows())
 {
@@ -603,7 +603,7 @@ else
 {
     builder.Services.AddSDL3LegacyRendering();
 }
-~~~
+```
 
 ---
 
@@ -611,7 +611,7 @@ else
 
 Validate configuration at startup:
 
-~~~csharp
+```csharp
 var renderingOptions = new RenderingOptions();
 builder.Configuration.GetSection("Rendering").Bind(renderingOptions);
 
@@ -620,7 +620,7 @@ if (renderingOptions.WindowWidth < 640)
 
 if (renderingOptions.WindowHeight < 480)
     throw new InvalidOperationException("Window height must be at least 480");
-~~~
+```
 
 ---
 
@@ -629,54 +629,54 @@ if (renderingOptions.WindowHeight < 480)
 ### ✅ DO
 
 1. **Use environment-specific configs**
-   ~~~csharp
+   ```csharp
    gamesettings.Development.json
    gamesettings.Production.json
-   ~~~
+   ```
 
 2. **Group related services in extension methods**
-   ~~~csharp
+   ```csharp
    builder.Services.AddMyGameSystems(builder.Configuration);
-   ~~~
+   ```
 
 3. **Bind configuration to options classes**
-   ~~~csharp
+   ```csharp
    builder.Services.Configure<RenderingOptions>(
        builder.Configuration.GetSection("Rendering"));
-   ~~~
+   ```
 
 4. **Use fluent API for readability**
-   ~~~csharp
+   ```csharp
    builder.Services
        .AddInputLayerManager()
        .AddSDL3Input();
-   ~~~
+   ```
 
 ### ❌ DON'T
 
 1. **Don't modify builder after Build()**
-   ~~~csharp
+   ```csharp
    var game = builder.Build();
    builder.Services.AddScene<NewScene>(); // ❌ Throws!
-   ~~~
+   ```
 
 2. **Don't register services in scenes**
-   ~~~csharp
+   ```csharp
    // ❌ Wrong place!
    protected override void OnInitialize()
    {
        builder.Services.AddSingleton<IService, Service>();
    }
-   ~~~
+   ```
 
 3. **Don't hard-code configuration**
-   ~~~csharp
+   ```csharp
    // ❌ Bad
    options.WindowWidth = 1280;
    
    // ✅ Good
    builder.Configuration.GetSection("Rendering").Bind(options);
-   ~~~
+   ```
 
 ---
 
@@ -684,16 +684,16 @@ if (renderingOptions.WindowHeight < 480)
 
 ### "Service not found" error
 
-~~~
+```
 System.InvalidOperationException: No service for type 'IRenderer' has been registered.
-~~~
+```
 
 **Solution:** Register the service before `Build()`:
 
-~~~csharp
+```csharp
 builder.Services.AddSDL3Rendering(); // Must be before Build()
 var game = builder.Build();
-~~~
+```
 
 ---
 
@@ -703,13 +703,13 @@ var game = builder.Build();
 
 **Solution:** Ensure it's copied to output:
 
-~~~xml
+```xml
 <ItemGroup>
   <None Update="gamesettings.json">
     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
   </None>
 </ItemGroup>
-~~~
+```
 
 ---
 
@@ -719,7 +719,7 @@ var game = builder.Build();
 
 **Solution:** Set `DOTNET_ENVIRONMENT` variable:
 
-~~~bash
+```bash
 # PowerShell
 $env:DOTNET_ENVIRONMENT="Development"
 
@@ -730,7 +730,7 @@ export DOTNET_ENVIRONMENT=Development
 "environmentVariables": {
   "DOTNET_ENVIRONMENT": "Development"
 }
-~~~
+```
 
 ---
 

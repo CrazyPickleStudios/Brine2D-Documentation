@@ -9,7 +9,7 @@ The **game loop** is the heart of every game engine. It's the endless cycle that
 
 ## Game Loop Overview
 
-~~~mermaid
+```mermaid
 sequenceDiagram
     participant GL as GameLoop
     participant IN as InputService
@@ -44,7 +44,7 @@ sequenceDiagram
         GL->>GL: Frame Limiting
         Note over GL: Sleep + SpinWait for precision
     end
-~~~
+```
 
 ---
 
@@ -54,7 +54,7 @@ sequenceDiagram
 
 **Purpose:** Poll hardware devices and prepare input state
 
-~~~csharp
+```csharp
 // Update input (polls SDL events)
 _inputService.Update();
 
@@ -66,7 +66,7 @@ if (_inputService.IsQuitRequested)
 {
     _gameContext.RequestExit();
 }
-~~~
+```
 
 **What happens:**
 1. SDL events are polled (keyboard, mouse, gamepad, window events)
@@ -79,18 +79,18 @@ if (_inputService.IsQuitRequested)
 
 **Purpose:** Track elapsed time for frame-rate independent gameplay
 
-~~~csharp
+```csharp
 var currentTime = _stopwatch.Elapsed;
 var elapsedTime = currentTime - lastFrameTime;
 lastFrameTime = currentTime;
 totalTime += elapsedTime;
 
 var gameTime = new GameTime(totalTime, elapsedTime);
-~~~
+```
 
 **GameTime Structure:**
 
-~~~csharp
+```csharp
 public readonly struct GameTime
 {
     public TimeSpan TotalTime { get; init; }    // Total elapsed since start
@@ -98,11 +98,11 @@ public readonly struct GameTime
     public double DeltaTime => ElapsedTime.TotalSeconds;  // Seconds as double
     public double TotalSeconds => TotalTime.TotalSeconds; // Total as seconds
 }
-~~~
+```
 
 **Usage in scenes:**
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     var deltaTime = (float)gameTime.DeltaTime;  // ~0.0166 at 60 FPS
@@ -113,7 +113,7 @@ protected override void OnUpdate(GameTime gameTime)
     // Animation timing
     _animator.Update(deltaTime);
 }
-~~~
+```
 
 ---
 
@@ -121,7 +121,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 **Purpose:** Execute game logic, physics, AI, etc.
 
-~~~csharp
+```csharp
 // Update game context time
 if (_gameContext is GameContext context)
 {
@@ -130,11 +130,11 @@ if (_gameContext is GameContext context)
 
 // Update current scene
 _sceneManager.Update(gameTime);
-~~~
+```
 
 **Scene Update Flow:**
 
-~~~mermaid
+```mermaid
 graph TD
     A["GameLoop.RunAsync()"] --> B["SceneManager.Update(gameTime)"]
     B --> C["CurrentScene.Update(gameTime)"]
@@ -155,7 +155,7 @@ style F fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
 style G fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
 style H fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
 style I fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
-~~~
+```
 
 ---
 
@@ -163,14 +163,14 @@ style I fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
 
 **Purpose:** Draw all visual elements to the screen
 
-~~~csharp
+```csharp
 // Render current scene
 _sceneManager.Render(gameTime);
-~~~
+```
 
 **Rendering Flow:**
 
-~~~mermaid
+```mermaid
 graph TD
     A["GameLoop.RunAsync()"] --> B["SceneManager.Render(gameTime)"]
     B --> C["CurrentScene.Render(gameTime)"]
@@ -198,7 +198,7 @@ style I fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
 style J fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
 style K fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
 style L fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
-~~~
+```
 
 ---
 
@@ -206,7 +206,7 @@ style L fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
 
 **Purpose:** Maintain consistent frame rate (default 60 FPS)
 
-~~~csharp
+```csharp
 var targetFrameTime = TimeSpan.FromSeconds(1.0 / TargetFramesPerSecond);
 
 // Frame limiting
@@ -227,7 +227,7 @@ if (frameTime < targetFrameTime)
         Thread.SpinWait(100);
     }
 }
-~~~
+```
 
 **Why two-phase timing?**
 1. **`Thread.Sleep()`** - Efficient but imprecise (~15ms resolution on Windows)
@@ -245,9 +245,9 @@ if (frameTime < targetFrameTime)
 
 Default: **60 FPS** (16.67ms per frame)
 
-~~~csharp
+```csharp
 public int TargetFramesPerSecond { get; set; } = 60;
-~~~
+```
 
 **Frame budgets:**
 
@@ -265,7 +265,7 @@ public int TargetFramesPerSecond { get; set; } = 60;
 
 At 60 FPS (16.67ms per frame):
 
-~~~mermaid
+```mermaid
 graph LR
     A["Frame Budget: 16.67ms"] --> B["Input: <1ms"]
     A --> C["Update: ~10ms"]
@@ -277,7 +277,7 @@ style B fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
 style C fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
 style D fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
 style E fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-~~~
+```
 
 | Phase | Time Budget | What Can Go Wrong |
 |-------|-------------|-------------------|
@@ -294,18 +294,18 @@ style E fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
 
 ### Without Delta Time (Bad)
 
-~~~csharp
+```csharp
 // BAD: Speed depends on frame rate
 position += velocity;  // Faster at 120 FPS, slower at 30 FPS
-~~~
+```
 
 ### With Delta Time (Good)
 
-~~~csharp
+```csharp
 // GOOD: Speed is consistent at any frame rate
 var deltaTime = (float)gameTime.DeltaTime;
 position += velocity * speed * deltaTime;
-~~~
+```
 
 **Example:**
 
@@ -321,7 +321,7 @@ Speed is **always 200 pixels/second** regardless of frame rate! ✅
 
 ## Game Loop Lifecycle
 
-~~~mermaid
+```mermaid
 stateDiagram-v2
     [*] --> Created: GameLoop Constructor
     Created --> Starting: RunAsync() Called
@@ -333,16 +333,16 @@ stateDiagram-v2
     
     Running --> Error: Exception
     Error --> Stopping: Catch & Log
-~~~
+```
 
 ### Startup Sequence
 
-~~~csharp
+```csharp
 var gameLoop = Services.GetRequiredService<IGameLoop>();
 
 // Start the loop
 await gameLoop.RunAsync(cancellationToken);
-~~~
+```
 
 **Initialization flow:**
 
@@ -355,13 +355,13 @@ await gameLoop.RunAsync(cancellationToken);
 
 ### Shutdown Sequence
 
-~~~csharp
+```csharp
 // Graceful shutdown
 _gameContext.RequestExit();
 
 // Or force stop
 gameLoop.Stop();
-~~~
+```
 
 **Cleanup:**
 1. Loop detects `_gameContext.IsRunning == false`
@@ -381,7 +381,7 @@ gameLoop.Stop();
 
 SDL3 **must** run on the main thread:
 
-~~~csharp
+```csharp
 public Task RunAsync<TScene>(CancellationToken ct) where TScene : IScene
 {
     // Block synchronously to keep SDL on the same thread
@@ -393,7 +393,7 @@ public Task RunAsync<TScene>(CancellationToken ct) where TScene : IScene
     // Start game loop - MUST stay on this thread
     gameLoop.RunAsync(ct).GetAwaiter().GetResult();
 }
-~~~
+```
 
 **Why synchronous?**
 - SDL3 window/rendering must stay on main thread
@@ -406,7 +406,7 @@ public Task RunAsync<TScene>(CancellationToken ct) where TScene : IScene
 
 You can still use async for loading:
 
-~~~csharp
+```csharp
 protected override async Task OnLoadAsync(CancellationToken ct)
 {
     // CPU-bound work (parsing JSON) - can run on thread pool
@@ -415,7 +415,7 @@ protected override async Task OnLoadAsync(CancellationToken ct)
     // SDL work (texture creation) - back on main thread
     _texture = await _textureLoader.LoadTextureAsync("sprite.png", ct);
 }
-~~~
+```
 
 **Rule:** SDL calls happen on main thread, but prep work can be parallel.
 
@@ -425,18 +425,18 @@ protected override async Task OnLoadAsync(CancellationToken ct)
 
 ### Change Target FPS
 
-~~~csharp
+```csharp
 var gameLoop = Services.GetRequiredService<IGameLoop>();
 gameLoop.TargetFramesPerSecond = 120; // High refresh rate
 
 await gameLoop.RunAsync();
-~~~
+```
 
 ### Uncapped Frame Rate
 
-~~~csharp
+```csharp
 gameLoop.TargetFramesPerSecond = 0; // No limiting (vsync only)
-~~~
+```
 
 **Use cases:**
 - Benchmarking
@@ -449,7 +449,7 @@ gameLoop.TargetFramesPerSecond = 0; // No limiting (vsync only)
 
 You can implement your own:
 
-~~~csharp
+```csharp
 public class MyCustomGameLoop : IGameLoop
 {
     public bool IsRunning { get; private set; }
@@ -477,7 +477,7 @@ public class MyCustomGameLoop : IGameLoop
 
 // Register
 builder.Services.AddSingleton<IGameLoop, MyCustomGameLoop>();
-~~~
+```
 
 ---
 
@@ -485,7 +485,7 @@ builder.Services.AddSingleton<IGameLoop, MyCustomGameLoop>();
 
 ### Measuring Frame Time
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     var deltaTime = gameTime.DeltaTime;
@@ -494,11 +494,11 @@ protected override void OnUpdate(GameTime gameTime)
     Logger.LogDebug("Frame time: {Ms}ms, FPS: {Fps}", 
         deltaTime * 1000, fps);
 }
-~~~
+```
 
 ### Profiling Phases
 
-~~~csharp
+```csharp
 var stopwatch = Stopwatch.StartNew();
 
 // Measure update time
@@ -514,7 +514,7 @@ var renderTime = stopwatch.Elapsed - renderStart;
 _logger.LogDebug("Update: {U}ms, Render: {R}ms", 
     updateTime.TotalMilliseconds,
     renderTime.TotalMilliseconds);
-~~~
+```
 
 ---
 
@@ -524,7 +524,7 @@ _logger.LogDebug("Update: {U}ms, Render: {R}ms",
 
 For deterministic physics:
 
-~~~csharp
+```csharp
 private double _accumulator;
 private const double FixedTimeStep = 1.0 / 60.0; // 60 Hz physics
 
@@ -542,7 +542,7 @@ protected override void OnUpdate(GameTime gameTime)
     // Render uses variable delta time
     UpdateAnimations((float)gameTime.DeltaTime);
 }
-~~~
+```
 
 **Why?**
 - Physics needs consistent timestep for stability
@@ -554,10 +554,10 @@ protected override void OnUpdate(GameTime gameTime)
 
 Smooth rendering between physics steps:
 
-~~~csharp
+```csharp
 var alpha = _accumulator / FixedTimeStep;
 var renderPosition = Vector2.Lerp(_previousPosition, _currentPosition, (float)alpha);
-~~~
+```
 
 ---
 
@@ -566,35 +566,35 @@ var renderPosition = Vector2.Lerp(_previousPosition, _currentPosition, (float)al
 ### ✅ DO
 
 1. **Always use delta time** for movement/animation
-   ~~~csharp
+   ```csharp
    position += velocity * deltaTime;  // ✅ Good
-   ~~~
+   ```
 
 2. **Keep Update and Render separate**
-   ~~~csharp
+   ```csharp
    OnUpdate(gameTime) { /* Logic only */ }
    OnRender(gameTime) { /* Drawing only */ }
-   ~~~
+   ```
 
 3. **Profile performance** regularly
-   ~~~csharp
+   ```csharp
    var fps = 1.0 / gameTime.DeltaTime;
-   ~~~
+   ```
 
 4. **Exit gracefully**
-   ~~~csharp
+   ```csharp
    _gameContext.RequestExit(); // ✅ Clean shutdown
-   ~~~
+   ```
 
 ### ❌ DON'T
 
 1. **Don't use fixed values**
-   ~~~csharp
+   ```csharp
    position += velocity; // ❌ Bad - frame-rate dependent
-   ~~~
+   ```
 
 2. **Don't do expensive work in Update**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - loads every frame!
    OnUpdate(gameTime)
    {
@@ -606,20 +606,20 @@ var renderPosition = Vector2.Lerp(_previousPosition, _currentPosition, (float)al
    {
        _texture = await LoadTextureAsync("sprite.png", ct);
    }
-   ~~~
+   ```
 
 3. **Don't render in Update**
-   ~~~csharp
+   ```csharp
    OnUpdate(gameTime)
    {
        _renderer.DrawRectangle(...); // ❌ Wrong phase!
    }
-   ~~~
+   ```
 
 4. **Don't block the main thread**
-   ~~~csharp
+   ```csharp
    Thread.Sleep(1000); // ❌ Freezes entire game!
-   ~~~
+   ```
 
 ---
 
