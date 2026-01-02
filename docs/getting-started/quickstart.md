@@ -15,69 +15,44 @@ Before you begin, make sure you have:
 - A code editor (Visual Studio 2022, VS Code, or Rider recommended)
 - Basic C# knowledge
 
-!!! note "NuGet Packages Not Yet Available"
-    Brine2D doesn't have NuGet packages yet. You'll need to clone the repository and reference the projects directly. We'll show you how below.
+## Step 1: Create Your Game Project
 
-## Step 1: Clone the Repository
+Create a new console application:
 
-Open a terminal and clone the Brine2D repository:
-
-```bash
-git clone https://github.com/CrazyPickleStudios/Brine2D.git
-cd Brine2D
-```
-
-Verify it builds successfully:
-
-```bash
-dotnet build
-```
-
-You should see all projects build without errors.
-
-## Step 2: Create Your Game Project
-
-Create a new console application in a separate directory:
-
-```bash
-cd ..
+~~~bash
 dotnet new console -n MyFirstGame
 cd MyFirstGame
-```
+~~~
 
 This creates a basic .NET 10 console application with a `Program.cs` file.
 
-## Step 3: Add Project References
+## Step 2: Add Brine2D Package
 
-Add references to the Brine2D projects. From your `MyFirstGame` directory:
+Add the Brine2D.Desktop NuGet package, which includes everything you need:
 
-```bash
-dotnet add reference ../Brine2D/src/Brine2D.Core/Brine2D.Core.csproj
-dotnet add reference ../Brine2D/src/Brine2D.Engine/Brine2D.Engine.csproj
-dotnet add reference ../Brine2D/src/Brine2D.Hosting/Brine2D.Hosting.csproj
-dotnet add reference ../Brine2D/src/Brine2D.Rendering/Brine2D.Rendering.csproj
-dotnet add reference ../Brine2D/src/Brine2D.Rendering.SDL/Brine2D.Rendering.SDL.csproj
-dotnet add reference ../Brine2D/src/Brine2D.Input/Brine2D.Input.csproj
-dotnet add reference ../Brine2D/src/Brine2D.Input.SDL/Brine2D.Input.SDL.csproj
-```
+~~~bash
+dotnet add package Brine2D.Desktop
+~~~
 
-!!! tip "Project Structure"
-    Your directory structure should look like this:
-```
-    .
-    ├── Brine2D/           # The engine repository
-    └── MyFirstGame/       # Your game project
-        ├── Program.cs
-        └── MyFirstGame.csproj
-```
+!!! info "What's Included?"
+    `Brine2D.Desktop` is a meta-package that includes:
+    
+    - **Brine2D.Core** - Core abstractions and types
+    - **Brine2D.Engine** - Game loop and scene management
+    - **Brine2D.Hosting** - ASP.NET-style hosting and DI
+    - **Brine2D.Rendering.SDL** - SDL3-based rendering
+    - **Brine2D.Input.SDL** - SDL3-based input handling
+    - **Brine2D.Audio.SDL** - SDL3-based audio system
+    - **Brine2D.UI** - UI components
+    
+    Everything needed for a complete desktop game!
 
-## Step 4: Write Your First Game
+## Step 3: Write Your First Game
 
 Replace the contents of `Program.cs` with this code:
 
-```csharp
+~~~csharp
 using Brine2D.Core;
-using Brine2D.Engine;
 using Brine2D.Hosting;
 using Brine2D.Input;
 using Brine2D.Input.SDL;
@@ -111,8 +86,7 @@ public class GameScene : Scene
     private readonly IInputService _input;
     private readonly IRenderer _renderer;
 
-    public GameScene
-    (
+    public GameScene(
         IRenderer renderer,
         IInputService input,
         IGameContext gameContext,
@@ -127,7 +101,6 @@ public class GameScene : Scene
     protected override void OnRender(GameTime gameTime)
     {
         _renderer.Clear(Color.CornflowerBlue);
-
         _renderer.BeginFrame();
 
         _renderer.DrawText("Hello, Brine2D!", 100, 100, Color.White);
@@ -143,15 +116,15 @@ public class GameScene : Scene
         }
     }
 }
-```
+~~~
 
-## Step 5: Run Your Game
+## Step 4: Run Your Game
 
 Build and run your game:
 
-```bash
+~~~bash
 dotnet run
-```
+~~~
 
 You should see a window with "Hello, Brine2D!" displayed. Press **Escape** to exit.
 
@@ -165,9 +138,9 @@ Let's break down the key concepts:
 
 ### The Builder Pattern
 
-```csharp
+~~~csharp
 var builder = GameApplication.CreateBuilder(args);
-```
+~~~
 
 Just like ASP.NET's `WebApplication.CreateBuilder()`, this sets up your game with sensible defaults. It:
 
@@ -178,11 +151,11 @@ Just like ASP.NET's `WebApplication.CreateBuilder()`, this sets up your game wit
 
 ### Service Registration
 
-```csharp
+~~~csharp
 builder.Services.AddSDL3Rendering(options => { ... });
 builder.Services.AddSDL3Input();
 builder.Services.AddScene<GameScene>();
-```
+~~~
 
 This should look familiar if you've used ASP.NET:
 
@@ -192,17 +165,18 @@ This should look familiar if you've used ASP.NET:
 
 ### Scenes Are Like Controllers
 
-```csharp
+~~~csharp
 public class GameScene : Scene
 {
-    public GameScene(IRenderer renderer, IInputService input, ILogger<GameScene> logger) : base(logger)
+    public GameScene(IRenderer renderer, IInputService input, ILogger<GameScene> logger) 
+        : base(logger)
     {
         // Constructor injection!
     }
 }
-```
+~~~
 
-cenes organize your game logic just like controllers organize your web endpoints. They:
+Scenes organize your game logic just like controllers organize your web endpoints. They:
 
 - Get dependencies injected via constructor
 - Have lifecycle methods (`OnInitialize`, `OnLoad`, `OnUpdate`, `OnRender`, `OnUnload`)
@@ -227,7 +201,7 @@ Now that you have a working game, here's what to explore next:
 
 Modify your `GameScene` to move text with arrow keys:
 
-```csharp
+~~~csharp
 public class GameScene : Scene
 {
     private readonly IGameContext _gameContext;
@@ -256,32 +230,22 @@ public class GameScene : Scene
 
         // Move with arrow keys
         if (_input.IsKeyDown(Keys.Left))
-        {
             _x -= _speed * deltaTime;
-        }
 
         if (_input.IsKeyDown(Keys.Right))
-        {
             _x += _speed * deltaTime;
-        }
 
         if (_input.IsKeyDown(Keys.Up))
-        {
             _y -= _speed * deltaTime;
-        }
 
         if (_input.IsKeyDown(Keys.Down))
-        {
             _y += _speed * deltaTime;
-        }
 
         if (_input.IsKeyPressed(Keys.Escape))
-        {
             _gameContext.RequestExit();
-        }
     }
 }
-```
+~~~
 
 Run it again and use the arrow keys to move the text!
 
@@ -289,7 +253,7 @@ Run it again and use the arrow keys to move the text!
 
 Draw a simple rectangle:
 
-```csharp
+~~~csharp
 protected override void OnRender(GameTime gameTime)
 {
     _renderer.Clear(Color.CornflowerBlue);
@@ -302,13 +266,13 @@ protected override void OnRender(GameTime gameTime)
 
     _renderer.EndFrame();
 }
-```
+~~~
 
 ### Optional: Add Configuration
 
 Create a `gamesettings.json` file in your project:
 
-```json
+~~~json
 {
   "Logging": {
     "LogLevel": {
@@ -324,26 +288,26 @@ Create a `gamesettings.json` file in your project:
     "Fullscreen": false
   }
 }
-```
+~~~
 
 Then simplify your rendering configuration:
 
-```csharp
+~~~csharp
 builder.Services.AddSDL3Rendering(options =>
 {
     builder.Configuration.GetSection("Rendering").Bind(options);
 });
-```
+~~~
 
 Make sure to set the file to copy to the output directory in your `.csproj`:
 
-```xml
+~~~xml
 <ItemGroup>
-	<None Update="gamesettings.json">
-		<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
+  <None Update="gamesettings.json">
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+  </None>
 </ItemGroup>
-```
+~~~
 
 ---
 
@@ -353,9 +317,9 @@ Make sure to set the file to copy to the output directory in your `.csproj`:
 
 If you get an error about SDL3 libraries not being found, make sure:
 
-1. The SDL3-CS NuGet package is properly restored
+1. The SDL3-CS NuGet package is properly restored (`dotnet restore`)
 2. You're running on a supported platform (Windows, macOS, Linux)
-3. The native libraries are copied to the output directory
+3. Try cleaning and rebuilding: `dotnet clean && dotnet build`
 
 ### Window Doesn't Appear
 
@@ -370,7 +334,32 @@ If the window doesn't show up:
 The text rendering is a simple fallback. For proper text:
 
 1. Add a TTF font to your project
-2. Use the font loading system (covered in the Text Rendering tutorial)
+2. Use the font loading system (covered in the Text Rendering guide)
+
+---
+
+## Development from Source
+
+If you want to contribute to Brine2D or use the latest development version, you can reference the projects directly instead:
+
+~~~bash
+git clone https://github.com/CrazyPickleStudios/Brine2D.git
+cd Brine2D
+dotnet build
+~~~
+
+Then in your game project, replace the NuGet package with project references:
+
+~~~bash
+dotnet remove package Brine2D.Desktop
+dotnet add reference ../Brine2D/src/Brine2D.Core/Brine2D.Core.csproj
+dotnet add reference ../Brine2D/src/Brine2D.Engine/Brine2D.Engine.csproj
+dotnet add reference ../Brine2D/src/Brine2D.Hosting/Brine2D.Hosting.csproj
+dotnet add reference ../Brine2D/src/Brine2D.Rendering/Brine2D.Rendering.csproj
+dotnet add reference ../Brine2D/src/Brine2D.Rendering.SDL/Brine2D.Rendering.SDL.csproj
+dotnet add reference ../Brine2D/src/Brine2D.Input/Brine2D.Input.csproj
+dotnet add reference ../Brine2D/src/Brine2D.Input.SDL/Brine2D.Input.SDL.csproj
+~~~
 
 ---
 
@@ -378,15 +367,7 @@ The text rendering is a simple fallback. For proper text:
 
 <div class="grid cards" markdown>
 
--   :material-school: **Tutorials**
-
-    ---
-
-    Step-by-step guides to build complete games
-
-    [:octicons-arrow-right-24: Explore Tutorials](../tutorials/index.md)
-
--   :material-book-open-variant: **Core Concepts**
+-   :material-school: **Core Concepts**
 
     ---
 
@@ -394,21 +375,29 @@ The text rendering is a simple fallback. For proper text:
 
     [:octicons-arrow-right-24: Read Concepts](../concepts/index.md)
 
--   :material-image: **Loading Sprites**
+-   :material-image: **Sprites & Textures**
 
     ---
 
-    Learn to load and render textures
+    Learn to load and render images
 
-    [:octicons-arrow-right-24: Sprite Tutorial](../tutorials/sprites.md)
+    [:octicons-arrow-right-24: Sprite Guide](../guides/rendering/sprites.md)
 
 -   :material-controller: **Input Handling**
 
     ---
 
-    Complete guide to keyboard, mouse, and gamepad input
+    Complete guide to keyboard, mouse, and gamepad
 
-    [:octicons-arrow-right-24: Input Guide](../guides/input.md)
+    [:octicons-arrow-right-24: Input Guide](../guides/input/keyboard.md)
+
+-   :material-music: **Audio**
+
+    ---
+
+    Add sound effects and music to your game
+
+    [:octicons-arrow-right-24: Audio Guide](../guides/audio/basics.md)
 
 </div>
 
@@ -416,11 +405,11 @@ The text rendering is a simple fallback. For proper text:
 
 ## What You've Learned
 
-✅ How to set up a Brine2D project  
+✅ How to set up a Brine2D project with NuGet  
 ✅ The builder pattern and service registration  
 ✅ Creating scenes with dependency injection  
 ✅ The basic game loop (update and render)  
 ✅ Handling input with `IInputService`  
 ✅ Drawing simple shapes and text  
 
-You're ready to build real games! Check out the [tutorials](../tutorials/index.md) to learn about sprites, animations, collision detection, and more.
+You're ready to build real games! Check out the [guides](../guides/index.md) to learn about sprites, animations, collision detection, audio, and more.

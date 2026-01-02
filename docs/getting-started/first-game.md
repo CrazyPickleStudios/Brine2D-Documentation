@@ -24,36 +24,29 @@ By the end of this tutorial, you'll have:
 
 - Completed the [Quick Start](quickstart.md) guide
 - Basic understanding of C# and OOP
-- Brine2D repository cloned and building
+- .NET 10 SDK installed
 
 ## Step 1: Project Setup
 
 Create a new console application:
 
-```bash
+~~~bash
 dotnet new console -n CoinCollector
 cd CoinCollector
-```
+~~~
 
-Add references to Brine2D (adjust paths as needed):
+Add the Brine2D.Desktop package:
 
-```bash
-dotnet add reference ../Brine2D/src/Brine2D.Core/Brine2D.Core.csproj
-dotnet add reference ../Brine2D/src/Brine2D.Engine/Brine2D.Engine.csproj
-dotnet add reference ../Brine2D/src/Brine2D.Hosting/Brine2D.Hosting.csproj
-dotnet add reference ../Brine2D/src/Brine2D.Rendering/Brine2D.Rendering.csproj
-dotnet add reference ../Brine2D/src/Brine2D.Rendering.SDL/Brine2D.Rendering.SDL.csproj
-dotnet add reference ../Brine2D/src/Brine2D.Input/Brine2D.Input.csproj
-dotnet add reference ../Brine2D/src/Brine2D.Input.SDL/Brine2D.Input.SDL.csproj
-```
+~~~bash
+dotnet add package Brine2D.Desktop
+~~~
 
 ## Step 2: Create the Game Scene
 
 Replace `Program.cs` with this code:
 
-```csharp
+~~~csharp
 using Brine2D.Core;
-using Brine2D.Engine;
 using Brine2D.Hosting;
 using Brine2D.Input;
 using Brine2D.Input.SDL;
@@ -288,15 +281,15 @@ public class GameScene : Scene
         Logger.LogInformation("Game restarted!");
     }
 }
-```
+~~~
 
 ## Step 3: Run Your Game
 
 Build and run:
 
-```bash
+~~~bash
 dotnet run
-```
+~~~
 
 You should see:
 - A blue square (player) in the center
@@ -315,7 +308,7 @@ Let's break down what we built:
 
 ### 1. Game State
 
-```csharp
+~~~csharp
 private Vector2 _playerPosition;
 private float _playerSpeed = 200f;
 private int _score = 0;
@@ -323,13 +316,13 @@ private bool _isGameOver = false;
 
 private readonly List<Vector2> _obstacles = new();
 private readonly List<Vector2> _coins = new();
-```
+~~~
 
 We track the player's position, speed, score, and game state. Lists hold obstacle and coin positions.
 
 ### 2. Initialization
 
-```csharp
+~~~csharp
 protected override void OnInitialize()
 {
     Logger.LogInformation("Coin Collector initialized!");
@@ -342,13 +335,13 @@ protected override void OnInitialize()
     _coins.Add(new Vector2(100, 100));
     // ... more coins
 }
-```
+~~~
 
 `OnInitialize()` runs once when the scene loads. We set up our game world here.
 
 ### 3. Update Loop
 
-```csharp
+~~~csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     var deltaTime = (float)gameTime.DeltaTime;
@@ -363,7 +356,7 @@ protected override void OnUpdate(GameTime gameTime)
     // Check collisions
     // ... collision logic
 }
-```
+~~~
 
 `OnUpdate()` runs every frame. We:
 1. Get input
@@ -375,7 +368,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 ### 4. Render Loop
 
-```csharp
+~~~csharp
 protected override void OnRender(GameTime gameTime)
 {
     _renderer.Clear(new Color(20, 20, 30));
@@ -386,7 +379,7 @@ protected override void OnRender(GameTime gameTime)
     
     _renderer.EndFrame();
 }
-```
+~~~
 
 `OnRender()` draws everything. Always call:
 1. `Clear()` - Clear the screen
@@ -396,13 +389,13 @@ protected override void OnRender(GameTime gameTime)
 
 ### 5. Collision Detection
 
-```csharp
+~~~csharp
 private bool CheckCollision(Vector2 pos1, Vector2 pos2, float radius1, float radius2)
 {
     var distance = Vector2.Distance(pos1, pos2);
     return distance < (radius1 + radius2);
 }
-```
+~~~
 
 Simple circle-circle collision using distance between centers.
 
@@ -412,7 +405,7 @@ Now let's make it better!
 
 ### Add Particle Effects on Coin Collection
 
-```csharp
+~~~csharp
 // At the top of GameScene class
 private readonly List<Particle> _particles = new();
 
@@ -472,11 +465,11 @@ foreach (var p in _particles)
         new Color(p.Color.R, p.Color.G, p.Color.B, alpha)
     );
 }
-```
+~~~
 
 ### Add a Timer
 
-```csharp
+~~~csharp
 // Add field
 private double _gameTime = 0;
 
@@ -485,11 +478,11 @@ _gameTime += gameTime.DeltaTime;
 
 // In OnRender:
 _renderer.DrawText($"Time: {(int)_gameTime}s", 10, 50, Color.White);
-```
+~~~
 
 ### Add Smooth Movement
 
-```csharp
+~~~csharp
 // Add fields
 private Vector2 _velocity = Vector2.Zero;
 private float _acceleration = 500f;
@@ -513,7 +506,7 @@ _velocity *= _friction;
 
 // Move player
 _playerPosition += _velocity * deltaTime;
-```
+~~~
 
 ## What You've Learned
 
@@ -530,10 +523,10 @@ _playerPosition += _velocity * deltaTime;
 
 Now that you have a complete game, you can:
 
-- [Learn about Sprites](../tutorials/moving-sprites.md) - Replace shapes with actual graphics
-- [Add Animations](../tutorials/animations.md) - Animate your player character
-- [Use the Collision System](../guides/collision/system.md) - More robust collision detection
-- [Build a Platformer](../tutorials/platformer.md) - Create a side-scrolling game
+- [Learn about Sprites](../guides/rendering/sprites-and-textures.md) - Replace shapes with actual graphics
+- [Add Animations](../guides/rendering/animation.md) - Animate your player character
+- [Use the Collision System](../guides/collision/basics.md) - More robust collision detection
+- [Add Audio](../guides/audio/basics.md) - Sound effects and music
 
 ## Complete Source Code
 
