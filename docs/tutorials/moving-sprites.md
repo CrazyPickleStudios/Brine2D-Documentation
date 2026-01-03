@@ -33,7 +33,7 @@ First, create a new scene for your moving sprite demo.
 
 Create a new file `MovingSpriteScene.cs`:
 
-```csharp MovingSpriteScene.cs
+```csharp
 using Brine2D.Core;
 using Brine2D.Input;
 using Brine2D.Rendering;
@@ -49,7 +49,8 @@ public class MovingSpriteScene : Scene
     private readonly ITextureLoader _textureLoader;
     private readonly IGameContext _gameContext;
 
-    public MovingSpriteScene(
+    public MovingSpriteScene
+    (
         IRenderer renderer,
         IInputService input,
         ITextureLoader textureLoader,
@@ -71,6 +72,7 @@ public class MovingSpriteScene : Scene
 ```
 
 **What's happening here:**
+
 - We're using **constructor injection** to get dependencies (just like ASP.NET!)
 - `IRenderer` - draws things on screen
 - `IInputService` - handles keyboard/mouse input
@@ -106,7 +108,8 @@ protected override async Task OnLoadAsync(CancellationToken cancellationToken)
 
     if (File.Exists(spritePath))
     {
-        _playerTexture = await _textureLoader.LoadTextureAsync(
+        _playerTexture = await _textureLoader.LoadTextureAsync
+        (
             spritePath,
             TextureScaleMode.Nearest, // Use Nearest for pixel art, Linear for smooth art
             cancellationToken
@@ -126,6 +129,7 @@ protected override async Task OnLoadAsync(CancellationToken cancellationToken)
 ```
 
 **Key Points:**
+
 - `LoadTextureAsync` is **async** - it won't block your game while loading
 - `TextureScaleMode.Nearest` is perfect for pixel art (no blurring)
 - `TextureScaleMode.Linear` is better for high-res sprites (smooth scaling)
@@ -150,7 +154,8 @@ protected override void OnRender(GameTime gameTime)
     // Draw the player sprite if loaded
     if (_playerTexture != null)
     {
-        _renderer.DrawTexture(
+        _renderer.DrawTexture
+        (
             _playerTexture,
             _playerPosition.X,
             _playerPosition.Y
@@ -162,6 +167,7 @@ protected override void OnRender(GameTime gameTime)
 ```
 
 **What's happening:**
+
 1. `Clear()` fills the screen with a background color
 2. `BeginFrame()` starts a new frame (required before drawing)
 3. `DrawTexture()` draws the sprite at the specified position
@@ -254,10 +260,25 @@ protected override void OnUpdate(GameTime gameTime)
     // Calculate movement direction
     var movement = Vector2.Zero;
 
-    if (_input.IsKeyDown(Keys.Left))  movement.X -= 1;
-    if (_input.IsKeyDown(Keys.Right)) movement.X += 1;
-    if (_input.IsKeyDown(Keys.Up))    movement.Y -= 1;
-    if (_input.IsKeyDown(Keys.Down))  movement.Y += 1;
+    if (_input.IsKeyDown(Keys.Left))
+    {
+        movement.X -= 1;
+    }
+
+    if (_input.IsKeyDown(Keys.Right))
+    {
+        movement.X += 1;
+    }
+
+    if (_input.IsKeyDown(Keys.Up))
+    {
+        movement.Y -= 1;
+    }
+
+    if (_input.IsKeyDown(Keys.Down))
+    {
+        movement.Y += 1;
+    }
 
     // Normalize for consistent diagonal speed
     if (movement != Vector2.Zero)
@@ -271,10 +292,12 @@ protected override void OnUpdate(GameTime gameTime)
 **Why Normalize?**
 
 Without normalization:
+
 - Moving right: speed = 200 px/s
 - Moving diagonally (right + up): speed = 282 px/s (√2 faster!)
 
 With `Vector2.Normalize()`:
+
 - All directions: speed = 200 px/s (consistent!)
 
 ---
@@ -297,10 +320,25 @@ protected override void OnUpdate(GameTime gameTime)
 
     // Calculate movement
     var movement = Vector2.Zero;
-    if (_input.IsKeyDown(Keys.Left))  movement.X -= 1;
-    if (_input.IsKeyDown(Keys.Right)) movement.X += 1;
-    if (_input.IsKeyDown(Keys.Up))    movement.Y -= 1;
-    if (_input.IsKeyDown(Keys.Down))  movement.Y += 1;
+    if (_input.IsKeyDown(Keys.Left))
+    {
+        movement.X -= 1;
+    }
+
+    if (_input.IsKeyDown(Keys.Right))
+    {
+        movement.X += 1;
+    }
+
+    if (_input.IsKeyDown(Keys.Up))
+    {
+        movement.Y -= 1;
+    }
+
+    if (_input.IsKeyDown(Keys.Down))
+    {
+        movement.Y += 1;
+    }
 
     if (movement != Vector2.Zero)
     {
@@ -311,7 +349,7 @@ protected override void OnUpdate(GameTime gameTime)
     // Keep player on screen (assuming 1280x720 window)
     const float screenWidth = 1280f;
     const float screenHeight = 720f;
-    
+
     var spriteWidth = _playerTexture?.Width ?? 32;
     var spriteHeight = _playerTexture?.Height ?? 32;
 
@@ -321,6 +359,7 @@ protected override void OnUpdate(GameTime gameTime)
 ```
 
 **`Math.Clamp()` keeps the value within a range:**
+
 - If `x < min`, returns `min`
 - If `x > max`, returns `max`
 - Otherwise, returns `x`
@@ -395,25 +434,25 @@ protected override void OnRender(GameTime gameTime)
 
 Here's the full `MovingSpriteScene.cs`:
 
-```csharp MovingSpriteScene.cs
+```csharp
+using System.Numerics;
 using Brine2D.Core;
 using Brine2D.Input;
 using Brine2D.Rendering;
 using Microsoft.Extensions.Logging;
-using System.Numerics;
 
 namespace MyGame;
 
 public class MovingSpriteScene : Scene
 {
-    private readonly IRenderer _renderer;
-    private readonly IInputService _input;
-    private readonly ITextureLoader _textureLoader;
     private readonly IGameContext _gameContext;
+    private readonly IInputService _input;
+    private readonly IRenderer _renderer;
+    private readonly ITextureLoader _textureLoader;
+    private Vector2 _playerPosition = new(640, 360); // Center of 1280x720
 
     private ITexture? _playerTexture;
-    private Vector2 _playerPosition = new Vector2(640, 360); // Center of 1280x720
-    private float _speed = 200f;
+    private readonly float _speed = 200f;
 
     public MovingSpriteScene(
         IRenderer renderer,
@@ -448,7 +487,7 @@ public class MovingSpriteScene : Scene
                 TextureScaleMode.Nearest,
                 cancellationToken
             );
-            
+
             Logger.LogInformation("Sprite loaded: {Width}x{Height}",
                 _playerTexture.Width, _playerTexture.Height);
         }
@@ -459,40 +498,6 @@ public class MovingSpriteScene : Scene
         }
     }
 
-    protected override void OnUpdate(GameTime gameTime)
-    {
-        var deltaTime = (float)gameTime.DeltaTime;
-
-        if (_input.IsKeyPressed(Keys.Escape))
-        {
-            _gameContext.RequestExit();
-        }
-
-        // Calculate movement direction
-        var movement = Vector2.Zero;
-        if (_input.IsKeyDown(Keys.Left))  movement.X -= 1;
-        if (_input.IsKeyDown(Keys.Right)) movement.X += 1;
-        if (_input.IsKeyDown(Keys.Up))    movement.Y -= 1;
-        if (_input.IsKeyDown(Keys.Down))  movement.Y += 1;
-
-        // Apply movement
-        if (movement != Vector2.Zero)
-        {
-            movement = Vector2.Normalize(movement);
-            _playerPosition += movement * _speed * deltaTime;
-        }
-
-        // Keep player on screen
-        const float screenWidth = 1280f;
-        const float screenHeight = 720f;
-        
-        var spriteWidth = _playerTexture?.Width ?? 32;
-        var spriteHeight = _playerTexture?.Height ?? 32;
-
-        _playerPosition.X = Math.Clamp(_playerPosition.X, spriteWidth / 2f, screenWidth - spriteWidth / 2f);
-        _playerPosition.Y = Math.Clamp(_playerPosition.Y, spriteHeight / 2f, screenHeight - spriteHeight / 2f);
-    }
-
     protected override void OnRender(GameTime gameTime)
     {
         _renderer.Clear(new Color(40, 40, 40));
@@ -501,8 +506,8 @@ public class MovingSpriteScene : Scene
         if (_playerTexture != null)
         {
             // Draw centered on position
-            var drawX = _playerPosition.X - (_playerTexture.Width / 2f);
-            var drawY = _playerPosition.Y - (_playerTexture.Height / 2f);
+            var drawX = _playerPosition.X - _playerTexture.Width / 2f;
+            var drawY = _playerPosition.Y - _playerTexture.Height / 2f;
 
             _renderer.DrawTexture(_playerTexture, drawX, drawY);
         }
@@ -520,12 +525,61 @@ public class MovingSpriteScene : Scene
 
         return Task.CompletedTask;
     }
+
+    protected override void OnUpdate(GameTime gameTime)
+    {
+        var deltaTime = (float)gameTime.DeltaTime;
+
+        if (_input.IsKeyPressed(Keys.Escape))
+        {
+            _gameContext.RequestExit();
+        }
+
+        // Calculate movement direction
+        var movement = Vector2.Zero;
+        if (_input.IsKeyDown(Keys.Left))
+        {
+            movement.X -= 1;
+        }
+
+        if (_input.IsKeyDown(Keys.Right))
+        {
+            movement.X += 1;
+        }
+
+        if (_input.IsKeyDown(Keys.Up))
+        {
+            movement.Y -= 1;
+        }
+
+        if (_input.IsKeyDown(Keys.Down))
+        {
+            movement.Y += 1;
+        }
+
+        // Apply movement
+        if (movement != Vector2.Zero)
+        {
+            movement = Vector2.Normalize(movement);
+            _playerPosition += movement * _speed * deltaTime;
+        }
+
+        // Keep player on screen
+        const float screenWidth = 1280f;
+        const float screenHeight = 720f;
+
+        var spriteWidth = _playerTexture?.Width ?? 32;
+        var spriteHeight = _playerTexture?.Height ?? 32;
+
+        _playerPosition.X = Math.Clamp(_playerPosition.X, spriteWidth / 2f, screenWidth - spriteWidth / 2f);
+        _playerPosition.Y = Math.Clamp(_playerPosition.Y, spriteHeight / 2f, screenHeight - spriteHeight / 2f);
+    }
 }
 ```
 
 ### Register the Scene in Program.cs
 
-```csharp Program.cs
+```csharp
 using Brine2D.Hosting;
 using Brine2D.Input.SDL;
 using Brine2D.Rendering.SDL;
@@ -555,16 +609,19 @@ await game.RunAsync<MovingSpriteScene>();
 Now that you've completed the tutorial, try these extensions:
 
 ### Easy
+
 1. **Change the speed** - Make the sprite move faster or slower
 2. **Different keys** - Use WASD instead of arrow keys
 3. **Background color** - Try different clear colors
 
 ### Medium
+
 4. **Multiple sprites** - Load and move 2-3 sprites independently
 5. **Wrap-around** - When the sprite leaves one edge, appear on the opposite edge
 6. **Speed boost** - Hold Shift to move 2x faster
 
 ### Hard
+
 7. **Smooth acceleration** - Gradually speed up/slow down instead of instant movement
 8. **Mouse follow** - Make the sprite move toward the mouse cursor
 9. **Rotation** - Rotate the sprite to face the direction of movement
@@ -597,16 +654,19 @@ Ready for more? Check out:
 ## Common Issues
 
 ### Sprite not showing?
+
 - Check if the file path is correct (`File.Exists()` returns true)
 - Make sure `assets/sprites/` folder is being copied to output (check `.csproj`)
 - Verify you called `BeginFrame()` before and `EndFrame()` after drawing
 
 ### Movement feels sluggish?
+
 - Check your `_speed` value (200 is a good default for pixels/second)
 - Make sure you're multiplying by `deltaTime`
 - Verify VSync is enabled for consistent frame rate
 
 ### Sprite is blurry?
+
 - Use `TextureScaleMode.Nearest` for pixel art
 - Make sure you're not scaling the sprite too much
 

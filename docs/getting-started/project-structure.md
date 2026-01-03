@@ -71,6 +71,7 @@ This design follows the **Dependency Inversion Principle**: high-level modules (
 **Purpose:** Core abstractions and data structures used throughout the engine.
 
 **Key Types:**
+
 - `IScene` - Interface for game scenes
 - `Scene` - Base class with lifecycle methods
 - `GameTime` - Holds frame timing information
@@ -78,6 +79,7 @@ This design follows the **Dependency Inversion Principle**: high-level modules (
 - `Color`, `Rectangle`, `RectangleF` - Common data types
 
 **Namespaces:**
+
 - `Brine2D.Core` - Core interfaces and base classes
 - `Brine2D.Core.Animation` - Sprite animation system
 - `Brine2D.Core.Collision` - Collision detection
@@ -103,6 +105,7 @@ public class MyScene : Scene
 **Purpose:** Game loop, scene management, and engine coordination.
 
 **Key Types:**
+
 - `IGameEngine` - Core engine interface
 - `GameEngine` - Coordinates subsystems
 - `IGameLoop` - Game loop abstraction
@@ -111,6 +114,7 @@ public class MyScene : Scene
 - `SceneManager` - Manages active scene
 
 **Dependencies:**
+
 - `Brine2D.Core`
 - `Microsoft.Extensions.*` (DI, Logging, Configuration)
 
@@ -131,11 +135,13 @@ await sceneManager.LoadSceneAsync<MenuScene>();
 **Purpose:** ASP.NET-style application hosting and builder pattern.
 
 **Key Types:**
+
 - `GameApplication` - The main application host
 - `GameApplicationBuilder` - Fluent API for configuration
 - Service registration extensions
 
 **Dependencies:**
+
 - `Brine2D.Core`
 - `Brine2D.Engine`
 - `Microsoft.Extensions.Hosting`
@@ -165,6 +171,7 @@ await game.RunAsync<GameScene>();
 **Purpose:** Rendering abstractions (interfaces and options).
 
 **Key Types:**
+
 - `IRenderer` - Core rendering interface
 - `ITexture` - Texture abstraction
 - `ITextureLoader` - Async texture loading
@@ -175,6 +182,7 @@ await game.RunAsync<GameScene>();
 - `RenderingOptions` - Configuration
 
 **Dependencies:**
+
 - `Brine2D.Core`
 
 ```csharp
@@ -200,6 +208,7 @@ public class GameScene : Scene
 **Purpose:** SDL3-based rendering implementation.
 
 **Key Types:**
+
 - `SDL3Renderer` - Implements `IRenderer` using SDL3
 - `SDL3Texture` - SDL3 texture wrapper
 - `SDL3TextureLoader` - Loads textures via SDL3_image
@@ -207,6 +216,7 @@ public class GameScene : Scene
 - Service registration extensions
 
 **Dependencies:**
+
 - `Brine2D.Rendering`
 - `SDL3-CS` (NuGet package - C# bindings for SDL3)
 
@@ -232,6 +242,7 @@ builder.Services.AddSDL3Rendering(options =>
 **Purpose:** Input abstractions for keyboard, mouse, and gamepad.
 
 **Key Types:**
+
 - `IInputService` - Unified input interface
 - `Keys` - Keyboard key enumeration
 - `MouseButton` - Mouse button enumeration
@@ -240,12 +251,21 @@ builder.Services.AddSDL3Rendering(options =>
 - `InputLayerManager` - Manages input layers
 
 **Dependencies:**
+
 - `Brine2D.Core`
 
 ```csharp
 // Unified input API
-if (_input.IsKeyPressed(Keys.Space)) { Jump(); }
-if (_input.IsMouseButtonDown(MouseButton.Left)) { Shoot(); }
+if (_input.IsKeyPressed(Keys.Space))
+{
+    Jump();
+}
+
+if (_input.IsMouseButtonDown(MouseButton.Left))
+{
+    Shoot();
+}
+
 var stick = _input.GetGamepadLeftStick();
 ```
 
@@ -256,10 +276,12 @@ var stick = _input.GetGamepadLeftStick();
 **Purpose:** SDL3-based input implementation.
 
 **Key Types:**
+
 - `SDL3InputService` - Implements `IInputService`
 - Service registration extensions
 
 **Dependencies:**
+
 - `Brine2D.Input`
 - `SDL3-CS`
 
@@ -278,11 +300,13 @@ builder.Services.AddSDL3Input();
 **Purpose:** Audio abstractions for sound effects and music.
 
 **Key Types:**
+
 - `IAudioService` - Audio playback interface
 - `ISoundEffect` - Short sound effect
 - `IMusic` - Background music
 
 **Dependencies:**
+
 - None (pure abstractions)
 
 ```csharp
@@ -301,11 +325,13 @@ _audio.PlayMusic(bgMusic, loops: -1); // Loop forever
 **Purpose:** SDL3_mixer-based audio implementation.
 
 **Key Types:**
+
 - `SDL3AudioService` - Implements `IAudioService`
 - `SDL3SoundEffect`, `SDL3Music` - SDL3 wrappers
 - Service registration extensions
 
 **Dependencies:**
+
 - `Brine2D.Audio`
 - `SDL3-CS` (includes SDL3_mixer bindings)
 
@@ -324,6 +350,7 @@ builder.Services.AddSDL3Audio();
 **Purpose:** Immediate-mode UI framework.
 
 **Key Types:**
+
 - `UICanvas` - Container for UI components
 - `UIButton`, `UILabel`, `UISlider` - Basic components
 - `UITextInput`, `UICheckbox`, `UIDropdown` - Form controls
@@ -332,6 +359,7 @@ builder.Services.AddSDL3Audio();
 - `IUIComponent` - Interface for custom UI
 
 **Dependencies:**
+
 - `Brine2D.Core`
 - `Brine2D.Rendering`
 - `Brine2D.Input`
@@ -360,6 +388,7 @@ _uiCanvas.Render(_renderer);
 **Purpose:** Sprite animation system.
 
 **Key Types:**
+
 - `SpriteAnimator` - Plays animation clips
 - `AnimationClip` - Sequence of frames
 - `SpriteFrame` - Single frame with duration
@@ -380,6 +409,7 @@ animator.Play("walk");
 **Purpose:** Collision detection system.
 
 **Key Types:**
+
 - `CollisionSystem` - Manages collision checks
 - `CollisionShape` - Base for all colliders
 - `BoxCollider`, `CircleCollider` - Shape types
@@ -403,11 +433,13 @@ var collisions = collisionSystem.GetCollisions(playerCollider);
 **Purpose:** Tilemap loading and rendering (Tiled format).
 
 **Key Types:**
+
 - `Tilemap` - Loaded tilemap data
 - `ITilemapLoader` - Loads `.tmj` files
 - `TilemapRenderer` - Renders tilemaps
 
 **Supports:**
+
 - Tiled Editor `.tmj` format
 - Multiple layers
 - Automatic collision generation
@@ -527,10 +559,13 @@ Brine2D/
 Brine2D's architecture follows these key principles:
 
 ### 1. **Dependency Inversion**
+
 High-level modules (your game) depend on abstractions (`IRenderer`), not implementations (`SDL3Renderer`).
 
 ### 2. **Single Responsibility**
+
 Each package has one job:
+
 - `Core` = abstractions
 - `Engine` = game loop
 - `Rendering` = draw things
@@ -538,12 +573,15 @@ Each package has one job:
 - etc.
 
 ### 3. **Open/Closed**
+
 Open for extension (implement `IRenderer` with DirectX, Metal, etc.), closed for modification (core interfaces rarely change).
 
 ### 4. **Dependency Injection**
+
 Everything is resolved via DI container—testable, mockable, swappable.
 
 ### 5. **Configuration Over Code**
+
 Prefer `gamesettings.json` over hardcoded values.
 
 ---

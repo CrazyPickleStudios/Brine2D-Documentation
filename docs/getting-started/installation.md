@@ -57,12 +57,14 @@ dotnet add package Brine2D.Desktop
 If you prefer Visual Studio's interface:
 
 **1. Create a new project:**
+
 - File → New → Project
 - Select **Console App** (.NET 10)
 - Name it `MyGame`
 - Click **Create**
 
 **2. Add NuGet Package:**
+
 - Right-click project → **Manage NuGet Packages**
 - Click **Browse** tab
 - Search for `Brine2D.Desktop`
@@ -126,6 +128,7 @@ dotnet add package Brine2D.Desktop
 ```
 
 **Includes:**
+
 - ✅ Core abstractions (`Brine2D.Core`)
 - ✅ Game engine (`Brine2D.Engine`)
 - ✅ Hosting system (`Brine2D.Hosting`)
@@ -325,6 +328,7 @@ dotnet run
    ```
    
    You should see:
+
    - `SDL3-CS`
    - `SDL3-CS.Native`
    - `SDL3-CS.Native.TTF`
@@ -429,6 +433,7 @@ No additional setup required. SDL3 native libraries are included via NuGet.
 SDL3 supports Linux, but we haven't tested Brine2D there yet.
 
 **If you try it:**
+
 1. Install .NET 10 SDK: [docs.microsoft.com/dotnet/core/install/linux](https://docs.microsoft.com/dotnet/core/install/linux)
 2. Install SDL3 dependencies:
    
@@ -451,6 +456,7 @@ SDL3 supports Linux, but we haven't tested Brine2D there yet.
 SDL3 supports macOS, but we haven't tested Brine2D there yet.
 
 **If you try it:**
+
 1. Install .NET 10 SDK: [docs.microsoft.com/dotnet/core/install/macos](https://docs.microsoft.com/dotnet/core/install/macos)
 2. Install SDL3 via Homebrew:
    
@@ -473,6 +479,7 @@ SDL3 supports macOS, but we haven't tested Brine2D there yet.
 - **Hot Reload** (built-in, works great!)
 
 **Settings:**
+
 - Enable **Just My Code** for cleaner debugging
 - Set **Output Verbosity** to `Normal` to see Brine2D logs
 
@@ -516,11 +523,13 @@ SDL3 supports macOS, but we haven't tested Brine2D there yet.
 ### JetBrains Rider
 
 **Setup:**
+
 - Rider 2024.1+ recommended
 - .NET 10 SDK detected automatically
 - NuGet restore happens on project open
 
 **Tips:**
+
 - Use **Run/Debug Configurations** for different scenes
 - Enable **Hot Reload** for faster iteration
 - Use **Solution-Wide Analysis** to catch issues early

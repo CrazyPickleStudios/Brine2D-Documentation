@@ -79,6 +79,7 @@ await game.RunAsync<MenuScene>();
 ```
 
 **Key Methods:**
+
 - `Services` - Access the `IServiceCollection` for DI
 - `Configuration` - Access game configuration (`gamesettings.json`)
 - `Logging` - Configure logging levels and providers

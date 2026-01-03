@@ -295,7 +295,8 @@ public class GameScene : Scene
     private readonly IConfiguration _configuration;
     private readonly RenderingOptions _renderingOptions;
     
-    public GameScene(
+    public GameScene
+    (
         IConfiguration configuration,
         IOptions<RenderingOptions> renderingOptions,
         ILogger<GameScene> logger
@@ -366,7 +367,8 @@ public class GameScene : Scene
 {
     private readonly GameplayOptions _gameplay;
     
-    public GameScene(
+    public GameScene
+    (
         IOptions<GameplayOptions> gameplay,
         ILogger<GameScene> logger
     ) : base(logger)
@@ -406,7 +408,8 @@ public class GameScene : Scene
 {
     private readonly IOptionsMonitor<RenderingOptions> _renderingMonitor;
     
-    public GameScene(
+    public GameScene
+    (
         IOptionsMonitor<RenderingOptions> renderingMonitor,
         ILogger<GameScene> logger
     ) : base(logger)

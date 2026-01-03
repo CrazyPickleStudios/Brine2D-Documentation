@@ -10,6 +10,7 @@ Master keyboard input handling in Brine2D for player movement, menu navigation, 
 ## Overview
 
 Brine2D provides a simple, frame-based keyboard input system via `IInputService`:
+
 - ✅ **Key down** - Is key currently held?
 - ✅ **Key pressed** - Was key just pressed this frame?
 - ✅ **Key released** - Was key just released this frame?
@@ -146,6 +147,7 @@ protected override void OnUpdate(GameTime gameTime)
 ```
 
 **Behavior:**
+
 - ✅ Returns `true` **every frame** while key is held
 - ✅ Perfect for smooth movement
 - ✅ Frame-rate independent (use delta time!)
@@ -173,6 +175,7 @@ protected override void OnUpdate(GameTime gameTime)
 ```
 
 **Behavior:**
+
 - ✅ Returns `true` **only on first frame** of press
 - ✅ Ignores key repeats
 - ✅ Perfect for discrete actions
@@ -217,6 +220,7 @@ protected override void OnUpdate(GameTime gameTime)
 ```
 
 **Behavior:**
+
 - ✅ Returns `true` **on frame of release**
 - ✅ Perfect for charge mechanics
 
