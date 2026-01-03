@@ -19,10 +19,10 @@ Before you begin, make sure you have:
 
 Create a new console application:
 
-~~~bash
+```bash
 dotnet new console -n MyFirstGame
 cd MyFirstGame
-~~~
+```
 
 This creates a basic .NET 10 console application with a `Program.cs` file.
 
@@ -30,9 +30,9 @@ This creates a basic .NET 10 console application with a `Program.cs` file.
 
 Add the Brine2D.Desktop NuGet package, which includes everything you need:
 
-~~~bash
+```bash
 dotnet add package Brine2D.Desktop
-~~~
+```
 
 !!! info "What's Included?"
     `Brine2D.Desktop` is a meta-package that includes:
@@ -51,7 +51,7 @@ dotnet add package Brine2D.Desktop
 
 Replace the contents of `Program.cs` with this code:
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.Hosting;
 using Brine2D.Input;
@@ -116,15 +116,15 @@ public class GameScene : Scene
         }
     }
 }
-~~~
+```
 
 ## Step 4: Run Your Game
 
 Build and run your game:
 
-~~~bash
+```bash
 dotnet run
-~~~
+```
 
 You should see a window with "Hello, Brine2D!" displayed. Press **Escape** to exit.
 
@@ -138,9 +138,9 @@ Let's break down the key concepts:
 
 ### The Builder Pattern
 
-~~~csharp
+```csharp
 var builder = GameApplication.CreateBuilder(args);
-~~~
+```
 
 Just like ASP.NET's `WebApplication.CreateBuilder()`, this sets up your game with sensible defaults. It:
 
@@ -151,11 +151,11 @@ Just like ASP.NET's `WebApplication.CreateBuilder()`, this sets up your game wit
 
 ### Service Registration
 
-~~~csharp
+```csharp
 builder.Services.AddSDL3Rendering(options => { ... });
 builder.Services.AddSDL3Input();
 builder.Services.AddScene<GameScene>();
-~~~
+```
 
 This should look familiar if you've used ASP.NET:
 
@@ -165,7 +165,7 @@ This should look familiar if you've used ASP.NET:
 
 ### Scenes Are Like Controllers
 
-~~~csharp
+```csharp
 public class GameScene : Scene
 {
     public GameScene(IRenderer renderer, IInputService input, ILogger<GameScene> logger) 
@@ -174,7 +174,7 @@ public class GameScene : Scene
         // Constructor injection!
     }
 }
-~~~
+```
 
 Scenes organize your game logic just like controllers organize your web endpoints. They:
 
@@ -201,7 +201,7 @@ Now that you have a working game, here's what to explore next:
 
 Modify your `GameScene` to move text with arrow keys:
 
-~~~csharp
+```csharp
 public class GameScene : Scene
 {
     private readonly IGameContext _gameContext;
@@ -245,7 +245,7 @@ public class GameScene : Scene
             _gameContext.RequestExit();
     }
 }
-~~~
+```
 
 Run it again and use the arrow keys to move the text!
 
@@ -253,7 +253,7 @@ Run it again and use the arrow keys to move the text!
 
 Draw a simple rectangle:
 
-~~~csharp
+```csharp
 protected override void OnRender(GameTime gameTime)
 {
     _renderer.Clear(Color.CornflowerBlue);
@@ -266,13 +266,13 @@ protected override void OnRender(GameTime gameTime)
 
     _renderer.EndFrame();
 }
-~~~
+```
 
 ### Optional: Add Configuration
 
 Create a `gamesettings.json` file in your project:
 
-~~~json
+```json
 {
   "Logging": {
     "LogLevel": {
@@ -288,26 +288,26 @@ Create a `gamesettings.json` file in your project:
     "Fullscreen": false
   }
 }
-~~~
+```
 
 Then simplify your rendering configuration:
 
-~~~csharp
+```csharp
 builder.Services.AddSDL3Rendering(options =>
 {
     builder.Configuration.GetSection("Rendering").Bind(options);
 });
-~~~
+```
 
 Make sure to set the file to copy to the output directory in your `.csproj`:
 
-~~~xml
+```xml
 <ItemGroup>
   <None Update="gamesettings.json">
     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
   </None>
 </ItemGroup>
-~~~
+```
 
 ---
 
@@ -342,15 +342,15 @@ The text rendering is a simple fallback. For proper text:
 
 If you want to contribute to Brine2D or use the latest development version, you can reference the projects directly instead:
 
-~~~bash
+```bash
 git clone https://github.com/CrazyPickleStudios/Brine2D.git
 cd Brine2D
 dotnet build
-~~~
+```
 
 Then in your game project, replace the NuGet package with project references:
 
-~~~bash
+```bash
 dotnet remove package Brine2D.Desktop
 dotnet add reference ../Brine2D/src/Brine2D.Core/Brine2D.Core.csproj
 dotnet add reference ../Brine2D/src/Brine2D.Engine/Brine2D.Engine.csproj
@@ -359,7 +359,7 @@ dotnet add reference ../Brine2D/src/Brine2D.Rendering/Brine2D.Rendering.csproj
 dotnet add reference ../Brine2D/src/Brine2D.Rendering.SDL/Brine2D.Rendering.SDL.csproj
 dotnet add reference ../Brine2D/src/Brine2D.Input/Brine2D.Input.csproj
 dotnet add reference ../Brine2D/src/Brine2D.Input.SDL/Brine2D.Input.SDL.csproj
-~~~
+```
 
 ---
 
