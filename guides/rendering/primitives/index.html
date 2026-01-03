@@ -1,0 +1,4051 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Learn to draw shapes, colors, and primitives in Brine2D">
+      
+      
+      
+      
+        <link rel="prev" href="../cameras/">
+      
+      
+        <link rel="next" href="../../input/keyboard/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Drawing Basics - Brine2D Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/prism-material-slate.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#drawing-basics" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Brine2D Documentation" class="md-header__button md-logo" aria-label="Brine2D Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Brine2D Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Drawing Basics
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Brine2D Documentation" class="md-nav__button md-logo" aria-label="Brine2D Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Brine2D Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/first-game/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/project-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/moving-sprites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Moving Sprites
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/animations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/collision.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision Detection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/platformer.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building a Platformer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/top-down.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Top-Down Adventure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4_2" id="__nav_4_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Rendering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sprites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprites & Textures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cameras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cameras
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Drawing Primitives
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Drawing Primitives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#your-first-drawing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Your First Drawing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Your First Drawing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minimal-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimal Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-rendering-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Rendering Pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Rendering Pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#frame-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frame Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drawing-rectangles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drawing Rectangles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Drawing Rectangles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-rectangle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Rectangle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rectangle-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rectangle Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drawing-circles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drawing Circles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Drawing Circles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-circle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Circle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#circle-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Circle Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#working-with-colors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Working with Colors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Working with Colors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#predefined-colors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Predefined Colors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-colors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Colors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#color-math" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Color Math
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drawing-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drawing Text
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Drawing Text">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Text
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#text-without-fonts-fallback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Text Without Fonts (Fallback)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-drawing-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Drawing Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-techniques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Techniques
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Techniques">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#alpha-blending" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alpha Blending
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gradient-effect-fake" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gradient Effect (Fake)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#progress-bar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Progress Bar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#health-bar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Bar
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-nothing-draws" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Nothing Draws
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-shapes-behind-each-other" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Shapes Behind Each Other
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-poor-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Poor Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DO
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DON'T
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Tips
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_3" id="__nav_4_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Input
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/keyboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keyboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/mouse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mouse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/gamepad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gamepad Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/layers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input Layers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_4" id="__nav_4_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audio
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Audio
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/sound-effects.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sound Effects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/music.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Music Playback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_5" id="__nav_4_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scenes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Scenes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/lifecycle.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/transitions.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Transitions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_6" id="__nav_4_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Collision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../collision/system.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../collision/colliders.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Colliders
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_7" id="__nav_4_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tilemaps
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tilemaps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tilemaps/loading.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Loading Tilemaps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tilemaps/rendering.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering Tiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_4_8" id="__nav_4_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Framework
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UI Framework
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ui/components.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ui/custom.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom UI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/dependency-injection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/game-loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Game Loop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/builder-pattern/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Builder Pattern
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/scenes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/core.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Core
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/rendering.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Rendering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/input.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Input
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/audio.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Samples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Samples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/basic-game.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/animation-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/collision-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Contributing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to Contribute
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/code-style.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Style
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/building.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building from Source
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#your-first-drawing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Your First Drawing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Your First Drawing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#minimal-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimal Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-rendering-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Rendering Pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Rendering Pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#frame-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frame Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drawing-rectangles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drawing Rectangles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Drawing Rectangles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-rectangle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Rectangle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rectangle-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rectangle Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drawing-circles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drawing Circles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Drawing Circles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-circle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Circle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#circle-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Circle Patterns
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#working-with-colors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Working with Colors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Working with Colors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#predefined-colors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Predefined Colors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#custom-colors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Custom Colors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#color-math" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Color Math
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drawing-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drawing Text
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Drawing Text">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Text
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#text-without-fonts-fallback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Text Without Fonts (Fallback)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-drawing-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Drawing Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-techniques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Techniques
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Techniques">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#alpha-blending" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alpha Blending
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gradient-effect-fake" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gradient Effect (Fake)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#progress-bar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Progress Bar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#health-bar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Bar
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-nothing-draws" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Nothing Draws
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-shapes-behind-each-other" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Shapes Behind Each Other
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-poor-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Poor Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DO
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DON'T
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Tips
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="drawing-basics">Drawing Basics<a class="headerlink" href="#drawing-basics" title="Permanent link">&para;</a></h1>
+<p>Master the fundamentals of rendering in Brine2D by learning to draw shapes, set colors, and understand the rendering pipeline.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Brine2D's rendering system provides simple, immediate-mode drawing APIs for 2D graphics:
+- ✅ <strong>Rectangles</strong> - Filled squares and rectangles
+- ✅ <strong>Circles</strong> - Filled circles for particles, bullets
+- ✅ <strong>Text</strong> - String rendering with fonts
+- ✅ <strong>Textures</strong> - Images and sprites (covered in <a href="textures.md">Textures</a>)</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Scene as Your Scene
+    participant Renderer as IRenderer
+    participant SDL as SDL3
+
+    Note over Scene: Every Frame
+
+    Scene-&gt;&gt;Renderer: Clear(color)
+    Renderer-&gt;&gt;SDL: SDL_SetRenderDrawColor
+    Renderer-&gt;&gt;SDL: SDL_RenderClear
+
+    Scene-&gt;&gt;Renderer: BeginFrame()
+
+    Scene-&gt;&gt;Renderer: DrawRectangle(...)
+    Renderer-&gt;&gt;SDL: SDL_RenderFillRect
+
+    Scene-&gt;&gt;Renderer: DrawCircle(...)
+    Renderer-&gt;&gt;SDL: Draw circle algorithm
+
+    Scene-&gt;&gt;Renderer: DrawText(...)
+    Renderer-&gt;&gt;SDL: SDL_TTF render
+
+    Scene-&gt;&gt;Renderer: EndFrame()
+    Renderer-&gt;&gt;SDL: SDL_RenderPresent
+    Note over SDL: Display on screen</code></pre>
+<hr />
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<ul>
+<li>✅ <a href="../getting-started/quick-start.md">Quick Start</a> - Basic scene setup</li>
+<li>✅ Basic C# knowledge</li>
+</ul>
+<hr />
+<h2 id="your-first-drawing">Your First Drawing<a class="headerlink" href="#your-first-drawing" title="Permanent link">&para;</a></h2>
+<h3 id="minimal-example">Minimal Example<a class="headerlink" href="#minimal-example" title="Permanent link">&para;</a></h3>
+<p>```csharp MinimalDrawing.cs
+using Brine2D.Core;
+using Brine2D.Rendering;
+using Microsoft.Extensions.Logging;</p>
+<p>public class DrawingScene : Scene
+{
+    private readonly IRenderer _renderer;</p>
+<pre class="highlight"><code>public DrawingScene(IRenderer renderer, ILogger&lt;DrawingScene&gt; logger) 
+    : base(logger)
+{
+    _renderer = renderer;
+}
+
+protected override void OnRender(GameTime gameTime)
+{
+    // 1. Clear screen (required)
+    _renderer.Clear(Color.CornflowerBlue);
+
+    // 2. Begin frame (required)
+    _renderer.BeginFrame();
+
+    // 3. Draw your stuff
+    _renderer.DrawRectangle(100, 100, 200, 150, Color.Red);
+
+    // 4. End frame (required) - presents to screen
+    _renderer.EndFrame();
+}</code></pre>
+<p>}
+```
+
+<strong>Result:</strong> A red rectangle on a blue background!</p>
+<hr />
+<h2 id="the-rendering-pipeline">The Rendering Pipeline<a class="headerlink" href="#the-rendering-pipeline" title="Permanent link">&para;</a></h2>
+<h3 id="frame-structure">Frame Structure<a class="headerlink" href="#frame-structure" title="Permanent link">&para;</a></h3>
+<p>Every frame <strong>MUST</strong> follow this pattern:
+
+<code>csharp
+protected override void OnRender(GameTime gameTime)
+{
+    // Step 1: Clear screen
+    _renderer.Clear(backgroundColor);
+
+    // Step 2: Begin frame
+    _renderer.BeginFrame();
+
+    // Step 3: Draw everything
+    DrawBackground();
+    DrawGameObjects();
+    DrawUI();
+
+    // Step 4: End frame (displays on screen)
+    _renderer.EndFrame();
+}</code></p>
+<p><strong>Why this order?</strong>
+- <code>Clear()</code> - Wipes previous frame
+- <code>BeginFrame()</code> - Prepares rendering state
+- Draw calls - Queues draw commands
+- <code>EndFrame()</code> - Flips buffers, shows result</p>
+<hr />
+<h2 id="drawing-rectangles">Drawing Rectangles<a class="headerlink" href="#drawing-rectangles" title="Permanent link">&para;</a></h2>
+<h3 id="basic-rectangle">Basic Rectangle<a class="headerlink" href="#basic-rectangle" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// DrawRectangle(x, y, width, height, color)
+_renderer.DrawRectangle(100, 100, 50, 50, Color.Red);</code></pre>
+<p><strong>Parameters:</strong>
+- <code>x</code> - Left edge position
+- <code>y</code> - Top edge position
+- <code>width</code> - Rectangle width
+- <code>height</code> - Rectangle height
+- <code>color</code> - Fill color</p>
+<pre class="highlight"><code>Screen Coordinates:
+(0,0) ───────► X
+  │
+  │    (100,100)
+  │      ┌──────────┐
+  │      │ 50x50 px │
+  │      │  rect    │
+  │      └──────────┘
+  ▼
+  Y</code></pre>
+<hr />
+<h3 id="rectangle-patterns">Rectangle Patterns<a class="headerlink" href="#rectangle-patterns" title="Permanent link">&para;</a></h3>
+<p><strong>Centered Rectangle</strong></p>
+<pre class="highlight"><code class="language-csharp">private void DrawCenteredRect(float centerX, float centerY, float size, Color color)
+{
+    _renderer.DrawRectangle(
+        centerX - size / 2,
+        centerY - size / 2,
+        size,
+        size,
+        color);
+}</code></pre>
+<p><strong>Outlined Rectangle</strong> (draw 4 thin rectangles)</p>
+<pre class="highlight"><code class="language-csharp">private void DrawRectangleOutline(float x, float y, float w, float h, Color color, float thickness = 2)
+{
+    // Top
+    _renderer.DrawRectangle(x, y, w, thickness, color);
+    // Bottom  
+    _renderer.DrawRectangle(x, y + h - thickness, w, thickness, color);
+    // Left
+    _renderer.DrawRectangle(x, y, thickness, h, color);
+    // Right
+    _renderer.DrawRectangle(x + w - thickness, y, thickness, h, color);
+}</code></pre>
+<p><strong>Grid Pattern</strong></p>
+<pre class="highlight"><code class="language-csharp">private void DrawGrid(int gridSize, Color gridColor)
+{
+    // Vertical lines
+    for (int x = 0; x &lt; 1280; x += gridSize)
+    {
+        _renderer.DrawRectangle(x, 0, 2, 720, gridColor);
+    }
+
+    // Horizontal lines
+    for (int y = 0; y &lt; 720; y += gridSize)
+    {
+        _renderer.DrawRectangle(0, y, 1280, 2, gridColor);
+    }
+}</code></pre>
+<hr />
+<h2 id="drawing-circles">Drawing Circles<a class="headerlink" href="#drawing-circles" title="Permanent link">&para;</a></h2>
+<h3 id="basic-circle">Basic Circle<a class="headerlink" href="#basic-circle" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// DrawCircle(centerX, centerY, radius, color)
+_renderer.DrawCircle(400, 300, 50, Color.Blue);</code></pre>
+<p><strong>Parameters:</strong>
+- <code>centerX</code> - Circle center X
+- <code>centerY</code> - Circle center Y
+- <code>radius</code> - Circle radius in pixels
+- <code>color</code> - Fill color</p>
+<p><strong>Note:</strong> Circles are filled automatically (no outline-only mode yet).</p>
+<hr />
+<h3 id="circle-patterns">Circle Patterns<a class="headerlink" href="#circle-patterns" title="Permanent link">&para;</a></h3>
+<p><strong>Particle Effect</strong></p>
+<pre class="highlight"><code class="language-csharp">private void DrawParticles()
+{
+    var random = new Random();
+
+    for (int i = 0; i &lt; 50; i++)
+    {
+        var x = random.Next(0, 1280);
+        var y = random.Next(0, 720);
+        var radius = random.Next(2, 8);
+
+        _renderer.DrawCircle(x, y, radius, Color.White);
+    }
+}</code></pre>
+<p><strong>Ripple Effect</strong></p>
+<pre class="highlight"><code class="language-csharp">private float _rippleRadius = 0f;
+
+protected override void OnUpdate(GameTime gameTime)
+{
+    _rippleRadius += 100f * (float)gameTime.DeltaTime;
+    if (_rippleRadius &gt; 200) _rippleRadius = 0;
+}
+
+protected override void OnRender(GameTime gameTime)
+{
+    _renderer.BeginFrame();
+
+    // Draw expanding circle
+    var alpha = (byte)(255 * (1.0f - _rippleRadius / 200f));
+    _renderer.DrawCircle(640, 360, _rippleRadius, 
+        new Color(255, 255, 255, alpha));
+
+    _renderer.EndFrame();
+}</code></pre>
+<hr />
+<h2 id="working-with-colors">Working with Colors<a class="headerlink" href="#working-with-colors" title="Permanent link">&para;</a></h2>
+<h3 id="predefined-colors">Predefined Colors<a class="headerlink" href="#predefined-colors" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">Color.White           // (255, 255, 255)
+Color.Black           // (0, 0, 0)
+Color.Red             // (255, 0, 0)
+Color.Green           // (0, 255, 0)
+Color.Blue            // (0, 0, 255)
+Color.Yellow          // (255, 255, 0)
+Color.CornflowerBlue  // (100, 149, 237)
+Color.Transparent     // (0, 0, 0, 0)</code></pre>
+<hr />
+<h3 id="custom-colors">Custom Colors<a class="headerlink" href="#custom-colors" title="Permanent link">&para;</a></h3>
+<p><strong>RGB Color</strong></p>
+<pre class="highlight"><code class="language-csharp">var purple = new Color(128, 0, 128);</code></pre>
+<p><strong>RGBA Color (with transparency)</strong></p>
+<pre class="highlight"><code class="language-csharp">var semiTransparentRed = new Color(255, 0, 0, 128); // 50% transparent</code></pre>
+<p><strong>Helper Methods</strong></p>
+<pre class="highlight"><code class="language-csharp">var color1 = Color.FromRgb(100, 150, 200);
+var color2 = Color.FromRgba(100, 150, 200, 128);</code></pre>
+<hr />
+<h3 id="color-math">Color Math<a class="headerlink" href="#color-math" title="Permanent link">&para;</a></h3>
+<p><strong>Lighten/Darken</strong></p>
+<pre class="highlight"><code class="language-csharp">public static Color Lighten(Color color, float amount)
+{
+    return new Color(
+        (byte)Math.Min(255, color.R + (255 - color.R) * amount),
+        (byte)Math.Min(255, color.G + (255 - color.G) * amount),
+        (byte)Math.Min(255, color.B + (255 - color.B) * amount),
+        color.A);
+}
+
+public static Color Darken(Color color, float amount)
+{
+    return new Color(
+        (byte)(color.R * (1 - amount)),
+        (byte)(color.G * (1 - amount)),
+        (byte)(color.B * (1 - amount)),
+        color.A);
+}</code></pre>
+<p><strong>Blend/Mix Colors</strong></p>
+<pre class="highlight"><code class="language-csharp">public static Color Lerp(Color a, Color b, float t)
+{
+    return new Color(
+        (byte)(a.R + (b.R - a.R) * t),
+        (byte)(a.G + (b.G - a.G) * t),
+        (byte)(a.B + (b.B - a.B) * t),
+        (byte)(a.A + (b.A - a.A) * t));
+}</code></pre>
+<p><strong>Pulsing Color</strong></p>
+<pre class="highlight"><code class="language-csharp">private float _pulse = 0f;
+
+protected override void OnUpdate(GameTime gameTime)
+{
+    _pulse += (float)gameTime.DeltaTime * 2f;
+}
+
+protected override void OnRender(GameTime gameTime)
+{
+    var intensity = (byte)(128 + Math.Sin(_pulse) * 127);
+    var color = new Color(intensity, 0, 0);
+
+    _renderer.DrawRectangle(100, 100, 100, 100, color);
+}</code></pre>
+<hr />
+<h2 id="drawing-text">Drawing Text<a class="headerlink" href="#drawing-text" title="Permanent link">&para;</a></h2>
+<h3 id="basic-text">Basic Text<a class="headerlink" href="#basic-text" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">_renderer.DrawText("Hello, World!", 100, 100, Color.White);</code></pre>
+<p><strong>Parameters:</strong>
+- <code>text</code> - String to display
+- <code>x</code> - Left edge
+- <code>y</code> - Top edge
+- <code>color</code> - Text color</p>
+<p><strong>Note:</strong> You need to load a font first! See <a href="text.md">Text Rendering</a> for details.</p>
+<hr />
+<h3 id="text-without-fonts-fallback">Text Without Fonts (Fallback)<a class="headerlink" href="#text-without-fonts-fallback" title="Permanent link">&para;</a></h3>
+<p>If no font is loaded, Brine2D renders text as rectangles:</p>
+<pre class="highlight"><code class="language-csharp">// Fallback rendering (automatic)
+_renderer.DrawText("TEST", 100, 100, Color.White);
+// Each character = 8x12 rectangle</code></pre>
+<hr />
+<h2 id="complete-drawing-example">Complete Drawing Example<a class="headerlink" href="#complete-drawing-example" title="Permanent link">&para;</a></h2>
+<p>Here's a scene with all drawing primitives:</p>
+<p>```csharp DrawingDemoScene.cs
+using Brine2D.Core;
+using Brine2D.Input;
+using Brine2D.Rendering;
+using Microsoft.Extensions.Logging;</p>
+<p>public class DrawingDemoScene : Scene
+{
+    private readonly IRenderer _renderer;
+    private readonly IInputService _input;
+    private readonly IGameContext _gameContext;</p>
+<pre class="highlight"><code>private float _pulse = 0f;
+private float _rotation = 0f;
+
+public DrawingDemoScene(
+    IRenderer renderer,
+    IInputService input,
+    IGameContext gameContext,
+    ILogger&lt;DrawingDemoScene&gt; logger
+) : base(logger)
+{
+    _renderer = renderer;
+    _input = input;
+    _gameContext = gameContext;
+}
+
+protected override void OnInitialize()
+{
+    Logger.LogInformation("Drawing Demo initialized!");
+    Logger.LogInformation("Press ESC to exit");
+}
+
+protected override void OnUpdate(GameTime gameTime)
+{
+    var deltaTime = (float)gameTime.DeltaTime;
+
+    if (_input.IsKeyPressed(Keys.Escape))
+    {
+        _gameContext.RequestExit();
+    }
+
+    // Animation
+    _pulse += deltaTime * 2f;
+    _rotation += deltaTime * 90f; // 90 degrees per second
+}
+
+protected override void OnRender(GameTime gameTime)
+{
+    // Clear to dark gray
+    _renderer.Clear(new Color(40, 40, 40));
+    _renderer.BeginFrame();
+
+    // Grid background
+    DrawGrid();
+
+    // Rectangles
+    DrawRectangles();
+
+    // Circles
+    DrawCircles();
+
+    // Pulsing square
+    DrawPulsingSquare();
+
+    // Text
+    _renderer.DrawText("Drawing Demo", 10, 10, Color.White);
+    _renderer.DrawText($"FPS: {(int)(1.0 / gameTime.DeltaTime)}", 10, 30, Color.Yellow);
+
+    _renderer.EndFrame();
+}
+
+private void DrawGrid()
+{
+    var gridSize = 50;
+    var gridColor = new Color(60, 60, 60);
+
+    // Vertical lines
+    for (int x = 0; x &lt;= 1280; x += gridSize)
+    {
+        _renderer.DrawRectangle(x, 0, 1, 720, gridColor);
+    }
+
+    // Horizontal lines
+    for (int y = 0; y &lt;= 720; y += gridSize)
+    {
+        _renderer.DrawRectangle(0, y, 1280, 1, gridColor);
+    }
+}
+
+private void DrawRectangles()
+{
+    // Solid rectangles
+    _renderer.DrawRectangle(100, 100, 100, 100, Color.Red);
+    _renderer.DrawRectangle(250, 100, 150, 80, Color.Green);
+    _renderer.DrawRectangle(450, 100, 120, 120, Color.Blue);
+
+    // Semi-transparent
+    _renderer.DrawRectangle(100, 250, 100, 100, 
+        new Color(255, 0, 0, 128));
+
+    // Outlined rectangle
+    DrawRectangleOutline(250, 250, 150, 80, Color.Yellow, 3);
+}
+
+private void DrawCircles()
+{
+    // Various sizes
+    _renderer.DrawCircle(700, 150, 50, Color.Red);
+    _renderer.DrawCircle(850, 150, 30, Color.Green);
+    _renderer.DrawCircle(950, 150, 70, Color.Blue);
+
+    // Semi-transparent
+    _renderer.DrawCircle(750, 300, 40, 
+        new Color(255, 255, 0, 128));
+
+    // Overlapping circles (alpha blending)
+    _renderer.DrawCircle(900, 300, 50, 
+        new Color(255, 0, 0, 100));
+    _renderer.DrawCircle(950, 300, 50, 
+        new Color(0, 255, 0, 100));
+    _renderer.DrawCircle(925, 340, 50, 
+        new Color(0, 0, 255, 100));
+}
+
+private void DrawPulsingSquare()
+{
+    var scale = 1.0f + (float)Math.Sin(_pulse) * 0.3f;
+    var size = 80 * scale;
+    var centerX = 640f;
+    var centerY = 500f;
+
+    // Pulsing color
+    var intensity = (byte)(128 + Math.Sin(_pulse * 2) * 127);
+    var color = new Color(intensity, 0, intensity);
+
+    _renderer.DrawRectangle(
+        centerX - size / 2,
+        centerY - size / 2,
+        size,
+        size,
+        color);
+}
+
+private void DrawRectangleOutline(float x, float y, float w, float h, 
+    Color color, float thickness)
+{
+    _renderer.DrawRectangle(x, y, w, thickness, color);
+    _renderer.DrawRectangle(x, y + h - thickness, w, thickness, color);
+    _renderer.DrawRectangle(x, y, thickness, h, color);
+    _renderer.DrawRectangle(x + w - thickness, y, thickness, h, color);
+}</code></pre>
+<p>}
+```</p>
+<hr />
+<h2 id="advanced-techniques">Advanced Techniques<a class="headerlink" href="#advanced-techniques" title="Permanent link">&para;</a></h2>
+<h3 id="alpha-blending">Alpha Blending<a class="headerlink" href="#alpha-blending" title="Permanent link">&para;</a></h3>
+<p><code>csharp
+// Transparent rectangles automatically blend
+_renderer.DrawRectangle(100, 100, 100, 100, new Color(255, 0, 0, 128));
+_renderer.DrawRectangle(150, 150, 100, 100, new Color(0, 0, 255, 128));
+// Result: Purple overlap!</code></p>
+<p><strong>How it works:</strong>
+- SDL automatically enables alpha blending when <code>color.A &lt; 255</code>
+- Overlapping shapes blend correctly</p>
+<hr />
+<h3 id="gradient-effect-fake">Gradient Effect (Fake)<a class="headerlink" href="#gradient-effect-fake" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">private void DrawVerticalGradient(float x, float y, float w, float h, 
+    Color topColor, Color bottomColor)
+{
+    int steps = (int)h;
+
+    for (int i = 0; i &lt; steps; i++)
+    {
+        float t = i / (float)steps;
+        var color = ColorLerp(topColor, bottomColor, t);
+
+        _renderer.DrawRectangle(x, y + i, w, 1, color);
+    }
+}
+
+private Color ColorLerp(Color a, Color b, float t)
+{
+    return new Color(
+        (byte)(a.R + (b.R - a.R) * t),
+        (byte)(a.G + (b.G - a.G) * t),
+        (byte)(a.B + (b.B - a.B) * t),
+        (byte)(a.A + (b.A - a.A) * t));
+}</code></pre>
+<hr />
+<h3 id="progress-bar">Progress Bar<a class="headerlink" href="#progress-bar" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">private void DrawProgressBar(float x, float y, float width, float height, 
+    float progress, Color fillColor, Color bgColor)
+{
+    // Background
+    _renderer.DrawRectangle(x, y, width, height, bgColor);
+
+    // Fill
+    var fillWidth = width * Math.Clamp(progress, 0f, 1f);
+    _renderer.DrawRectangle(x, y, fillWidth, height, fillColor);
+
+    // Border
+    DrawRectangleOutline(x, y, width, height, Color.White, 2);
+}
+
+// Usage
+DrawProgressBar(100, 500, 200, 30, 0.75f, Color.Green, Color.Black);</code></pre>
+<hr />
+<h3 id="health-bar">Health Bar<a class="headerlink" href="#health-bar" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">private void DrawHealthBar(float x, float y, float width, float height, 
+    float current, float max)
+{
+    var percentage = current / max;
+
+    // Determine color based on health
+    Color fillColor;
+    if (percentage &gt; 0.5f) fillColor = Color.Green;
+    else if (percentage &gt; 0.25f) fillColor = Color.Yellow;
+    else fillColor = Color.Red;
+
+    DrawProgressBar(x, y, width, height, percentage, fillColor, 
+        new Color(40, 40, 40));
+}</code></pre>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="problem-nothing-draws">Problem: Nothing Draws<a class="headerlink" href="#problem-nothing-draws" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> Blank screen</p>
+<p><strong>Causes &amp; Solutions:</strong></p>
+<ol>
+<li>
+<p><strong>Forgot <code>BeginFrame()</code> or <code>EndFrame()</code></strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Bad
+_renderer.Clear(Color.Blue);
+_renderer.DrawRectangle(...);
+
+// ✅ Good
+_renderer.Clear(Color.Blue);
+_renderer.BeginFrame();
+_renderer.DrawRectangle(...);
+_renderer.EndFrame();</code></pre></p>
+</li>
+<li>
+<p><strong>Drawing outside screen bounds</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Bad - off screen
+_renderer.DrawRectangle(2000, 2000, 100, 100, Color.Red);
+
+// ✅ Good - visible
+_renderer.DrawRectangle(100, 100, 100, 100, Color.Red);</code></pre></p>
+</li>
+<li>
+<p><strong>Alpha = 0 (fully transparent)</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Bad - invisible
+_renderer.DrawRectangle(100, 100, 100, 100, 
+    new Color(255, 0, 0, 0));
+
+// ✅ Good - visible
+_renderer.DrawRectangle(100, 100, 100, 100, 
+    new Color(255, 0, 0, 255));</code></pre></p>
+</li>
+</ol>
+<hr />
+<h3 id="problem-shapes-behind-each-other">Problem: Shapes Behind Each Other<a class="headerlink" href="#problem-shapes-behind-each-other" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> Draw order issues</p>
+<p><strong>Solution:</strong> Draw in order (back to front):</p>
+<pre class="highlight"><code class="language-csharp">protected override void OnRender(GameTime gameTime)
+{
+    _renderer.Clear(Color.Black);
+    _renderer.BeginFrame();
+
+    // Draw order matters!
+    DrawBackground();      // Back
+    DrawGameObjects();     // Middle
+    DrawUI();              // Front
+
+    _renderer.EndFrame();
+}</code></pre>
+<p><strong>No Z-buffer in 2D!</strong> Last drawn = on top.</p>
+<hr />
+<h3 id="problem-poor-performance">Problem: Poor Performance<a class="headerlink" href="#problem-poor-performance" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> Low FPS with many shapes</p>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li><strong>Batch draws</strong> - Don't recreate objects per frame</li>
+<li><strong>Cull off-screen</strong> - Don't draw invisible shapes</li>
+<li><strong>Use textures</strong> - Faster than many primitives</li>
+</ol>
+<pre class="highlight"><code class="language-csharp">// ❌ Bad - 1000 draw calls
+for (int i = 0; i &lt; 1000; i++)
+{
+    _renderer.DrawCircle(i * 10, 100, 5, Color.White);
+}
+
+// ✅ Better - Draw only visible
+for (int i = 0; i &lt; 1000; i++)
+{
+    var x = i * 10;
+    if (x &gt;= 0 &amp;&amp; x &lt;= 1280) // Visible range
+    {
+        _renderer.DrawCircle(x, 100, 5, Color.White);
+    }
+}</code></pre>
+<hr />
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="do">DO<a class="headerlink" href="#do" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Always Clear, Begin, End</strong>
+   <pre class="highlight"><code class="language-csharp">_renderer.Clear(bgColor);
+_renderer.BeginFrame();
+// ... draw ...
+_renderer.EndFrame();</code></pre></p>
+</li>
+<li>
+<p><strong>Use constants for repeated values</strong>
+   <pre class="highlight"><code class="language-csharp">const float PLAYER_SIZE = 50f;
+_renderer.DrawRectangle(x, y, PLAYER_SIZE, PLAYER_SIZE, Color.Red);</code></pre></p>
+</li>
+<li>
+<p><strong>Extract drawing logic to methods</strong>
+   <pre class="highlight"><code class="language-csharp">private void DrawPlayer() { ... }
+private void DrawEnemies() { ... }</code></pre></p>
+</li>
+<li>
+<p><strong>Use delta time for animations</strong>
+   <pre class="highlight"><code class="language-csharp">_pulse += (float)gameTime.DeltaTime * 2f;</code></pre></p>
+</li>
+</ol>
+<h3 id="dont">DON'T<a class="headerlink" href="#dont" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Don't call Clear/Begin/End multiple times per frame</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Bad
+_renderer.BeginFrame();
+DrawStuff();
+_renderer.EndFrame();
+_renderer.BeginFrame(); // Wrong!</code></pre></p>
+</li>
+<li>
+<p><strong>Don't create colors every frame</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Bad - allocates every frame
+_renderer.DrawRectangle(x, y, 100, 100, new Color(255, 0, 0));
+
+// ✅ Good - reuse
+private static readonly Color Red = new Color(255, 0, 0);
+_renderer.DrawRectangle(x, y, 100, 100, Red);</code></pre></p>
+</li>
+<li>
+<p><strong>Don't draw invisible shapes</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Bad
+if (!isVisible)
+    return;
+_renderer.DrawRectangle(...); // Still calls method
+
+// ✅ Good
+if (isVisible)
+{
+    _renderer.DrawRectangle(...);
+}</code></pre></p>
+</li>
+</ol>
+<hr />
+<h2 id="performance-tips">Performance Tips<a class="headerlink" href="#performance-tips" title="Permanent link">&para;</a></h2>
+<ol>
+<li><strong>Minimize draw calls</strong> - Combine shapes when possible</li>
+<li><strong>Cull off-screen</strong> - Don't draw invisible objects</li>
+<li><strong>Cache colors</strong> - Reuse Color instances</li>
+<li><strong>Use textures for complex shapes</strong> - Faster than many primitives</li>
+<li><strong>Profile first</strong> - Measure before optimizing</li>
+</ol>
+<hr />
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Shape</th>
+<th>Method</th>
+<th>Parameters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Rectangle</strong></td>
+<td><code>DrawRectangle()</code></td>
+<td>x, y, width, height, color</td>
+</tr>
+<tr>
+<td><strong>Circle</strong></td>
+<td><code>DrawCircle()</code></td>
+<td>centerX, centerY, radius, color</td>
+</tr>
+<tr>
+<td><strong>Text</strong></td>
+<td><code>DrawText()</code></td>
+<td>text, x, y, color</td>
+</tr>
+<tr>
+<td><strong>Clear</strong></td>
+<td><code>Clear()</code></td>
+<td>color</td>
+</tr>
+<tr>
+<td><strong>Frame</strong></td>
+<td><code>BeginFrame()</code>, <code>EndFrame()</code></td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><a href="textures.md">Textures</a></strong> - Load and draw images</li>
+<li><strong><a href="../sprites/">Sprites</a></strong> - Work with sprite sheets</li>
+<li><strong><a href="text.md">Text Rendering</a></strong> - Load fonts and draw text</li>
+<li><strong><a href="animation.md">Animation</a></strong> - Animate sprites</li>
+<li><strong><a href="camera.md">Camera</a></strong> - Move the viewport</li>
+</ul>
+<hr />
+<p>Ready to add images? Move on to <a href="textures.md">Loading Textures</a>!</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["content.code.copy", "content.code.select"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+      
+    
+  </body>
+</html>
