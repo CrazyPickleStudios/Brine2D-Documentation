@@ -32,22 +32,22 @@ By the end of this tutorial, you'll have:
 
 Create a new console application:
 
-~~~bash
+```bash
 dotnet new console -n CoinCollector
 cd CoinCollector
-~~~
+```
 
 Add the Brine2D.Desktop package:
 
-~~~bash
+```bash
 dotnet add package Brine2D.Desktop
-~~~
+```
 
 ## Step 2: Create the Game Scene
 
 Replace `Program.cs` with this code:
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.Engine;
 using Brine2D.Hosting;
@@ -284,15 +284,15 @@ public class GameScene : Scene
         Logger.LogInformation("Game restarted!");
     }
 }
-~~~
+```
 
 ## Step 3: Run Your Game
 
 Build and run:
 
-~~~bash
+```bash
 dotnet run
-~~~
+```
 
 You should see:
 - A blue square (player) in the center
@@ -311,7 +311,7 @@ Let's break down what we built:
 
 ### 1. Game State
 
-~~~csharp
+```csharp
 private Vector2 _playerPosition;
 private float _playerSpeed = 200f;
 private int _score = 0;
@@ -319,13 +319,13 @@ private bool _isGameOver = false;
 
 private readonly List<Vector2> _obstacles = new();
 private readonly List<Vector2> _coins = new();
-~~~
+```
 
 We track the player's position, speed, score, and game state. Lists hold obstacle and coin positions.
 
 ### 2. Initialization
 
-~~~csharp
+```csharp
 protected override void OnInitialize()
 {
     Logger.LogInformation("Coin Collector initialized!");
@@ -338,13 +338,13 @@ protected override void OnInitialize()
     _coins.Add(new Vector2(100, 100));
     // ... more coins
 }
-~~~
+```
 
 `OnInitialize()` runs once when the scene loads. We set up our game world here.
 
 ### 3. Update Loop
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     var deltaTime = (float)gameTime.DeltaTime;
@@ -359,7 +359,7 @@ protected override void OnUpdate(GameTime gameTime)
     // Check collisions
     // ... collision logic
 }
-~~~
+```
 
 `OnUpdate()` runs every frame. We:
 
@@ -372,7 +372,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 ### 4. Render Loop
 
-~~~csharp
+```csharp
 protected override void OnRender(GameTime gameTime)
 {
     _renderer.Clear(new Color(20, 20, 30));
@@ -383,7 +383,7 @@ protected override void OnRender(GameTime gameTime)
     
     _renderer.EndFrame();
 }
-~~~
+```
 
 `OnRender()` draws everything. Always call:
 
@@ -394,13 +394,13 @@ protected override void OnRender(GameTime gameTime)
 
 ### 5. Collision Detection
 
-~~~csharp
+```csharp
 private bool CheckCollision(Vector2 pos1, Vector2 pos2, float radius1, float radius2)
 {
     var distance = Vector2.Distance(pos1, pos2);
     return distance < (radius1 + radius2);
 }
-~~~
+```
 
 Simple circle-circle collision using distance between centers.
 
@@ -412,7 +412,7 @@ Now let's make it better! We'll add particle effects, a timer, and smooth moveme
 
 Add this `Particle` class after the `GameScene` class:
 
-~~~csharp
+```csharp
 public class Particle
 {
     public Vector2 Position;
@@ -420,17 +420,17 @@ public class Particle
     public float Lifetime;
     public Color Color;
 }
-~~~
+```
 
 In the `GameScene` class, add a field to track particles:
 
-~~~csharp
+```csharp
 private readonly List<Particle> _particles = new();
-~~~
+```
 
 Update the coin collection code in `OnUpdate()`:
 
-~~~csharp
+```csharp
 // Check collision with coins
 for (int i = _coins.Count - 1; i >= 0; i--)
 {
@@ -463,11 +463,11 @@ for (int i = _coins.Count - 1; i >= 0; i--)
         }
     }
 }
-~~~
+```
 
 Add particle update logic in `OnUpdate()` (after player movement):
 
-~~~csharp
+```csharp
 // Update particles
 for (int i = _particles.Count - 1; i >= 0; i--)
 {
@@ -480,11 +480,11 @@ for (int i = _particles.Count - 1; i >= 0; i--)
         _particles.RemoveAt(i);
     }
 }
-~~~
+```
 
 Add particle rendering in `OnRender()` (after drawing coins):
 
-~~~csharp
+```csharp
 // Draw particles
 foreach (var p in _particles)
 {
@@ -497,47 +497,47 @@ foreach (var p in _particles)
         new Color(p.Color.R, p.Color.G, p.Color.B, alpha)
     );
 }
-~~~
+```
 
 ### Add a Timer
 
 Add a field to track game time:
 
-~~~csharp
+```csharp
 private double _gameTime = 0;
-~~~
+```
 
 In `OnUpdate()`, add this before checking input (when not game over):
 
-~~~csharp
+```csharp
 _gameTime += gameTime.DeltaTime;
-~~~
+```
 
 In `OnRender()`, add this after drawing the coins count:
 
-~~~csharp
+```csharp
 _renderer.DrawText($"Time: {(int)_gameTime}s", 10, 50, Color.White);
-~~~
+```
 
 Don't forget to reset the timer in `RestartGame()`:
 
-~~~csharp
+```csharp
 _gameTime = 0;
-~~~
+```
 
 ### Add Smooth Movement
 
 Add fields for velocity-based movement:
 
-~~~csharp
+```csharp
 private Vector2 _velocity = Vector2.Zero;
 private float _acceleration = 500f;
 private float _friction = 0.9f;
-~~~
+```
 
 Replace the player movement code in `OnUpdate()`:
 
-~~~csharp
+```csharp
 // Player movement with physics
 var input = Vector2.Zero;
 if (_input.IsKeyDown(Keys.W)) input.Y -= 1;
@@ -560,19 +560,19 @@ _playerPosition += _velocity * deltaTime;
 // Keep player in bounds
 _playerPosition.X = Math.Clamp(_playerPosition.X, 20, 780);
 _playerPosition.Y = Math.Clamp(_playerPosition.Y, 20, 580);
-~~~
+```
 
 Reset velocity in `RestartGame()`:
 
-~~~csharp
+```csharp
 _velocity = Vector2.Zero;
-~~~
+```
 
 ## Complete Code with All Enhancements
 
 Here's the full `Program.cs` with all enhancements integrated:
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.Engine;
 using Brine2D.Hosting;
@@ -880,7 +880,7 @@ public class Particle
     public float Lifetime;
     public Color Color;
 }
-~~~
+```
 
 ## What You've Learned
 

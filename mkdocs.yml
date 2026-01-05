@@ -59,6 +59,12 @@ nav:
       - UI Framework:
           - UI Components: guides/ui/components.md
           - Custom UI: guides/ui/custom.md
+      - Entity Component System:
+          - Getting Started: guides/ecs/getting-started.md
+          - Components: guides/ecs/components.md
+          - Systems: guides/ecs/systems.md
+          - Entities: guides/ecs/entities.md
+          - Queries: guides/ecs/queries.md
   
   - Concepts:
       - Overview: concepts/index.md
@@ -67,6 +73,7 @@ nav:
       - Game Loop: concepts/game-loop.md
       - Builder Pattern: concepts/builder-pattern.md
       - Scene Management: concepts/scenes.md
+      - Entity Component System: concepts/entity-component-system.md
   
   - API Reference:
       - Overview: api/index.md
@@ -74,12 +81,14 @@ nav:
       - Brine2D.Rendering: api/rendering.md
       - Brine2D.Input: api/input.md
       - Brine2D.Audio: api/audio.md
+      - Brine2D.ECS: api/ecs.md
   
   - Samples:
       - Overview: samples/index.md
       - Basic Game: samples/basic-game.md
       - Animation Demo: samples/animation-demo.md
       - Collision Demo: samples/collision-demo.md
+      - ECS Demo: samples/ecs-demo.md
   
   - Contributing:
       - How to Contribute: contributing/index.md

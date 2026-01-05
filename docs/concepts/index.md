@@ -160,7 +160,57 @@ style E fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
 
 ---
 
-### 3. Dependency Injection
+### 3. Entity Component System
+
+**Like:** Composition over inheritance  
+**Purpose:** Build flexible, performant game entities
+
+```csharp
+// Create entities with components
+var player = world.CreateEntity("Player");
+player.Tags.Add("Player");
+
+player.AddComponent<TransformComponent>().Position = new Vector2(400, 300);
+player.AddComponent<VelocityComponent>();
+player.AddComponent<PlayerControllerComponent>();
+player.AddComponent<HealthComponent>().Max = 100;
+
+// Components can have logic
+public class LifetimeComponent : Component
+{
+    public float Lifetime { get; set; }
+    
+    protected internal override void OnUpdate(GameTime gameTime)
+    {
+        Lifetime -= (float)gameTime.DeltaTime;
+        if (Lifetime <= 0) Entity?.Destroy();
+    }
+}
+
+// Systems for performance (optional)
+public class VelocitySystem : IUpdateSystem
+{
+    public int UpdateOrder => 100;
+    
+    public void Update(GameTime gameTime)
+    {
+        var entities = _world.GetEntitiesWithComponents<TransformComponent, VelocityComponent>();
+        // Batch process all moving entities efficiently
+    }
+}
+```
+
+**Key Benefits:**
+- Composition over inheritance
+- Components can contain logic OR be data-only
+- Optional systems for performance optimization
+- Flexible entity creation through prefabs
+
+**Learn more:** [Entity Component System](entity-component-system.md)
+
+---
+
+### 4. Dependency Injection
 
 **Like:** ASP.NET's DI container  
 **Purpose:** Manage dependencies and promote testability
@@ -208,7 +258,7 @@ public class GameScene : Scene
 
 ---
 
-### 4. Game Loop (Like ASP.NET Middleware)
+### 5. Game Loop (Like ASP.NET Middleware)
 
 **Like:** ASP.NET Middleware Pipeline  
 **Purpose:** Orchestrates update and render cycles
@@ -264,7 +314,7 @@ sequenceDiagram
 
 ---
 
-### 5. Configuration (Like appsettings.json)
+### 6. Configuration (Like appsettings.json)
 
 **Like:** ASP.NET's `appsettings.json`  
 **Purpose:** Configure your game without recompiling
@@ -314,7 +364,7 @@ public class GameScene : Scene
 
 ---
 
-### 6. GameTime and Delta Time
+### 7. GameTime and Delta Time
 
 **Purpose:** Track elapsed time for frame-rate independent gameplay
 
@@ -345,7 +395,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 ---
 
-### 7. Service Registration (Extension Methods)
+### 8. Service Registration (Extension Methods)
 
 **Like:** ASP.NET's service registration pattern  
 **Purpose:** Clean, discoverable API for adding features
@@ -378,6 +428,7 @@ public static class SDL3RenderingServiceCollectionExtensions
 | `AddSDL3Rendering()` | Adds rendering system |
 | `AddSDL3Input()` | Adds input system |
 | `AddSDL3Audio()` | Adds audio system |
+| `AddObjectECS()` | Adds ECS framework |
 | `AddCollisionSystem()` | Adds collision detection |
 | `AddUICanvas()` | Adds UI framework |
 | `AddScene<T>()` | Registers a scene |
@@ -390,19 +441,20 @@ public static class SDL3RenderingServiceCollectionExtensions
 |-----------------|-------------------|---------|
 | `WebApplicationBuilder` | `GameApplicationBuilder` | Configure and build app |
 | Controller | `Scene` | Handle logic and routing |
-| Middleware | `GameLoop` | Process requests (frames) |
+| Middleware | `GameLoop` / `System` | Process requests (frames) |
 | `appsettings.json` | `gamesettings.json` | Configuration |
 | `ILogger<T>` | `ILogger<T>` | Logging |
 | `IServiceCollection` | `IServiceCollection` | Dependency injection |
 | Route | Scene transition | Navigate between pages/screens |
 | Request Pipeline | Game Loop | Process each frame |
+| Entity Framework | ECS | Data composition |
 
 ---
 
 ## Key Principles
 
 ### 1. **Separation of Concerns**
-Each system (rendering, input, audio) is independent and testable.
+Each system (rendering, input, audio, ECS) is independent and testable.
 
 ### 2. **Dependency Injection**
 Services are injected, not created directly. This promotes testability and flexibility.
@@ -411,10 +463,13 @@ Services are injected, not created directly. This promotes testability and flexi
 Use `gamesettings.json` for settings that might change.
 
 ### 4. **Lifecycle Management**
-Scenes have clear lifecycle methods (`Initialize`, `Load`, `Update`, `Render`, `Unload`).
+Scenes and components have clear lifecycle methods.
 
 ### 5. **Frame-Rate Independence**
 Always use delta time for movement and animation.
+
+### 6. **Composition Over Inheritance**
+Build complex entities by composing simple components.
 
 ---
 
@@ -425,14 +480,16 @@ graph LR
 
 A["Architecture"] --> B["Dependency Injection"]
 B --> C["Builder Pattern"] 
-C --> D["Scene Management"] 
-D --> E["Game Loop"]
+C --> D["Scene Management"]
+D --> E["Entity Component System"]
+E --> F["Game Loop"]
 
-style A fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-style B fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
-style C fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
-style D fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
-style E fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+	style A fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style B fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+    style C fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style D fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
+    style E fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style F fill:#3d4a1f,stroke:#b5ce78,stroke-width:2px,color:#fff
 ```
 
 **Recommended Reading Order:**
@@ -440,17 +497,19 @@ style E fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
 2. [Dependency Injection](dependency-injection.md) - Learn DI patterns
 3. [Builder Pattern](builder-pattern.md) - Master the builder
 4. [Scene Management](scenes.md) - Organize your game
-5. [Game Loop](game-loop.md) - Understand frame processing
+5. [Entity Component System](entity-component-system.md) - Build flexible entities
+6. [Game Loop](game-loop.md) - Understand frame processing
 
 ---
 
 ## Next Steps
 
 - **[Architecture](architecture.md)** - Deep dive into Brine2D's architecture
+- **[Entity Component System](entity-component-system.md)** - Learn ECS patterns
 - **[Tutorials](../tutorials/index.md)** - Hands-on learning
 - **[Samples](../samples/index.md)** - See concepts in action
 - **[API Reference](../api/index.md)** - Detailed API docs
 
 ---
 
-Ready to dive deeper? Start with [Architecture](architecture.md) to understand how all these concepts work together! 🎯
+Ready to dive deeper? Start with [Architecture](architecture.md) to understand how all these concepts work together!
