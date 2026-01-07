@@ -15,7 +15,7 @@ Learn by example! The Brine2D samples demonstrate real-world usage of the engine
 
 The FeatureDemos project is an interactive showcase of Brine2D's major features. Run the project to see a **menu-driven demo selector** where you can explore each feature independently.
 
-~~~mermaid
+```mermaid
 graph TD
     A["FeatureDemos Project"] --> B["MainMenuScene"]
     B --> C["Query System Demo"]
@@ -57,7 +57,7 @@ graph TD
     style F fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
     style G fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
     style H fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-~~~
+```
 
 ### Demo Scenes
 
@@ -89,10 +89,10 @@ graph TD
 
 ### Option 2: Run from Command Line
 
-~~~bash
+```bash
 cd samples/FeatureDemos
 dotnet run
-~~~
+```
 
 ### Navigation
 
@@ -119,7 +119,7 @@ dotnet run
 
 **Key Code:**
 
-~~~csharp
+```csharp
 // Find low-health enemies near the player
 var weakEnemies = _world.Query()
     .With<HealthComponent>()
@@ -142,7 +142,7 @@ foreach (var (transform, velocity) in movingEntities)
 {
     transform.Position += velocity.Velocity * deltaTime;
 }
-~~~
+```
 
 ---
 
@@ -162,7 +162,7 @@ foreach (var (transform, velocity) in movingEntities)
 
 **Key Code:**
 
-~~~csharp
+```csharp
 // Create particle emitter
 var emitter = entity.AddComponent<ParticleEmitterComponent>();
 emitter.EmissionRate = 100;
@@ -171,7 +171,7 @@ emitter.StartColor = Color.Red;
 emitter.EndColor = new Color(255, 0, 0, 0);
 emitter.StartSpeed = 100f;
 emitter.SpreadAngle = MathF.PI / 4;
-~~~
+```
 
 ---
 
@@ -195,7 +195,7 @@ emitter.SpreadAngle = MathF.PI / 4;
 
 **Key Code:**
 
-~~~csharp
+```csharp
 // Player slides along walls
 var newPosition = _playerPosition + moveVector;
 _playerCollider.Position = newPosition;
@@ -215,7 +215,7 @@ if (collisions.Any(c => _walls.Contains(c)))
 
 // Ball bounces with physics
 _ballVelocity = CollisionResponse.Bounce(_ballVelocity, penetration, 0.7f);
-~~~
+```
 
 ---
 
@@ -235,7 +235,7 @@ _ballVelocity = CollisionResponse.Bounce(_ballVelocity, penetration, 0.7f);
 
 **Key Code:**
 
-~~~csharp
+```csharp
 // Fade transition
 await _sceneManager.LoadSceneAsync<SceneB>(
     new FadeTransition(duration: 0.5f, color: Color.Black)
@@ -255,7 +255,7 @@ await _sceneManager.LoadSceneAsync<GameScene>(
     loadingScreen: new CustomLoadingScreen(),
     transition: new FadeTransition(0.5f, Color.Black)
 );
-~~~
+```
 
 ---
 
@@ -296,7 +296,7 @@ await _sceneManager.LoadSceneAsync<GameScene>(
 
 **Key Code:**
 
-~~~csharp
+```csharp
 // Button with event
 var button = new UIButton("Click Me!", pos, size);
 button.OnClick += () => Logger.LogInformation("Clicked!");
@@ -319,7 +319,7 @@ var dialog = new UIDialog("Confirm", "Are you sure?", new Vector2(400, 250));
 dialog.AddButton("Yes", () => dialog.Visible = false);
 dialog.AddButton("No", () => dialog.Visible = false);
 _uiCanvas.Add(dialog);
-~~~
+```
 
 ---
 
@@ -337,7 +337,7 @@ _uiCanvas.Add(dialog);
 
 **Key Code:**
 
-~~~csharp
+```csharp
 public class ManualControlScene : Scene
 {
     public override bool EnableLifecycleHooks => false; // Disable automatic execution
@@ -361,7 +361,7 @@ public class ManualControlScene : Scene
         _renderer.EndFrame();
     }
 }
-~~~
+```
 
 See [Lifecycle Hooks Guide](../guides/scenes/lifecycle-hooks.md) for full documentation.
 
@@ -369,7 +369,7 @@ See [Lifecycle Hooks Guide](../guides/scenes/lifecycle-hooks.md) for full docume
 
 ## Project Structure
 
-~~~
+```
 FeatureDemos/
 ├── Scenes/
 │   ├── MainMenuScene.cs           # Interactive demo selector
@@ -391,13 +391,13 @@ FeatureDemos/
 ├── Program.cs                      # Entry point
 ├── gamesettings.json               # Configuration
 └── FeatureDemos.csproj             # Project file
-~~~
+```
 
 ---
 
 ## Configuration
 
-~~~json
+```json
 {
   "Logging": {
     "LogLevel": {
@@ -413,7 +413,7 @@ FeatureDemos/
     "Backend": "LegacyRenderer"
   }
 }
-~~~
+```
 
 ---
 
@@ -421,7 +421,7 @@ FeatureDemos/
 
 FeatureDemos demonstrates complete service configuration:
 
-~~~csharp
+```csharp
 var builder = GameApplication.CreateBuilder(args);
 
 // Core services
@@ -447,7 +447,7 @@ builder.Services.AddScene<ManualControlScene>();
 
 var game = builder.Build();
 await game.RunAsync<MainMenuScene>();
-~~~
+```
 
 ---
 
@@ -506,11 +506,11 @@ After exploring the demos:
 
 Ready to explore? Clone the repository and run the demos:
 
-~~~bash
+```bash
 git clone https://github.com/CrazyPickleStudios/Brine2D.git
 cd Brine2D/samples/FeatureDemos
 dotnet run
-~~~
+```
 
 **Press 1-6 to explore each demo!** 🚀
 

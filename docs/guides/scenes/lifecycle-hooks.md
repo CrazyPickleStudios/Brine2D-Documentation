@@ -16,7 +16,7 @@ Lifecycle hooks provide fine-grained control over when and how your game logic e
 
 Lifecycle hooks are integration points where Brine2D automatically executes systems (like ECS pipelines) at specific points in the game loop:
 
-~~~mermaid
+```mermaid
 graph LR
     A[Input] --> B[PreUpdate Hooks]
     B --> C[Scene.Update]
@@ -32,7 +32,7 @@ graph LR
     style E fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
     style F fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
     style G fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-~~~
+```
 
 **Default behavior (automatic execution):**
 
@@ -49,7 +49,7 @@ graph LR
 
 This is what most games should use:
 
-~~~csharp
+```csharp
 public class GameScene : Scene
 {
     private readonly IEntityWorld _world;
@@ -71,7 +71,7 @@ public class GameScene : Scene
         _renderer.DrawText($"Score: {_score}", 10, 10, Color.White);
     }
 }
-~~~
+```
 
 **Benefits:**
 
@@ -84,7 +84,7 @@ public class GameScene : Scene
 
 Disable automatic behavior when you need fine control:
 
-~~~csharp
+```csharp
 public class ManualControlScene : Scene
 {
     private readonly UpdatePipeline _updatePipeline;
@@ -99,7 +99,7 @@ public class ManualControlScene : Scene
         _world.Update(gameTime);
     }
 }
-~~~
+```
 
 **Use manual control when:**
 
@@ -116,7 +116,7 @@ public class ManualControlScene : Scene
 
 Keep automatic frame management but control systems manually:
 
-~~~csharp
+```csharp
 public class ManualSystemsScene : Scene
 {
     private readonly UpdatePipeline _updatePipeline;
@@ -144,13 +144,13 @@ public class ManualSystemsScene : Scene
         _renderPipeline.Execute(_renderer);
     }
 }
-~~~
+```
 
 ### Option 2: Full Manual Control
 
 Disable both system execution and frame management:
 
-~~~csharp
+```csharp
 public class FullManualControlScene : Scene
 {
     private readonly IRenderer _renderer;
@@ -175,13 +175,13 @@ public class FullManualControlScene : Scene
         _renderer.EndFrame();
     }
 }
-~~~
+```
 
 ---
 
 ## Understanding Hook Execution Order
 
-~~~mermaid
+```mermaid
 sequenceDiagram
     participant GL as Game Loop
     participant SM as SceneManager
@@ -209,7 +209,7 @@ sequenceDiagram
     
     SM->>H: PostRender Hooks
     Note over H: Debug overlays
-~~~
+```
 
 **Built-in hooks:**
 
@@ -227,7 +227,7 @@ sequenceDiagram
 
 Run systems only when game is not paused:
 
-~~~csharp
+```csharp
 public class PausableGameScene : Scene
 {
     private readonly UpdatePipeline _updatePipeline;
@@ -254,13 +254,13 @@ public class PausableGameScene : Scene
         }
     }
 }
-~~~
+```
 
 ### Fixed Timestep
 
 Implement frame-rate independent physics:
 
-~~~csharp
+```csharp
 public class FixedTimestepScene : Scene
 {
     private readonly UpdatePipeline _updatePipeline;
@@ -287,13 +287,13 @@ public class FixedTimestepScene : Scene
         }
     }
 }
-~~~
+```
 
 ### Selective System Execution
 
 Run only specific systems:
 
-~~~csharp
+```csharp
 public class CustomPipelineScene : Scene
 {
     private readonly PlayerControllerSystem _playerController;
@@ -321,7 +321,7 @@ public class CustomPipelineScene : Scene
         _renderer.EndFrame();
     }
 }
-~~~
+```
 
 ---
 
@@ -354,7 +354,7 @@ The overhead of automatic hooks is negligible (~0.01ms). Don't disable for perfo
 - Running systems at different intervals
 - Implementing custom scheduling
 
-~~~csharp
+```csharp
 public class OptimizedScene : Scene
 {
     private readonly AISystem _aiSystem;
@@ -373,7 +373,7 @@ public class OptimizedScene : Scene
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -381,7 +381,7 @@ public class OptimizedScene : Scene
 
 ### Check Hook Status at Startup
 
-~~~csharp
+```csharp
 protected override void OnInitialize()
 {
     if (!EnableLifecycleHooks)
@@ -394,23 +394,23 @@ protected override void OnInitialize()
         Logger.LogWarning("Frame management DISABLED - you must call Clear/BeginFrame/EndFrame");
     }
 }
-~~~
+```
 
 ### Common Issues
 
 **Problem:** Systems not running
 
-~~~csharp
+```csharp
 // Check if hooks are enabled
 public override bool EnableLifecycleHooks => true; // ← Make sure this is true
 
 // Or call systems manually
 _updatePipeline.Execute(gameTime);
-~~~
+```
 
 **Problem:** Black screen
 
-~~~csharp
+```csharp
 // Enable automatic frame management
 public override bool EnableAutomaticFrameManagement => true;
 
@@ -419,7 +419,7 @@ _renderer.Clear(Color.Black);
 _renderer.BeginFrame();
 // ... rendering ...
 _renderer.EndFrame();
-~~~
+```
 
 ---
 
@@ -429,7 +429,7 @@ _renderer.EndFrame();
 
 **Before:**
 
-~~~csharp
+```csharp
 public class GameScene : Scene
 {
     protected override void OnUpdate(GameTime gameTime)
@@ -437,11 +437,11 @@ public class GameScene : Scene
         // Game logic
     }
 }
-~~~
+```
 
 **After:**
 
-~~~csharp
+```csharp
 public class GameScene : Scene
 {
     private readonly UpdatePipeline _updatePipeline;
@@ -466,13 +466,13 @@ public class GameScene : Scene
         _world.Update(gameTime);           // Add this
     }
 }
-~~~
+```
 
 ### From Manual to Automatic
 
 Remove the overrides and manual calls:
 
-~~~csharp
+```csharp
 public class GameScene : Scene
 {
     // Remove: public override bool EnableLifecycleHooks => false;
@@ -483,7 +483,7 @@ public class GameScene : Scene
         // Just your game logic
     }
 }
-~~~
+```
 
 ---
 

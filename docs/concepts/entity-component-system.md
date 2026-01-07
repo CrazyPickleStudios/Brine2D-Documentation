@@ -32,7 +32,7 @@ Think of it as **"ASP.NET for game entities"** - familiar patterns with performa
 
 **Entities are containers** for components. They're like game objects but lightweight.
 
-~~~csharp
+```csharp
 // Create an entity
 var player = world.CreateEntity("Player");
 player.Tags.Add("Player");
@@ -42,7 +42,7 @@ player.Tags.Add("Player");
 // - Name (for debugging)
 // - Tags (for querying)
 // - Components (the data and behavior)
-~~~
+```
 
 **Think of entities as:**
 - Rows in a database
@@ -53,7 +53,7 @@ player.Tags.Add("Player");
 
 **Components are classes** that inherit from `Component` and can contain both data and logic.
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.ECS;
 
@@ -77,7 +77,7 @@ public class LifetimeComponent : Component
         if (Lifetime <= 0) Entity?.Destroy();
     }
 }
-~~~
+```
 
 **Key features:**
 - Inherit from `Component` base class
@@ -90,7 +90,7 @@ public class LifetimeComponent : Component
 
 **Systems are performance optimizations** that batch-process many entities with specific components.
 
-~~~csharp
+```csharp
 using Brine2D.ECS.Systems;
 
 public class VelocitySystem : IUpdateSystem
@@ -113,7 +113,7 @@ public class VelocitySystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 **When to use:**
 - 50+ entities need the same processing
@@ -211,7 +211,7 @@ Let's build a simple game to see how everything works together.
 
 ### Step 1: Define Components
 
-~~~csharp
+```csharp
 // Position in world
 public class TransformComponent : Component
 {
@@ -243,11 +243,11 @@ public class LifetimeComponent : Component
         if (Lifetime <= 0) Entity?.Destroy();
     }
 }
-~~~
+```
 
 ### Step 2: Create Entities
 
-~~~csharp
+```csharp
 // Create player
 var player = world.CreateEntity("Player");
 player.Tags.Add("Player");
@@ -261,11 +261,11 @@ var bullet = world.CreateEntity("Bullet");
 bullet.AddComponent<TransformComponent>().Position = player.GetComponent<TransformComponent>()!.Position;
 bullet.AddComponent<VelocityComponent>().Velocity = new Vector2(500, 0);
 bullet.AddComponent<LifetimeComponent>().Lifetime = 3f; // Auto-destroy after 3 seconds
-~~~
+```
 
 ### Step 3: Register Systems (Optional)
 
-~~~csharp
+```csharp
 // In Program.cs
 builder.Services.ConfigureSystemPipelines(pipelines =>
 {
@@ -273,13 +273,13 @@ builder.Services.ConfigureSystemPipelines(pipelines =>
     pipelines.AddSystem<VelocitySystem>();          // Apply movement
     pipelines.AddSystem<SpriteRenderingSystem>();   // Draw sprites
 });
-~~~
+```
 
 **Systems run automatically** via lifecycle hooks - no manual calls needed!
 
 ### Step 4: Use in Scene
 
-~~~csharp
+```csharp
 public class GameScene : Scene
 {
     private readonly IEntityWorld _world;
@@ -314,7 +314,7 @@ public class GameScene : Scene
         _renderer.DrawText($"Score: {_score}", 10, 10, Color.White);
     }
 }
-~~~
+```
 
 **Notice:** No manual `_updatePipeline.Execute()` or `_world.Update()` calls needed!
 
@@ -350,7 +350,7 @@ sequenceDiagram
     Note over C: Cleanup
 \`\`\`
 
-~~~csharp
+```csharp
 public class MyComponent : Component
 {
     protected internal override void OnAdded()
@@ -381,7 +381,7 @@ public class MyComponent : Component
         // Cleanup here
     }
 }
-~~~
+```
 
 ---
 
@@ -391,7 +391,7 @@ public class MyComponent : Component
 
 Build complex entities by combining simple components:
 
-~~~csharp
+```csharp
 // Flying enemy = Transform + AI + Flying behavior
 var flyingEnemy = world.CreateEntity("FlyingEnemy");
 flyingEnemy.AddComponent<TransformComponent>();
@@ -409,7 +409,7 @@ boss.AddComponent<FlyingMovementComponent>();
 boss.AddComponent<SpriteComponent>();
 boss.AddComponent<BossAbilitiesComponent>(); // Unique!
 boss.AddComponent<HealthComponent>().Max = 1000; // Lots of health
-~~~
+```
 
 No inheritance hierarchy needed!
 
@@ -417,7 +417,7 @@ No inheritance hierarchy needed!
 
 Reuse entity templates:
 
-~~~csharp
+```csharp
 // Create prefab once
 var enemyPrefab = new EntityPrefab("Enemy");
 enemyPrefab.AddComponent<TransformComponent>();
@@ -436,13 +436,13 @@ for (int i = 0; i < 10; i++)
 {
     var enemy = enemyPrefab.Instantiate(world, new Vector2(i * 100, 200));
 }
-~~~
+```
 
 ### Component Communication
 
 Components can interact:
 
-~~~csharp
+```csharp
 public class DamageOnContactComponent : Component
 {
     public float Damage { get; set; } = 10f;
@@ -464,7 +464,7 @@ public class DamageOnContactComponent : Component
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -478,7 +478,7 @@ public class DamageOnContactComponent : Component
 ✅ Unique per-entity behavior  
 
 **Example:**
-~~~csharp
+```csharp
 public class FollowMouseComponent : Component
 {
     protected internal override void OnUpdate(GameTime gameTime)
@@ -492,7 +492,7 @@ public class FollowMouseComponent : Component
         }
     }
 }
-~~~
+```
 
 ### Use Systems When:
 
@@ -502,7 +502,7 @@ public class FollowMouseComponent : Component
 ✅ Specific execution order required  
 
 **Example:**
-~~~csharp
+```csharp
 public class VelocitySystem : IUpdateSystem
 {
     public int UpdateOrder => 100;
@@ -522,7 +522,7 @@ public class VelocitySystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 **Remember:** Once registered, systems **run automatically** via lifecycle hooks!
 
@@ -544,7 +544,7 @@ Brine2D's ECS mirrors ASP.NET patterns:
 
 **Example:**
 
-~~~csharp
+```csharp
 // ASP.NET Controller
 public class PlayerController : ControllerBase
 {
@@ -556,7 +556,7 @@ public class PlayerController : ControllerBase
 var player = world.CreateEntity("Player");
 player.AddComponent<TransformComponent>();
 player.AddComponent<PlayerControllerComponent>();
-~~~
+```
 
 Both use dependency injection and composition!
 
@@ -580,14 +580,14 @@ Both use dependency injection and composition!
 
 ### Querying
 
-~~~csharp
+```csharp
 // Fast - uses internal indexing
 var players = world.GetEntitiesByTag("Player");
 var moving = world.GetEntitiesWithComponents<TransformComponent, VelocityComponent>();
 
 // Slower - linear search
 var specific = world.FindEntity(e => e.Name == "Boss" && e.IsActive);
-~~~
+```
 
 ---
 
@@ -595,16 +595,16 @@ var specific = world.FindEntity(e => e.Name == "Boss" && e.IsActive);
 
 ### Entity Operations
 
-~~~csharp
+```csharp
 var entity = world.CreateEntity("Name");
 entity.Tags.Add("Player");
 entity.IsActive = false; // Disable
 world.DestroyEntity(entity);
-~~~
+```
 
 ### Component Operations
 
-~~~csharp
+```csharp
 var health = entity.AddComponent<HealthComponent>();
 health.Current = 100;
 
@@ -613,17 +613,17 @@ bool has = entity.HasComponent<HealthComponent>();
 entity.RemoveComponent<HealthComponent>();
 
 health.IsEnabled = false; // Disable component
-~~~
+```
 
 ### Querying
 
-~~~csharp
+```csharp
 var all = world.Entities;
 var tagged = world.GetEntitiesByTag("Enemy");
 var withHealth = world.GetEntitiesWithComponent<HealthComponent>();
 var moving = world.GetEntitiesWithComponents<TransformComponent, VelocityComponent>();
 var player = world.FindEntity(e => e.Name == "Player");
-~~~
+```
 
 ---
 

@@ -22,7 +22,7 @@ Scene transitions make your game feel polished by smoothly fading between scenes
 
 ### Basic Fade Transition
 
-~~~csharp
+```csharp
 using Brine2D.Engine;
 using Brine2D.Engine.Transitions;
 
@@ -46,7 +46,7 @@ public class MenuScene : Scene
         }
     }
 }
-~~~
+```
 
 That's it! The scene will fade out, load, and fade in automatically.
 
@@ -58,12 +58,12 @@ The `FadeTransition` is the built-in transition effect that fades to a solid col
 
 ### Basic Usage
 
-~~~csharp
+```csharp
 // Black fade, 500ms
 var transition = new FadeTransition(duration: 0.5f, color: Color.Black);
 
 await _sceneManager.LoadSceneAsync<GameScene>(transition);
-~~~
+```
 
 ### Constructor Parameters
 
@@ -76,7 +76,7 @@ await _sceneManager.LoadSceneAsync<GameScene>(transition);
 
 Choose a fade color that matches your game's aesthetic:
 
-~~~csharp
+```csharp
 // Black fade (classic)
 new FadeTransition(0.5f, Color.Black)
 
@@ -88,13 +88,13 @@ new FadeTransition(0.5f, new Color(50, 0, 100)) // Dark purple
 
 // Custom alpha (transparent fade)
 new FadeTransition(0.5f, new Color(0, 0, 0, 128)) // Semi-transparent
-~~~
+```
 
 ### Timing
 
 Adjust duration based on scene complexity:
 
-~~~csharp
+```csharp
 // Quick transition (UI screens)
 new FadeTransition(0.3f, Color.Black)
 
@@ -106,7 +106,7 @@ new FadeTransition(1.0f, Color.Black)
 
 // Very slow (cinematic)
 new FadeTransition(2.0f, Color.Black)
-~~~
+```
 
 ---
 
@@ -116,7 +116,7 @@ For scenes that take time to load, show a loading screen with progress feedback.
 
 ### Basic Loading Screen
 
-~~~csharp
+```csharp
 public class SimpleLoadingScreen : LoadingScene
 {
     protected override void OnRender(GameTime gameTime)
@@ -131,13 +131,13 @@ await _sceneManager.LoadSceneAsync<GameScene>(
     loadingScreen: new SimpleLoadingScreen(),
     transition: new FadeTransition(0.5f, Color.Black)
 );
-~~~
+```
 
 ### Advanced Loading Screen
 
 Show detailed progress with a progress bar:
 
-~~~csharp
+```csharp
 public class GameLoadingScreen : LoadingScene
 {
     protected override void OnRender(GameTime gameTime)
@@ -176,13 +176,13 @@ public class GameLoadingScreen : LoadingScene
         _renderer.DrawText("Tip: Press F1 for help", centerX - 100, centerY + 100, Color.Gray);
     }
 }
-~~~
+```
 
 ### Animated Loading Screen
 
 Add animation for visual interest:
 
-~~~csharp
+```csharp
 public class AnimatedLoadingScreen : LoadingScene
 {
     private float _rotation = 0f;
@@ -213,13 +213,13 @@ public class AnimatedLoadingScreen : LoadingScene
         _renderer.DrawText($"Loading... {Progress:P0}", centerX - 80, centerY + 80, Color.White);
     }
 }
-~~~
+```
 
 ### Loading Screen with Assets
 
 Load and display images/textures:
 
-~~~csharp
+```csharp
 public class BrandedLoadingScreen : LoadingScene
 {
     private ITexture? _logoTexture;
@@ -250,7 +250,7 @@ public class BrandedLoadingScreen : LoadingScene
         _renderer.DrawText($"{Progress:P0}", 620, 380, Color.White);
     }
 }
-~~~
+```
 
 ---
 
@@ -260,7 +260,7 @@ Transition through multiple scenes in sequence.
 
 ### Manual Chaining
 
-~~~csharp
+```csharp
 public class IntroScene : Scene
 {
     protected override async void OnUpdate(GameTime gameTime)
@@ -287,13 +287,13 @@ public class TutorialScene : Scene
         }
     }
 }
-~~~
+```
 
 ### Automatic Chaining
 
 Create a scene that auto-progresses:
 
-~~~csharp
+```csharp
 public class SplashScreenScene : Scene
 {
     private float _timer = 0f;
@@ -317,13 +317,13 @@ public class SplashScreenScene : Scene
         _renderer.DrawText("Studio Logo Here", 500, 300, Color.White);
     }
 }
-~~~
+```
 
 ### Circular Chaining
 
 Loop through scenes (A → B → C → A):
 
-~~~csharp
+```csharp
 public class SceneA : Scene
 {
     protected override async void OnUpdate(GameTime gameTime)
@@ -363,7 +363,7 @@ public class SceneC : Scene
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -371,7 +371,7 @@ public class SceneC : Scene
 
 Understanding what happens during a transition:
 
-~~~mermaid
+```mermaid
 sequenceDiagram
     participant Current Scene
     participant Transition (Fade Out)
@@ -389,7 +389,7 @@ sequenceDiagram
     Transition (Fade In)->>Transition (Fade In): Fade from color (duration/2)
     Transition (Fade In)->>New Scene: Transition complete
     Note over New Scene: OnInitialize runs
-~~~
+```
 
 ### Phase Breakdown
 
@@ -407,7 +407,7 @@ sequenceDiagram
 
 ### Return to Menu
 
-~~~csharp
+```csharp
 public class GameScene : Scene
 {
     protected override async void OnUpdate(GameTime gameTime)
@@ -426,11 +426,11 @@ public class GameScene : Scene
         }
     }
 }
-~~~
+```
 
 ### Death Screen
 
-~~~csharp
+```csharp
 public class GameScene : Scene
 {
     protected override async void OnUpdate(GameTime gameTime)
@@ -444,11 +444,11 @@ public class GameScene : Scene
         }
     }
 }
-~~~
+```
 
 ### Level Progression
 
-~~~csharp
+```csharp
 public class Level1Scene : Scene
 {
     protected override async void OnUpdate(GameTime gameTime)
@@ -462,11 +462,11 @@ public class Level1Scene : Scene
         }
     }
 }
-~~~
+```
 
 ### Save and Quit
 
-~~~csharp
+```csharp
 public class GameScene : Scene
 {
     protected override async void OnUpdate(GameTime gameTime)
@@ -484,7 +484,7 @@ public class GameScene : Scene
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -494,16 +494,16 @@ public class GameScene : Scene
 
 ✅ **Use transitions for all scene changes** - Consistency matters
 
-~~~csharp
+```csharp
 // Good - always use transitions
 await _sceneManager.LoadSceneAsync<GameScene>(
     new FadeTransition(0.5f, Color.Black)
 );
-~~~
+```
 
 ✅ **Match transition duration to load time**
 
-~~~csharp
+```csharp
 // Quick load → short transition
 await _sceneManager.LoadSceneAsync<MenuScene>(
     new FadeTransition(0.3f, Color.Black)
@@ -514,11 +514,11 @@ await _sceneManager.LoadSceneAsync<GameScene>(
     loadingScreen: new GameLoadingScreen(),
     transition: new FadeTransition(0.5f, Color.Black)
 );
-~~~
+```
 
 ✅ **Use thematic colors**
 
-~~~csharp
+```csharp
 // Red fade for danger/death
 new FadeTransition(1.0f, Color.Red)
 
@@ -527,43 +527,43 @@ new FadeTransition(0.5f, new Color(0, 100, 200))
 
 // White fade for bright/happy moments
 new FadeTransition(0.5f, Color.White)
-~~~
+```
 
 ✅ **Show progress for long loads**
 
-~~~csharp
+```csharp
 await _sceneManager.LoadSceneAsync<GameScene>(
     loadingScreen: new DetailedLoadingScreen(),
     transition: new FadeTransition(0.5f, Color.Black)
 );
-~~~
+```
 
 ### Don'ts
 
 ❌ **Don't make transitions too fast**
 
-~~~csharp
+```csharp
 // Bad - too jarring
 new FadeTransition(0.1f, Color.Black) // Feels broken
-~~~
+```
 
 ❌ **Don't make transitions too slow**
 
-~~~csharp
+```csharp
 // Bad - frustrating for players
 new FadeTransition(5.0f, Color.Black) // Way too long
-~~~
+```
 
 ❌ **Don't skip transitions for important moments**
 
-~~~csharp
+```csharp
 // Bad - no transition for game over
 await _sceneManager.LoadSceneAsync<GameOverScene>(); // Jarring
-~~~
+```
 
 ❌ **Don't load heavy assets in loading screen**
 
-~~~csharp
+```csharp
 // Bad - defeats the purpose
 public class LoadingScreen : LoadingScene
 {
@@ -573,7 +573,7 @@ public class LoadingScreen : LoadingScene
         await LoadGiantTextureAsync(); // Wrong place!
     }
 }
-~~~
+```
 
 ---
 
@@ -581,7 +581,7 @@ public class LoadingScreen : LoadingScene
 
 ### Optimize Scene Loading
 
-~~~csharp
+```csharp
 public class GameScene : Scene
 {
     protected override async Task OnLoadAsync(CancellationToken ct)
@@ -596,11 +596,11 @@ public class GameScene : Scene
         });
     }
 }
-~~~
+```
 
 ### Preload Next Scene
 
-~~~csharp
+```csharp
 public class MenuScene : Scene
 {
     protected override async Task OnLoadAsync(CancellationToken ct)
@@ -612,11 +612,11 @@ public class MenuScene : Scene
         });
     }
 }
-~~~
+```
 
 ### Unload Previous Scene Assets
 
-~~~csharp
+```csharp
 public class GameScene : Scene
 {
     protected override async Task OnUnloadAsync(CancellationToken ct)
@@ -628,7 +628,7 @@ public class GameScene : Scene
         await base.OnUnloadAsync(ct);
     }
 }
-~~~
+```
 
 ---
 
@@ -636,11 +636,11 @@ public class GameScene : Scene
 
 Check out the **Scene Transitions Demo** in FeatureDemos!
 
-~~~bash
+```bash
 cd samples/FeatureDemos
 dotnet run
 # Select "4" for Scene Transitions Demo
-~~~
+```
 
 The demo shows:
 - Basic fade transitions
@@ -655,12 +655,12 @@ The demo shows:
 
 ### ISceneManager.LoadSceneAsync
 
-~~~csharp
+```csharp
 Task LoadSceneAsync<TScene>(
     ITransition? transition = null,
     LoadingScene? loadingScreen = null
 ) where TScene : Scene
-~~~
+```
 
 **Parameters:**
 - `transition` - Transition effect (e.g., `FadeTransition`)
@@ -670,9 +670,9 @@ Task LoadSceneAsync<TScene>(
 
 ### FadeTransition Constructor
 
-~~~csharp
+```csharp
 public FadeTransition(float duration, Color color)
-~~~
+```
 
 **Parameters:**
 - `duration` - Total fade time in seconds (both fade out and in)
@@ -682,7 +682,7 @@ public FadeTransition(float duration, Color color)
 
 Base class for custom loading screens:
 
-~~~csharp
+```csharp
 public abstract class LoadingScene : Scene
 {
     protected float Progress { get; } // 0.0 to 1.0
@@ -692,7 +692,7 @@ public abstract class LoadingScene : Scene
         // Draw loading UI
     }
 }
-~~~
+```
 
 ---
 

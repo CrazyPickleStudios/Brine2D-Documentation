@@ -54,7 +54,7 @@ Just like ASP.NET, Brine2D provides sensible defaults that just work. Focus on b
 
 Built on Microsoft's DI container, Brine2D makes testable, maintainable code the default—not the exception.
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.Input;
 using Brine2D.Rendering;
@@ -68,7 +68,7 @@ public class GameScene : Scene
         // Dependencies automatically injected!
     }
 }
-~~~
+```
 
 ### Familiar Developer Experience
 
@@ -92,7 +92,7 @@ public class GameScene : Scene
 
 Here's a complete game in ~30 lines of code:
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.Engine;
 using Brine2D.Hosting;
@@ -155,57 +155,57 @@ public class GameScene : Scene
         }
     }
 }
-~~~
+```
 
 That's it! A complete game window with input handling and rendering.
 
 ## Core Features
 
-### :video_game: **Complete 2D Rendering**
+### **Complete 2D Rendering**
 - Hardware-accelerated rendering via SDL3
 - Sprite sheets and animations
 - Camera system with zoom and rotation
 - **Line drawing with configurable thickness**
 
-### :jigsaw: **Hybrid Entity Component System**
+### **Hybrid Entity Component System**
 - Components are classes that can contain logic
 - Optional systems for performance optimization
 - Composition over inheritance for flexible entities
 - **ASP.NET-style system pipelines with automatic execution**
 
-### :mag: **Advanced Query System**
+### **Advanced Query System**
 - Fluent API for complex entity searches
 - Cached queries for zero-allocation performance
 - Multiple filter conditions
 - Real-time entity statistics
 
-### :arrows_counterclockwise: **Scene Transitions**
+### **Scene Transitions**
 - Smooth fade transitions between scenes
 - Custom loading screens with progress bars
 - Async scene loading
 - Scene chaining support
 
-### :space_invader: **Flexible Input System**
+### **Flexible Input System**
 - Keyboard, mouse, and gamepad support
 - Input layers (like middleware for input)
 - Event-driven and polling APIs
 
-### :speaker: **Audio System**
+### **Audio System**
 - Sound effects and music playback
 - SDL3_mixer integration
 - Simple, async-friendly API
 
-### :wrench: **Collision Detection**
+### **Collision Detection**
 - Box and circle colliders
 - Spatial partitioning for performance
 - **Physics response (bounce, slide, push)**
 
-### :world_map: **Tilemap Support**
+### **Tilemap Support**
 - Tiled (.tmj) file format
 - Automatic collision generation
 - Layer rendering
 
-### :art: **UI Framework**
+### **UI Framework**
 - **Complete component library** (15+ components)
 - Buttons, sliders, text inputs, dialogs, tabs
 - Scroll views, tooltips, dropdowns
@@ -215,7 +215,7 @@ That's it! A complete game window with input handling and rendering.
 
 Brine2D follows a clean, modular architecture:
 
-~~~
+```
 Brine2D/ 
     ├── Brine2D.Core         # Core abstractions (IScene, ITexture, etc.)
     ├── Brine2D.Engine        # Game loop, scene management, transitions
@@ -231,7 +231,7 @@ Brine2D/
     ├── Brine2D.Audio.SDL     # SDL3 audio implementation 
     ├── Brine2D.Audio.ECS     # ECS audio systems 
     └── Brine2D.UI            # Complete UI framework
-~~~
+```
 
 Each package is focused, testable, and can be swapped with custom implementations.
 

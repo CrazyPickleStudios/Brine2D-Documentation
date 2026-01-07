@@ -42,7 +42,7 @@ Brine2D uses a **hybrid object-based ECS** that gives you flexibility:
 - **Systems run automatically** via lifecycle hooks
 - **Familiar object-oriented patterns** - easier to learn than pure data-oriented ECS
 
-~~~csharp
+```csharp
 // ✅ Simple component with logic (perfectly fine!)
 public class RotateComponent : Component
 {
@@ -64,7 +64,7 @@ public class VelocityComponent : Component
     public Vector2 Velocity { get; set; }
     public float MaxSpeed { get; set; }
 }
-~~~
+```
 
 ---
 
@@ -72,9 +72,9 @@ public class VelocityComponent : Component
 
 First, add the ECS package to your project:
 
-~~~bash
+```bash
 dotnet add package Brine2D.ECS
-~~~
+```
 
 !!! info "Desktop Package Includes ECS"
     If you installed `Brine2D.Desktop`, you already have ECS included!
@@ -87,7 +87,7 @@ Components are **classes** that inherit from `Component`.
 
 Create a new file `Components.cs`:
 
-~~~csharp
+```csharp
 using System.Numerics;
 using Brine2D.Core;
 using Brine2D.ECS;
@@ -144,7 +144,7 @@ public class LifetimeComponent : Component
         }
     }
 }
-~~~
+```
 
 !!! tip "Component Design Tips"
     - ✅ Inherit from `Component` base class
@@ -160,7 +160,7 @@ For this tutorial, we'll use **component logic** for simplicity. In production, 
 
 Add player movement logic:
 
-~~~csharp
+```csharp
 // Player input handling (self-contained component)
 public class SimplePlayerController : Component
 {
@@ -245,7 +245,7 @@ public class CoinCollectorComponent : Component
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -253,7 +253,7 @@ public class CoinCollectorComponent : Component
 
 Now let's put it all together in a scene with **automatic execution**:
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.ECS;
 using Brine2D.Input;
@@ -380,7 +380,7 @@ public class ECSGameScene : Scene
         }
     }
 }
-~~~
+```
 
 !!! success " Notice: Clean & Simple!"
     The scene is **incredibly clean**:
@@ -396,7 +396,7 @@ public class ECSGameScene : Scene
 
 Update your `Program.cs`:
 
-~~~csharp
+```csharp
 using Brine2D.ECS;
 using Brine2D.Hosting;
 using Brine2D.Input.SDL;
@@ -426,15 +426,15 @@ var game = builder.Build();
 
 // Run the ECS scene
 await game.RunAsync<ECSGameScene>();
-~~~
+```
 
 ---
 
 ## Step 6: Run Your Game
 
-~~~bash
+```bash
 dotnet run
-~~~
+```
 
 **What you should see:**
 - A green circle (player) in the center
@@ -454,7 +454,7 @@ dotnet run
 
 Everything runs automatically via lifecycle hooks:
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     // Component OnUpdate() methods run automatically!
@@ -475,13 +475,13 @@ protected override void OnRender(GameTime gameTime)
     
     _renderer.DrawCircleFilled(...);
 }
-~~~
+```
 
 **No boilerplate - just game logic!**
 
 ### Entity Creation
 
-~~~csharp
+```csharp
 var player = _world.CreateEntity("Player");
 player.Tags.Add("Player");
 
@@ -489,7 +489,7 @@ var transform = player.AddComponent<TransformComponent>();
 transform.Position = new Vector2(400, 300);
 
 player.AddComponent<SimplePlayerController>();
-~~~
+```
 
 **What happens:**
 1. `CreateEntity()` - Creates a new entity object
@@ -499,7 +499,7 @@ player.AddComponent<SimplePlayerController>();
 
 ### Component Lifecycle
 
-~~~csharp
+```csharp
 public class MyComponent : Component
 {
     protected internal override void OnAdded()
@@ -517,11 +517,11 @@ public class MyComponent : Component
         // Clean up when removed
     }
 }
-~~~
+```
 
 ### Querying Entities
 
-~~~csharp
+```csharp
 // Get all entities with a specific component
 var coins = _world.GetEntitiesWithComponent<CoinComponent>();
 
@@ -536,7 +536,7 @@ var targets = _world.Query()
     .WithTag("Enemy")
     .Without<DeadComponent>()
     .Execute();
-~~~
+```
 
 ---
 
@@ -544,7 +544,7 @@ var targets = _world.Query()
 
 When you have many entities (50+), use systems for better performance:
 
-~~~csharp
+```csharp
 // 1. Register systems in Program.cs
 builder.Services.ConfigureSystemPipelines(pipelines =>
 {
@@ -554,7 +554,7 @@ builder.Services.ConfigureSystemPipelines(pipelines =>
 
 // 2. Systems run automatically via lifecycle hooks!
 // No manual calls needed in your scene - just works!
-~~~
+```
 
 - `PlayerControllerSystem` processes input (UpdateOrder: 10)
 - `VelocitySystem` applies movement (UpdateOrder: 100)

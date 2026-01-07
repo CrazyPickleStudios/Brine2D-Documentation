@@ -23,7 +23,7 @@ Systems are **optional performance optimizations** in Brine2D's hybrid ECS. Whil
 - ✅ **Rapid prototyping** - faster to write than systems
 - ✅ **Unique per entity** - not batched processing
 
-~~~csharp
+```csharp
 // ✅ Good for component logic
 public class LifetimeComponent : Component
 {
@@ -55,7 +55,7 @@ public class VelocitySystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -67,7 +67,7 @@ Brine2D supports two types of systems:
 
 Run during the update phase (game logic):
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.ECS;
 using Brine2D.ECS.Systems;
@@ -109,13 +109,13 @@ public class VelocitySystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 ### Render Systems (IRenderSystem)
 
 Run during the render phase (drawing):
 
-~~~csharp
+```csharp
 using Brine2D.ECS.Systems;
 using Brine2D.Rendering;
 using Brine2D.Rendering.ECS;
@@ -165,13 +165,13 @@ public class SpriteRenderingSystem : IRenderSystem
         }
     }
 }
-~~~
+```
 
 ### Hybrid Systems (Both Update and Render)
 
 Systems can implement both interfaces:
 
-~~~csharp
+```csharp
 public class ParticleSystem : IUpdateSystem, IRenderSystem
 {
     private readonly IEntityWorld _world;
@@ -216,7 +216,7 @@ public class ParticleSystem : IUpdateSystem, IRenderSystem
     private void UpdateParticles(ParticleEmitterComponent emitter, GameTime gameTime) { /* ... */ }
     private void RenderParticles(IRenderer renderer, ParticleEmitterComponent emitter, TransformComponent? transform) { /* ... */ }
 }
-~~~
+```
 
 ---
 
@@ -226,7 +226,7 @@ Systems run in **priority order** based on `UpdateOrder` or `RenderOrder`:
 
 ### Update Pipeline Order
 
-~~~csharp
+```csharp
 builder.Services.ConfigureSystemPipelines(pipelines =>
 {
     // Order matters! Lower numbers run first
@@ -237,7 +237,7 @@ builder.Services.ConfigureSystemPipelines(pipelines =>
     pipelines.AddSystem<CameraSystem>();            // UpdateOrder: 400 (camera follow)
     pipelines.AddSystem<AudioSystem>();             // UpdateOrder: 300 (audio)
 });
-~~~
+```
 
 **Execution:**
 1. Input systems read controls
@@ -249,7 +249,7 @@ builder.Services.ConfigureSystemPipelines(pipelines =>
 
 ### Render Pipeline Order
 
-~~~csharp
+```csharp
 builder.Services.ConfigureSystemPipelines(pipelines =>
 {
     // Lower = background, Higher = foreground
@@ -258,7 +258,7 @@ builder.Services.ConfigureSystemPipelines(pipelines =>
     pipelines.AddSystem<ParticleSystem>();        // RenderOrder: 500
     pipelines.AddSystem<DebugRenderer>();         // RenderOrder: 1000
 });
-~~~
+```
 
 **Rendering:**
 1. Background layer
@@ -274,7 +274,7 @@ builder.Services.ConfigureSystemPipelines(pipelines =>
 
 The **automatic approach** - systems run via lifecycle hooks:
 
-~~~csharp
+```csharp
 using Brine2D.ECS;
 using Brine2D.ECS.Systems;
 using Brine2D.Rendering.ECS;
@@ -306,7 +306,7 @@ builder.Services.ConfigureSystemPipelines(pipelines =>
 
 var game = builder.Build();
 await game.RunAsync<MyScene>();
-~~~
+```
 
 **Systems Execute Automatically!**
 
@@ -321,7 +321,7 @@ Once registered, systems run **automatically** via lifecycle hooks:
 ### Scenes Don't Need Pipeline Calls Anymore!
 
 **Old way (manual):**
-~~~csharp
+```csharp
 // ❌ OLD - Don't do this anymore!
 public class MyScene : Scene
 {
@@ -341,10 +341,10 @@ public class MyScene : Scene
         _renderer.EndFrame();
     }
 }
-~~~
+```
 
 **New way (automatic):**
-~~~csharp
+```csharp
 // ✅ NEW - Clean and simple!
 public class MyScene : Scene
 {
@@ -379,7 +379,7 @@ public class MyScene : Scene
         _renderer.DrawText($"Score: {_score}", 10, 10, Color.White);
     }
 }
-~~~
+```
 
 **Benefits:**
 - ✅ No boilerplate pipeline calls
@@ -393,7 +393,7 @@ public class MyScene : Scene
 
 For advanced scenarios, you can **opt out** and control pipelines manually:
 
-~~~csharp
+```csharp
 public class AdvancedScene : Scene
 {
     // Disable automatic execution
@@ -431,7 +431,7 @@ public class AdvancedScene : Scene
         _renderPipeline.Execute(_renderer);
     }
 }
-~~~
+```
 
 **Use cases:**
 - Pausing systems conditionally
@@ -451,7 +451,7 @@ Brine2D provides several pre-built systems:
 
 Applies velocity to transform positions with friction:
 
-~~~csharp
+```csharp
 // Automatically registered with AddObjectECS()
 // UpdateOrder: 100
 // Runs automatically via lifecycle hooks!
@@ -460,13 +460,13 @@ Applies velocity to transform positions with friction:
 var entity = world.CreateEntity();
 entity.AddComponent<TransformComponent>().Position = new Vector2(100, 100);
 entity.AddComponent<VelocityComponent>().Velocity = new Vector2(50, 0);
-~~~
+```
 
 ### PhysicsSystem
 
 Handles collision detection and response:
 
-~~~csharp
+```csharp
 // UpdateOrder: 200
 // Runs automatically!
 
@@ -474,13 +474,13 @@ var entity = world.CreateEntity();
 entity.AddComponent<TransformComponent>();
 entity.AddComponent<VelocityComponent>();
 entity.AddComponent<ColliderComponent>().Shape = new BoxCollider(32, 32);
-~~~
+```
 
 ### AISystem
 
 Processes AI behaviors (chase, patrol, flee):
 
-~~~csharp
+```csharp
 // UpdateOrder: 50
 // Runs automatically!
 
@@ -492,13 +492,13 @@ var ai = enemy.AddComponent<AIControllerComponent>();
 ai.Behavior = AIBehavior.Chase;
 ai.TargetTag = "Player";
 ai.MoveSpeed = 100f;
-~~~
+```
 
 ### PlayerControllerSystem
 
 Handles player input and applies to velocity:
 
-~~~csharp
+```csharp
 // Requires: Brine2D.Input.ECS
 // UpdateOrder: 10
 // Runs automatically!
@@ -510,13 +510,13 @@ player.AddComponent<VelocityComponent>();
 var controller = player.AddComponent<PlayerControllerComponent>();
 controller.MoveSpeed = 200f;
 controller.InputMode = InputMode.KeyboardAndGamepad;
-~~~
+```
 
 ### SpriteRenderingSystem
 
 Renders sprites efficiently:
 
-~~~csharp
+```csharp
 // Requires: Brine2D.Rendering.ECS
 // RenderOrder: 0
 // Renders automatically!
@@ -527,13 +527,13 @@ entity.AddComponent<TransformComponent>();
 var sprite = entity.AddComponent<SpriteComponent>();
 sprite.TexturePath = "assets/player.png";
 sprite.Tint = Color.White;
-~~~
+```
 
 ### CameraSystem
 
 Updates camera to follow entities:
 
-~~~csharp
+```csharp
 // UpdateOrder: 400
 // Runs automatically!
 
@@ -543,13 +543,13 @@ player.AddComponent<TransformComponent>();
 var cameraFollow = player.AddComponent<CameraFollowComponent>();
 cameraFollow.CameraName = "main";
 cameraFollow.Smoothing = 5f;
-~~~
+```
 
 ### AudioSystem
 
 Plays sounds and music from components:
 
-~~~csharp
+```csharp
 // Requires: Brine2D.Audio.ECS
 // UpdateOrder: 300
 // Runs automatically!
@@ -560,7 +560,7 @@ var audio = entity.AddComponent<AudioSourceComponent>();
 audio.SoundEffect = jumpSound;
 audio.Volume = 1.0f;
 audio.TriggerPlay = true; // Play now!
-~~~
+```
 
 ---
 
@@ -568,7 +568,7 @@ audio.TriggerPlay = true; // Play now!
 
 ### Update System Example
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.ECS;
 using Brine2D.ECS.Systems;
@@ -616,11 +616,11 @@ builder.Services.ConfigureSystemPipelines(pipelines =>
 {
     pipelines.AddSystem<GravitySystem>(); // Runs automatically!
 });
-~~~
+```
 
 ### Render System Example
 
-~~~csharp
+```csharp
 using Brine2D.ECS.Systems;
 using Brine2D.Rendering;
 using Brine2D.Rendering.ECS;
@@ -668,7 +668,7 @@ builder.Services.ConfigureSystemPipelines(pipelines =>
 {
     pipelines.AddSystem<HealthBarSystem>(); // Renders automatically!
 });
-~~~
+```
 
 ---
 
@@ -678,7 +678,7 @@ builder.Services.ConfigureSystemPipelines(pipelines =>
 
 Cache entity queries for better performance:
 
-~~~csharp
+```csharp
 public class OptimizedSystem : IUpdateSystem
 {
     private readonly IEntityWorld _world;
@@ -715,13 +715,13 @@ public class OptimizedSystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 ### System Communication
 
 Systems can communicate via events:
 
-~~~csharp
+```csharp
 // Event definition
 public class CollisionEvent
 {
@@ -769,7 +769,7 @@ public class CollisionResponseSystem : IUpdateSystem
     
     public void Update(GameTime gameTime) { }
 }
-~~~
+```
 
 ---
 
@@ -777,7 +777,7 @@ public class CollisionResponseSystem : IUpdateSystem
 
 ### Minimize Component Lookups
 
-~~~csharp
+```csharp
 // ❌ Slow - multiple lookups per entity
 public void Update(GameTime gameTime)
 {
@@ -806,13 +806,13 @@ public void Update(GameTime gameTime)
         // ...
     }
 }
-~~~
+```
 
 ### Use Enabled Flags
 
 Skip disabled components:
 
-~~~csharp
+```csharp
 public void Update(GameTime gameTime)
 {
     var entities = _world.GetEntitiesWithComponent<MyComponent>();
@@ -826,13 +826,13 @@ public void Update(GameTime gameTime)
         // Process component
     }
 }
-~~~
+```
 
 ### Batch Processing
 
 Process entities in batches for cache efficiency:
 
-~~~csharp
+```csharp
 public void Update(GameTime gameTime)
 {
     var entities = _world.GetEntitiesWithComponents<TransformComponent, VelocityComponent>();
@@ -847,7 +847,7 @@ public void Update(GameTime gameTime)
         transform.Position += velocity.Velocity * deltaTime;
     }
 }
-~~~
+```
 
 ---
 

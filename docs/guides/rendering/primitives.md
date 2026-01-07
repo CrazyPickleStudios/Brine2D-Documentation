@@ -16,7 +16,7 @@ Brine2D's rendering system provides simple, immediate-mode drawing APIs for 2D g
 - ✅ **Text** - String rendering with fonts
 - ✅ **Textures** - Images and sprites (covered in [Sprites](sprites.md))
 
-~~~mermaid
+```mermaid
 sequenceDiagram
     participant Scene as Your Scene
     participant Renderer as IRenderer
@@ -37,7 +37,7 @@ sequenceDiagram
     Renderer->>SDL: SDL_TTF render
     
     Note over Renderer,SDL: Frame management automatic!
-~~~
+```
 
 ---
 
@@ -52,7 +52,7 @@ sequenceDiagram
 
 In Brine2D, frame management happens automatically! You don't need to call `Clear()`, `BeginFrame()`, or `EndFrame()`:
 
-~~~csharp
+```csharp
 public class DrawingScene : Scene
 {
     protected override void OnRender(GameTime gameTime)
@@ -63,7 +63,7 @@ public class DrawingScene : Scene
         _renderer.DrawLine(100, 100, 300, 200, Color.Yellow, 2f);
     }
 }
-~~~
+```
 
 !!! tip "Manual Control Available"
     Need manual control? Set `EnableAutomaticFrameManagement = false` in your scene. See [Lifecycle Hooks](../scenes/lifecycle-hooks.md).
@@ -74,10 +74,10 @@ public class DrawingScene : Scene
 
 ### Filled Rectangle
 
-~~~csharp
+```csharp
 // DrawRectangleFilled(x, y, width, height, color)
 _renderer.DrawRectangleFilled(100, 100, 50, 50, Color.Red);
-~~~
+```
 
 **Parameters:**
 - `x` - Left edge position
@@ -86,7 +86,7 @@ _renderer.DrawRectangleFilled(100, 100, 50, 50, Color.Red);
 - `height` - Rectangle height
 - `color` - Fill color
 
-~~~
+```
 Screen Coordinates:
 (0,0) ───────► X
   │
@@ -97,14 +97,14 @@ Screen Coordinates:
   │      └──────────┘
   ▼
   Y
-~~~
+```
 
 ### Rectangle Outline
 
-~~~csharp
+```csharp
 // DrawRectangleOutline(x, y, width, height, color, thickness)
 _renderer.DrawRectangleOutline(100, 100, 200, 150, Color.White, 2f);
-~~~
+```
 
 **Thickness parameter:**
 - Default: `1.0f` (1 pixel)
@@ -116,17 +116,17 @@ _renderer.DrawRectangleOutline(100, 100, 200, 150, Color.White, 2f);
 
 ### Filled Circle
 
-~~~csharp
+```csharp
 // DrawCircleFilled(centerX, centerY, radius, color)
 _renderer.DrawCircleFilled(400, 300, 50, Color.Blue);
-~~~
+```
 
 ### Circle Outline
 
-~~~csharp
+```csharp
 // DrawCircleOutline(centerX, centerY, radius, color, thickness)
 _renderer.DrawCircleOutline(400, 300, 50, Color.White, 2f);
-~~~
+```
 
 ---
 
@@ -136,10 +136,10 @@ Draw lines between two points with configurable thickness:
 
 ### Basic Line
 
-~~~csharp
+```csharp
 // DrawLine(x1, y1, x2, y2, color, thickness)
 _renderer.DrawLine(100, 100, 300, 200, Color.Yellow, 1f);
-~~~
+```
 
 **Parameters:**
 - `x1, y1` - Start point
@@ -149,7 +149,7 @@ _renderer.DrawLine(100, 100, 300, 200, Color.Yellow, 1f);
 
 ### Thick Lines
 
-~~~csharp
+```csharp
 // Thin line
 _renderer.DrawLine(100, 100, 300, 100, Color.Red, 1f);
 
@@ -161,35 +161,35 @@ _renderer.DrawLine(100, 200, 300, 200, Color.Blue, 5f);
 
 // Very thick line
 _renderer.DrawLine(100, 250, 300, 250, Color.Yellow, 10f);
-~~~
+```
 
 ### Line Patterns
 
 **Draw a cross:**
 
-~~~csharp
+```csharp
 var centerX = 640f;
 var centerY = 360f;
 var size = 50f;
 
 _renderer.DrawLine(centerX - size, centerY, centerX + size, centerY, Color.White, 2f);
 _renderer.DrawLine(centerX, centerY - size, centerX, centerY + size, Color.White, 2f);
-~~~
+```
 
 **Draw a box with lines:**
 
-~~~csharp
+```csharp
 float x = 100, y = 100, w = 200, h = 150;
 
 _renderer.DrawLine(x, y, x + w, y, Color.White, 2f);         // Top
 _renderer.DrawLine(x + w, y, x + w, y + h, Color.White, 2f); // Right
 _renderer.DrawLine(x + w, y + h, x, y + h, Color.White, 2f); // Bottom
 _renderer.DrawLine(x, y + h, x, y, Color.White, 2f);         // Left
-~~~
+```
 
 **Velocity vectors (from collision demo):**
 
-~~~csharp
+```csharp
 private void DrawVelocityVector(Vector2 position, Vector2 velocity, Color color)
 {
     var end = position + velocity * 0.1f;
@@ -205,11 +205,11 @@ private void DrawVelocityVector(Vector2 position, Vector2 velocity, Color color)
     _renderer.DrawLine(end.X, end.Y, arrowPoint1.X, arrowPoint1.Y, color, 2f);
     _renderer.DrawLine(end.X, end.Y, arrowPoint2.X, arrowPoint2.Y, color, 2f);
 }
-~~~
+```
 
 **Grid with lines:**
 
-~~~csharp
+```csharp
 private void DrawLineGrid(int gridSize, Color gridColor)
 {
     // Vertical lines
@@ -224,7 +224,7 @@ private void DrawLineGrid(int gridSize, Color gridColor)
         _renderer.DrawLine(0, y, 1280, y, gridColor, 1f);
     }
 }
-~~~
+```
 
 ---
 
@@ -232,7 +232,7 @@ private void DrawLineGrid(int gridSize, Color gridColor)
 
 ### Predefined Colors
 
-~~~csharp
+```csharp
 Color.White           // (255, 255, 255)
 Color.Black           // (0, 0, 0)
 Color.Red             // (255, 0, 0)
@@ -243,28 +243,28 @@ Color.Yellow          // (255, 255, 0)
 Color.Gray            // (128, 128, 128)
 Color.CornflowerBlue  // (100, 149, 237)
 Color.Transparent     // (0, 0, 0, 0)
-~~~
+```
 
 ### Custom Colors
 
 **RGB Color**
 
-~~~csharp
+```csharp
 var purple = new Color(128, 0, 128);
-~~~
+```
 
 **RGBA Color (with transparency)**
 
-~~~csharp
+```csharp
 var semiTransparentRed = new Color(255, 0, 0, 128); // 50% transparent
-~~~
+```
 
 **Helper Methods**
 
-~~~csharp
+```csharp
 var color1 = Color.FromRgb(100, 150, 200);
 var color2 = Color.FromRgba(100, 150, 200, 128);
-~~~
+```
 
 ---
 
@@ -272,9 +272,9 @@ var color2 = Color.FromRgba(100, 150, 200, 128);
 
 ### Basic Text
 
-~~~csharp
+```csharp
 _renderer.DrawText("Hello, World!", 100, 100, Color.White);
-~~~
+```
 
 **Note:** Brine2D includes an embedded font that loads automatically!
 
@@ -284,7 +284,7 @@ _renderer.DrawText("Hello, World!", 100, 100, Color.White);
 
 Here's a scene with all drawing primitives:
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.Input;
 using Brine2D.Rendering;
@@ -399,7 +399,7 @@ public class PrimitivesDemo : Scene
             color);
     }
 }
-~~~
+```
 
 ---
 
@@ -407,12 +407,12 @@ public class PrimitivesDemo : Scene
 
 Check out the **Collision Demo** in FeatureDemos to see `DrawLine` used for velocity vectors!
 
-~~~bash
+```bash
 cd samples/FeatureDemos
 dotnet run
 # Select "3" for Collision Demo
 # Press F2 to toggle velocity vectors
-~~~
+```
 
 ---
 
@@ -420,29 +420,29 @@ dotnet run
 
 ### Rectangles
 
-~~~csharp
+```csharp
 DrawRectangleFilled(float x, float y, float width, float height, Color color)
 DrawRectangleOutline(float x, float y, float width, float height, Color color, float thickness = 1f)
-~~~
+```
 
 ### Circles
 
-~~~csharp
+```csharp
 DrawCircleFilled(float centerX, float centerY, float radius, Color color)
 DrawCircleOutline(float centerX, float centerY, float radius, Color color, float thickness = 1f)
-~~~
+```
 
 ### Lines
 
-~~~csharp
+```csharp
 DrawLine(float x1, float y1, float x2, float y2, Color color, float thickness = 1f)
-~~~
+```
 
 ### Text
 
-~~~csharp
+```csharp
 DrawText(string text, float x, float y, Color color)
-~~~
+```
 
 ---
 
@@ -452,48 +452,48 @@ DrawText(string text, float x, float y, Color color)
 
 ✅ **Let the framework manage frames**
 
-~~~csharp
+```csharp
 protected override void OnRender(GameTime gameTime)
 {
     // Just draw!
     _renderer.DrawRectangleFilled(...);
 }
-~~~
+```
 
 ✅ **Use constants for repeated values**
 
-~~~csharp
+```csharp
 private const float PLAYER_SIZE = 50f;
 _renderer.DrawRectangleFilled(x, y, PLAYER_SIZE, PLAYER_SIZE, Color.Red);
-~~~
+```
 
 ✅ **Cache colors**
 
-~~~csharp
+```csharp
 private static readonly Color PlayerColor = new Color(100, 200, 255);
-~~~
+```
 
 ### DON'T
 
 ❌ **Don't create colors every frame**
 
-~~~csharp
+```csharp
 // Bad
 _renderer.DrawRectangleFilled(x, y, 100, 100, new Color(255, 0, 0));
 
 // Good
 private static readonly Color Red = Color.Red;
 _renderer.DrawRectangleFilled(x, y, 100, 100, Red);
-~~~
+```
 
 ❌ **Don't draw off-screen objects**
 
-~~~csharp
+```csharp
 if (IsVisible(entity))
 {
     DrawEntity(entity);
 }
-~~~
+```
 
 ---
 

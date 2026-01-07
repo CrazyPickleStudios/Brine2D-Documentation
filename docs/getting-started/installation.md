@@ -20,9 +20,9 @@ Before you begin, make sure you have:
 
 !!! tip "Verify .NET Installation"
     Open a terminal and run:
-    ~~~bash
+    ```bash
     dotnet --version
-    ~~~
+    ```
     You should see `10.0.x` or higher.
 
 ---
@@ -37,16 +37,16 @@ The easiest way to get started. Perfect for most users.
 
 **1. Create a new project:**
 
-~~~bash
+```bash
 dotnet new console -n MyGame
 cd MyGame
-~~~
+```
 
 **2. Add Brine2D:**
 
-~~~bash
+```bash
 dotnet add package Brine2D.Desktop --version
-~~~
+```
 
 **3. Done!** You're ready to start coding.
 
@@ -81,30 +81,30 @@ For contributors or users who want the latest development version:
 
 **1. Clone the repository:**
 
-~~~bash
+```bash
 git clone https://github.com/CrazyPickleStudios/Brine2D.git
 cd Brine2D
-~~~
+```
 
 **2. Build the solution:**
 
-~~~bash
+```bash
 dotnet build
-~~~
+```
 
 **3. Reference in your game project:**
 
 Create your game project in a separate directory:
 
-~~~bash
+```bash
 cd ..
 dotnet new console -n MyGame
 cd MyGame
-~~~
+```
 
 Add project references:
 
-~~~bash
+```bash
 dotnet add reference ../Brine2D/src/Brine2D.Core/Brine2D.Core.csproj
 dotnet add reference ../Brine2D/src/Brine2D.Engine/Brine2D.Engine.csproj
 dotnet add reference ../Brine2D/src/Brine2D.Hosting/Brine2D.Hosting.csproj
@@ -113,7 +113,7 @@ dotnet add reference ../Brine2D/src/Brine2D.Input.SDL/Brine2D.Input.SDL.csproj
 dotnet add reference ../Brine2D/src/Brine2D.Audio.SDL/Brine2D.Audio.SDL.csproj
 dotnet add reference ../Brine2D/src/Brine2D.UI/Brine2D.UI.csproj
 dotnet add reference ../Brine2D/src/Brine2D.ECS/Brine2D.ECS.csproj
-~~~
+```
 
 ---
 
@@ -125,9 +125,9 @@ Brine2D offers flexible package options depending on your needs:
 
 **The all-in-one package.** Includes everything you need for desktop game development.
 
-~~~bash
+```bash
 dotnet add package Brine2D.Desktop --version
-~~~
+```
 
 **Includes:**
 
@@ -150,7 +150,7 @@ For advanced users who want fine-grained control:
 
 **Core Packages:**
 
-~~~bash
+```bash
 # Core abstractions and types
 dotnet add package Brine2D.Core
 
@@ -162,11 +162,11 @@ dotnet add package Brine2D.Hosting
 
 # Entity Component System
 dotnet add package Brine2D.ECS
-~~~
+```
 
 **Abstraction Layers:**
 
-~~~bash
+```bash
 # Rendering abstractions (IRenderer, ITexture, etc.)
 dotnet add package Brine2D.Rendering
 
@@ -175,11 +175,11 @@ dotnet add package Brine2D.Input
 
 # Audio abstractions (IAudioService)
 dotnet add package Brine2D.Audio
-~~~
+```
 
 **SDL3 Implementations:**
 
-~~~bash
+```bash
 # SDL3 rendering backend
 dotnet add package Brine2D.Rendering.SDL
 
@@ -188,14 +188,14 @@ dotnet add package Brine2D.Input.SDL
 
 # SDL3 audio backend
 dotnet add package Brine2D.Audio.SDL
-~~~
+```
 
 **Extensions:**
 
-~~~bash
+```bash
 # UI components (buttons, inputs, dialogs, tabs, etc.)
 dotnet add package Brine2D.UI
-~~~
+```
 
 **Use case:** Custom setups, plugin development, or minimal dependencies.
 
@@ -209,7 +209,7 @@ Let's verify everything is working correctly.
 
 Replace your `Program.cs` with:
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.Hosting;
 using Brine2D.Input;
@@ -267,16 +267,16 @@ public class TestScene : Scene
         }
     }
 }
-~~~
+```
 
 !!! tip Automatic Frame Management"
     Notice we don't call `Clear()`, `BeginFrame()`, or `EndFrame()` - the framework handles this automatically!
 
 ### 2. Run the Test
 
-~~~bash
+```bash
 dotnet run
-~~~
+```
 
 **Expected result:**
 
@@ -296,27 +296,27 @@ dotnet run
 **Solution:**
 1. Make sure you're targeting .NET 10:
    
-   ~~~xml
+   ```xml
    <TargetFramework>net10.0</TargetFramework>
-   ~~~
+   ```
 
 2. Include prerelease packages:
    
-   ~~~bash
+   ```bash
    dotnet add package Brine2D.Desktop --prerelease
-   ~~~
+   ```
 
 3. Try restoring packages explicitly:
    
-   ~~~bash
+   ```bash
    dotnet restore
-   ~~~
+   ```
 
 4. Check NuGet.org is accessible:
    
-   ~~~bash
+   ```bash
    dotnet nuget list source
-   ~~~
+   ```
 
 ---
 
@@ -328,16 +328,16 @@ dotnet run
 
 1. Clean and rebuild:
    
-   ~~~bash
+   ```bash
    dotnet clean
    dotnet build
-   ~~~
+   ```
 
 2. Verify SDL3-CS packages are installed:
    
-   ~~~bash
+   ```bash
    dotnet list package
-   ~~~
+   ```
    
    You should see:
 
@@ -357,13 +357,13 @@ dotnet run
 
 1. Check logs for errors:
    
-   ~~~bash
+   ```bash
    dotnet run --verbosity normal
-   ~~~
+   ```
 
 2. Frame management is automatic. If using manual control, make sure you're calling `BeginFrame()` and `EndFrame()`:
    
-   ~~~csharp
+   ```csharp
    public override bool EnableAutomaticFrameManagement => false;
    
    protected override void OnRender(GameTime gameTime)
@@ -375,7 +375,7 @@ dotnet run
        
        _renderer.EndFrame();
    }
-   ~~~
+   ```
 
 3. Verify graphics drivers are up to date.
 
@@ -392,13 +392,13 @@ The embedded Roboto font should work automatically. If not:
 1. Download a `.ttf` font (e.g., [Roboto Mono](https://fonts.google.com/specimen/Roboto+Mono))
 2. Load it manually:
 
-~~~csharp
+```csharp
 protected override async Task OnLoadAsync(CancellationToken ct)
 {
     var font = await _fontLoader.LoadFontAsync("path/to/font.ttf", 16, ct);
     _renderer.SetDefaultFont(font);
 }
-~~~
+```
 
 ---
 
@@ -411,9 +411,9 @@ protected override async Task OnLoadAsync(CancellationToken ct)
 3. Restart your terminal/IDE
 4. Verify:
    
-   ~~~bash
+   ```bash
    dotnet --version
-   ~~~
+   ```
 
 ---
 
@@ -450,13 +450,13 @@ SDL3 supports Linux, but we haven't tested Brine2D there yet.
 1. Install .NET 10 SDK: [docs.microsoft.com/dotnet/core/install/linux](https://docs.microsoft.com/dotnet/core/install/linux)
 2. Install SDL3 dependencies:
    
-   ~~~bash
+   ```bash
    # Ubuntu/Debian
    sudo apt-get install libsdl3-dev
    
    # Fedora
    sudo dnf install SDL3-devel
-   ~~~
+   ```
 
 3. Let us know if it works! Open a discussion with your findings.
 
@@ -473,9 +473,9 @@ SDL3 supports macOS, but we haven't tested Brine2D there yet.
 1. Install .NET 10 SDK: [docs.microsoft.com/dotnet/core/install/macos](https://docs.microsoft.com/dotnet/core/install/macos)
 2. Install SDL3 via Homebrew:
    
-   ~~~bash
+   ```bash
    brew install sdl3
-   ~~~
+   ```
 
 3. Report your results! We'd love to hear from Mac users.
 
@@ -512,7 +512,7 @@ SDL3 supports macOS, but we haven't tested Brine2D there yet.
 
 **Launch configuration (`.vscode/launch.json`):**
 
-~~~json
+```json
 {
     "version": "0.2.0",
     "configurations": [
@@ -529,7 +529,7 @@ SDL3 supports macOS, but we haven't tested Brine2D there yet.
         }
     ]
 }
-~~~
+```
 
 ---
 
@@ -564,23 +564,23 @@ Now that Brine2D is installed:
 
 ### Check for Updates
 
-~~~bash
+```bash
 dotnet list package --outdated
-~~~
+```
 
 ### Update to Latest Version
 
-~~~bash
+```bash
 dotnet add package Brine2D.Desktop
-~~~
+```
 
 ### Pre-release Versions
 
 To use the latest pre-release (alpha/beta):
 
-~~~bash
+```bash
 dotnet add package Brine2D.Desktop --prerelease
-~~~
+```
 
 **Current version:** `0.5.0-beta`
 
@@ -590,15 +590,15 @@ dotnet add package Brine2D.Desktop --prerelease
 
 To remove Brine2D from a project:
 
-~~~bash
+```bash
 dotnet remove package Brine2D.Desktop
-~~~
+```
 
 Clean up build artifacts:
 
-~~~bash
+```bash
 dotnet clean
-~~~
+```
 
 ---
 
