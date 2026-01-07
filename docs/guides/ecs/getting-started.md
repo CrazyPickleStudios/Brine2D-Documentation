@@ -24,7 +24,8 @@ By the end of this guide, you'll have:
 - ✅ A player entity controlled with WASD
 - ✅ Collectible coin entities  
 - ✅ Score tracking
-- ✅ Simple rendering
+- ✅ Simple rendering with automatic frame management
+- ✅ Automatic ECS system execution
 - ✅ Understanding of Brine2D's hybrid ECS
 
 **Estimated time:** 15-20 minutes
@@ -38,9 +39,10 @@ Brine2D uses a **hybrid object-based ECS** that gives you flexibility:
 - **Components are classes** (not structs) that can contain logic
 - **Components can self-update** via `OnUpdate()` for simple behaviors
 - **Systems are optional** - use them when you need performance for many entities
+- **Systems run automatically** via lifecycle hooks
 - **Familiar object-oriented patterns** - easier to learn than pure data-oriented ECS
 
-```csharp
+~~~csharp
 // ✅ Simple component with logic (perfectly fine!)
 public class RotateComponent : Component
 {
@@ -62,7 +64,7 @@ public class VelocityComponent : Component
     public Vector2 Velocity { get; set; }
     public float MaxSpeed { get; set; }
 }
-```
+~~~
 
 ---
 
@@ -70,9 +72,9 @@ public class VelocityComponent : Component
 
 First, add the ECS package to your project:
 
-```bash
+~~~bash
 dotnet add package Brine2D.ECS
-```
+~~~
 
 !!! info "Desktop Package Includes ECS"
     If you installed `Brine2D.Desktop`, you already have ECS included!
@@ -85,7 +87,7 @@ Components are **classes** that inherit from `Component`.
 
 Create a new file `Components.cs`:
 
-```csharp
+~~~csharp
 using System.Numerics;
 using Brine2D.Core;
 using Brine2D.ECS;
@@ -142,7 +144,7 @@ public class LifetimeComponent : Component
         }
     }
 }
-```
+~~~
 
 !!! tip "Component Design Tips"
     - ✅ Inherit from `Component` base class
@@ -158,7 +160,7 @@ For this tutorial, we'll use **component logic** for simplicity. In production, 
 
 Add player movement logic:
 
-```csharp
+~~~csharp
 // Player input handling (self-contained component)
 public class SimplePlayerController : Component
 {
@@ -167,8 +169,12 @@ public class SimplePlayerController : Component
     
     protected internal override void OnAdded()
     {
-        // Get input service from entity's world
-        _input = Entity?.World?.Services.GetService<IInputService>();
+        // Get input service from DI
+        var world = Entity?.World;
+        if (world?.Services != null)
+        {
+            _input = world.Services.GetService(typeof(IInputService)) as IInputService;
+        }
     }
     
     protected internal override void OnUpdate(GameTime gameTime)
@@ -239,15 +245,15 @@ public class CoinCollectorComponent : Component
         }
     }
 }
-```
+~~~
 
 ---
 
 ## Step 4: Create the Game Scene
 
-Now let's put it all together in a scene:
+Now let's put it all together in a scene with **automatic execution**:
 
-```csharp
+~~~csharp
 using Brine2D.Core;
 using Brine2D.ECS;
 using Brine2D.Input;
@@ -319,20 +325,20 @@ public class ECSGameScene : Scene
     
     protected override void OnUpdate(GameTime gameTime)
     {
-        // Update the ECS world (calls OnUpdate on all components)
-        _world.Update(gameTime);
-        
         // Check for quit
         if (_input.IsKeyPressed(Keys.Escape))
         {
             _gameContext.RequestExit();
         }
+        
+        // NO MANUAL CALLS NEEDED!
+        // Component logic (SimplePlayerController, CoinCollectorComponent) 
+        // runs automatically via lifecycle hooks!
     }
     
     protected override void OnRender(GameTime gameTime)
     {
-        _renderer.Clear(new Color(20, 20, 40));
-        _renderer.BeginFrame();
+        // Just draw - no Clear/BeginFrame/EndFrame needed
         
         // Render player
         if (_player != null)
@@ -340,7 +346,7 @@ public class ECSGameScene : Scene
             var transform = _player.GetComponent<TransformComponent>();
             if (transform != null)
             {
-                _renderer.DrawCircle(
+                _renderer.DrawCircleFilled(
                     transform.Position.X,
                     transform.Position.Y,
                     16,
@@ -356,7 +362,7 @@ public class ECSGameScene : Scene
             var transform = coin.GetComponent<TransformComponent>();
             if (transform != null)
             {
-                _renderer.DrawCircle(
+                _renderer.DrawCircleFilled(
                     transform.Position.X,
                     transform.Position.Y,
                     8,
@@ -370,13 +376,19 @@ public class ECSGameScene : Scene
         if (score != null)
         {
             _renderer.DrawText($"Score: {score.Current}", 10, 10, Color.White);
-            _renderer.DrawText("WASD to move, ESC to quit", 10, 30, Color.White);
+            _renderer.DrawText("WASD to move, ESC to quit", 10, 30, Color.Gray);
         }
-        
-        _renderer.EndFrame();
     }
 }
-```
+~~~
+
+!!! success " Notice: Clean & Simple!"
+    The scene is **incredibly clean**:
+
+    - No manual `_world.Update()` call - runs automatically!
+    - No manual `Clear()`, `BeginFrame()`, `EndFrame()` - automatic!
+    - Component `OnUpdate()` methods run automatically
+    - Just focus on your game logic!
 
 ---
 
@@ -384,7 +396,7 @@ public class ECSGameScene : Scene
 
 Update your `Program.cs`:
 
-```csharp
+~~~csharp
 using Brine2D.ECS;
 using Brine2D.Hosting;
 using Brine2D.Input.SDL;
@@ -414,15 +426,15 @@ var game = builder.Build();
 
 // Run the ECS scene
 await game.RunAsync<ECSGameScene>();
-```
+~~~
 
 ---
 
 ## Step 6: Run Your Game
 
-```bash
+~~~bash
 dotnet run
-```
+~~~
 
 **What you should see:**
 - A green circle (player) in the center
@@ -432,15 +444,44 @@ dotnet run
 - Coins disappear when collected
 - Score increases by 10 per coin
 
-Congratulations! You just built your first hybrid ECS game!
+**Congratulations! You just built your first hybrid ECS game with automatic execution!**
 
 ---
 
 ## Understanding What You Built
 
+### Automatic Execution
+
+Everything runs automatically via lifecycle hooks:
+
+~~~csharp
+protected override void OnUpdate(GameTime gameTime)
+{
+    // Component OnUpdate() methods run automatically!
+    // _world.Update() called automatically by SceneManager!
+    // Just add your custom scene logic here
+    
+    if (_input.IsKeyPressed(Keys.Escape))
+    {
+        _gameContext.RequestExit();
+    }
+}
+
+protected override void OnRender(GameTime gameTime)
+{
+    // Frame management automatic!
+    // Clear/BeginFrame/EndFrame called by SceneManager!
+    // Just draw your stuff
+    
+    _renderer.DrawCircleFilled(...);
+}
+~~~
+
+**No boilerplate - just game logic!**
+
 ### Entity Creation
 
-```csharp
+~~~csharp
 var player = _world.CreateEntity("Player");
 player.Tags.Add("Player");
 
@@ -448,17 +489,17 @@ var transform = player.AddComponent<TransformComponent>();
 transform.Position = new Vector2(400, 300);
 
 player.AddComponent<SimplePlayerController>();
-```
+~~~
 
 **What happens:**
 1. `CreateEntity()` - Creates a new entity object
 2. `.Tags.Add()` - Tag for querying/identification
 3. `.AddComponent<T>()` - Adds components to the entity
-4. Components automatically update every frame
+4. **Components automatically update every frame** via lifecycle hooks
 
 ### Component Lifecycle
 
-```csharp
+~~~csharp
 public class MyComponent : Component
 {
     protected internal override void OnAdded()
@@ -468,7 +509,7 @@ public class MyComponent : Component
     
     protected internal override void OnUpdate(GameTime gameTime)
     {
-        // Update every frame
+        // Update every frame automatically!
     }
     
     protected internal override void OnRemoved()
@@ -476,11 +517,11 @@ public class MyComponent : Component
         // Clean up when removed
     }
 }
-```
+~~~
 
 ### Querying Entities
 
-```csharp
+~~~csharp
 // Get all entities with a specific component
 var coins = _world.GetEntitiesWithComponent<CoinComponent>();
 
@@ -490,50 +531,20 @@ var moving = _world.GetEntitiesWithComponents<TransformComponent, VelocityCompon
 // Find entity by tag
 var player = _world.GetEntitiesByTag("Player").FirstOrDefault();
 
-// Find entity by name
-var boss = _world.GetEntityByName("Boss");
-```
+var targets = _world.Query()
+    .With<HealthComponent>()
+    .WithTag("Enemy")
+    .Without<DeadComponent>()
+    .Execute();
+~~~
 
 ---
 
-## Using Prefabs (Reusable Templates)
+## Using Systems for Performance
 
-For cleaner code, use prefabs:
+When you have many entities (50+), use systems for better performance:
 
-```csharp
-protected override void OnInitialize()
-{
-    // Create coin prefab
-    var coinPrefab = new EntityPrefab("Coin");
-    coinPrefab.Tags.Add("Collectible");
-    
-    coinPrefab.AddComponent<TransformComponent>();
-    coinPrefab.AddComponent<CoinComponent>(c => c.Value = 10);
-    
-    // Register prefab
-    var prefabLibrary = _gameContext.Services.GetService<PrefabLibrary>();
-    prefabLibrary?.Register(coinPrefab);
-    
-    // Instantiate multiple coins from prefab
-    for (int i = 0; i < 20; i++)
-    {
-        var position = new Vector2(
-            Random.Shared.Next(100, 700),
-            Random.Shared.Next(100, 500)
-        );
-        
-        coinPrefab.Instantiate(_world, position);
-    }
-}
-```
-
----
-
-## Adding Systems for Performance
-
-When you have many entities (50+), use systems:
-
-```csharp
+~~~csharp
 // 1. Register systems in Program.cs
 builder.Services.ConfigureSystemPipelines(pipelines =>
 {
@@ -541,95 +552,15 @@ builder.Services.ConfigureSystemPipelines(pipelines =>
     pipelines.AddSystem<VelocitySystem>();
 });
 
-// 2. Inject and use in scene
-public class ECSGameScene : Scene
-{
-    private readonly UpdatePipeline _updatePipeline;
-    
-    public ECSGameScene(
-        UpdatePipeline updatePipeline,
-        // ... other services
-    ) : base(logger)
-    {
-        _updatePipeline = updatePipeline;
-    }
-    
-    protected override void OnUpdate(GameTime gameTime)
-    {
-        // Execute all systems in order (optimized!)
-        _updatePipeline.Execute(gameTime);
-        
-        // Then update entity components
-        _world.Update(gameTime);
-    }
-}
-```
+// 2. Systems run automatically via lifecycle hooks!
+// No manual calls needed in your scene - just works!
+~~~
+
+- `PlayerControllerSystem` processes input (UpdateOrder: 10)
+- `VelocitySystem` applies movement (UpdateOrder: 100)
+- **All via automatic lifecycle hooks!**
 
 See the [Systems Guide](systems.md) for more details.
-
----
-
-## Troubleshooting
-
-### "Component logic isn't running"
-
-**Problem:** Component's `OnUpdate()` not being called.
-
-**Solution:** Make sure the component is enabled:
-
-```csharp
-component.IsEnabled = true;
-```
-
-And that the world is being updated:
-
-```csharp
-protected override void OnUpdate(GameTime gameTime)
-{
-    _world.Update(gameTime); // ← Don't forget this!
-}
-```
-
----
-
-### "Can't access other components"
-
-**Problem:** `Entity` property is null.
-
-**Solution:** Only access `Entity` after `OnAdded()` is called:
-
-```csharp
-public class MyComponent : Component
-{
-    protected internal override void OnAdded()
-    {
-        // ✅ Safe - Entity is set
-        var other = Entity?.GetComponent<OtherComponent>();
-    }
-    
-    // ❌ Unsafe - Entity might be null here
-    public MyComponent()
-    {
-        var other = Entity?.GetComponent<OtherComponent>();
-    }
-}
-```
-
----
-
-### "NullReferenceException when querying"
-
-**Problem:** Component not found on entity.
-
-**Solution:** Always null-check:
-
-```csharp
-var transform = entity.GetComponent<TransformComponent>();
-if (transform != null)
-{
-    // ✅ Safe to use
-}
-```
 
 ---
 
@@ -639,8 +570,9 @@ if (transform != null)
 ✅ **Entities** - Objects that hold components  
 ✅ **Component Lifecycle** - `OnAdded()`, `OnUpdate()`, `OnRemoved()`  
 ✅ **Queries** - Finding entities by component or tag  
-✅ **Prefabs** - Reusable entity templates  
 ✅ **Systems** - Optional performance optimization  
+✅ **Automatic Execution** - Components/systems run via lifecycle hooks  
+✅ **Automatic Frame Management** - No manual Clear/BeginFrame/EndFrame
 
 ---
 
@@ -650,54 +582,40 @@ Ready to dive deeper into ECS?
 
 <div class="grid cards" markdown>
 
--   **Components Guide**
-
-    ---
-
-    Learn component design patterns and best practices
-
-    [:octicons-arrow-right-24: Components Guide](components.md)
-
 -   **Systems Guide**
 
     ---
 
-    Write efficient systems for performance-critical logic
+    Write efficient systems for performance
 
     [:octicons-arrow-right-24: Systems Guide](systems.md)
 
--   **Entities Guide**
+-   **Queries Guide**
 
     ---
 
-    Master entity creation and management
+    Master the advanced query system
 
-    [:octicons-arrow-right-24: Entities Guide](entities.md)
+    [:octicons-arrow-right-24: Queries Guide](queries.md)
 
--   **ECS Concepts**
+-   **Components Guide**
 
     ---
 
-    Deep dive into ECS architecture
+    Learn component design patterns
 
-    [:octicons-arrow-right-24: ECS Concepts](../../concepts/entity-component-system.md)
+    [:octicons-arrow-right-24: Components Guide](components.md)
+
+-   **FeatureDemos**
+
+    ---
+
+    See Query System Demo in action
+
+    [:octicons-arrow-right-24: View Demos](../../samples/index.md)
 
 </div>
 
 ---
 
-## Challenge: Expand the Game
-
-Try adding these features to practice ECS:
-
-1. **Enemies** - Entities that chase the player (use `FollowComponent`)
-2. **Shooting** - Spawn bullet entities with `LifetimeComponent`
-3. **Health** - Create `HealthComponent` with damage/death logic
-4. **Power-ups** - Special coins that boost speed temporarily
-5. **Particles** - Spawn visual effects on coin collection
-
-See the [ECS Tutorial](../../tutorials/ecs-game.md) for complete examples!
-
----
-
-**You're now ready to build games with Brine2D's hybrid ECS!** Use component logic for simplicity, systems for performance. Choose what fits your needs!
+**You're now ready to build games with Brine2D's hybrid ECS!** Use component logic for simplicity, systems for performance. Everything runs automatically!

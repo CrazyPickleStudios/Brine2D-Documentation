@@ -55,17 +55,18 @@ stateDiagram-v2
 
 ## Scene Lifecycle
 
-Every scene goes through a **5-phase lifecycle**:
+Every scene goes through a **5-phase lifecycle** with automatic ECS and frame management:
 
 ```mermaid
 sequenceDiagram
     participant SM as SceneManager
+    participant H as LifecycleHooks
     participant S as Scene
     participant DI as DIContainer
     
-    Note over SM: LoadSceneAsync of GameScene
+    Note over SM: LoadSceneAsync<GameScene>
     
-    SM->>DI: GetRequiredService of GameScene
+    SM->>DI: GetRequiredService<GameScene>
     DI->>S: new GameScene(dependencies...)
     DI->>SM: Scene instance
     
@@ -77,12 +78,33 @@ sequenceDiagram
     Note over S: OnLoadAsync() - Load assets
     S->>SM: Task completed
     
-    loop Every Frame
+    loop Every Frame (Update)
+        Note over SM: SceneManager.Update()
+        
+        SM->>H: PreUpdate hooks
+        Note over H: Input layers, etc.
+        
         SM->>S: Update(gameTime)
         Note over S: OnUpdate() - Game logic
         
+        SM->>H: PostUpdate hooks
+        Note over H: ECS systems execute automatically!
+    end
+    
+    loop Every Frame (Render)
+        Note over SM: SceneManager.Render()
+        SM->>SM: Clear/BeginFrame (automatic)
+        
+        SM->>H: PreRender hooks
+        Note over H: ECS rendering (sprites, particles)
+        
         SM->>S: Render(gameTime)
-        Note over S: OnRender() - Draw graphics
+        Note over S: OnRender() - Draw UI
+        
+        SM->>H: PostRender hooks
+        Note over H: Debug overlays
+        
+        SM->>SM: EndFrame (automatic)
     end
     
     Note over SM: Loading new scene...
@@ -99,27 +121,30 @@ sequenceDiagram
 
 **Purpose:** Receive dependencies via constructor injection
 
-```csharp
+~~~csharp
 public class GameScene : Scene
 {
     private readonly IRenderer _renderer;
     private readonly IInputService _input;
     private readonly IGameContext _gameContext;
+    private readonly IEntityWorld _world; // ECS support
     
     // Constructor injection (DI)
     public GameScene(
         IRenderer renderer,
         IInputService input,
         IGameContext gameContext,
+        IEntityWorld world,
         ILogger<GameScene> logger
     ) : base(logger)
     {
         _renderer = renderer;
         _input = input;
         _gameContext = gameContext;
+        _world = world;
     }
 }
-```
+~~~
 
 **✅ DO:** Store dependencies in readonly fields  
 **❌ DON'T:** Initialize game state here (use `OnInitialize` instead)
@@ -130,28 +155,34 @@ public class GameScene : Scene
 
 **Purpose:** Set up initial scene state (synchronous)
 
-```csharp
+~~~csharp
 protected override void OnInitialize()
 {
     Logger.LogInformation("Game scene initialized!");
     
-    // Setup camera
-    _camera = new Camera2D(1280, 720);
-    _renderer.Camera = _camera;
+    // Set clear color (automatic frame management uses this)
+    _renderer.ClearColor = new Color(40, 40, 60);
     
-    // Initialize game objects
-    _player = new Player { Position = new Vector2(400, 300) };
-    _enemies = new List<Enemy>();
+    // Create ECS entities
+    var player = _world.CreateEntity("Player");
+    player.AddComponent<TransformComponent>().Position = new Vector2(400, 300);
+    player.AddComponent<PlayerControllerComponent>();
     
-    // Register collision shapes
-    _collisionSystem.AddShape(_playerCollider);
+    // Create enemies
+    for (int i = 0; i < 5; i++)
+    {
+        var enemy = _world.CreateEntity($"Enemy{i}");
+        enemy.AddComponent<TransformComponent>();
+        enemy.AddComponent<AIControllerComponent>();
+    }
 }
-```
+~~~
 
 **When:** Called once when scene is created  
 **Use for:** 
-- Creating game objects
-- Setting up systems
+- Creating game objects/entities
+- Setting up scene state
+- Configuring clear color
 - Initializing non-async resources
 
 **❌ DON'T:** Load assets here (use `OnLoadAsync`)
@@ -162,7 +193,7 @@ protected override void OnInitialize()
 
 **Purpose:** Load assets and resources asynchronously
 
-```csharp
+~~~csharp
 protected override async Task OnLoadAsync(CancellationToken cancellationToken)
 {
     Logger.LogInformation("Loading assets...");
@@ -170,12 +201,6 @@ protected override async Task OnLoadAsync(CancellationToken cancellationToken)
     // Load textures
     _playerTexture = await _textureLoader.LoadTextureAsync(
         "assets/player.png",
-        TextureScaleMode.Nearest,
-        cancellationToken);
-    
-    // Load sprites
-    _enemyTexture = await _textureLoader.LoadTextureAsync(
-        "assets/enemy.png",
         TextureScaleMode.Nearest,
         cancellationToken);
     
@@ -188,7 +213,7 @@ protected override async Task OnLoadAsync(CancellationToken cancellationToken)
     
     Logger.LogInformation("Assets loaded!");
 }
-```
+~~~
 
 **When:** Called once after `Initialize`  
 **Use for:**
@@ -201,7 +226,7 @@ protected override async Task OnLoadAsync(CancellationToken cancellationToken)
 **✅ DO:** Use `cancellationToken` for long operations  
 **✅ DO:** Load assets in parallel when possible
 
-```csharp
+~~~csharp
 // Parallel loading
 var loadTasks = new[]
 {
@@ -211,7 +236,7 @@ var loadTasks = new[]
 };
 
 await Task.WhenAll(loadTasks);
-```
+~~~
 
 ---
 
@@ -219,7 +244,7 @@ await Task.WhenAll(loadTasks);
 
 **Purpose:** Update game logic
 
-```csharp
+~~~csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     var deltaTime = (float)gameTime.DeltaTime;
@@ -230,86 +255,85 @@ protected override void OnUpdate(GameTime gameTime)
         _gameContext.RequestExit();
     }
     
-    // Player movement
-    var movement = Vector2.Zero;
-    if (_input.IsKeyDown(Keys.W)) movement.Y -= 1;
-    if (_input.IsKeyDown(Keys.S)) movement.Y += 1;
-    if (_input.IsKeyDown(Keys.A)) movement.X -= 1;
-    if (_input.IsKeyDown(Keys.D)) movement.X += 1;
+    // Scene-specific logic
+    HandlePlayerInput();
+    CheckWinCondition();
     
-    if (movement != Vector2.Zero)
-    {
-        movement = Vector2.Normalize(movement);
-        _playerPosition += movement * _speed * deltaTime;
-    }
-    
-    // Update animations
-    _animator?.Update(deltaTime);
-    
-    // Update physics
-    foreach (var enemy in _enemies)
-    {
-        enemy.Update(deltaTime);
-    }
-    
-    // Check collisions
-    CheckCollisions();
+    // NO MANUAL PIPELINE CALLS NEEDED!
+    // ECS systems execute automatically via lifecycle hooks!
+    // VelocitySystem, PhysicsSystem, etc. all run automatically
 }
-```
+~~~
 
 **When:** Called every frame (~60 times per second)  
 **Use for:**
 - Input processing
-- Physics updates
-- AI logic
-- Animation updates
-- Collision detection
+- Scene-specific logic
+- Win/lose conditions
+- Scene transitions
 
-**⚠️ Important:** Always use `deltaTime` for frame-rate independence!
+**Automatic ECS Execution**
+
+You **no longer need** to manually call:
+
+- ❌ `_updatePipeline.Execute(gameTime)` - **Runs automatically!**
+- ❌ `_world.Update(gameTime)` - **Runs automatically!**
+
+**Behind the scenes,** `SceneManager` executes:
+
+1. **PreUpdate hooks** (input layers, camera setup)
+2. **Your `OnUpdate()`** (scene logic)
+3. **PostUpdate hooks** (ECS systems, physics, AI)
+
+This happens automatically via lifecycle hooks!
 
 ---
 
 ### Phase 5: Render (Every Frame)
 
-**Purpose:** Draw graphics to screen
+**Purpose:** Draw scene-specific graphics (UI, debug overlays)
 
-```csharp
+~~~csharp
 protected override void OnRender(GameTime gameTime)
 {
-    _renderer.Clear(new Color(40, 40, 40));
-    _renderer.BeginFrame();
+    // NO FRAME MANAGEMENT NEEDED!
+    // SceneManager handles Clear/BeginFrame/EndFrame automatically
     
-    // Draw background
-    DrawBackground();
+    // NO PIPELINE CALLS NEEDED!
+    // ECS render systems (sprites, particles) already drew automatically
     
-    // Draw game objects
-    DrawPlayer();
-    DrawEnemies();
-    DrawProjectiles();
-    
-    // Draw UI
+    // Just draw your scene-specific UI
     DrawUI();
-    
-    _renderer.EndFrame();
+    DrawDebugInfo();
 }
 
-private void DrawPlayer()
+private void DrawUI()
 {
-    if (_playerTexture != null)
-    {
-        _renderer.DrawTexture(
-            _playerTexture,
-            _playerPosition.X,
-            _playerPosition.Y);
-    }
+    _renderer.DrawText($"Score: {_score}", 10, 10, Color.White);
+    _renderer.DrawText($"Lives: {_lives}", 10, 35, Color.White);
 }
-```
+~~~
 
 **When:** Called every frame after `Update`  
 **Use for:**
-- Drawing sprites
-- Drawing UI
+- Drawing UI overlays
 - Debug visualization
+- Scene-specific rendering
+
+**Automatic Frame Management**
+
+You **no longer need** to call:
+- ❌ `_renderer.Clear(color)` - **Handled automatically!**
+- ❌ `_renderer.BeginFrame()` - **Handled automatically!**
+- ❌ `_renderer.EndFrame()` - **Handled automatically!**
+
+**Behind the scenes,** `SceneManager` executes:
+1. **Clear screen** (uses `_renderer.ClearColor` you set in `OnInitialize`)
+2. **BeginFrame()**
+3. **PreRender hooks** (ECS sprites, particles)
+4. **Your `OnRender()`** (UI, debug)
+5. **PostRender hooks** (debug overlays)
+6. **EndFrame()**
 
 **❌ DON'T:** Update game logic here (use `OnUpdate`)
 
@@ -319,7 +343,7 @@ private void DrawPlayer()
 
 **Purpose:** Clean up resources
 
-```csharp
+~~~csharp
 protected override Task OnUnloadAsync(CancellationToken cancellationToken)
 {
     Logger.LogInformation("Unloading scene...");
@@ -333,18 +357,10 @@ protected override Task OnUnloadAsync(CancellationToken cancellationToken)
         _textureLoader.UnloadTexture(_playerTexture);
     }
     
-    if (_enemyTexture != null)
-    {
-        _textureLoader.UnloadTexture(_enemyTexture);
-    }
-    
-    // Clean up collision system
-    _collisionSystem.Clear();
-    
     Logger.LogInformation("Scene unloaded");
     return Task.CompletedTask;
 }
-```
+~~~
 
 **When:** Called when switching to another scene  
 **Use for:**
@@ -353,7 +369,169 @@ protected override Task OnUnloadAsync(CancellationToken cancellationToken)
 - Clearing collections
 - Disposing resources
 
-**⚠️ Scoped services** (like `CollisionSystem`, `UICanvas`) are automatically disposed after this!
+---
+
+## Complete Scene Example (Modern Approach)
+
+Here's a full scene with automatic ECS execution:
+
+~~~csharp
+using Brine2D.Core;
+using Brine2D.ECS;
+using Brine2D.ECS.Components;
+using Brine2D.Input;
+using Brine2D.Rendering;
+using Microsoft.Extensions.Logging;
+using System.Numerics;
+
+public class GameScene : Scene
+{
+    private readonly IRenderer _renderer;
+    private readonly IInputService _input;
+    private readonly IGameContext _gameContext;
+    private readonly IEntityWorld _world;
+    
+    private Entity? _player;
+    private int _score;
+    
+    public GameScene(
+        IRenderer renderer,
+        IInputService input,
+        IGameContext gameContext,
+        IEntityWorld world,
+        ILogger<GameScene> logger
+    ) : base(logger)
+    {
+        _renderer = renderer;
+        _input = input;
+        _gameContext = gameContext;
+        _world = world;
+    }
+    
+    protected override void OnInitialize()
+    {
+        Logger.LogInformation("Game scene initialized!");
+        
+        // Set clear color (automatic frame management uses this)
+        _renderer.ClearColor = new Color(40, 40, 60);
+        
+        // Create player entity
+        _player = _world.CreateEntity("Player");
+        _player.Tags.Add("Player");
+        
+        var transform = _player.AddComponent<TransformComponent>();
+        transform.Position = new Vector2(400, 300);
+        
+        _player.AddComponent<VelocityComponent>();
+        _player.AddComponent<PlayerControllerComponent>();
+        _player.AddComponent<SpriteComponent>().TexturePath = "assets/player.png";
+    }
+    
+    protected override async Task OnLoadAsync(CancellationToken cancellationToken)
+    {
+        Logger.LogInformation("Loading game assets...");
+        // Textures are loaded automatically by SpriteRenderingSystem
+        Logger.LogInformation("Assets loaded!");
+    }
+    
+    protected override void OnUpdate(GameTime gameTime)
+    {
+        if (_input.IsKeyPressed(Keys.Escape))
+        {
+            _gameContext.RequestExit();
+        }
+        
+        CheckCollisions();
+        UpdateScore();
+        
+        // ECS systems run automatically!
+        // No manual pipeline calls needed
+    }
+    
+    protected override void OnRender(GameTime gameTime)
+    {
+        // Frame management is automatic!
+        // Sprites already rendered via ECS!
+        
+        // Just draw scene-specific UI
+        _renderer.DrawText($"Score: {_score}", 10, 10, Color.White);
+    }
+    
+    protected override Task OnUnloadAsync(CancellationToken cancellationToken)
+    {
+        Logger.LogInformation("Unloading game scene...");
+        return Task.CompletedTask;
+    }
+    
+    private void CheckCollisions() { /* ... */ }
+    private void UpdateScore() { /* ... */ }
+}
+~~~
+
+---
+
+## Power User: Manual Control
+
+For advanced scenarios, you can **opt out** of automatic behavior:
+
+~~~csharp
+public class AdvancedScene : Scene
+{
+    // Disable automatic ECS execution
+    public override bool EnableLifecycleHooks => false;
+    
+    // Disable automatic frame management
+    public override bool EnableAutomaticFrameManagement => false;
+    
+    private readonly UpdatePipeline _updatePipeline;
+    private readonly RenderPipeline _renderPipeline;
+    private readonly IEntityWorld _world;
+    private readonly IRenderer _renderer;
+    
+    public AdvancedScene(
+        UpdatePipeline updatePipeline,
+        RenderPipeline renderPipeline,
+        IEntityWorld world,
+        IRenderer renderer,
+        ILogger<AdvancedScene> logger
+    ) : base(logger)
+    {
+        _updatePipeline = updatePipeline;
+        _renderPipeline = renderPipeline;
+        _world = world;
+        _renderer = renderer;
+    }
+    
+    protected override void OnUpdate(GameTime gameTime)
+    {
+        // Manual control - you decide when systems run
+        if (_someCondition)
+        {
+            _updatePipeline.Execute(gameTime);
+            _world.Update(gameTime);
+        }
+    }
+    
+    protected override void OnRender(GameTime gameTime)
+    {
+        // Manual frame management
+        _renderer.Clear(Color.Black);
+        _renderer.BeginFrame();
+        
+        _renderPipeline.Execute(_renderer);
+        DrawCustomUI();
+        
+        _renderer.EndFrame();
+    }
+}
+~~~
+
+**Use cases for manual control:**
+- Multi-pass rendering
+- Custom render targets
+- Pausing systems conditionally
+- Frame-by-frame debugging
+- Post-processing effects
 
 ---
 
@@ -361,7 +539,7 @@ protected override Task OnUnloadAsync(CancellationToken cancellationToken)
 
 ### Step 1: Register Scene
 
-```csharp Program.cs
+~~~csharp
 var builder = GameApplication.CreateBuilder(args);
 
 // Register scenes
@@ -371,7 +549,7 @@ builder.Services.AddScene<PauseScene>();
 builder.Services.AddScene<GameOverScene>();
 
 var game = builder.Build();
-```
+~~~
 
 **What it does:**
 - Registers scene as **transient** (new instance each time)
@@ -381,10 +559,10 @@ var game = builder.Build();
 
 ### Step 2: Set Initial Scene
 
-```csharp
+~~~csharp
 // Run with MenuScene as starting scene
 await game.RunAsync<MenuScene>();
-```
+~~~
 
 ---
 
@@ -392,7 +570,7 @@ await game.RunAsync<MenuScene>();
 
 ### Method 1: Via SceneManager (Injected)
 
-```csharp
+~~~csharp
 public class MenuScene : Scene
 {
     private readonly ISceneManager _sceneManager;
@@ -414,13 +592,13 @@ public class MenuScene : Scene
         }
     }
 }
-```
+~~~
 
 ---
 
 ### Method 2: Via Game Context (Common Pattern)
 
-```csharp
+~~~csharp
 public class GameScene : Scene
 {
     private readonly IGameContext _gameContext;
@@ -434,148 +612,15 @@ public class GameScene : Scene
         }
     }
 }
-```
-
----
-
-## Complete Scene Example
-
-Here's a full scene with all lifecycle phases:
-
-```csharp GameScene.cs
-using Brine2D.Core;
-using Brine2D.Input;
-using Brine2D.Rendering;
-using Microsoft.Extensions.Logging;
-using System.Numerics;
-
-public class GameScene : Scene
-{
-    // ============================================
-    // STEP 1: Dependencies (Constructor)
-    // ============================================
-    private readonly IRenderer _renderer;
-    private readonly IInputService _input;
-    private readonly IGameContext _gameContext;
-    private readonly ITextureLoader _textureLoader;
-    
-    public GameScene(
-        IRenderer renderer,
-        IInputService input,
-        IGameContext gameContext,
-        ITextureLoader textureLoader,
-        ILogger<GameScene> logger
-    ) : base(logger)
-    {
-        _renderer = renderer;
-        _input = input;
-        _gameContext = gameContext;
-        _textureLoader = textureLoader;
-    }
-    
-    // ============================================
-    // STEP 2: Scene State
-    // ============================================
-    private ITexture? _playerTexture;
-    private Vector2 _playerPosition;
-    private float _playerSpeed = 200f;
-    
-    // ============================================
-    // STEP 3: Initialize
-    // ============================================
-    protected override void OnInitialize()
-    {
-        Logger.LogInformation("Game scene initialized!");
-        
-        // Set initial position
-        _playerPosition = new Vector2(400, 300);
-    }
-    
-    // ============================================
-    // STEP 4: Load Assets
-    // ============================================
-    protected override async Task OnLoadAsync(CancellationToken cancellationToken)
-    {
-        Logger.LogInformation("Loading game assets...");
-        
-        _playerTexture = await _textureLoader.LoadTextureAsync(
-            "assets/player.png",
-            TextureScaleMode.Nearest,
-            cancellationToken);
-        
-        Logger.LogInformation("Assets loaded!");
-    }
-    
-    // ============================================
-    // STEP 5: Update Logic
-    // ============================================
-    protected override void OnUpdate(GameTime gameTime)
-    {
-        var deltaTime = (float)gameTime.DeltaTime;
-        
-        // Exit on ESC
-        if (_input.IsKeyPressed(Keys.Escape))
-        {
-            _gameContext.RequestExit();
-        }
-        
-        // Movement
-        var movement = Vector2.Zero;
-        if (_input.IsKeyDown(Keys.W)) movement.Y -= 1;
-        if (_input.IsKeyDown(Keys.S)) movement.Y += 1;
-        if (_input.IsKeyDown(Keys.A)) movement.X -= 1;
-        if (_input.IsKeyDown(Keys.D)) movement.X += 1;
-        
-        if (movement != Vector2.Zero)
-        {
-            movement = Vector2.Normalize(movement);
-            _playerPosition += movement * _playerSpeed * deltaTime;
-        }
-    }
-    
-    // ============================================
-    // STEP 6: Render
-    // ============================================
-    protected override void OnRender(GameTime gameTime)
-    {
-        _renderer.Clear(Color.CornflowerBlue);
-        _renderer.BeginFrame();
-        
-        if (_playerTexture != null)
-        {
-            _renderer.DrawTexture(
-                _playerTexture,
-                _playerPosition.X,
-                _playerPosition.Y);
-        }
-        
-        _renderer.EndFrame();
-    }
-    
-    // ============================================
-    // STEP 7: Cleanup
-    // ============================================
-    protected override Task OnUnloadAsync(CancellationToken cancellationToken)
-    {
-        Logger.LogInformation("Unloading game scene...");
-        
-        if (_playerTexture != null)
-        {
-            _textureLoader.UnloadTexture(_playerTexture);
-        }
-        
-        return Task.CompletedTask;
-    }
-}
-```
+~~~
 
 ---
 
 ## Scene Manager
 
-The `SceneManager` orchestrates scene lifecycle:
+The `SceneManager` orchestrates scene lifecycle automatically:
 
-```csharp
+~~~csharp
 public interface ISceneManager
 {
     IScene? CurrentScene { get; }
@@ -586,94 +631,116 @@ public interface ISceneManager
     void Update(GameTime gameTime);
     void Render(GameTime gameTime);
 }
-```
+~~~
 
-**What it does:**
+**What it does automatically:**
 1. ✅ Resolves scene from DI
 2. ✅ Calls lifecycle methods in correct order
-3. ✅ Manages current scene state
-4. ✅ Handles scene transitions
+3. ✅ **Executes lifecycle hooks (ECS systems)**
+4. ✅ **Handles frame management (Clear/Begin/End)**
+5. ✅ Manages current scene state
+6. ✅ Handles scene transitions
 
 ---
 
 ## Best Practices
 
-### DO
+### DO ✅
 
 1. **Use dependency injection**
-   ```csharp
-   public GameScene(IRenderer renderer, ...) : base(logger)
-   ```
+   ~~~csharp
+   public GameScene(IRenderer renderer, IEntityWorld world, ...) : base(logger)
+   ~~~
 
 2. **Initialize in `OnInitialize`**
-   ```csharp
+   ~~~csharp
    protected override void OnInitialize()
    {
-       _player = new Player();
+       _renderer.ClearColor = new Color(40, 40, 60);
+       _player = _world.CreateEntity("Player");
    }
-   ```
+   ~~~
 
 3. **Load assets in `OnLoadAsync`**
-   ```csharp
+   ~~~csharp
    protected override async Task OnLoadAsync(CancellationToken ct)
    {
        _texture = await _textureLoader.LoadTextureAsync(..., ct);
    }
-   ```
+   ~~~
 
-4. **Use delta time in `OnUpdate`**
-   ```csharp
-   position += velocity * speed * deltaTime;
-   ```
+4. **Trust automatic execution**
+   ~~~csharp
+   // ✅ Clean - systems run automatically
+   protected override void OnUpdate(GameTime gameTime)
+   {
+       HandleInput();
+       CheckWinCondition();
+   }
+   ~~~
 
-5. **Separate logic from rendering**
-   - Update: game logic only
-   - Render: drawing only
+5. **Draw only UI in `OnRender`**
+   ~~~csharp
+   // ✅ Sprites already rendered by ECS
+   protected override void OnRender(GameTime gameTime)
+   {
+       _renderer.DrawText($"Score: {_score}", 10, 10, Color.White);
+   }
+   ~~~
 
 6. **Clean up in `OnUnloadAsync`**
-   ```csharp
+   ~~~csharp
    protected override Task OnUnloadAsync(CancellationToken ct)
    {
        _textureLoader.UnloadTexture(_texture);
        return Task.CompletedTask;
    }
-   ```
+   ~~~
 
-### DON'T
+### DON'T ❌
 
-1. **Don't load assets in constructor**
-   ```csharp
-   // ❌ Bad
-   public GameScene(...)
+1. **Don't manually call pipelines (unless opting out)**
+   ~~~csharp
+   // ❌ Unnecessary - runs automatically!
+   protected override void OnUpdate(GameTime gameTime)
    {
-       _texture = LoadTexture(); // Synchronous!
+       _updatePipeline.Execute(gameTime); // Don't do this!
+       _world.Update(gameTime); // Don't do this!
    }
-   ```
+   ~~~
 
-2. **Don't update logic in `OnRender`**
-   ```csharp
+2. **Don't manually manage frames (unless opting out)**
+   ~~~csharp
+   // ❌ Unnecessary - automatic!
+   protected override void OnRender(GameTime gameTime)
+   {
+       _renderer.Clear(Color.Black); // Don't do this!
+       _renderer.BeginFrame(); // Don't do this!
+       
+       DrawUI();
+       
+       _renderer.EndFrame(); // Don't do this!
+   }
+   ~~~
+
+3. **Don't update logic in `OnRender`**
+   ~~~csharp
    // ❌ Bad
    protected override void OnRender(GameTime gt)
    {
        _player.Update(); // Wrong place!
    }
-   ```
-
-3. **Don't use fixed values**
-   ```csharp
-   // ❌ Bad
-   position += velocity; // Frame-rate dependent!
-   ```
+   ~~~
 
 4. **Don't forget to unload**
-   ```csharp
+   ~~~csharp
    // ❌ Memory leak!
    protected override Task OnUnloadAsync(CancellationToken ct)
    {
        // Forgot to unload _texture!
        return Task.CompletedTask;
    }
-   ```
+   ~~~
 
 ---
 
@@ -681,7 +748,7 @@ public interface ISceneManager
 
 ### Shared State Between Scenes
 
-```csharp
+~~~csharp
 // Create a shared service
 public class GameState
 {
@@ -707,13 +774,13 @@ public class GameScene : Scene
         _gameState.PlayerScore += points;
     }
 }
-```
+~~~
 
 ---
 
 ### Scene Data Transfer
 
-```csharp
+~~~csharp
 // Option 1: Via shared service
 public class SceneTransitionData
 {
@@ -735,7 +802,7 @@ public static class SceneManagerExtensions
         // Implementation specific to your needs
     }
 }
-```
+~~~
 
 ---
 
@@ -747,14 +814,14 @@ public static class SceneManagerExtensions
 
 **Solutions:**
 1. Check scene is registered:
-   ```csharp
+   ~~~csharp
    builder.Services.AddScene<GameScene>();
-   ```
+   ~~~
 
 2. Check `RunAsync` has correct type:
-   ```csharp
+   ~~~csharp
    await game.RunAsync<GameScene>(); // ✅ Correct
-   ```
+   ~~~
 
 ---
 
@@ -763,14 +830,14 @@ public static class SceneManagerExtensions
 **Symptom:** Memory usage keeps growing
 
 **Solution:** Always unload in `OnUnloadAsync`:
-```csharp
+~~~csharp
 protected override Task OnUnloadAsync(CancellationToken ct)
 {
     _textureLoader.UnloadTexture(_texture);
     _audio.UnloadMusic(_music);
     return Task.CompletedTask;
 }
-```
+~~~
 
 ---
 
@@ -786,14 +853,14 @@ protected override Task OnUnloadAsync(CancellationToken ct)
 
 ## Summary
 
-| Phase | Method | Purpose | When |
-|-------|--------|---------|------|
-| **Constructor** | `__init__` | DI | Scene created |
-| **Initialize** | `OnInitialize()` | Setup | Once at start |
-| **Load** | `OnLoadAsync()` | Load assets | Once (async) |
-| **Update** | `OnUpdate(gt)` | Game logic | Every frame |
-| **Render** | `OnRender(gt)` | Draw graphics | Every frame |
-| **Unload** | `OnUnloadAsync()` | Cleanup | Scene change |
+| Phase | Method | Purpose | What's Automatic |
+|-------|--------|---------|------------------|
+| **Constructor** | `__init__` | DI | - |
+| **Initialize** | `OnInitialize()` | Setup | - |
+| **Load** | `OnLoadAsync()` | Load assets | - |
+| **Update** | `OnUpdate(gt)` | Scene logic | ECS systems, World update |
+| **Render** | `OnRender(gt)` | Draw UI | Frame management, ECS rendering |
+| **Unload** | `OnUnloadAsync()` | Cleanup | - |
 
 ---
 
@@ -801,9 +868,9 @@ protected override Task OnUnloadAsync(CancellationToken ct)
 
 - **[Game Loop](game-loop.md)** - Understand how scenes fit in the loop
 - **[Dependency Injection](dependency-injection.md)** - Master scene dependencies
-- **[Asset Loading](../guides/assets.md)** - Learn asset management
-- **[Input Handling](../guides/input.md)** - Process player input
+- **[ECS Systems](../guides/ecs/systems.md)** - Create systems that run automatically
+- **[Input Handling](../guides/input/keyboard.md)** - Process player input
 
 ---
 
-Scenes keep your game organized and maintainable!
+**Scenes are now cleaner than ever!** Trust automatic execution and focus on game logic. 🚀

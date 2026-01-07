@@ -23,7 +23,7 @@ Systems are **optional performance optimizations** in Brine2D's hybrid ECS. Whil
 - ✅ **Rapid prototyping** - faster to write than systems
 - ✅ **Unique per entity** - not batched processing
 
-```csharp
+~~~csharp
 // ✅ Good for component logic
 public class LifetimeComponent : Component
 {
@@ -55,7 +55,7 @@ public class VelocitySystem : IUpdateSystem
         }
     }
 }
-```
+~~~
 
 ---
 
@@ -67,7 +67,7 @@ Brine2D supports two types of systems:
 
 Run during the update phase (game logic):
 
-```csharp
+~~~csharp
 using Brine2D.Core;
 using Brine2D.ECS;
 using Brine2D.ECS.Systems;
@@ -109,13 +109,13 @@ public class VelocitySystem : IUpdateSystem
         }
     }
 }
-```
+~~~
 
 ### Render Systems (IRenderSystem)
 
 Run during the render phase (drawing):
 
-```csharp
+~~~csharp
 using Brine2D.ECS.Systems;
 using Brine2D.Rendering;
 using Brine2D.Rendering.ECS;
@@ -165,13 +165,13 @@ public class SpriteRenderingSystem : IRenderSystem
         }
     }
 }
-```
+~~~
 
 ### Hybrid Systems (Both Update and Render)
 
 Systems can implement both interfaces:
 
-```csharp
+~~~csharp
 public class ParticleSystem : IUpdateSystem, IRenderSystem
 {
     private readonly IEntityWorld _world;
@@ -216,7 +216,7 @@ public class ParticleSystem : IUpdateSystem, IRenderSystem
     private void UpdateParticles(ParticleEmitterComponent emitter, GameTime gameTime) { /* ... */ }
     private void RenderParticles(IRenderer renderer, ParticleEmitterComponent emitter, TransformComponent? transform) { /* ... */ }
 }
-```
+~~~
 
 ---
 
@@ -226,7 +226,7 @@ Systems run in **priority order** based on `UpdateOrder` or `RenderOrder`:
 
 ### Update Pipeline Order
 
-```csharp
+~~~csharp
 builder.Services.ConfigureSystemPipelines(pipelines =>
 {
     // Order matters! Lower numbers run first
@@ -237,7 +237,7 @@ builder.Services.ConfigureSystemPipelines(pipelines =>
     pipelines.AddSystem<CameraSystem>();            // UpdateOrder: 400 (camera follow)
     pipelines.AddSystem<AudioSystem>();             // UpdateOrder: 300 (audio)
 });
-```
+~~~
 
 **Execution:**
 1. Input systems read controls
@@ -249,7 +249,7 @@ builder.Services.ConfigureSystemPipelines(pipelines =>
 
 ### Render Pipeline Order
 
-```csharp
+~~~csharp
 builder.Services.ConfigureSystemPipelines(pipelines =>
 {
     // Lower = background, Higher = foreground
@@ -258,7 +258,7 @@ builder.Services.ConfigureSystemPipelines(pipelines =>
     pipelines.AddSystem<ParticleSystem>();        // RenderOrder: 500
     pipelines.AddSystem<DebugRenderer>();         // RenderOrder: 1000
 });
-```
+~~~
 
 **Rendering:**
 1. Background layer
@@ -270,11 +270,11 @@ builder.Services.ConfigureSystemPipelines(pipelines =>
 
 ## Registering Systems
 
-### Method 1: ASP.NET-Style Pipeline Configuration
+### ASP.NET-Style Pipeline Configuration
 
-The recommended approach - clean and declarative:
+The **automatic approach** - systems run via lifecycle hooks:
 
-```csharp
+~~~csharp
 using Brine2D.ECS;
 using Brine2D.ECS.Systems;
 using Brine2D.Rendering.ECS;
@@ -306,24 +306,108 @@ builder.Services.ConfigureSystemPipelines(pipelines =>
 
 var game = builder.Build();
 await game.RunAsync<MyScene>();
-```
+~~~
 
-### Method 2: Manual Injection in Scene
+**Systems Execute Automatically!**
 
-For more control or dynamic systems:
+Once registered, systems run **automatically** via lifecycle hooks:
+- **Update systems** run during `SceneManager.Update()` (PostUpdate hook)
+- **Render systems** run during `SceneManager.Render()` (PreRender hook)
 
-```csharp
+**No manual pipeline calls needed in your scenes!**
+
+---
+
+### Scenes Don't Need Pipeline Calls Anymore!
+
+**Old way (manual):**
+~~~csharp
+// ❌ OLD - Don't do this anymore!
 public class MyScene : Scene
 {
     private readonly UpdatePipeline _updatePipeline;
     private readonly RenderPipeline _renderPipeline;
+    
+    protected override void OnUpdate(GameTime gameTime)
+    {
+        _updatePipeline.Execute(gameTime);  // Manual call
+        _world.Update(gameTime);
+    }
+    
+    protected override void OnRender(GameTime gameTime)
+    {
+        _renderer.BeginFrame();
+        _renderPipeline.Execute(_renderer);  // Manual call
+        _renderer.EndFrame();
+    }
+}
+~~~
+
+**New way (automatic):**
+~~~csharp
+// ✅ NEW - Clean and simple!
+public class MyScene : Scene
+{
+    private readonly IRenderer _renderer;
     private readonly IEntityWorld _world;
     
-    public MyScene(
+    protected override void OnInitialize()
+    {
+        _renderer.ClearColor = new Color(40, 40, 60);
+        
+        // Create entities - systems will process them automatically
+        var player = _world.CreateEntity("Player");
+        player.AddComponent<TransformComponent>();
+        player.AddComponent<VelocityComponent>();
+        player.AddComponent<PlayerControllerComponent>();
+    }
+    
+    protected override void OnUpdate(GameTime gameTime)
+    {
+        // Just your scene-specific logic
+        CheckWinCondition();
+        
+        // Systems run automatically via lifecycle hooks!
+    }
+    
+    protected override void OnRender(GameTime gameTime)
+    {
+        // Frame management automatic!
+        // Sprites already rendered by SpriteRenderingSystem!
+        
+        // Just draw scene-specific UI
+        _renderer.DrawText($"Score: {_score}", 10, 10, Color.White);
+    }
+}
+~~~
+
+**Benefits:**
+- ✅ No boilerplate pipeline calls
+- ✅ Cleaner scenes (like ASP.NET controllers)
+- ✅ Can't forget to execute systems
+- ✅ Automatic execution order
+
+---
+
+## Power User: Manual Pipeline Control
+
+For advanced scenarios, you can **opt out** and control pipelines manually:
+
+~~~csharp
+public class AdvancedScene : Scene
+{
+    // Disable automatic execution
+    public override bool EnableLifecycleHooks => false;
+    
+    private readonly UpdatePipeline _updatePipeline;
+    private readonly RenderPipeline _renderPipeline;
+    private readonly IEntityWorld _world;
+    
+    public AdvancedScene(
         UpdatePipeline updatePipeline,
         RenderPipeline renderPipeline,
         IEntityWorld world,
-        ILogger<MyScene> logger
+        ILogger<AdvancedScene> logger
     ) : base(logger)
     {
         _updatePipeline = updatePipeline;
@@ -333,24 +417,29 @@ public class MyScene : Scene
     
     protected override void OnUpdate(GameTime gameTime)
     {
-        // Execute all registered update systems
-        _updatePipeline.Execute(gameTime);
-        
-        // Then update component logic
-        _world.Update(gameTime);
+        // Manual control - pause systems on condition
+        if (!_isPaused)
+        {
+            _updatePipeline.Execute(gameTime);
+            _world.Update(gameTime);
+        }
     }
     
     protected override void OnRender(GameTime gameTime)
     {
-        _renderer.BeginFrame();
-        
-        // Execute all registered render systems
+        // Manual rendering control
         _renderPipeline.Execute(_renderer);
-        
-        _renderer.EndFrame();
     }
 }
-```
+~~~
+
+**Use cases:**
+- Pausing systems conditionally
+- Frame-by-frame debugging
+- Custom execution timing
+- Multiple pipeline passes
+
+See [Scene Management](../../concepts/scenes.md#power-user-manual-control) for details.
 
 ---
 
@@ -362,35 +451,38 @@ Brine2D provides several pre-built systems:
 
 Applies velocity to transform positions with friction:
 
-```csharp
+~~~csharp
 // Automatically registered with AddObjectECS()
 // UpdateOrder: 100
+// Runs automatically via lifecycle hooks!
 
 // Usage: Just add components!
 var entity = world.CreateEntity();
 entity.AddComponent<TransformComponent>().Position = new Vector2(100, 100);
 entity.AddComponent<VelocityComponent>().Velocity = new Vector2(50, 0);
-```
+~~~
 
 ### PhysicsSystem
 
 Handles collision detection and response:
 
-```csharp
+~~~csharp
 // UpdateOrder: 200
+// Runs automatically!
 
 var entity = world.CreateEntity();
 entity.AddComponent<TransformComponent>();
 entity.AddComponent<VelocityComponent>();
 entity.AddComponent<ColliderComponent>().Shape = new BoxCollider(32, 32);
-```
+~~~
 
 ### AISystem
 
 Processes AI behaviors (chase, patrol, flee):
 
-```csharp
+~~~csharp
 // UpdateOrder: 50
+// Runs automatically!
 
 var enemy = world.CreateEntity();
 enemy.AddComponent<TransformComponent>();
@@ -400,15 +492,16 @@ var ai = enemy.AddComponent<AIControllerComponent>();
 ai.Behavior = AIBehavior.Chase;
 ai.TargetTag = "Player";
 ai.MoveSpeed = 100f;
-```
+~~~
 
 ### PlayerControllerSystem
 
 Handles player input and applies to velocity:
 
-```csharp
+~~~csharp
 // Requires: Brine2D.Input.ECS
 // UpdateOrder: 10
+// Runs automatically!
 
 var player = world.CreateEntity();
 player.AddComponent<TransformComponent>();
@@ -417,15 +510,16 @@ player.AddComponent<VelocityComponent>();
 var controller = player.AddComponent<PlayerControllerComponent>();
 controller.MoveSpeed = 200f;
 controller.InputMode = InputMode.KeyboardAndGamepad;
-```
+~~~
 
 ### SpriteRenderingSystem
 
 Renders sprites efficiently:
 
-```csharp
+~~~csharp
 // Requires: Brine2D.Rendering.ECS
 // RenderOrder: 0
+// Renders automatically!
 
 var entity = world.CreateEntity();
 entity.AddComponent<TransformComponent>();
@@ -433,14 +527,15 @@ entity.AddComponent<TransformComponent>();
 var sprite = entity.AddComponent<SpriteComponent>();
 sprite.TexturePath = "assets/player.png";
 sprite.Tint = Color.White;
-```
+~~~
 
 ### CameraSystem
 
 Updates camera to follow entities:
 
-```csharp
+~~~csharp
 // UpdateOrder: 400
+// Runs automatically!
 
 var player = world.CreateEntity();
 player.AddComponent<TransformComponent>();
@@ -448,15 +543,16 @@ player.AddComponent<TransformComponent>();
 var cameraFollow = player.AddComponent<CameraFollowComponent>();
 cameraFollow.CameraName = "main";
 cameraFollow.Smoothing = 5f;
-```
+~~~
 
 ### AudioSystem
 
 Plays sounds and music from components:
 
-```csharp
+~~~csharp
 // Requires: Brine2D.Audio.ECS
 // UpdateOrder: 300
+// Runs automatically!
 
 var entity = world.CreateEntity();
 
@@ -464,7 +560,7 @@ var audio = entity.AddComponent<AudioSourceComponent>();
 audio.SoundEffect = jumpSound;
 audio.Volume = 1.0f;
 audio.TriggerPlay = true; // Play now!
-```
+~~~
 
 ---
 
@@ -472,7 +568,7 @@ audio.TriggerPlay = true; // Play now!
 
 ### Update System Example
 
-```csharp
+~~~csharp
 using Brine2D.Core;
 using Brine2D.ECS;
 using Brine2D.ECS.Systems;
@@ -514,11 +610,17 @@ public class GravityComponent : Component
 {
     public float Force { get; set; } = 980f; // Pixels per second squared
 }
-```
+
+// Register it
+builder.Services.ConfigureSystemPipelines(pipelines =>
+{
+    pipelines.AddSystem<GravitySystem>(); // Runs automatically!
+});
+~~~
 
 ### Render System Example
 
-```csharp
+~~~csharp
 using Brine2D.ECS.Systems;
 using Brine2D.Rendering;
 using Brine2D.Rendering.ECS;
@@ -560,86 +662,13 @@ public class HealthBarSystem : IRenderSystem
         }
     }
 }
-```
 
-### Hybrid System Example
-
-```csharp
-public class DamageNumberSystem : IUpdateSystem, IRenderSystem
+// Register it
+builder.Services.ConfigureSystemPipelines(pipelines =>
 {
-    private readonly IEntityWorld _world;
-    private readonly List<DamageNumber> _activeNumbers = new();
-    
-    public int UpdateOrder => 250;
-    public int RenderOrder => 200;
-    
-    public DamageNumberSystem(IEntityWorld world)
-    {
-        _world = world;
-        
-        // Subscribe to damage events
-        var eventBus = world.Services.GetService<EventBus>();
-        eventBus?.Subscribe<DamageEvent>(OnDamage);
-    }
-    
-    private void OnDamage(DamageEvent evt)
-    {
-        if (evt.Target == null) return;
-        
-        var transform = evt.Target.GetComponent<TransformComponent>();
-        if (transform == null) return;
-        
-        _activeNumbers.Add(new DamageNumber
-        {
-            Position = transform.Position,
-            Amount = evt.Amount,
-            Lifetime = 1f
-        });
-    }
-    
-    public void Update(GameTime gameTime)
-    {
-        var deltaTime = (float)gameTime.DeltaTime;
-        
-        // Update damage numbers
-        for (int i = _activeNumbers.Count - 1; i >= 0; i--)
-        {
-            var number = _activeNumbers[i];
-            
-            number.Lifetime -= deltaTime;
-            number.Position.Y -= 30 * deltaTime; // Float upward
-            
-            if (number.Lifetime <= 0)
-            {
-                _activeNumbers.RemoveAt(i);
-            }
-        }
-    }
-    
-    public void Render(IRenderer renderer)
-    {
-        foreach (var number in _activeNumbers)
-        {
-            var alpha = (byte)(255 * (number.Lifetime / 1f));
-            var color = new Color(255, 255, 255, alpha);
-            
-            renderer.DrawText(
-                $"-{number.Amount:F0}",
-                number.Position.X,
-                number.Position.Y,
-                color
-            );
-        }
-    }
-    
-    private class DamageNumber
-    {
-        public Vector2 Position;
-        public float Amount;
-        public float Lifetime;
-    }
-}
-```
+    pipelines.AddSystem<HealthBarSystem>(); // Renders automatically!
+});
+~~~
 
 ---
 
@@ -649,7 +678,7 @@ public class DamageNumberSystem : IUpdateSystem, IRenderSystem
 
 Cache entity queries for better performance:
 
-```csharp
+~~~csharp
 public class OptimizedSystem : IUpdateSystem
 {
     private readonly IEntityWorld _world;
@@ -686,13 +715,13 @@ public class OptimizedSystem : IUpdateSystem
         }
     }
 }
-```
+~~~
 
 ### System Communication
 
 Systems can communicate via events:
 
-```csharp
+~~~csharp
 // Event definition
 public class CollisionEvent
 {
@@ -740,45 +769,7 @@ public class CollisionResponseSystem : IUpdateSystem
     
     public void Update(GameTime gameTime) { }
 }
-```
-
-### System State
-
-Systems can maintain state:
-
-```csharp
-public class WaveSpawnerSystem : IUpdateSystem
-{
-    private readonly IEntityWorld _world;
-    private int _currentWave = 1;
-    private float _timeSinceLastWave = 0;
-    private int _enemiesRemaining = 0;
-    
-    public int UpdateOrder => 300;
-    
-    public void Update(GameTime gameTime)
-    {
-        _timeSinceLastWave += (float)gameTime.DeltaTime;
-        
-        // Count remaining enemies
-        _enemiesRemaining = _world.GetEntitiesByTag("Enemy").Count();
-        
-        // Spawn new wave if ready
-        if (_enemiesRemaining == 0 && _timeSinceLastWave > 5f)
-        {
-            SpawnWave(_currentWave);
-            _currentWave++;
-            _timeSinceLastWave = 0;
-        }
-    }
-    
-    private void SpawnWave(int waveNumber)
-    {
-        int enemyCount = waveNumber * 5;
-        // Spawn enemies...
-    }
-}
-```
+~~~
 
 ---
 
@@ -786,7 +777,7 @@ public class WaveSpawnerSystem : IUpdateSystem
 
 ### Minimize Component Lookups
 
-```csharp
+~~~csharp
 // ❌ Slow - multiple lookups per entity
 public void Update(GameTime gameTime)
 {
@@ -815,13 +806,13 @@ public void Update(GameTime gameTime)
         // ...
     }
 }
-```
+~~~
 
 ### Use Enabled Flags
 
 Skip disabled components:
 
-```csharp
+~~~csharp
 public void Update(GameTime gameTime)
 {
     var entities = _world.GetEntitiesWithComponent<MyComponent>();
@@ -835,13 +826,13 @@ public void Update(GameTime gameTime)
         // Process component
     }
 }
-```
+~~~
 
 ### Batch Processing
 
 Process entities in batches for cache efficiency:
 
-```csharp
+~~~csharp
 public void Update(GameTime gameTime)
 {
     var entities = _world.GetEntitiesWithComponents<TransformComponent, VelocityComponent>();
@@ -856,66 +847,7 @@ public void Update(GameTime gameTime)
         transform.Position += velocity.Velocity * deltaTime;
     }
 }
-```
-
----
-
-## Testing Systems
-
-Systems are easy to test in isolation:
-
-```csharp
-[Test]
-public void VelocitySystem_AppliesVelocityToPosition()
-{
-    // Arrange
-    var world = new EntityWorld();
-    var system = new VelocitySystem(world);
-    
-    var entity = world.CreateEntity();
-    var transform = entity.AddComponent<TransformComponent>();
-    transform.Position = new Vector2(0, 0);
-    
-    var velocity = entity.AddComponent<VelocityComponent>();
-    velocity.Velocity = new Vector2(100, 0);
-    
-    // Act
-    system.Update(new GameTime(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1)));
-    
-    // Assert
-    Assert.AreEqual(new Vector2(100, 0), transform.Position);
-}
-
-[Test]
-public void AISystem_ChasesTarget()
-{
-    var world = new EntityWorld();
-    var system = new AISystem(world);
-    
-    // Create player
-    var player = world.CreateEntity("Player");
-    player.Tags.Add("Player");
-    player.AddComponent<TransformComponent>().Position = new Vector2(200, 0);
-    
-    // Create enemy
-    var enemy = world.CreateEntity("Enemy");
-    var enemyTransform = enemy.AddComponent<TransformComponent>();
-    enemyTransform.Position = new Vector2(0, 0);
-    
-    var ai = enemy.AddComponent<AIControllerComponent>();
-    ai.Behavior = AIBehavior.Chase;
-    ai.TargetTag = "Player";
-    ai.MoveSpeed = 100f;
-    
-    var velocity = enemy.AddComponent<VelocityComponent>();
-    
-    // Act
-    system.Update(new GameTime(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1)));
-    
-    // Assert
-    Assert.IsTrue(velocity.Velocity.X > 0); // Moving toward player
-}
-```
+~~~
 
 ---
 
@@ -930,6 +862,7 @@ When creating a system, consider:
 - ✅ Does it query the right component combination?
 - ✅ Are component lookups minimized?
 - ✅ Are disabled components skipped?
+- ✅ Is it registered via `ConfigureSystemPipelines()`?
 - ✅ Can it be tested in isolation?
 
 ### System Order Guidelines
@@ -949,34 +882,11 @@ When creating a system, consider:
 
 Now that you understand systems, explore related topics:
 
-<div class="grid cards" markdown>
-
--   **Components Guide**
-
-    ---
-
-    Learn when to use component logic vs systems
-
-    [:octicons-arrow-right-24: Components Guide](components.md)
-
--   **Entities Guide**
-
-    ---
-
-    Master entity queries and management
-
-    [:octicons-arrow-right-24: Entities Guide](entities.md)
-
--   **ECS Concepts**
-
-    ---
-
-    Deep dive into ECS architecture
-
-    [:octicons-arrow-right-24: ECS Concepts](../../concepts/entity-component-system.md)
-
-</div>
+**[Scene Management](../../concepts/scenes.md)** - See how systems run automatically  
+**[Components Guide](components.md)** - Learn when to use component logic vs systems  
+**[Entities Guide](entities.md)** - Master entity queries and management  
+**[ECS Concepts](../../concepts/entity-component-system.md)** - Deep dive into ECS architecture
 
 ---
 
-**Remember:** Systems are **optional performance optimizations** in Brine2D's hybrid ECS. Use them when you need to batch-process many entities efficiently. For simple behaviors, component logic is often simpler and faster to develop!
+**Remember:** Systems are **optional performance optimizations** in Brine2D's hybrid ECS. Once registered via `ConfigureSystemPipelines()`, they **run automatically** via lifecycle hooks - no manual calls needed! For simple behaviors, component logic is often simpler and faster to develop.

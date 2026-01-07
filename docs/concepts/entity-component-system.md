@@ -20,6 +20,7 @@ Brine2D's ECS is "hybrid" because it bridges two worlds:
 - Optional systems for batch processing
 - Entity queries for efficient lookups
 - Component-based composition
+- **Automatic system execution** via lifecycle hooks
 
 Think of it as **"ASP.NET for game entities"** - familiar patterns with performance when you need it.
 
@@ -31,7 +32,7 @@ Think of it as **"ASP.NET for game entities"** - familiar patterns with performa
 
 **Entities are containers** for components. They're like game objects but lightweight.
 
-```csharp
+~~~csharp
 // Create an entity
 var player = world.CreateEntity("Player");
 player.Tags.Add("Player");
@@ -41,7 +42,7 @@ player.Tags.Add("Player");
 // - Name (for debugging)
 // - Tags (for querying)
 // - Components (the data and behavior)
-```
+~~~
 
 **Think of entities as:**
 - Rows in a database
@@ -52,7 +53,7 @@ player.Tags.Add("Player");
 
 **Components are classes** that inherit from `Component` and can contain both data and logic.
 
-```csharp
+~~~csharp
 using Brine2D.Core;
 using Brine2D.ECS;
 
@@ -76,19 +77,20 @@ public class LifetimeComponent : Component
         if (Lifetime <= 0) Entity?.Destroy();
     }
 }
-```
+~~~
 
 **Key features:**
 - Inherit from `Component` base class
 - Can override lifecycle methods (`OnUpdate`, `OnAdded`, etc.)
 - Access other components via `Entity`
 - Can be enabled/disabled
+- **Update automatically** via `SceneManager`
 
 ### Systems (Optional)
 
 **Systems are performance optimizations** that batch-process many entities with specific components.
 
-```csharp
+~~~csharp
 using Brine2D.ECS.Systems;
 
 public class VelocitySystem : IUpdateSystem
@@ -111,12 +113,14 @@ public class VelocitySystem : IUpdateSystem
         }
     }
 }
-```
+~~~
 
 **When to use:**
 - 50+ entities need the same processing
 - Performance is critical
 - Explicit execution order needed
+
+Once registered via `ConfigureSystemPipelines()`, systems **run automatically** via lifecycle hooks!
 
 ---
 
@@ -124,7 +128,7 @@ public class VelocitySystem : IUpdateSystem
 
 ### Traditional OOP (Unity-style)
 
-```mermaid
+\`\`\`mermaid
 graph TD
     GO1["GameObject: Player"] --> C1["Health: 100"]
     GO1 --> C2["Movement Script"]
@@ -135,14 +139,14 @@ graph TD
     GO2 --> C6["Render Script"]
 
     style GO1 fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
-style GO2 fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
-style C1 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-style C2 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-style C3 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-style C4 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-style C5 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-style C6 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-```
+    style GO2 fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
+    style C1 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style C2 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style C3 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style C4 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style C5 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style C6 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+\`\`\`
 
 **Characteristics:**
 - Components update individually
@@ -151,7 +155,7 @@ style C6 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
 
 ### Brine2D Hybrid ECS
 
-```mermaid
+\`\`\`mermaid
 graph TD
     subgraph "Entities"
         E1["Entity: Player"]
@@ -174,22 +178,29 @@ graph TD
         S2["RenderSystem"] -.processes.-> C1
         S2 -.processes.-> C4
     end
+    
+    subgraph "Automatic Execution"
+        SM["SceneManager"] -.runs automatically.-> S1
+        SM -.runs automatically.-> S2
+    end
 
-        style E1 fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
-        style E2 fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
-        style C1 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-        style C2 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-        style C3 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-        style C4 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-        style C5 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-        style C6 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-        style S1 fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
-        style S2 fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff        
-```
+    style E1 fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
+    style E2 fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
+    style C1 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style C2 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style C3 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style C4 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style C5 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style C6 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style S1 fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+    style S2 fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+    style SM fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+\`\`\`
 
 **Characteristics:**
 - Components can update themselves (rapid prototyping)
 - Systems available for performance (batch processing)
+- **Systems run automatically** via lifecycle hooks
 - Best of both worlds
 
 ---
@@ -200,7 +211,7 @@ Let's build a simple game to see how everything works together.
 
 ### Step 1: Define Components
 
-```csharp
+~~~csharp
 // Position in world
 public class TransformComponent : Component
 {
@@ -232,11 +243,11 @@ public class LifetimeComponent : Component
         if (Lifetime <= 0) Entity?.Destroy();
     }
 }
-```
+~~~
 
 ### Step 2: Create Entities
 
-```csharp
+~~~csharp
 // Create player
 var player = world.CreateEntity("Player");
 player.Tags.Add("Player");
@@ -250,11 +261,11 @@ var bullet = world.CreateEntity("Bullet");
 bullet.AddComponent<TransformComponent>().Position = player.GetComponent<TransformComponent>()!.Position;
 bullet.AddComponent<VelocityComponent>().Velocity = new Vector2(500, 0);
 bullet.AddComponent<LifetimeComponent>().Lifetime = 3f; // Auto-destroy after 3 seconds
-```
+~~~
 
 ### Step 3: Register Systems (Optional)
 
-```csharp
+~~~csharp
 // In Program.cs
 builder.Services.ConfigureSystemPipelines(pipelines =>
 {
@@ -262,26 +273,50 @@ builder.Services.ConfigureSystemPipelines(pipelines =>
     pipelines.AddSystem<VelocitySystem>();          // Apply movement
     pipelines.AddSystem<SpriteRenderingSystem>();   // Draw sprites
 });
-```
+~~~
+
+**Systems run automatically** via lifecycle hooks - no manual calls needed!
 
 ### Step 4: Use in Scene
 
-```csharp
+~~~csharp
 public class GameScene : Scene
 {
     private readonly IEntityWorld _world;
-    private readonly UpdatePipeline _updatePipeline;
+    private readonly IRenderer _renderer;
+    
+    protected override void OnInitialize()
+    {
+        _renderer.ClearColor = new Color(40, 40, 60);
+        
+        // Create entities
+        var player = _world.CreateEntity("Player");
+        player.AddComponent<TransformComponent>();
+        player.AddComponent<VelocityComponent>();
+        player.AddComponent<PlayerControllerComponent>();
+    }
     
     protected override void OnUpdate(GameTime gameTime)
     {
-        // Execute systems (optimized batch processing)
-        _updatePipeline.Execute(gameTime);
+        // Just scene-specific logic
+        CheckWinCondition();
         
-        // Update component logic (LifetimeComponent, etc.)
-        _world.Update(gameTime);
+        // Systems run automatically!
+        // Component OnUpdate() runs automatically!
+    }
+    
+    protected override void OnRender(GameTime gameTime)
+    {
+        // Frame management automatic!
+        // Sprites already rendered by SpriteRenderingSystem!
+        
+        // Just draw UI
+        _renderer.DrawText($"Score: {_score}", 10, 10, Color.White);
     }
 }
-```
+~~~
+
+**Notice:** No manual `_updatePipeline.Execute()` or `_world.Update()` calls needed!
 
 ---
 
@@ -289,19 +324,19 @@ public class GameScene : Scene
 
 Components have several lifecycle hooks:
 
-```mermaid
+\`\`\`mermaid
 sequenceDiagram
     participant E as Entity
     participant C as Component
-    participant W as World
+    participant SM as SceneManager
     
     E->>C: AddComponent()
     C->>C: OnAdded()
     Note over C: Initialize component
     
-    loop Every Frame
-        W->>C: OnUpdate(gameTime)
-        Note over C: Component logic runs
+    loop Every Frame (Automatic)
+        SM->>C: OnUpdate(gameTime)
+        Note over C: Component logic runs automatically
     end
     
     E->>C: IsEnabled = false
@@ -313,9 +348,9 @@ sequenceDiagram
     E->>C: RemoveComponent()
     C->>C: OnRemoved()
     Note over C: Cleanup
-```
+\`\`\`
 
-```csharp
+~~~csharp
 public class MyComponent : Component
 {
     protected internal override void OnAdded()
@@ -327,7 +362,7 @@ public class MyComponent : Component
     protected internal override void OnUpdate(GameTime gameTime)
     {
         // Called every frame if enabled
-        // Your logic here
+        // Runs automatically via SceneManager!
     }
     
     protected internal override void OnEnabled()
@@ -346,7 +381,7 @@ public class MyComponent : Component
         // Cleanup here
     }
 }
-```
+~~~
 
 ---
 
@@ -356,7 +391,7 @@ public class MyComponent : Component
 
 Build complex entities by combining simple components:
 
-```csharp
+~~~csharp
 // Flying enemy = Transform + AI + Flying behavior
 var flyingEnemy = world.CreateEntity("FlyingEnemy");
 flyingEnemy.AddComponent<TransformComponent>();
@@ -374,7 +409,7 @@ boss.AddComponent<FlyingMovementComponent>();
 boss.AddComponent<SpriteComponent>();
 boss.AddComponent<BossAbilitiesComponent>(); // Unique!
 boss.AddComponent<HealthComponent>().Max = 1000; // Lots of health
-```
+~~~
 
 No inheritance hierarchy needed!
 
@@ -382,7 +417,7 @@ No inheritance hierarchy needed!
 
 Reuse entity templates:
 
-```csharp
+~~~csharp
 // Create prefab once
 var enemyPrefab = new EntityPrefab("Enemy");
 enemyPrefab.AddComponent<TransformComponent>();
@@ -401,13 +436,13 @@ for (int i = 0; i < 10; i++)
 {
     var enemy = enemyPrefab.Instantiate(world, new Vector2(i * 100, 200));
 }
-```
+~~~
 
 ### Component Communication
 
 Components can interact:
 
-```csharp
+~~~csharp
 public class DamageOnContactComponent : Component
 {
     public float Damage { get; set; } = 10f;
@@ -429,7 +464,7 @@ public class DamageOnContactComponent : Component
         }
     }
 }
-```
+~~~
 
 ---
 
@@ -443,7 +478,7 @@ public class DamageOnContactComponent : Component
 ✅ Unique per-entity behavior  
 
 **Example:**
-```csharp
+~~~csharp
 public class FollowMouseComponent : Component
 {
     protected internal override void OnUpdate(GameTime gameTime)
@@ -457,7 +492,7 @@ public class FollowMouseComponent : Component
         }
     }
 }
-```
+~~~
 
 ### Use Systems When:
 
@@ -467,7 +502,7 @@ public class FollowMouseComponent : Component
 ✅ Specific execution order required  
 
 **Example:**
-```csharp
+~~~csharp
 public class VelocitySystem : IUpdateSystem
 {
     public int UpdateOrder => 100;
@@ -487,7 +522,9 @@ public class VelocitySystem : IUpdateSystem
         }
     }
 }
-```
+~~~
+
+**Remember:** Once registered, systems **run automatically** via lifecycle hooks!
 
 ---
 
@@ -503,10 +540,11 @@ Brine2D's ECS mirrors ASP.NET patterns:
 | `IOptions<T>` | Component properties | Configuration |
 | `ILogger<T>` | Component events | Diagnostics |
 | DI Container | `IEntityWorld` | Service location |
+| **Auto-execution** | **Lifecycle hooks** | **Automatic behavior** |
 
 **Example:**
 
-```csharp
+~~~csharp
 // ASP.NET Controller
 public class PlayerController : ControllerBase
 {
@@ -518,7 +556,7 @@ public class PlayerController : ControllerBase
 var player = world.CreateEntity("Player");
 player.AddComponent<TransformComponent>();
 player.AddComponent<PlayerControllerComponent>();
-```
+~~~
 
 Both use dependency injection and composition!
 
@@ -530,24 +568,26 @@ Both use dependency injection and composition!
 
 - Components update in order they were added
 - Skipped if `IsEnabled = false`
+- **Run automatically** via `SceneManager`
 - Good for <50 entities per component type
 
 ### System Processing
 
 - Batch processes all matching entities
 - Explicit execution order (`UpdateOrder`)
+- **Run automatically** via lifecycle hooks
 - Efficient for 50+ entities
 
 ### Querying
 
-```csharp
+~~~csharp
 // Fast - uses internal indexing
 var players = world.GetEntitiesByTag("Player");
 var moving = world.GetEntitiesWithComponents<TransformComponent, VelocityComponent>();
 
 // Slower - linear search
 var specific = world.FindEntity(e => e.Name == "Boss" && e.IsActive);
-```
+~~~
 
 ---
 
@@ -555,16 +595,16 @@ var specific = world.FindEntity(e => e.Name == "Boss" && e.IsActive);
 
 ### Entity Operations
 
-```csharp
+~~~csharp
 var entity = world.CreateEntity("Name");
 entity.Tags.Add("Player");
 entity.IsActive = false; // Disable
 world.DestroyEntity(entity);
-```
+~~~
 
 ### Component Operations
 
-```csharp
+~~~csharp
 var health = entity.AddComponent<HealthComponent>();
 health.Current = 100;
 
@@ -573,17 +613,17 @@ bool has = entity.HasComponent<HealthComponent>();
 entity.RemoveComponent<HealthComponent>();
 
 health.IsEnabled = false; // Disable component
-```
+~~~
 
 ### Querying
 
-```csharp
+~~~csharp
 var all = world.Entities;
 var tagged = world.GetEntitiesByTag("Enemy");
 var withHealth = world.GetEntitiesWithComponent<HealthComponent>();
 var moving = world.GetEntitiesWithComponents<TransformComponent, VelocityComponent>();
 var player = world.FindEntity(e => e.Name == "Player");
-```
+~~~
 
 ---
 
@@ -591,34 +631,11 @@ var player = world.FindEntity(e => e.Name == "Player");
 
 Now that you understand the concepts, start building:
 
-<div class="grid cards" markdown>
-
--   **ECS Getting Started**
-
-    ---
-
-    Build your first ECS game in 15 minutes
-
-    [:octicons-arrow-right-24: Getting Started](../guides/ecs/getting-started.md)
-
--   **Components Guide**
-
-    ---
-
-    Learn component design patterns
-
-    [:octicons-arrow-right-24: Components Guide](../guides/ecs/components.md)
-
--   **Systems Guide**
-
-    ---
-
-    Create efficient systems for performance
-
-    [:octicons-arrow-right-24: Systems Guide](../guides/ecs/systems.md)
-
-</div>
+**[ECS Getting Started](../guides/ecs/getting-started.md)** - Build your first ECS game in 15 minutes  
+**[Components Guide](../guides/ecs/components.md)** - Learn component design patterns  
+**[Systems Guide](../guides/ecs/systems.md)** - Create efficient systems for performance  
+**[Scene Management](scenes.md)** - See how automatic execution works
 
 ---
 
-**Remember:** Brine2D's hybrid ECS gives you flexibility. Start with component logic for rapid development, add systems when you need performance. Choose what fits your needs!
+**Remember:** Brine2D's hybrid ECS gives you flexibility. Start with component logic for rapid development, add systems when you need performance. Systems and component updates **run automatically** via lifecycle hooks - no manual calls needed! Choose what fits your needs!

@@ -54,7 +54,7 @@ Just like ASP.NET, Brine2D provides sensible defaults that just work. Focus on b
 
 Built on Microsoft's DI container, Brine2D makes testable, maintainable code the default—not the exception.
 
-```csharp
+~~~csharp
 using Brine2D.Core;
 using Brine2D.Input;
 using Brine2D.Rendering;
@@ -68,7 +68,7 @@ public class GameScene : Scene
         // Dependencies automatically injected!
     }
 }
-```
+~~~
 
 ### Familiar Developer Experience
 
@@ -76,10 +76,10 @@ public class GameScene : Scene
 |------------------|-------------|-------------------|
 | `WebApplicationBuilder` | `GameApplicationBuilder` | Configure your game with the same patterns |
 | Controllers | Scenes | Organize game logic into manageable units |
-| Middleware Pipeline | Input Layer System | Process input with composable layers |
+| Middleware Pipeline | **System Pipelines** | Automatic execution via lifecycle hooks |
 | `appsettings.json` | `gamesettings.json` | JSON configuration with hot reload |
 | `ILogger<T>` | `ILogger<T>` | Structured logging everywhere |
-| Entity Framework | Scene Management | High-level abstractions over complex systems |
+| Entity Framework | **Scene Management** | Transitions, loading screens |
 
 ### Production-Ready Architecture
 
@@ -92,7 +92,7 @@ public class GameScene : Scene
 
 Here's a complete game in ~30 lines of code:
 
-```csharp
+~~~csharp
 using Brine2D.Core;
 using Brine2D.Engine;
 using Brine2D.Hosting;
@@ -143,10 +143,8 @@ public class GameScene : Scene
 
     protected override void OnRender(GameTime gameTime)
     {
-        _renderer.Clear(Color.CornflowerBlue);
-        _renderer.BeginFrame();
+        // Frame management happens automatically!
         _renderer.DrawText("Hello, Brine2D!", 100, 100, Color.White);
-        _renderer.EndFrame();
     }
 
     protected override void OnUpdate(GameTime gameTime)
@@ -157,7 +155,7 @@ public class GameScene : Scene
         }
     }
 }
-```
+~~~
 
 That's it! A complete game window with input handling and rendering.
 
@@ -167,13 +165,25 @@ That's it! A complete game window with input handling and rendering.
 - Hardware-accelerated rendering via SDL3
 - Sprite sheets and animations
 - Camera system with zoom and rotation
-- Multiple render backends (GPU/Legacy)
+- **Line drawing with configurable thickness**
 
 ### :jigsaw: **Hybrid Entity Component System**
 - Components are classes that can contain logic
 - Optional systems for performance optimization
 - Composition over inheritance for flexible entities
-- ASP.NET-style system pipelines
+- **ASP.NET-style system pipelines with automatic execution**
+
+### :mag: **Advanced Query System**
+- Fluent API for complex entity searches
+- Cached queries for zero-allocation performance
+- Multiple filter conditions
+- Real-time entity statistics
+
+### :arrows_counterclockwise: **Scene Transitions**
+- Smooth fade transitions between scenes
+- Custom loading screens with progress bars
+- Async scene loading
+- Scene chaining support
 
 ### :space_invader: **Flexible Input System**
 - Keyboard, mouse, and gamepad support
@@ -185,15 +195,10 @@ That's it! A complete game window with input handling and rendering.
 - SDL3_mixer integration
 - Simple, async-friendly API
 
-### :jigsaw: **Scene Management**
-- Organize games into scenes (like pages/views)
-- Async loading with cancellation support
-- Scene transitions
-
 ### :wrench: **Collision Detection**
 - Box and circle colliders
 - Spatial partitioning for performance
-- Collision response helpers
+- **Physics response (bounce, slide, push)**
 
 ### :world_map: **Tilemap Support**
 - Tiled (.tmj) file format
@@ -201,19 +206,19 @@ That's it! A complete game window with input handling and rendering.
 - Layer rendering
 
 ### :art: **UI Framework**
-- Immediate-mode style UI
-- Buttons, sliders, text inputs, dialogs
-- Tooltip system
-- Customizable themes
+- **Complete component library** (15+ components)
+- Buttons, sliders, text inputs, dialogs, tabs
+- Scroll views, tooltips, dropdowns
+- Input layer management
 
 ## Project Structure
 
 Brine2D follows a clean, modular architecture:
 
-```
+~~~
 Brine2D/ 
     ├── Brine2D.Core         # Core abstractions (IScene, ITexture, etc.)
-    ├── Brine2D.Engine        # Game loop and scene management 
+    ├── Brine2D.Engine        # Game loop, scene management, transitions
     ├── Brine2D.Hosting       # ASP.NET-style hosting model 
     ├── Brine2D.ECS           # Entity Component System 
     ├── Brine2D.Rendering     # Rendering abstractions 
@@ -225,82 +230,95 @@ Brine2D/
     ├── Brine2D.Audio         # Audio abstractions 
     ├── Brine2D.Audio.SDL     # SDL3 audio implementation 
     ├── Brine2D.Audio.ECS     # ECS audio systems 
-    └── Brine2D.UI            # UI framework
-```
-
+    └── Brine2D.UI            # Complete UI framework
+~~~
 
 Each package is focused, testable, and can be swapped with custom implementations.
+
+## What's New in 0.5.0-beta
+
+Brine2D 0.5.0-beta is here with major improvements:
+
+- **Scene Transitions** - Smooth fades with `FadeTransition` and custom loading screens
+- **Advanced Queries** - Fluent API for complex entity searches with caching
+- **Automatic Execution** - Systems and frame management run automatically via lifecycle hooks
+- **Complete UI Framework** - 15+ production-ready components (dialogs, tabs, tooltips, scroll views)
+- **Collision Physics** - Bounce, slide, and push collision response
+- **DrawLine Primitive** - Draw lines with configurable thickness
+- **6 Interactive Demos** - FeatureDemos project showcases all major features
+
+[Read the full changelog](https://github.com/CrazyPickleStudios/Brine2D/releases/tag/v0.5.0-beta)
 
 ## Who Is This For?
 
 ### **ASP.NET Developers**
-    You already know the patterns. Now build games with them.
+You already know the patterns. Now build games with them.
 
 ### **Game Developers**
-    Get enterprise-grade architecture without the boilerplate.
+Get enterprise-grade architecture without the boilerplate.
 
 ### **Students & Educators**
-    Learn game development with familiar .NET patterns.
+Learn game development with familiar .NET patterns.
 
 ### **Enterprise Teams**
-    Build internal tools and games with maintainable code.
+Build internal tools and games with maintainable code.
 
 ## Requirements
 
 - **.NET 10 SDK** or later
-    - **SDL3** (included via SDL3-CS NuGet)
+- **SDL3** (included via SDL3-CS NuGet)
 - **Windows, macOS, or Linux**
 
 ## Next Steps
 
-    <div class="grid cards" markdown>
+<div class="grid cards" markdown>
 
-    -   :material-clock-fast: **5-Minute Quickstart**
+-   :material-clock-fast: **5-Minute Quickstart**
 
     ---
 
-        Create your first game in minutes
+    Create your first game in minutes
 
     [:octicons-arrow-right-24: Get Started](getting-started/quickstart.md)
 
-    -   :material-school: **Tutorials**
+-   :material-school: **Tutorials**
 
     ---
 
-        Step-by-step guides for common scenarios
+    Step-by-step guides for common scenarios
 
     [:octicons-arrow-right-24: Learn More](tutorials/index.md)
 
-    -   :material-file-document: **Concepts**
+-   :material-file-document: **Concepts**
 
     ---
 
-        Deep dive into Brine2D's architecture
+    Deep dive into Brine2D's architecture
 
     [:octicons-arrow-right-24: Read Docs](concepts/index.md)
 
-    -   :material-code-tags: **Samples**
+-   :material-code-tags: **FeatureDemos**
 
     ---
 
-        Working examples you can run today
+    6 interactive demos showcasing 0.5.0 features
 
-    [:octicons-arrow-right-24: Browse Samples](samples/index.md)
+    [:octicons-arrow-right-24: Browse Demos](samples/index.md)
 
-    </div>
+</div>
 
 ## Community & Support
 
-    - **GitHub**: [CrazyPickleStudios/Brine2D](https://github.com/CrazyPickleStudios/Brine2D)
-    - **Issues**: Report bugs or request features
-    - **Discussions**: Ask questions and share ideas
-    - **License**: MIT - Use it anywhere, even commercially
+- **GitHub**: [CrazyPickleStudios/Brine2D](https://github.com/CrazyPickleStudios/Brine2D)
+- **Issues**: Report bugs or request features
+- **Discussions**: Ask questions and share ideas
+- **License**: MIT - Use it anywhere, even commercially
 
-        ---
+---
 
-    <div class="centered-text" markdown>
-    **Ready to build games the ASP.NET way?**
+<div class="centered-text" markdown>
+**Ready to build games the ASP.NET way?**
 
-    [Get Started :material-arrow-right:](getting-started/quickstart.md){ .md-button .md-button--primary }
-[View Examples :material-github:](samples/index.md){ .md-button }
+[Get Started :material-arrow-right:](getting-started/quickstart.md){ .md-button .md-button--primary }
+[View Demos :material-github:](samples/index.md){ .md-button }
 </div>

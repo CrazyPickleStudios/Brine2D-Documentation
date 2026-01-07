@@ -1,21 +1,22 @@
 ---
-title: Drawing Basics
-description: Learn to draw shapes, colors, and primitives in Brine2D
+title: Drawing Primitives
+description: Learn to draw shapes, lines, and primitives in Brine2D
 ---
 
-# Drawing Basics
+# Drawing Primitives
 
-Master the fundamentals of rendering in Brine2D by learning to draw shapes, set colors, and understand the rendering pipeline.
+Master the fundamentals of rendering in Brine2D by learning to draw shapes, lines, colors, and primitives.
 
 ## Overview
 
 Brine2D's rendering system provides simple, immediate-mode drawing APIs for 2D graphics:
-- ✅ **Rectangles** - Filled squares and rectangles
-- ✅ **Circles** - Filled circles for particles, bullets
+- ✅ **Rectangles** - Filled and outlined rectangles
+- ✅ **Circles** - Filled and outlined circles
+- ✅ **Lines** - Lines with configurable thickness
 - ✅ **Text** - String rendering with fonts
-- ✅ **Textures** - Images and sprites (covered in [Textures](textures.md))
+- ✅ **Textures** - Images and sprites (covered in [Sprites](sprites.md))
 
-```mermaid
+~~~mermaid
 sequenceDiagram
     participant Scene as Your Scene
     participant Renderer as IRenderer
@@ -23,116 +24,60 @@ sequenceDiagram
     
     Note over Scene: Every Frame
     
-    Scene->>Renderer: Clear(color)
-    Renderer->>SDL: SDL_SetRenderDrawColor
-    Renderer->>SDL: SDL_RenderClear
-    
-    Scene->>Renderer: BeginFrame()
-    
-    Scene->>Renderer: DrawRectangle(...)
+    Scene->>Renderer: DrawRectangleFilled(...)
     Renderer->>SDL: SDL_RenderFillRect
     
-    Scene->>Renderer: DrawCircle(...)
+    Scene->>Renderer: DrawLine(...)
+    Renderer->>SDL: SDL_RenderLine
+    
+    Scene->>Renderer: DrawCircleFilled(...)
     Renderer->>SDL: Draw circle algorithm
     
     Scene->>Renderer: DrawText(...)
     Renderer->>SDL: SDL_TTF render
     
-    Scene->>Renderer: EndFrame()
-    Renderer->>SDL: SDL_RenderPresent
-    Note over SDL: Display on screen
-```
+    Note over Renderer,SDL: Frame management automatic!
+~~~
 
 ---
 
 ## Prerequisites
 
-- ✅ [Quick Start](../getting-started/quick-start.md) - Basic scene setup
+- ✅ [Quick Start](../../getting-started/quickstart.md) - Basic scene setup
 - ✅ Basic C# knowledge
 
 ---
 
-## Your First Drawing
+## Automatic Frame Management
 
-### Minimal Example
+In Brine2D, frame management happens automatically! You don't need to call `Clear()`, `BeginFrame()`, or `EndFrame()`:
 
-```csharp MinimalDrawing.cs
-using Brine2D.Core;
-using Brine2D.Rendering;
-using Microsoft.Extensions.Logging;
-
+~~~csharp
 public class DrawingScene : Scene
 {
-    private readonly IRenderer _renderer;
-    
-    public DrawingScene(IRenderer renderer, ILogger<DrawingScene> logger) 
-        : base(logger)
-    {
-        _renderer = renderer;
-    }
-    
     protected override void OnRender(GameTime gameTime)
     {
-        // 1. Clear screen (required)
-        _renderer.Clear(Color.CornflowerBlue);
-        
-        // 2. Begin frame (required)
-        _renderer.BeginFrame();
-        
-        // 3. Draw your stuff
-        _renderer.DrawRectangle(100, 100, 200, 150, Color.Red);
-        
-        // 4. End frame (required) - presents to screen
-        _renderer.EndFrame();
+        // Just draw! Frame management is automatic
+        _renderer.DrawRectangleFilled(100, 100, 200, 150, Color.Red);
+        _renderer.DrawCircleFilled(400, 300, 50, Color.Blue);
+        _renderer.DrawLine(100, 100, 300, 200, Color.Yellow, 2f);
     }
 }
-```
+~~~
 
-**Result:** A red rectangle on a blue background!
-
----
-
-## The Rendering Pipeline
-
-### Frame Structure
-
-Every frame **MUST** follow this pattern:
-
-```csharp
-protected override void OnRender(GameTime gameTime)
-{
-    // Step 1: Clear screen
-    _renderer.Clear(backgroundColor);
-    
-    // Step 2: Begin frame
-    _renderer.BeginFrame();
-    
-    // Step 3: Draw everything
-    DrawBackground();
-    DrawGameObjects();
-    DrawUI();
-    
-    // Step 4: End frame (displays on screen)
-    _renderer.EndFrame();
-}
-```
-
-**Why this order?**
-- `Clear()` - Wipes previous frame
-- `BeginFrame()` - Prepares rendering state
-- Draw calls - Queues draw commands
-- `EndFrame()` - Flips buffers, shows result
+!!! tip "Manual Control Available"
+    Need manual control? Set `EnableAutomaticFrameManagement = false` in your scene. See [Lifecycle Hooks](../scenes/lifecycle-hooks.md).
 
 ---
 
 ## Drawing Rectangles
 
-### Basic Rectangle
+### Filled Rectangle
 
-```csharp
-// DrawRectangle(x, y, width, height, color)
-_renderer.DrawRectangle(100, 100, 50, 50, Color.Red);
-```
+~~~csharp
+// DrawRectangleFilled(x, y, width, height, color)
+_renderer.DrawRectangleFilled(100, 100, 50, 50, Color.Red);
+~~~
 
 **Parameters:**
 - `x` - Left edge position
@@ -141,7 +86,7 @@ _renderer.DrawRectangle(100, 100, 50, 50, Color.Red);
 - `height` - Rectangle height
 - `color` - Fill color
 
-```
+~~~
 Screen Coordinates:
 (0,0) ───────► X
   │
@@ -152,125 +97,134 @@ Screen Coordinates:
   │      └──────────┘
   ▼
   Y
-```
+~~~
 
----
+### Rectangle Outline
 
-### Rectangle Patterns
+~~~csharp
+// DrawRectangleOutline(x, y, width, height, color, thickness)
+_renderer.DrawRectangleOutline(100, 100, 200, 150, Color.White, 2f);
+~~~
 
-**Centered Rectangle**
-
-```csharp
-private void DrawCenteredRect(float centerX, float centerY, float size, Color color)
-{
-    _renderer.DrawRectangle(
-        centerX - size / 2,
-        centerY - size / 2,
-        size,
-        size,
-        color);
-}
-```
-
-**Outlined Rectangle** (draw 4 thin rectangles)
-
-```csharp
-private void DrawRectangleOutline(float x, float y, float w, float h, Color color, float thickness = 2)
-{
-    // Top
-    _renderer.DrawRectangle(x, y, w, thickness, color);
-    // Bottom  
-    _renderer.DrawRectangle(x, y + h - thickness, w, thickness, color);
-    // Left
-    _renderer.DrawRectangle(x, y, thickness, h, color);
-    // Right
-    _renderer.DrawRectangle(x + w - thickness, y, thickness, h, color);
-}
-```
-
-**Grid Pattern**
-
-```csharp
-private void DrawGrid(int gridSize, Color gridColor)
-{
-    // Vertical lines
-    for (int x = 0; x < 1280; x += gridSize)
-    {
-        _renderer.DrawRectangle(x, 0, 2, 720, gridColor);
-    }
-    
-    // Horizontal lines
-    for (int y = 0; y < 720; y += gridSize)
-    {
-        _renderer.DrawRectangle(0, y, 1280, 2, gridColor);
-    }
-}
-```
+**Thickness parameter:**
+- Default: `1.0f` (1 pixel)
+- Larger values = thicker lines
 
 ---
 
 ## Drawing Circles
 
-### Basic Circle
+### Filled Circle
 
-```csharp
-// DrawCircle(centerX, centerY, radius, color)
-_renderer.DrawCircle(400, 300, 50, Color.Blue);
-```
+~~~csharp
+// DrawCircleFilled(centerX, centerY, radius, color)
+_renderer.DrawCircleFilled(400, 300, 50, Color.Blue);
+~~~
 
-**Parameters:**
-- `centerX` - Circle center X
-- `centerY` - Circle center Y
-- `radius` - Circle radius in pixels
-- `color` - Fill color
+### Circle Outline
 
-**Note:** Circles are filled automatically (no outline-only mode yet).
+~~~csharp
+// DrawCircleOutline(centerX, centerY, radius, color, thickness)
+_renderer.DrawCircleOutline(400, 300, 50, Color.White, 2f);
+~~~
 
 ---
 
-### Circle Patterns
+## Drawing Lines
 
-**Particle Effect**
+Draw lines between two points with configurable thickness:
 
-```csharp
-private void DrawParticles()
+### Basic Line
+
+~~~csharp
+// DrawLine(x1, y1, x2, y2, color, thickness)
+_renderer.DrawLine(100, 100, 300, 200, Color.Yellow, 1f);
+~~~
+
+**Parameters:**
+- `x1, y1` - Start point
+- `x2, y2` - End point
+- `color` - Line color
+- `thickness` - Line thickness (default: 1.0f)
+
+### Thick Lines
+
+~~~csharp
+// Thin line
+_renderer.DrawLine(100, 100, 300, 100, Color.Red, 1f);
+
+// Medium line
+_renderer.DrawLine(100, 150, 300, 150, Color.Green, 3f);
+
+// Thick line
+_renderer.DrawLine(100, 200, 300, 200, Color.Blue, 5f);
+
+// Very thick line
+_renderer.DrawLine(100, 250, 300, 250, Color.Yellow, 10f);
+~~~
+
+### Line Patterns
+
+**Draw a cross:**
+
+~~~csharp
+var centerX = 640f;
+var centerY = 360f;
+var size = 50f;
+
+_renderer.DrawLine(centerX - size, centerY, centerX + size, centerY, Color.White, 2f);
+_renderer.DrawLine(centerX, centerY - size, centerX, centerY + size, Color.White, 2f);
+~~~
+
+**Draw a box with lines:**
+
+~~~csharp
+float x = 100, y = 100, w = 200, h = 150;
+
+_renderer.DrawLine(x, y, x + w, y, Color.White, 2f);         // Top
+_renderer.DrawLine(x + w, y, x + w, y + h, Color.White, 2f); // Right
+_renderer.DrawLine(x + w, y + h, x, y + h, Color.White, 2f); // Bottom
+_renderer.DrawLine(x, y + h, x, y, Color.White, 2f);         // Left
+~~~
+
+**Velocity vectors (from collision demo):**
+
+~~~csharp
+private void DrawVelocityVector(Vector2 position, Vector2 velocity, Color color)
 {
-    var random = new Random();
+    var end = position + velocity * 0.1f;
+    _renderer.DrawLine(position.X, position.Y, end.X, end.Y, color, 2f);
     
-    for (int i = 0; i < 50; i++)
+    // Arrow head
+    var direction = Vector2.Normalize(velocity);
+    var perpendicular = new Vector2(-direction.Y, direction.X);
+    
+    var arrowPoint1 = end - direction * 10f + perpendicular * 5f;
+    var arrowPoint2 = end - direction * 10f - perpendicular * 5f;
+    
+    _renderer.DrawLine(end.X, end.Y, arrowPoint1.X, arrowPoint1.Y, color, 2f);
+    _renderer.DrawLine(end.X, end.Y, arrowPoint2.X, arrowPoint2.Y, color, 2f);
+}
+~~~
+
+**Grid with lines:**
+
+~~~csharp
+private void DrawLineGrid(int gridSize, Color gridColor)
+{
+    // Vertical lines
+    for (int x = 0; x <= 1280; x += gridSize)
     {
-        var x = random.Next(0, 1280);
-        var y = random.Next(0, 720);
-        var radius = random.Next(2, 8);
-        
-        _renderer.DrawCircle(x, y, radius, Color.White);
+        _renderer.DrawLine(x, 0, x, 720, gridColor, 1f);
+    }
+    
+    // Horizontal lines
+    for (int y = 0; y <= 720; y += gridSize)
+    {
+        _renderer.DrawLine(0, y, 1280, y, gridColor, 1f);
     }
 }
-```
-
-**Ripple Effect**
-
-```csharp
-private float _rippleRadius = 0f;
-
-protected override void OnUpdate(GameTime gameTime)
-{
-    _rippleRadius += 100f * (float)gameTime.DeltaTime;
-    if (_rippleRadius > 200) _rippleRadius = 0;
-}
-
-protected override void OnRender(GameTime gameTime)
-{
-    _renderer.BeginFrame();
-    
-    // Draw expanding circle
-    var alpha = (byte)(255 * (1.0f - _rippleRadius / 200f));
-    _renderer.DrawCircle(640, 360, _rippleRadius, 
-        new Color(255, 255, 255, alpha));
-    
-    _renderer.EndFrame();
-}
-```
+~~~
 
 ---
 
@@ -278,97 +232,39 @@ protected override void OnRender(GameTime gameTime)
 
 ### Predefined Colors
 
-```csharp
+~~~csharp
 Color.White           // (255, 255, 255)
 Color.Black           // (0, 0, 0)
 Color.Red             // (255, 0, 0)
 Color.Green           // (0, 255, 0)
 Color.Blue            // (0, 0, 255)
+Color.Cyan            // (0, 255, 255)
 Color.Yellow          // (255, 255, 0)
+Color.Gray            // (128, 128, 128)
 Color.CornflowerBlue  // (100, 149, 237)
 Color.Transparent     // (0, 0, 0, 0)
-```
-
----
+~~~
 
 ### Custom Colors
 
 **RGB Color**
 
-```csharp
+~~~csharp
 var purple = new Color(128, 0, 128);
-```
+~~~
 
 **RGBA Color (with transparency)**
 
-```csharp
+~~~csharp
 var semiTransparentRed = new Color(255, 0, 0, 128); // 50% transparent
-```
+~~~
 
 **Helper Methods**
 
-```csharp
+~~~csharp
 var color1 = Color.FromRgb(100, 150, 200);
 var color2 = Color.FromRgba(100, 150, 200, 128);
-```
-
----
-
-### Color Math
-
-**Lighten/Darken**
-
-```csharp
-public static Color Lighten(Color color, float amount)
-{
-    return new Color(
-        (byte)Math.Min(255, color.R + (255 - color.R) * amount),
-        (byte)Math.Min(255, color.G + (255 - color.G) * amount),
-        (byte)Math.Min(255, color.B + (255 - color.B) * amount),
-        color.A);
-}
-
-public static Color Darken(Color color, float amount)
-{
-    return new Color(
-        (byte)(color.R * (1 - amount)),
-        (byte)(color.G * (1 - amount)),
-        (byte)(color.B * (1 - amount)),
-        color.A);
-}
-```
-
-**Blend/Mix Colors**
-
-```csharp
-public static Color Lerp(Color a, Color b, float t)
-{
-    return new Color(
-        (byte)(a.R + (b.R - a.R) * t),
-        (byte)(a.G + (b.G - a.G) * t),
-        (byte)(a.B + (b.B - a.B) * t),
-        (byte)(a.A + (b.A - a.A) * t));
-}
-```
-
-**Pulsing Color**
-
-```csharp
-private float _pulse = 0f;
-
-protected override void OnUpdate(GameTime gameTime)
-{
-    _pulse += (float)gameTime.DeltaTime * 2f;
-}
-
-protected override void OnRender(GameTime gameTime)
-{
-    var intensity = (byte)(128 + Math.Sin(_pulse) * 127);
-    var color = new Color(intensity, 0, 0);
-    
-    _renderer.DrawRectangle(100, 100, 100, 100, color);
-}
-```
+~~~
 
 ---
 
@@ -376,29 +272,11 @@ protected override void OnRender(GameTime gameTime)
 
 ### Basic Text
 
-```csharp
+~~~csharp
 _renderer.DrawText("Hello, World!", 100, 100, Color.White);
-```
+~~~
 
-**Parameters:**
-- `text` - String to display
-- `x` - Left edge
-- `y` - Top edge
-- `color` - Text color
-
-**Note:** You need to load a font first! See [Text Rendering](text.md) for details.
-
----
-
-### Text Without Fonts (Fallback)
-
-If no font is loaded, Brine2D renders text as rectangles:
-
-```csharp
-// Fallback rendering (automatic)
-_renderer.DrawText("TEST", 100, 100, Color.White);
-// Each character = 8x12 rectangle
-```
+**Note:** Brine2D includes an embedded font that loads automatically!
 
 ---
 
@@ -406,26 +284,25 @@ _renderer.DrawText("TEST", 100, 100, Color.White);
 
 Here's a scene with all drawing primitives:
 
-```csharp DrawingDemoScene.cs
+~~~csharp
 using Brine2D.Core;
 using Brine2D.Input;
 using Brine2D.Rendering;
 using Microsoft.Extensions.Logging;
 
-public class DrawingDemoScene : Scene
+public class PrimitivesDemo : Scene
 {
     private readonly IRenderer _renderer;
     private readonly IInputService _input;
     private readonly IGameContext _gameContext;
     
     private float _pulse = 0f;
-    private float _rotation = 0f;
     
-    public DrawingDemoScene(
+    public PrimitivesDemo(
         IRenderer renderer,
         IInputService input,
         IGameContext gameContext,
-        ILogger<DrawingDemoScene> logger
+        ILogger<PrimitivesDemo> logger
     ) : base(logger)
     {
         _renderer = renderer;
@@ -433,49 +310,53 @@ public class DrawingDemoScene : Scene
         _gameContext = gameContext;
     }
     
-    protected override void OnInitialize()
-    {
-        Logger.LogInformation("Drawing Demo initialized!");
-        Logger.LogInformation("Press ESC to exit");
-    }
-    
     protected override void OnUpdate(GameTime gameTime)
     {
-        var deltaTime = (float)gameTime.DeltaTime;
-        
         if (_input.IsKeyPressed(Keys.Escape))
         {
             _gameContext.RequestExit();
         }
         
-        // Animation
-        _pulse += deltaTime * 2f;
-        _rotation += deltaTime * 90f; // 90 degrees per second
+        _pulse += (float)gameTime.DeltaTime * 2f;
     }
     
     protected override void OnRender(GameTime gameTime)
     {
-        // Clear to dark gray
-        _renderer.Clear(new Color(40, 40, 40));
-        _renderer.BeginFrame();
+        // Frame management automatic! Just draw
         
         // Grid background
         DrawGrid();
         
-        // Rectangles
-        DrawRectangles();
+        // Filled rectangles
+        _renderer.DrawRectangleFilled(100, 100, 100, 100, Color.Red);
+        _renderer.DrawRectangleFilled(250, 100, 150, 80, Color.Green);
         
-        // Circles
-        DrawCircles();
+        // Rectangle outlines
+        _renderer.DrawRectangleOutline(100, 250, 100, 100, Color.Yellow, 3f);
+        _renderer.DrawRectangleOutline(250, 250, 150, 80, Color.Cyan, 2f);
+        
+        // Filled circles
+        _renderer.DrawCircleFilled(600, 150, 50, Color.Red);
+        _renderer.DrawCircleFilled(750, 150, 30, Color.Green);
+        
+        // Circle outlines
+        _renderer.DrawCircleOutline(600, 300, 50, Color.Yellow, 3f);
+        _renderer.DrawCircleOutline(750, 300, 30, Color.Cyan, 2f);
+        
+        // Lines with different thickness
+        _renderer.DrawLine(100, 400, 300, 400, Color.White, 1f);
+        _renderer.DrawLine(100, 430, 300, 430, Color.White, 3f);
+        _renderer.DrawLine(100, 470, 300, 470, Color.White, 5f);
+        
+        // Cross pattern
+        DrawCross(500, 450, 50, Color.Yellow, 3f);
         
         // Pulsing square
         DrawPulsingSquare();
         
         // Text
-        _renderer.DrawText("Drawing Demo", 10, 10, Color.White);
+        _renderer.DrawText("Primitives Demo", 10, 10, Color.White);
         _renderer.DrawText($"FPS: {(int)(1.0 / gameTime.DeltaTime)}", 10, 30, Color.Yellow);
-        
-        _renderer.EndFrame();
     }
     
     private void DrawGrid()
@@ -483,271 +364,85 @@ public class DrawingDemoScene : Scene
         var gridSize = 50;
         var gridColor = new Color(60, 60, 60);
         
-        // Vertical lines
         for (int x = 0; x <= 1280; x += gridSize)
         {
-            _renderer.DrawRectangle(x, 0, 1, 720, gridColor);
+            _renderer.DrawLine(x, 0, x, 720, gridColor, 1f);
         }
         
-        // Horizontal lines
         for (int y = 0; y <= 720; y += gridSize)
         {
-            _renderer.DrawRectangle(0, y, 1280, 1, gridColor);
+            _renderer.DrawLine(0, y, 1280, y, gridColor, 1f);
         }
     }
     
-    private void DrawRectangles()
+    private void DrawCross(float centerX, float centerY, float size, Color color, float thickness)
     {
-        // Solid rectangles
-        _renderer.DrawRectangle(100, 100, 100, 100, Color.Red);
-        _renderer.DrawRectangle(250, 100, 150, 80, Color.Green);
-        _renderer.DrawRectangle(450, 100, 120, 120, Color.Blue);
-        
-        // Semi-transparent
-        _renderer.DrawRectangle(100, 250, 100, 100, 
-            new Color(255, 0, 0, 128));
-        
-        // Outlined rectangle
-        DrawRectangleOutline(250, 250, 150, 80, Color.Yellow, 3);
-    }
-    
-    private void DrawCircles()
-    {
-        // Various sizes
-        _renderer.DrawCircle(700, 150, 50, Color.Red);
-        _renderer.DrawCircle(850, 150, 30, Color.Green);
-        _renderer.DrawCircle(950, 150, 70, Color.Blue);
-        
-        // Semi-transparent
-        _renderer.DrawCircle(750, 300, 40, 
-            new Color(255, 255, 0, 128));
-        
-        // Overlapping circles (alpha blending)
-        _renderer.DrawCircle(900, 300, 50, 
-            new Color(255, 0, 0, 100));
-        _renderer.DrawCircle(950, 300, 50, 
-            new Color(0, 255, 0, 100));
-        _renderer.DrawCircle(925, 340, 50, 
-            new Color(0, 0, 255, 100));
+        _renderer.DrawLine(centerX - size, centerY, centerX + size, centerY, color, thickness);
+        _renderer.DrawLine(centerX, centerY - size, centerX, centerY + size, color, thickness);
     }
     
     private void DrawPulsingSquare()
     {
-        var scale = 1.0f + (float)Math.Sin(_pulse) * 0.3f;
+        var scale = 1.0f + MathF.Sin(_pulse) * 0.3f;
         var size = 80 * scale;
-        var centerX = 640f;
+        var centerX = 900f;
         var centerY = 500f;
         
-        // Pulsing color
-        var intensity = (byte)(128 + Math.Sin(_pulse * 2) * 127);
+        var intensity = (byte)(128 + MathF.Sin(_pulse * 2) * 127);
         var color = new Color(intensity, 0, intensity);
         
-        _renderer.DrawRectangle(
+        _renderer.DrawRectangleFilled(
             centerX - size / 2,
             centerY - size / 2,
             size,
             size,
             color);
     }
-    
-    private void DrawRectangleOutline(float x, float y, float w, float h, 
-        Color color, float thickness)
-    {
-        _renderer.DrawRectangle(x, y, w, thickness, color);
-        _renderer.DrawRectangle(x, y + h - thickness, w, thickness, color);
-        _renderer.DrawRectangle(x, y, thickness, h, color);
-        _renderer.DrawRectangle(x + w - thickness, y, thickness, h, color);
-    }
 }
-```
+~~~
 
 ---
 
-## Advanced Techniques
+## See It In Action
 
-### Alpha Blending
+Check out the **Collision Demo** in FeatureDemos to see `DrawLine` used for velocity vectors!
 
-```csharp
-// Transparent rectangles automatically blend
-_renderer.DrawRectangle(100, 100, 100, 100, new Color(255, 0, 0, 128));
-_renderer.DrawRectangle(150, 150, 100, 100, new Color(0, 0, 255, 128));
-// Result: Purple overlap!
-```
-
-**How it works:**
-- SDL automatically enables alpha blending when `color.A < 255`
-- Overlapping shapes blend correctly
+~~~bash
+cd samples/FeatureDemos
+dotnet run
+# Select "3" for Collision Demo
+# Press F2 to toggle velocity vectors
+~~~
 
 ---
 
-### Gradient Effect (Fake)
+## API Reference
 
-```csharp
-private void DrawVerticalGradient(float x, float y, float w, float h, 
-    Color topColor, Color bottomColor)
-{
-    int steps = (int)h;
-    
-    for (int i = 0; i < steps; i++)
-    {
-        float t = i / (float)steps;
-        var color = ColorLerp(topColor, bottomColor, t);
-        
-        _renderer.DrawRectangle(x, y + i, w, 1, color);
-    }
-}
+### Rectangles
 
-private Color ColorLerp(Color a, Color b, float t)
-{
-    return new Color(
-        (byte)(a.R + (b.R - a.R) * t),
-        (byte)(a.G + (b.G - a.G) * t),
-        (byte)(a.B + (b.B - a.B) * t),
-        (byte)(a.A + (b.A - a.A) * t));
-}
-```
+~~~csharp
+DrawRectangleFilled(float x, float y, float width, float height, Color color)
+DrawRectangleOutline(float x, float y, float width, float height, Color color, float thickness = 1f)
+~~~
 
----
+### Circles
 
-### Progress Bar
+~~~csharp
+DrawCircleFilled(float centerX, float centerY, float radius, Color color)
+DrawCircleOutline(float centerX, float centerY, float radius, Color color, float thickness = 1f)
+~~~
 
-```csharp
-private void DrawProgressBar(float x, float y, float width, float height, 
-    float progress, Color fillColor, Color bgColor)
-{
-    // Background
-    _renderer.DrawRectangle(x, y, width, height, bgColor);
-    
-    // Fill
-    var fillWidth = width * Math.Clamp(progress, 0f, 1f);
-    _renderer.DrawRectangle(x, y, fillWidth, height, fillColor);
-    
-    // Border
-    DrawRectangleOutline(x, y, width, height, Color.White, 2);
-}
+### Lines
 
-// Usage
-DrawProgressBar(100, 500, 200, 30, 0.75f, Color.Green, Color.Black);
-```
+~~~csharp
+DrawLine(float x1, float y1, float x2, float y2, Color color, float thickness = 1f)
+~~~
 
----
+### Text
 
-### Health Bar
-
-```csharp
-private void DrawHealthBar(float x, float y, float width, float height, 
-    float current, float max)
-{
-    var percentage = current / max;
-    
-    // Determine color based on health
-    Color fillColor;
-    if (percentage > 0.5f) fillColor = Color.Green;
-    else if (percentage > 0.25f) fillColor = Color.Yellow;
-    else fillColor = Color.Red;
-    
-    DrawProgressBar(x, y, width, height, percentage, fillColor, 
-        new Color(40, 40, 40));
-}
-```
-
----
-
-## Troubleshooting
-
-### Problem: Nothing Draws
-
-**Symptom:** Blank screen
-
-**Causes & Solutions:**
-
-1. **Forgot `BeginFrame()` or `EndFrame()`**
-   ```csharp
-   // ❌ Bad
-   _renderer.Clear(Color.Blue);
-   _renderer.DrawRectangle(...);
-   
-   // ✅ Good
-   _renderer.Clear(Color.Blue);
-   _renderer.BeginFrame();
-   _renderer.DrawRectangle(...);
-   _renderer.EndFrame();
-   ```
-
-2. **Drawing outside screen bounds**
-   ```csharp
-   // ❌ Bad - off screen
-   _renderer.DrawRectangle(2000, 2000, 100, 100, Color.Red);
-   
-   // ✅ Good - visible
-   _renderer.DrawRectangle(100, 100, 100, 100, Color.Red);
-   ```
-
-3. **Alpha = 0 (fully transparent)**
-   ```csharp
-   // ❌ Bad - invisible
-   _renderer.DrawRectangle(100, 100, 100, 100, 
-       new Color(255, 0, 0, 0));
-   
-   // ✅ Good - visible
-   _renderer.DrawRectangle(100, 100, 100, 100, 
-       new Color(255, 0, 0, 255));
-   ```
-
----
-
-### Problem: Shapes Behind Each Other
-
-**Symptom:** Draw order issues
-
-**Solution:** Draw in order (back to front):
-
-```csharp
-protected override void OnRender(GameTime gameTime)
-{
-    _renderer.Clear(Color.Black);
-    _renderer.BeginFrame();
-    
-    // Draw order matters!
-    DrawBackground();      // Back
-    DrawGameObjects();     // Middle
-    DrawUI();              // Front
-    
-    _renderer.EndFrame();
-}
-```
-
-**No Z-buffer in 2D!** Last drawn = on top.
-
----
-
-### Problem: Poor Performance
-
-**Symptom:** Low FPS with many shapes
-
-**Solutions:**
-
-1. **Batch draws** - Don't recreate objects per frame
-2. **Cull off-screen** - Don't draw invisible shapes
-3. **Use textures** - Faster than many primitives
-
-```csharp
-// ❌ Bad - 1000 draw calls
-for (int i = 0; i < 1000; i++)
-{
-    _renderer.DrawCircle(i * 10, 100, 5, Color.White);
-}
-
-// ✅ Better - Draw only visible
-for (int i = 0; i < 1000; i++)
-{
-    var x = i * 10;
-    if (x >= 0 && x <= 1280) // Visible range
-    {
-        _renderer.DrawCircle(x, 100, 5, Color.White);
-    }
-}
-```
+~~~csharp
+DrawText(string text, float x, float y, Color color)
+~~~
 
 ---
 
@@ -755,98 +450,83 @@ for (int i = 0; i < 1000; i++)
 
 ### DO
 
-1. **Always Clear, Begin, End**
-   ```csharp
-   _renderer.Clear(bgColor);
-   _renderer.BeginFrame();
-   // ... draw ...
-   _renderer.EndFrame();
-   ```
+✅ **Let the framework manage frames**
 
-2. **Use constants for repeated values**
-   ```csharp
-   const float PLAYER_SIZE = 50f;
-   _renderer.DrawRectangle(x, y, PLAYER_SIZE, PLAYER_SIZE, Color.Red);
-   ```
+~~~csharp
+protected override void OnRender(GameTime gameTime)
+{
+    // Just draw!
+    _renderer.DrawRectangleFilled(...);
+}
+~~~
 
-3. **Extract drawing logic to methods**
-   ```csharp
-   private void DrawPlayer() { ... }
-   private void DrawEnemies() { ... }
-   ```
+✅ **Use constants for repeated values**
 
-4. **Use delta time for animations**
-   ```csharp
-   _pulse += (float)gameTime.DeltaTime * 2f;
-   ```
+~~~csharp
+private const float PLAYER_SIZE = 50f;
+_renderer.DrawRectangleFilled(x, y, PLAYER_SIZE, PLAYER_SIZE, Color.Red);
+~~~
+
+✅ **Cache colors**
+
+~~~csharp
+private static readonly Color PlayerColor = new Color(100, 200, 255);
+~~~
 
 ### DON'T
 
-1. **Don't call Clear/Begin/End multiple times per frame**
-   ```csharp
-   // ❌ Bad
-   _renderer.BeginFrame();
-   DrawStuff();
-   _renderer.EndFrame();
-   _renderer.BeginFrame(); // Wrong!
-   ```
+❌ **Don't create colors every frame**
 
-2. **Don't create colors every frame**
-   ```csharp
-   // ❌ Bad - allocates every frame
-   _renderer.DrawRectangle(x, y, 100, 100, new Color(255, 0, 0));
-   
-   // ✅ Good - reuse
-   private static readonly Color Red = new Color(255, 0, 0);
-   _renderer.DrawRectangle(x, y, 100, 100, Red);
-   ```
+~~~csharp
+// Bad
+_renderer.DrawRectangleFilled(x, y, 100, 100, new Color(255, 0, 0));
 
-3. **Don't draw invisible shapes**
-   ```csharp
-   // ❌ Bad
-   if (!isVisible)
-       return;
-   _renderer.DrawRectangle(...); // Still calls method
-   
-   // ✅ Good
-   if (isVisible)
-   {
-       _renderer.DrawRectangle(...);
-   }
-   ```
+// Good
+private static readonly Color Red = Color.Red;
+_renderer.DrawRectangleFilled(x, y, 100, 100, Red);
+~~~
 
----
+❌ **Don't draw off-screen objects**
 
-## Performance Tips
-
-1. **Minimize draw calls** - Combine shapes when possible
-2. **Cull off-screen** - Don't draw invisible objects
-3. **Cache colors** - Reuse Color instances
-4. **Use textures for complex shapes** - Faster than many primitives
-5. **Profile first** - Measure before optimizing
-
----
-
-## Summary
-
-| Shape | Method | Parameters |
-|-------|--------|------------|
-| **Rectangle** | `DrawRectangle()` | x, y, width, height, color |
-| **Circle** | `DrawCircle()` | centerX, centerY, radius, color |
-| **Text** | `DrawText()` | text, x, y, color |
-| **Clear** | `Clear()` | color |
-| **Frame** | `BeginFrame()`, `EndFrame()` | - |
+~~~csharp
+if (IsVisible(entity))
+{
+    DrawEntity(entity);
+}
+~~~
 
 ---
 
 ## Next Steps
 
-- **[Textures](textures.md)** - Load and draw images
-- **[Sprites](sprites.md)** - Work with sprite sheets
-- **[Text Rendering](text.md)** - Load fonts and draw text
-- **[Animation](animation.md)** - Animate sprites
-- **[Camera](camera.md)** - Move the viewport
+<div class="grid cards" markdown>
+
+-   **Sprites**
+
+    ---
+
+    Load and draw images
+
+    [:octicons-arrow-right-24: Sprites Guide](sprites.md)
+
+-   **Cameras**
+
+    ---
+
+    Move the viewport
+
+    [:octicons-arrow-right-24: Camera Guide](cameras.md)
+
+-   **FeatureDemos**
+
+    ---
+
+    See primitives in action
+
+    [:octicons-arrow-right-24: View Demos](../../samples/index.md)
+
+</div>
 
 ---
 
-Ready to add images? Move on to [Loading Textures](textures.md)!
+**Remember:** Frame management is automatic - just draw!

@@ -11,7 +11,7 @@ Brine2D follows a **clean, modular architecture** inspired by ASP.NET Core's des
 
 ```mermaid
 graph TB
-    Game["<b>Your Game Project</b><br/><i>BasicGame.csproj</i>"]
+    Game["<b>Your Game Project</b><br/><i>FeatureDemos.csproj</i>"]
     
     subgraph "Direct References"
         Hosting["<b>Brine2D.Hosting</b>"]
@@ -542,7 +542,7 @@ Brine2D/
 │       └── UIDialog.cs, UITooltip.cs
 │
 ├── samples/
-│   ├── BasicGame/
+│   ├── FeatureDemos/
 │   ├── PlatformerGame/
 │   └── AdvancedGame/
 │

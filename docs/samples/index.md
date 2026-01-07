@@ -7,71 +7,72 @@ description: Complete working examples demonstrating Brine2D features
 
 Learn by example! The Brine2D samples demonstrate real-world usage of the engine's features. Each sample is a complete, runnable project that showcases specific functionality.
 
-## Available Samples
+## FeatureDemos
 
-### BasicGame
+**Location:** `samples/FeatureDemos/`  
+**Difficulty:** Beginner to Advanced  
+**Topics Covered:** ECS Queries, Particles, Collision, Scene Transitions, UI, Manual Control
 
-**Location:** `samples/BasicGame/`  
-**Difficulty:** Beginner to Intermediate  
-**Topics Covered:** Animation, Input, Collision, UI, Camera, Tilemaps
+The FeatureDemos project is an interactive showcase of Brine2D's major features. Run the project to see a **menu-driven demo selector** where you can explore each feature independently.
 
-The BasicGame sample is your one-stop reference for learning Brine2D. It contains multiple demo scenes that demonstrate different engine features.
-
-```mermaid
+~~~mermaid
 graph TD
-    A["BasicGame Project"] --> B["AnimationDemoScene"]
-    A --> C["CameraDemoScene"]
-    A --> D["CollisionDemoScene"]
-    A --> E["TilemapDemoScene"]
+    A["FeatureDemos Project"] --> B["MainMenuScene"]
+    B --> C["Query System Demo"]
+    B --> D["Particle System Demo"]
+    B --> E["Collision Demo"]
+    B --> F["Scene Transitions Demo"]
+    B --> G["UI Components Demo"]
+    B --> H["Manual Control Demo"]
     
-    B --> F["Sprite Sheets"]
-    B --> G["Animation System"]
+    C --> I["Fluent Query API"]
+    C --> J["Cached Queries"]
+    C --> K["Complex Filters"]
     
-    C --> H["Camera2D"]
-    C --> I["Camera Bounds"]
-    C --> J["Smooth Following"]
+    D --> L["GPU Particles"]
+    D --> M["Emitter Systems"]
+    D --> N["Performance"]
     
-    D --> K["Box Colliders"]
-    D --> L["Circle Colliders"]
-    D --> M["Collision Response"]
-    D --> N["UI System"]
+    E --> O["AABB Colliders"]
+    E --> P["Circle Colliders"]
+    E --> Q["Physics Response"]
     
-    E --> O["Tilemap Loading"]
-    E --> P["Tile Rendering"]
-    E --> Q["Collision Generation"]
+    F --> R["FadeTransition"]
+    F --> S["Loading Screens"]
+    F --> T["Scene Chaining"]
+    
+    G --> U["Complete UI Library"]
+    G --> V["Tooltips & Dialogs"]
+    G --> W["Input Layers"]
+    
+    H --> X["Lifecycle Hooks"]
+    H --> Y["Manual Pipelines"]
+    H --> Z["Power User Features"]
 
     style A fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
-style B fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-style C fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-style D fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-style E fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-style F fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
-style G fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
-style H fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
-style I fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
-style J fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
-style K fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-style L fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-style M fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-style N fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-style O fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
-style P fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
-style Q fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
-```
+    style B fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style C fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style D fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style E fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style F fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style G fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style H fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+~~~
 
+### Demo Scenes
 
-#### Demo Scenes
-
-| Scene | Description | Key Features |
-|-------|-------------|--------------|
-| **AnimationDemoScene** | Sprite sheet animation system | 6 animations, pause/resume, frame-by-frame control |
-| **CameraDemoScene** | 2D camera system | Zoom, smooth following, world bounds |
-| **CollisionDemoScene** | Physics and collision detection | Box/circle colliders, UI components, input layers |
-| **TilemapDemoScene** | Tilemap rendering and collision | Tiled (.tmj) format, auto-generated collision |
+| Demo | Description | Key Features | Category |
+|------|-------------|--------------|----------|
+| **Query System** | Advanced entity queries | Fluent API, cached queries, complex filters | ECS |
+| **Particle System** | GPU-accelerated particles | 10,000+ particles, emitters, performance | ECS |
+| **Collision Detection** | Physics and collision | AABB/circle colliders, bounce, slide, push | Collision |
+| **Scene Transitions** | Smooth scene changes | FadeTransition, loading screens, async loading | Transitions |
+| **UI Components** | Complete UI showcase | All 15+ components, tooltips, dialogs, tabs | UI |
+| **Manual Control** | Power user features | Opt-out of automatic execution, custom pipelines | Advanced |
 
 ---
 
-## Running the Samples
+## Running the Demos
 
 ### Prerequisites
 
@@ -82,348 +83,435 @@ style Q fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
 ### Option 1: Run from Visual Studio
 
 1. Open `Brine2D.sln` in Visual Studio
-2. Set `BasicGame` as startup project
+2. Set `FeatureDemos` as startup project
 3. Press **F5** to run
+4. Select a demo from the menu
 
 ### Option 2: Run from Command Line
 
-```bash
-cd samples/BasicGame
+~~~bash
+cd samples/FeatureDemos
 dotnet run
-```
+~~~
 
-### Switching Between Scenes
+### Navigation
 
-In `Program.cs`, change the scene parameter:
-
-```csharp
-// Run animation demo
-await game.RunAsync<AnimationDemoScene>();
-
-// Or run collision demo
-await game.RunAsync<CollisionDemoScene>();
-
-// Or run camera demo
-await game.RunAsync<CameraDemoScene>();
-
-// Or run tilemap demo
-await game.RunAsync<TilemapDemoScene>();
-```
+- **Use number keys (1-6)** to select a demo
+- **ESC** returns to menu from any demo
+- **F1/F2** toggle debug options in some demos
 
 ---
 
-## Sample Deep Dive
+## Demo Deep Dive
 
-### 1. Animation Demo
+### 1. Query System Demo
 
 **What it demonstrates:**
-- Loading sprite sheets with `ITextureLoader`
-- Creating animations with `AnimationClip.FromSpriteSheet()`
-- Managing animations with `SpriteAnimator`
-- Frame-by-frame animation control
-- Pause/resume functionality
+- Fluent query API for complex entity searches
+- Cached queries for performance
+- Multiple filter conditions (`With`, `Without`, `Where`)
+- Real-time entity statistics
 
 **Controls:**
-- **WASD** - Move sprite
-- **1-6** - Switch animations (walk, run, kick, hurt, crouch, sneak)
-- **Space** - Pause/resume animation
-- **ESC** - Exit
+- **SPACE** - Spawn entities
+- **C** - Clear entities
+- **ESC** - Return to menu
 
 **Key Code:**
 
-```csharp
-// Creating an animation from a sprite sheet
-var walkAnim = AnimationClip.FromSpriteSheet(
-    name: "walk",
-    frameWidth: 24,
-    frameHeight: 24,
-    frameCount: 4,
-    columns: 24,
-    frameDuration: 0.15f,
-    loop: true
+~~~csharp
+// Find low-health enemies near the player
+var weakEnemies = _world.Query()
+    .With<HealthComponent>()
+    .With<TransformComponent>()
+    .Without<DeadComponent>()
+    .WithTag("Enemy")
+    .Where(e => 
+    {
+        var health = e.GetComponent<HealthComponent>();
+        var transform = e.GetComponent<TransformComponent>();
+        var distance = Vector2.Distance(transform.Position, playerPos);
+        
+        return health.CurrentHealth < 50 && distance < 200f;
+    })
+    .Execute();
+
+// Cached queries (no allocation!)
+var movingEntities = _world.CreateCachedQuery<TransformComponent, VelocityComponent>();
+foreach (var (transform, velocity) in movingEntities)
+{
+    transform.Position += velocity.Velocity * deltaTime;
+}
+~~~
+
+---
+
+### 2. Particle System Demo
+
+**What it demonstrates:**
+- GPU-accelerated particle rendering
+- 10,000+ particles at 60 FPS
+- Multiple emitter types
+- Particle lifetime and physics
+- Performance monitoring
+
+**Controls:**
+- **SPACE** - Toggle emission
+- **1-3** - Change emitter type
+- **ESC** - Return to menu
+
+**Key Code:**
+
+~~~csharp
+// Create particle emitter
+var emitter = entity.AddComponent<ParticleEmitterComponent>();
+emitter.EmissionRate = 100;
+emitter.Lifetime = 2f;
+emitter.StartColor = Color.Red;
+emitter.EndColor = new Color(255, 0, 0, 0);
+emitter.StartSpeed = 100f;
+emitter.SpreadAngle = MathF.PI / 4;
+~~~
+
+---
+
+### 3. Collision Detection Demo
+
+**What it demonstrates:**
+- AABB (box) and circle colliders
+- Collision detection with `CollisionSystem`
+- Physics response: bounce, slide, push
+- Dynamic vs static objects
+- Trigger colliders (collectibles)
+- Debug visualization
+
+**Controls:**
+- **WASD** - Move player
+- **R** - Kick ball (when nearby)
+- **F1** - Toggle collider visualization
+- **F2** - Toggle velocity vectors
+- **SPACE** - Reset scene
+- **ESC** - Return to menu
+
+**Key Code:**
+
+~~~csharp
+// Player slides along walls
+var newPosition = _playerPosition + moveVector;
+_playerCollider.Position = newPosition;
+
+var collisions = _collisionSystem.GetCollisions(_playerCollider);
+if (collisions.Any(c => _walls.Contains(c)))
+{
+    // Try sliding along X axis
+    var slideX = _playerPosition + new Vector2(moveVector.X, 0);
+    _playerCollider.Position = slideX;
+    
+    if (!_collisionSystem.GetCollisions(_playerCollider).Any())
+    {
+        _playerPosition = slideX;
+    }
+}
+
+// Ball bounces with physics
+_ballVelocity = CollisionResponse.Bounce(_ballVelocity, penetration, 0.7f);
+~~~
+
+---
+
+### 4. Scene Transitions Demo
+
+**What it demonstrates:**
+- `FadeTransition` between scenes
+- Custom loading screens with progress bars
+- Async scene loading
+- Scene chaining (A → B → C → A)
+- Transition customization (duration, color)
+
+**Controls:**
+- **ENTER** - Go to next scene
+- **Number keys** - Jump to specific scene
+- **ESC** - Return to menu
+
+**Key Code:**
+
+~~~csharp
+// Fade transition
+await _sceneManager.LoadSceneAsync<SceneB>(
+    new FadeTransition(duration: 0.5f, color: Color.Black)
 );
 
-_animator.AddAnimation(walkAnim);
-_animator.Play("walk");
-```
-
----
-
-### 2. Camera Demo
-
-**What it demonstrates:**
-- Creating a 2D camera with `Camera2D`
-- Smooth camera following with `LerpTo()`
-- Zoom control
-- Camera bounds and clamping
-- World-space rendering
-
-**Controls:**
-- **WASD** - Move player
-- **Q/E** - Zoom out/in
-- **R** - Reset camera
-- **1-2** - Change animations
-- **ESC** - Exit
-
-**Key Code:**
-
-```csharp
-// Smooth camera following
-_camera.LerpTo(_playerPosition, 5f * deltaTime);
-
-// Constrain to world bounds
-_camera.Position = _worldBounds.ClampPosition(_camera.Position, _camera);
-```
-
----
-
-### 3. Collision Demo
-
-**What it demonstrates:**
-- Box and circle colliders
-- Collision detection with `CollisionSystem`
-- Collision response (sliding along walls)
-- Physics simulation (bouncing ball with gravity)
-- Full UI system showcase:
-  - Labels, buttons, sliders
-  - Text input with validation
-  - Progress bars, dropdowns
-  - Radio buttons, checkboxes
-  - Tab containers, scroll views
-  - Tooltips, dialogs
-- Input layer management (UI vs game input)
-- Camera integration
-
-**Controls:**
-- **WASD** - Move player
-- **Q/E** - Zoom out/in
-- **R** - Reset camera
-- **Mouse** - Interact with UI
-- **ESC** - Show exit dialog
-
-**Key Code:**
-
-```csharp
-// Add colliders to the system
-_collisionSystem.AddShape(_playerCollider);
-
-// Check for collisions
-var collisions = _collisionSystem.GetCollisions(_playerCollider);
-
-// Respond to collisions
-if (collisions.Any(c => c is BoxCollider && _walls.Contains(c)))
+// Custom loading screen
+public class CustomLoadingScreen : LoadingScene
 {
-    // Player hit a wall - handle sliding
+    protected override void OnRender(GameTime gameTime)
+    {
+        _renderer.DrawText($"Loading... {Progress:P0}", 500, 300, Color.White);
+        _renderer.DrawRectangleFilled(400, 350, Progress * 400, 20, Color.Green);
+    }
 }
-```
 
-**UI Features Demonstrated:**
+await _sceneManager.LoadSceneAsync<GameScene>(
+    loadingScreen: new CustomLoadingScreen(),
+    transition: new FadeTransition(0.5f, Color.Black)
+);
+~~~
 
-| Component | Example Usage |
-|-----------|---------------|
-| `UILabel` | FPS counter, coin count |
-| `UIButton` | Reset button with click events |
-| `UISlider` | Speed control slider |
-| `UITextInput` | Player name input with validation |
-| `UIProgressBar` | Health bar display |
+---
+
+### 5. UI Components Demo
+
+**What it demonstrates:**
+- **Complete UI library** - All 15+ components
+- Buttons, labels, text inputs
+- Sliders, checkboxes, radio buttons
+- Progress bars, dropdowns
+- Tab containers, scroll views
+- Dialogs with multiple buttons
+- Tooltips on hover
+- Input layer management
+
+**Controls:**
+- **Mouse** - Interact with all UI elements
+- **TAB** - Navigate between inputs
+- **ESC** - Return to menu
+
+**Components Showcased:**
+
+| Component | Demo Feature |
+|-----------|--------------|
+| `UILabel` | Title, status messages |
+| `UIButton` | Click counter, actions |
+| `UITextInput` | Name entry with placeholder |
+| `UISlider` | Volume control (0-100) |
+| `UIProgressBar` | Health bar with +/- buttons |
 | `UIDropdown` | Graphics quality selector |
+| `UICheckbox` | Sound/VSync toggles |
 | `UIRadioButton` | Difficulty selection |
-| `UITabContainer` | Settings panel organization |
-| `UIScrollView` | Scrollable item list |
-| `UIDialog` | Exit confirmation dialog |
-| `UITooltip` | Hover tooltips on components |
-
----
-
-### 4. Tilemap Demo
-
-**What it demonstrates:**
-- Loading tilemaps from Tiled (.tmj format)
-- Rendering multiple tilemap layers
-- Automatic collision generation from tiles
-- Camera viewport culling (only render visible tiles)
-- Tileset texture management
-
-**Controls:**
-- **Arrow Keys** - Move camera
-- **Q/E** - Zoom out/in
-- **ESC** - Exit
+| `UITabContainer` | Settings organization |
+| `UIScrollView` | 25-item scrollable list |
+| `UIDialog` | Confirmation popups |
+| `UITooltip` | Hover help text |
+| `UIPanel` | Visual grouping |
 
 **Key Code:**
 
-```csharp
-// Load tilemap from Tiled JSON format
-_tilemap = await _tilemapLoader.LoadAsync("assets/maps/level1.tmj", cancellationToken);
+~~~csharp
+// Button with event
+var button = new UIButton("Click Me!", pos, size);
+button.OnClick += () => Logger.LogInformation("Clicked!");
+_uiCanvas.Add(button);
 
-// Load tileset textures
-await _tilemapRenderer.LoadTilesetAsync(_tilemap, _textureLoader, cancellationToken);
-
-// Generate collision from tilemap layer
-var colliders = _tilemap.GenerateColliders("gameplay");
-foreach (var collider in colliders)
+// Slider with value display
+var slider = new UISlider(pos, size)
 {
-    _collisionSystem.AddShape(collider);
-}
+    MinValue = 0f,
+    MaxValue = 100f,
+    Value = 75f,
+    ShowValue = true,
+    Tooltip = new UITooltip("Adjust volume")
+};
+slider.OnValueChanged += (value) => Logger.LogDebug("Volume: {Volume}", value);
+_uiCanvas.Add(slider);
 
-// Render tilemap
-_tilemapRenderer.Render(_tilemap, _renderer, _camera);
-```
+// Dialog with multiple buttons
+var dialog = new UIDialog("Confirm", "Are you sure?", new Vector2(400, 250));
+dialog.AddButton("Yes", () => dialog.Visible = false);
+dialog.AddButton("No", () => dialog.Visible = false);
+_uiCanvas.Add(dialog);
+~~~
+
+---
+
+### 6. Manual Control Demo
+
+**What it demonstrates:**
+- Opt-out of automatic execution
+- Manual pipeline control
+- Manual frame management
+- When and why to use manual control
+- Power user scenarios (fixed timestep, conditional execution)
+
+**Controls:**
+- **ESC** - Return to menu
+
+**Key Code:**
+
+~~~csharp
+public class ManualControlScene : Scene
+{
+    public override bool EnableLifecycleHooks => false; // Disable automatic execution
+    public override bool EnableAutomaticFrameManagement => false; // Full manual control
+    
+    protected override void OnUpdate(GameTime gameTime)
+    {
+        // You control when systems run
+        _updatePipeline.Execute(gameTime);
+        _world.Update(gameTime);
+    }
+    
+    protected override void OnRender(GameTime gameTime)
+    {
+        // You control frame management
+        _renderer.Clear(Color.Black);
+        _renderer.BeginFrame();
+        
+        _renderPipeline.Execute(_renderer);
+        
+        _renderer.EndFrame();
+    }
+}
+~~~
+
+See [Lifecycle Hooks Guide](../guides/scenes/lifecycle-hooks.md) for full documentation.
 
 ---
 
 ## Project Structure
 
-```
-BasicGame/
-├── AnimationDemoScene.cs      # Sprite animation demo
-├── CameraDemoScene.cs          # Camera system demo
-├── CollisionDemoScene.cs       # Collision & UI demo
-├── TilemapDemoScene.cs         # Tilemap rendering demo
-├── Program.cs                  # Entry point and DI configuration
-├── gamesettings.json           # Configuration file
-├── BasicGame.csproj            # Project file
-└── assets/
-    ├── sprites/
-    │   └── character.png       # 576x24 sprite sheet (24 frames)
-    ├── maps/
-    │   └── level1.tmj          # Tiled tilemap JSON
-    └── fonts/
-        └── arial.ttf           # Font for UI rendering
-```
+~~~
+FeatureDemos/
+├── Scenes/
+│   ├── MainMenuScene.cs           # Interactive demo selector
+│   ├── DemoSceneBase.cs           # Shared base class
+│   ├── ECS/
+│   │   ├── QueryDemoScene.cs      # Query system showcase
+│   │   └── ParticleDemoScene.cs   # Particle effects
+│   ├── Collision/
+│   │   └── CollisionDemoScene.cs  # Physics demo
+│   ├── Transitions/
+│   │   ├── TransitionDemoScene.cs # Transition showcase
+│   │   ├── SceneA.cs              # Chain scene A
+│   │   ├── SceneB.cs              # Chain scene B
+│   │   └── SceneC.cs              # Chain scene C
+│   ├── UI/
+│   │   └── UIDemoScene.cs         # Complete UI showcase
+│   └── Advanced/
+│       └── ManualControlScene.cs  # Power user demo
+├── Program.cs                      # Entry point
+├── gamesettings.json               # Configuration
+└── FeatureDemos.csproj             # Project file
+~~~
 
 ---
 
 ## Configuration
 
-The samples use `gamesettings.json` for configuration:
-
-```json
+~~~json
 {
   "Logging": {
     "LogLevel": {
-      "Default": "Debug",
-      "Brine2D.Audio.SDL": "Trace"
+      "Default": "Information",
+      "Brine2D": "Debug"
     }
   },
   "Rendering": {
-    "WindowTitle": "Brine2D Samples",
+    "WindowTitle": "Brine2D Feature Demos",
     "WindowWidth": 1280,
     "WindowHeight": 720,
-    "VSync": true
+    "VSync": true,
+    "Backend": "LegacyRenderer"
   }
 }
-```
+~~~
 
 ---
 
 ## Dependency Injection Setup
 
-The samples demonstrate ASP.NET-style DI configuration:
+FeatureDemos demonstrates complete service configuration:
 
-```csharp
+~~~csharp
 var builder = GameApplication.CreateBuilder(args);
 
-// Add SDL3 Input with input layer support
-builder.Services.AddInputLayerManager().AddSDL3Input();
-
-// Add SDL3 Audio
-builder.Services.AddSDL3Audio();
-
-// Configure rendering
+// Core services
 builder.Services.AddSDL3Rendering(options =>
 {
     builder.Configuration.GetSection("Rendering").Bind(options);
 });
+builder.Services.AddInputLayerManager().AddSDL3Input();
+builder.Services.AddSDL3Audio();
 
-// Add tilemap support
-builder.Services.AddTilemapServices();
-builder.Services.AddTilemapRenderer();
-
-// Add collision system
+// ECS and systems
 builder.Services.AddCollisionSystem();
-
-// Add UI canvas
 builder.Services.AddUICanvas();
 
-// Register scenes
-builder.Services.AddScene<AnimationDemoScene>();
-builder.Services.AddScene<CameraDemoScene>();
+// Register all demo scenes
+builder.Services.AddScene<MainMenuScene>();
+builder.Services.AddScene<QueryDemoScene>();
+builder.Services.AddScene<ParticleDemoScene>();
 builder.Services.AddScene<CollisionDemoScene>();
-builder.Services.AddScene<TilemapDemoScene>();
+builder.Services.AddScene<TransitionDemoScene>();
+builder.Services.AddScene<UIDemoScene>();
+builder.Services.AddScene<ManualControlScene>();
 
 var game = builder.Build();
-await game.RunAsync<CollisionDemoScene>();
-```
-
----
-
-## Coming Soon
-
-### PlatformerGame Sample
-**Status:** In Development  
-**Topics:** Gravity, jumping, platform collision, scrolling levels
-
-### AdvancedGame Sample
-**Status:** Planned  
-**Topics:** State machines, advanced AI, particle systems, shaders
+await game.RunAsync<MainMenuScene>();
+~~~
 
 ---
 
 ## Learning Path
 
-We recommend exploring the samples in this order:
+We recommend exploring the demos in this order:
 
-1. **[Animation Demo](animation-demo.md)** - Learn sprite animation basics
-2. **[Camera Demo](camera-demo.md)** - Understand camera systems
-3. **[Collision Demo](collision-demo.md)** - Master physics and UI
-4. **[Tilemap Demo](tilemap-demo.md)** - Build tile-based worlds
-
-After completing the samples, try the [Tutorials](../tutorials/index.md) for guided step-by-step learning!
+1. **Query System** - Understand ECS queries (if using ECS)
+2. **Collision Detection** - Learn physics and collision response
+3. **UI Components** - Master the UI framework
+4. **Scene Transitions** - Build polished scene changes
+5. **Particle System** - Add visual effects
+6. **Manual Control** - Advanced power user techniques
 
 ---
 
-## Using Samples as Templates
+## Using Demos as Templates
 
-The sample code is designed to be copied and modified for your own projects:
+The demo code is production-ready and designed to be copied:
 
-1. **Copy a scene class** - Use as a starting point for your game
-2. **Modify DI setup** - Add/remove services as needed
-3. **Change assets** - Replace sprite sheets, maps, fonts
-4. **Extend functionality** - Build on top of the examples
+1. **Copy a scene class** - Use as a starting point
+2. **Modify for your game** - Change colors, sizes, behaviors
+3. **Extract patterns** - Query builders, UI layouts, collision response
+4. **Build on top** - Extend with your own features
 
 ---
 
 ## Troubleshooting
 
-### Assets not loading?
-- Check that `assets/` folder is copied to output directory
-- Verify paths in `.csproj`: `<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>`
+### Menu doesn't appear?
+- Check that `MainMenuScene` is registered
+- Verify `game.RunAsync<MainMenuScene>()` is called
 
-### Scene not running?
-- Make sure you registered the scene with `builder.Services.AddScene<YourScene>()`
-- Check that you're calling `game.RunAsync<YourScene>()` with the correct type
+### Demo crashes on load?
+- Check console for missing dependencies
+- Verify all scenes are registered in DI
+- Try running from Visual Studio with debugger
 
 ### Performance issues?
 - Enable VSync in `gamesettings.json`
-- Check FPS counter in Collision Demo
-- Review logging level (set to `Information` instead of `Debug`)
+- Check particle count in Particle Demo (reduce if needed)
+- Review logging level (set to `Information`)
 
 ---
 
 ## Next Steps
 
-- **[Tutorials](../tutorials/index.md)** - Build games step-by-step
+After exploring the demos:
+
 - **[Guides](../guides/index.md)** - Deep dive into specific features
-- **[API Reference](../api/index.md)** - Detailed API documentation
+- **[Tutorials](../tutorials/index.md)** - Build complete games step-by-step
+- **[Lifecycle Hooks](../guides/scenes/lifecycle-hooks.md)** - Advanced manual control
+- **[ECS Queries](../guides/ecs/queries.md)** - Master the query system
 
 ---
 
-Ready to explore? Clone the repository and run the samples:
+Ready to explore? Clone the repository and run the demos:
 
-```bash
+~~~bash
 git clone https://github.com/CrazyPickleStudios/Brine2D.git
-cd Brine2D/samples/BasicGame
+cd Brine2D/samples/FeatureDemos
 dotnet run
-```
+~~~
+
+**Press 1-6 to explore each demo!** 🚀
 
 Happy coding!

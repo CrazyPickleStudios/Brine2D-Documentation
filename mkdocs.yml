@@ -50,6 +50,7 @@ nav:
       - Scenes:
           - Scene Lifecycle: guides/scenes/lifecycle.md
           - Scene Transitions: guides/scenes/transitions.md
+          - Lifecycle Hooks: guides/scenes/lifecycle-hooks.md
       - Collision:
           - Collision System: guides/collision/system.md
           - Colliders: guides/collision/colliders.md
