@@ -4,9 +4,9 @@ title: Home
 
 # Brine2D Game Engine
 
-**The ASP.NET of game engines** - Enterprise-grade 2D game development with .NET elegance.
+## Modern 2D game development with .NET elegance
 
-Brine2D is a modern .NET 10 game engine built on SDL3 that brings the familiar patterns and developer experience of ASP.NET to game development. If you've built web applications with ASP.NET Core, you'll feel right at home building games with Brine2D.
+Brine2D is a modern .NET 10 engine built on SDL3, inspired by the architecture and developer experience of ASP.NET. If you’ve built ASP.NET Core applications, the development model will feel immediately familiar.
 
 <div class="grid cards" markdown>
 
@@ -255,7 +255,7 @@ Brine2D 0.5.0-beta is here with major improvements:
 You already know the patterns. Now build games with them.
 
 ### **Game Developers**
-Get enterprise-grade architecture without the boilerplate.
+Build games on a modern, maintainable .NET architecture.
 
 ### **Students & Educators**
 Learn game development with familiar .NET patterns.
