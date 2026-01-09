@@ -4,6 +4,11 @@ title: Home
 
 # Brine2D Game Engine
 
+!!! tip "What's New in v0.6.0-beta"
+    Performance monitoring, zero-allocation systems, sprite batching, spatial queries, camera follow, and particle system! 
+    
+    [:octicons-arrow-right-24: See What's New](whats-new/v0.6.0-beta.md)
+
 ## Modern 2D game development with .NET elegance
 
 Brine2D is a modern .NET 10 engine built on SDL3, inspired by the architecture and developer experience of ASP.NET. If you’ve built ASP.NET Core applications, the development model will feel immediately familiar.

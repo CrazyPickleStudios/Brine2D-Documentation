@@ -582,8 +582,6 @@ To use the latest pre-release (alpha/beta):
 dotnet add package Brine2D.Desktop --prerelease
 ```
 
-**Current version:** `0.5.0-beta`
-
 ---
 
 ## Uninstalling

@@ -100,7 +100,7 @@ public class CameraScene : Scene
 }
 ```
 
-**Result:** Camera smoothly follows the player! 🎥
+**Result:** Camera smoothly follows the player!
 
 ---
 

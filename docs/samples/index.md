@@ -57,6 +57,24 @@ graph TD
     style F fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
     style G fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
     style H fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style I fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style J fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style K fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style L fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style M fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style N fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style O fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style P fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style Q fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style R fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style S fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style T fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style U fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style V fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style W fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style X fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style Y fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style Z fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
 ```
 
 ### Demo Scenes
@@ -512,6 +530,6 @@ cd Brine2D/samples/FeatureDemos
 dotnet run
 ```
 
-**Press 1-6 to explore each demo!** 🚀
+**Press 1-6 to explore each demo!**
 
 Happy coding!

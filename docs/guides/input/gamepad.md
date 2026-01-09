@@ -140,7 +140,7 @@ public class GamepadScene : Scene
 }
 ```
 
-**Result:** Move with left stick, jump with A, exit with Start! 🎮
+**Result:** Move with left stick, jump with A, exit with Start!
 
 ---
 

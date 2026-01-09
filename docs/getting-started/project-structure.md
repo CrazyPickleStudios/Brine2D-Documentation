@@ -13,7 +13,7 @@ Brine2D follows a **clean, modular architecture** inspired by ASP.NET Core's des
 graph TB
     Game["<b>Your Game Project</b><br/><i>FeatureDemos.csproj</i>"]
     
-    subgraph "Direct References"
+    subgraph Direct["Direct References"]
         Hosting["<b>Brine2D.Hosting</b>"]
         RenderingSDL["<b>Brine2D.Rendering.SDL</b>"]
         InputSDL["<b>Brine2D.Input.SDL</b>"]
@@ -21,7 +21,7 @@ graph TB
         UI["<b>Brine2D.UI</b>"]
     end
     
-    subgraph "Transitive Dependencies"
+    subgraph Transitive["Transitive Dependencies"]
         Engine["<b>Brine2D.Engine</b>"]
         Rendering["<b>Brine2D.Rendering</b>"]
         Input["<b>Brine2D.Input</b>"]
@@ -49,17 +49,19 @@ graph TB
     Input --> Core
     Audio -.-> Core
 
-style Game fill:#264f78,stroke:#4fc1ff,stroke-width:3px,color:#fff
-style Hosting fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
-style RenderingSDL fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-style InputSDL fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-style AudioSDL fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-style UI fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
-style Engine fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-style Rendering fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
-style Input fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
-style Audio fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
-style Core fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style Game fill:#264f78,stroke:#4fc1ff,stroke-width:3px,color:#fff
+    style Hosting fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+    style RenderingSDL fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style InputSDL fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style AudioSDL fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style UI fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
+    style Engine fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style Rendering fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style Input fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style Audio fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style Core fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style Direct fill:#1a2332,stroke:#c586c0,stroke-width:2px,color:#fff
+    style Transitive fill:#1a2332,stroke:#4ec9b0,stroke-width:2px,color:#fff
 ```
 
 This design follows the **Dependency Inversion Principle**: high-level modules (your game) depend on abstractions (interfaces), not concrete implementations.

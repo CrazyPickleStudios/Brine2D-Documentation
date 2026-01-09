@@ -112,7 +112,7 @@ public class MouseScene : Scene
 }
 ```
 
-**Result:** Red circle follows cursor, displays coordinates! 🖱️
+**Result:** Red circle follows cursor, displays coordinates!
 
 ---
 

@@ -18,11 +18,11 @@ graph LR
     D --> F["Better Code"]
 
     style A fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-style B fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-style C fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-style E fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-style D fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
-style F fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style B fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
+    style C fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style E fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style D fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+    style F fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
 ```
 
 **Benefits:**
@@ -48,16 +48,16 @@ Brine2D supports three service lifetimes:
 
 ```mermaid
 graph TD
-    subgraph "Application Lifetime"
+    subgraph APP["Application Lifetime"]
         SINGLETON["Singleton Services<br/>(IRenderer, IInputService)"]
     end
     
-    subgraph "Scene 1 Lifetime"
+    subgraph S1["Scene 1 Lifetime"]
         SCOPED1["Scoped Services<br/>(CollisionSystem, UICanvas)"]
         TRANSIENT1["Transient<br/>(MenuScene)"]
     end
     
-    subgraph "Scene 2 Lifetime"
+    subgraph S2["Scene 2 Lifetime"]
         SCOPED2["Scoped Services<br/>(CollisionSystem, UICanvas)"]
         TRANSIENT2["Transient<br/>(GameScene)"]
     end
@@ -67,11 +67,14 @@ graph TD
     SCOPED1 --> TRANSIENT1
     SCOPED2 --> TRANSIENT2
 
-    style SINGLETON fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-style SCOPED1 fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
-style SCOPED2 fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
-style TRANSIENT1 fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
-style TRANSIENT2 fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style SINGLETON fill:#2d5016,stroke:#4ec9b0,stroke-width:3px,color:#fff
+    style SCOPED1 fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+    style SCOPED2 fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+    style TRANSIENT1 fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style TRANSIENT2 fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style APP fill:#1a2332,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style S1 fill:#1a2332,stroke:#569cd6,stroke-width:2px,color:#fff
+    style S2 fill:#1a2332,stroke:#569cd6,stroke-width:2px,color:#fff
 ```
 
 ---

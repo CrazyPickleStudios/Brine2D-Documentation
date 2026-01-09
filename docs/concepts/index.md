@@ -308,6 +308,26 @@ sequenceDiagram
         
         GL->>GL: Frame Limiting
     end
+    
+    box rgba(30, 58, 95, 0.3) Game Loop
+    participant GL
+    end
+    
+    box rgba(61, 61, 42, 0.3) Input Layer
+    participant IN
+    end
+    
+    box rgba(45, 80, 22, 0.3) Scene Management
+    participant SM
+    end
+    
+    box rgba(74, 45, 74, 0.3) Scene Layer
+    participant S
+    end
+    
+    box rgba(29, 79, 120, 0.3) Rendering
+    participant R
+    end
 ```
 
 **Learn more:** [Game Loop](game-loop.md)

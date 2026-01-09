@@ -115,6 +115,22 @@ sequenceDiagram
     S->>SM: Task completed
     
     Note over DI: Scene instance disposed
+    
+    box rgba(30, 58, 95, 0.3) SceneManager Layer
+    participant SM
+    end
+    
+    box rgba(45, 80, 22, 0.3) Lifecycle Hooks
+    participant H
+    end
+    
+    box rgba(74, 45, 74, 0.3) Scene Layer
+    participant S
+    end
+    
+    box rgba(61, 61, 42, 0.3) DI Container
+    participant DI
+    end
 ```
 
 ### Phase 1: Constructor (Dependency Injection)
@@ -873,4 +889,4 @@ protected override Task OnUnloadAsync(CancellationToken ct)
 
 ---
 
-**Scenes are now cleaner than ever!** Trust automatic execution and focus on game logic. 🚀
+**Scenes are now cleaner than ever!** Trust automatic execution and focus on game logic.

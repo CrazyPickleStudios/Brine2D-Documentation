@@ -71,7 +71,7 @@ Each frame is 24x24 pixels, arranged horizontally in one row.
 
 ```mermaid
 graph TD
-    subgraph "Frame Positions (X coordinates)"
+    subgraph COORDS["Frame Positions (X coordinates)"]
         C0["Frame 0<br/>X: 0"]
         C1["Frame 1<br/>X: 24"]
         C2["Frame 2<br/>X: 48"]
@@ -84,14 +84,15 @@ graph TD
         C2 -.->|"+24px"| C3
         C3 -.->|"+24px"| C4
         C4 -.->|"+24px"| C5
-
-        style C0 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-style C1 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-style C2 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-style C3 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-style C4 fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
-style C5 fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
     end
+
+    style C0 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style C1 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style C2 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style C3 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style C4 fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+    style C5 fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+    style COORDS fill:#1a2332,stroke:#4ec9b0,stroke-width:2px,color:#fff
 ```
 
 ### Frame to Rectangle Mapping

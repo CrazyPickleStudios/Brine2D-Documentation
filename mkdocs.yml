@@ -18,6 +18,9 @@ extra_css:
 nav:
   - Overview: index.md
   
+  - What's New: 
+      - v0.6.0-beta: whats-new/v0.6.0-beta.md
+  
   - Getting Started:
       - Quick Start: getting-started/quickstart.md
       - Installation: getting-started/installation.md

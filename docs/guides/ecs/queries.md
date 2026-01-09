@@ -16,7 +16,7 @@ Queries are how you **find and filter entities** in Brine2D's ECS. Think of them
 - **Fluent API for complex searches**
 - **Cached queries for zero-allocation performance**
 
-```csharp
+~~~csharp
 // Find all entities with Health component
 var withHealth = world.GetEntitiesWithComponent<HealthComponent>();
 
@@ -35,7 +35,7 @@ var weakEnemies = world.Query()
         return health.CurrentHealth < 50;
     })
     .Execute();
-```
+~~~
 
 ---
 
@@ -47,7 +47,7 @@ Brine2D introduces a powerful fluent query API for building complex entity searc
 
 Build queries with a chainable, readable syntax:
 
-```csharp
+~~~csharp
 using Brine2D.ECS.Query;
 
 // Find low-health enemies near the player
@@ -71,7 +71,7 @@ foreach (var enemy in dangerousEnemies)
 {
     Logger.LogInformation("Dangerous enemy: {Name}", enemy.Name);
 }
-```
+~~~
 
 ### Query Builder Methods
 
@@ -88,7 +88,7 @@ foreach (var enemy in dangerousEnemies)
 
 **Cached queries** are pre-compiled and automatically updated - perfect for systems that run every frame:
 
-```csharp
+~~~csharp
 public class MovementSystem : GameSystem
 {
     private readonly CachedQuery<TransformComponent, VelocityComponent> _movingEntities;
@@ -110,7 +110,7 @@ public class MovementSystem : GameSystem
         }
     }
 }
-```
+~~~
 
 **Benefits:**
 - ✅ **Zero allocation** - No garbage collection pressure
@@ -122,7 +122,7 @@ public class MovementSystem : GameSystem
 
 Query up to **5 components** simultaneously:
 
-```csharp
+~~~csharp
 // 2 components
 var query2 = world.CreateCachedQuery<TransformComponent, VelocityComponent>();
 
@@ -142,11 +142,11 @@ foreach (var (transform, sprite, animator) in query3)
     animator.Update(deltaTime);
     sprite.CurrentFrame = animator.CurrentFrame;
 }
-```
+~~~
 
 ### Query Performance Comparison
 
-```csharp
+~~~csharp
 // ❌ Slow - Creates new list every frame
 public override void Update(GameTime gameTime)
 {
@@ -168,13 +168,13 @@ public override void Update(GameTime gameTime)
         transform.Position += velocity.Velocity * deltaTime;
     }
 }
-```
+~~~
 
 ### Complex Query Example
 
 Combining fluent API with cached queries:
 
-```csharp
+~~~csharp
 public class CombatSystem : GameSystem
 {
     private readonly CachedQuery<TransformComponent, HealthComponent> _damageable;
@@ -205,7 +205,7 @@ public class CombatSystem : GameSystem
         }
     }
 }
-```
+~~~
 
 ---
 
@@ -213,7 +213,7 @@ public class CombatSystem : GameSystem
 
 ### Query All Entities
 
-```csharp
+~~~csharp
 // Get all entities in the world
 IReadOnlyList<Entity> allEntities = world.Entities;
 
@@ -221,11 +221,11 @@ foreach (var entity in allEntities)
 {
     Console.WriteLine($"{entity.Name} ({entity.Id})");
 }
-```
+~~~
 
 ### Query by Single Component
 
-```csharp
+~~~csharp
 // Get all entities with a specific component
 var withHealth = world.GetEntitiesWithComponent<HealthComponent>();
 
@@ -234,11 +234,11 @@ foreach (var entity in withHealth)
     var health = entity.GetComponent<HealthComponent>()!;
     Console.WriteLine($"{entity.Name}: {health.Current}/{health.Max} HP");
 }
-```
+~~~
 
 ### Query by Multiple Components
 
-```csharp
+~~~csharp
 // Get entities that have BOTH components
 var moving = world.GetEntitiesWithComponents<TransformComponent, VelocityComponent>();
 
@@ -249,11 +249,11 @@ foreach (var entity in moving)
     
     Console.WriteLine($"{entity.Name} at {transform.Position}, moving {velocity.Velocity}");
 }
-```
+~~~
 
 ### Query by Tag
 
-```csharp
+~~~csharp
 // Get all entities with a specific tag
 var enemies = world.GetEntitiesByTag("Enemy");
 
@@ -265,7 +265,7 @@ foreach (var enemy in enemies)
 // Check multiple tags (manual filtering)
 var bossEnemies = world.GetEntitiesByTag("Enemy")
     .Where(e => e.Tags.Contains("Boss"));
-```
+~~~
 
 ---
 
@@ -273,7 +273,7 @@ var bossEnemies = world.GetEntitiesByTag("Enemy")
 
 ### Find by Name
 
-```csharp
+~~~csharp
 // Find first entity with exact name
 var player = world.GetEntityByName("Player");
 
@@ -281,11 +281,11 @@ if (player != null)
 {
     Console.WriteLine($"Found player: {player.Id}");
 }
-```
+~~~
 
 ### Find by ID
 
-```csharp
+~~~csharp
 // Find entity by unique ID
 Guid entityId = someEntity.Id;
 var found = world.GetEntityById(entityId);
@@ -294,11 +294,11 @@ if (found != null)
 {
     Console.WriteLine($"Found entity: {found.Name}");
 }
-```
+~~~
 
 ### Find by Predicate
 
-```csharp
+~~~csharp
 // Find first entity matching custom condition
 var boss = world.FindEntity(e => 
     e.Tags.Contains("Enemy") && 
@@ -310,7 +310,7 @@ if (boss != null)
 {
     Console.WriteLine($"Found boss: {boss.Name}");
 }
-```
+~~~
 
 ---
 
@@ -318,7 +318,7 @@ if (boss != null)
 
 ### LINQ-Style Filtering
 
-```csharp
+~~~csharp
 using System.Linq;
 
 // Get active enemies with low health
@@ -347,7 +347,7 @@ var nearbyEnemies = world.GetEntitiesByTag("Enemy")
         var distance = Vector2.Distance(enemyTransform.Position, playerTransform.Position);
         return distance < 500f;
     });
-```
+~~~
 
 ---
 
@@ -355,7 +355,7 @@ var nearbyEnemies = world.GetEntitiesByTag("Enemy")
 
 ### Distance-Based Queries
 
-```csharp
+~~~csharp
 // Extension method for radius queries
 public static class SpatialQueryExtensions
 {
@@ -382,7 +382,7 @@ public static class SpatialQueryExtensions
 var playerPos = player.GetComponent<TransformComponent>()!.Position;
 var nearbyEnemies = world.GetEntitiesByTag("Enemy")
     .WithinRadius(playerPos, 200f);
-```
+~~~
 
 ---
 
@@ -390,7 +390,7 @@ var nearbyEnemies = world.GetEntitiesByTag("Enemy")
 
 ### Do's and Don'ts
 
-```csharp
+~~~csharp
 // ✅ DO: Use cached queries in systems
 var _cachedQuery = world.CreateCachedQuery<TransformComponent, VelocityComponent>();
 
@@ -415,7 +415,7 @@ var hasEnemies = world.GetEntitiesByTag("Enemy").Any();
 
 // ❌ DON'T: Use Count() for existence checks
 var hasEnemies = world.GetEntitiesByTag("Enemy").Count() > 0;
-```
+~~~
 
 ---
 
@@ -423,7 +423,7 @@ var hasEnemies = world.GetEntitiesByTag("Enemy").Count() > 0;
 
 ### Fluent Query API
 
-```csharp
+~~~csharp
 world.Query()                                       // Start query builder
     .With<T>()                                      // Require component
     .Without<T>()                                   // Exclude component
@@ -431,21 +431,21 @@ world.Query()                                       // Start query builder
     .WithoutTag("tag")                              // Exclude tag
     .Where(e => condition)                          // Custom filter
     .Execute()                                      // Run query
-```
+~~~
 
 ### Cached Queries
 
-```csharp
+~~~csharp
 world.CreateCachedQuery<T>()                        // 1 component
 world.CreateCachedQuery<T1, T2>()                   // 2 components
 world.CreateCachedQuery<T1, T2, T3>()               // 3 components
 world.CreateCachedQuery<T1, T2, T3, T4>()           // 4 components
 world.CreateCachedQuery<T1, T2, T3, T4, T5>()       // 5 components
-```
+~~~
 
 ### Basic Queries
 
-```csharp
+~~~csharp
 world.Entities                                      // All entities
 world.GetEntityByName("Player")                     // By name
 world.GetEntityById(guid)                           // By ID
@@ -453,7 +453,7 @@ world.GetEntitiesByTag("Enemy")                     // By tag
 world.GetEntitiesWithComponent<T>()                 // By component
 world.GetEntitiesWithComponents<T1, T2>()           // By multiple components
 world.FindEntity(e => /* condition */)              // By predicate
-```
+~~~
 
 ---
 
@@ -461,11 +461,11 @@ world.FindEntity(e => /* condition */)              // By predicate
 
 Check out the **Query System Demo** in FeatureDemos to see advanced queries in action!
 
-```bash
+~~~bash
 cd samples/FeatureDemos
 dotnet run
 # Select "1" for Query System Demo
-```
+~~~
 
 ---
 
