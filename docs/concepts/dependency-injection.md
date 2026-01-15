@@ -102,7 +102,7 @@ services.TryAddSingleton<ISceneManager, SceneManager>();
 
 ### 2. Rendering Services (Singleton)
 
-Rendering is expensive to initialize:
+Rendering is expensive to initialize and provides both GPU and legacy renderer options:
 
 ```csharp
 // In your Program.cs
@@ -111,12 +111,14 @@ builder.Services.AddSDL3Rendering(options =>
     options.WindowTitle = "My Game";
     options.WindowWidth = 1280;
     options.WindowHeight = 720;
+    options.Backend = GraphicsBackend.GPU;  // GPU, LegacyRenderer, or Auto
 });
 
 // What it registers (internally):
-services.TryAddSingleton<IRenderer, SDL3Renderer>();
+services.TryAddSingleton<IFontLoader, SDL3FontLoader>();
+services.TryAddSingleton<IRenderer>(/* backend-specific implementation */);
+services.TryAddSingleton<ITextureContext>(/* from renderer */);
 services.TryAddSingleton<ITextureLoader, SDL3TextureLoader>();
-services.AddSingleton<IFontLoader, SDL3FontLoader>();
 ```
 
 **Implementation:**
@@ -131,25 +133,59 @@ public static IServiceCollection AddSDL3Rendering(
         services.Configure(configureOptions);
     }
 
-    // Choose renderer based on options
+    services.TryAddSingleton<IFontLoader, SDL3FontLoader>();
+
+    // Choose renderer based on backend configuration
     services.TryAddSingleton<IRenderer>(provider =>
     {
         var options = provider.GetRequiredService<IOptions<RenderingOptions>>();
+        var loggerFactory = provider.GetRequiredService<ILoggerFactory>();
+        var fontLoader = provider.GetService<IFontLoader>();
+        var eventBus = provider.GetService<EventBus>();  // Optional EventBus for window events
 
         return options.Value.Backend switch
         {
-            GraphicsBackend.GPU => new SDL3GPURenderer(...),
-            GraphicsBackend.LegacyRenderer => new SDL3Renderer(...),
-            _ => new SDL3GPURenderer(...)
+            GraphicsBackend.GPU => new SDL3GPURenderer(
+                provider.GetRequiredService<ILogger<SDL3GPURenderer>>(),
+                loggerFactory,
+                options,
+                fontLoader,
+                eventBus),
+            GraphicsBackend.LegacyRenderer => new SDL3Renderer(
+                provider.GetRequiredService<ILogger<SDL3Renderer>>(),
+                loggerFactory,
+                options,
+                fontLoader,
+                eventBus),
+            GraphicsBackend.Auto => new SDL3GPURenderer(
+                provider.GetRequiredService<ILogger<SDL3GPURenderer>>(),
+                loggerFactory,
+                options,
+                fontLoader,
+                eventBus),  // Defaults to GPU
+            _ => throw new NotSupportedException($"Backend {options.Value.Backend} not supported")
         };
     });
 
-    services.TryAddSingleton<ITextureLoader>(...);
-    services.AddSingleton<IFontLoader, SDL3FontLoader>();
+    services.TryAddSingleton<ITextureContext>(provider => 
+        (ITextureContext)provider.GetRequiredService<IRenderer>());
+    services.TryAddSingleton<ITextureLoader, SDL3TextureLoader>();
 
     return services;
 }
 ```
+
+**What's new in v0.7.0:**
+- Renderer selection based on `GraphicsBackend` enum (`GPU`, `LegacyRenderer`, `Auto`)
+- Both renderers accept optional `EventBus` for window events like `WindowResizedEvent`
+- GPU renderer is the new default - modern shader-based rendering with Vulkan/Metal/D3D11/D3D12 support
+- Legacy renderer remains available for compatibility with older systems
+- Configure preferred GPU driver via `options.PreferredGPUDriver` (optional)
+
+**Why Singleton?**
+- Window and graphics device initialization is expensive
+- Shared rendering context across all scenes
+- Manages global rendering state and frame buffers
 
 ---
 
@@ -264,7 +300,7 @@ public class GameScene : Scene
 **DI Container resolves:**
 1. `GameScene` requested
 2. Looks at constructor parameters
-3. Resolves `IRenderer` → `SDL3Renderer` (singleton)
+3. Resolves `IRenderer` → `SDL3GPURenderer` or `SDL3Renderer` based on backend (singleton)
 4. Resolves `IInputService` → `SDL3InputService` (singleton)
 5. Resolves `IGameContext` → `GameContext` (singleton)
 6. Resolves `ILogger<GameScene>` → logging framework
@@ -560,24 +596,50 @@ public class EnemyFactory : IEnemyFactory
 public class GameScene : Scene
 {
     private readonly IRenderer _renderer;
-    private readonly IAudioService? _audio; // Optional
+    private readonly IAudioService? _audio;
+    private readonly EventBus? _eventBus;
     
     public GameScene(
         IRenderer renderer,
-        IAudioService? audio, // May be null
+        IAudioService? audio,      // Optional
+        EventBus? eventBus,        // Optional - for custom events
         ILogger<GameScene> logger
     ) : base(logger)
     {
         _renderer = renderer;
         _audio = audio;
+        _eventBus = eventBus;
+    }
+    
+    protected override void OnLoad()
+    {
+        // Subscribe to custom events
+        _eventBus?.Subscribe<PlayerScoredEvent>(OnPlayerScored);
+    }
+    
+    protected override void OnUnload()
+    {
+        // Clean up event subscriptions
+        _eventBus?.Unsubscribe<PlayerScoredEvent>(OnPlayerScored);
+    }
+    
+    private void OnPlayerScored(PlayerScoredEvent evt)
+    {
+        _audio?.PlaySound("score.wav");
     }
     
     protected override void PlaySound()
     {
-        _audio?.PlaySound(soundEffect); // Safe navigation
+        _audio?.PlaySound(soundEffect);
     }
 }
 ```
+
+**EventBus in v0.7.0:**
+- `EventBus` moved from `Brine2D.ECS` to `Brine2D.Core` namespace
+- Now available globally without ECS dependencies
+- Used internally by renderers for window events (`WindowResizedEvent`)
+- Optional service - register with `builder.Services.AddSingleton<EventBus>()`
 
 ---
 
@@ -676,6 +738,7 @@ Here's a full DI setup:
 
 ```csharp Program.cs
 using Brine2D.Audio.SDL;
+using Brine2D.Core;
 using Brine2D.Core.Collision;
 using Brine2D.Hosting;
 using Brine2D.Input;
@@ -685,6 +748,9 @@ using Brine2D.UI;
 using MyGame;
 
 var builder = GameApplication.CreateBuilder(args);
+
+// Optional: Register EventBus for custom event handling
+builder.Services.AddSingleton<EventBus>();
 
 // Singleton services (global, expensive)
 builder.Services

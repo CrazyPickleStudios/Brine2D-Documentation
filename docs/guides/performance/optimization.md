@@ -11,7 +11,7 @@ Master zero-allocation patterns, object pooling, and other techniques to build h
 
 Brine2D is designed for performance from the ground up, using modern .NET techniques to minimize garbage collection pressure and maximize frame rates. This guide covers best practices for building games that run at 60+ FPS with minimal memory allocations.
 
-~~~mermaid
+```mermaid
 graph TD
     A[Performance Optimization] --> B[Zero Allocations]
     A --> C[Object Pooling]
@@ -33,7 +33,7 @@ graph TD
     E --> O[Cached Queries]
     E --> P[Spatial Queries]
     E --> Q[Predicate Optimization]
-~~~
+```
 
 ---
 
@@ -43,7 +43,7 @@ graph TD
 
 Every `new` allocation creates garbage that must eventually be collected:
 
-~~~csharp
+```csharp
 // ❌ BAD: Allocates every frame
 protected override void OnUpdate(GameTime gameTime)
 {
@@ -59,7 +59,7 @@ protected override void OnUpdate(GameTime gameTime)
     
     // Process enemies...
 }
-~~~
+```
 
 **Problems:**
 - Creates garbage every frame
@@ -72,7 +72,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 Use `ArrayPool<T>` for temporary buffers:
 
-~~~csharp
+```csharp
 using System.Buffers;
 
 // ✅ GOOD: Zero allocation
@@ -100,7 +100,7 @@ protected override void OnUpdate(GameTime gameTime)
         ArrayPool<Entity>.Shared.Return(array, clearArray: true);
     }
 }
-~~~
+```
 
 **Benefits:**
 - Zero allocation (array is reused)
@@ -118,7 +118,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 Brine2D's cached queries eliminate allocations in hot paths:
 
-~~~csharp
+```csharp
 public class MovementSystem : ECSSystem
 {
     private readonly IEntityWorld _world;
@@ -146,7 +146,7 @@ public class MovementSystem : ECSSystem
         }
     }
 }
-~~~
+```
 
 **When to Use:**
 - Hot paths (every frame)
@@ -164,7 +164,7 @@ public class MovementSystem : ECSSystem
 
 LINQ is convenient but allocates:
 
-~~~csharp
+```csharp
 // ❌ BAD: LINQ allocates enumerators
 var weakEnemies = World.Query()
     .With<EnemyComponent>()
@@ -187,17 +187,17 @@ foreach (var entity in World.Query()
         weakEnemies.Add(entity);
     }
 }
-~~~
+```
 
 **Even Better:**
 
-~~~csharp
+```csharp
 // ✅ BEST: Use query predicates
 var weakEnemies = World.Query()
     .With<EnemyComponent>()
     .With<HealthComponent>(h => h.CurrentHealth < 50) // Filtered at query level!
     .Execute();
-~~~
+```
 
 ---
 
@@ -207,7 +207,7 @@ var weakEnemies = World.Query()
 
 Brine2D's particle system uses object pooling automatically:
 
-~~~csharp
+```csharp
 // ParticleEmitterComponent uses ObjectPool<Particle> internally
 var emitter = entity.AddComponent<ParticleEmitterComponent>();
 emitter.MaxParticles = 200;
@@ -215,11 +215,11 @@ emitter.EmissionRate = 50f;
 
 // Particles are Get() from pool on spawn, Return() on death
 // Zero allocation per particle!
-~~~
+```
 
 **Under the Hood:**
 
-~~~csharp
+```csharp
 public class ParticleEmitterComponent : Component
 {
     private readonly ObjectPool<Particle> _particlePool;
@@ -249,7 +249,7 @@ public class ParticleEmitterComponent : Component
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -257,7 +257,7 @@ public class ParticleEmitterComponent : Component
 
 Create your own pools for frequently spawned objects:
 
-~~~csharp
+```csharp
 using Brine2D.Core.Pooling;
 
 public class BulletPool
@@ -311,11 +311,11 @@ public class BulletPool
         _pool.Return(bullet);
     }
 }
-~~~
+```
 
 **Usage:**
 
-~~~csharp
+```csharp
 public class WeaponSystem : ECSSystem
 {
     private readonly BulletPool _bulletPool;
@@ -336,7 +336,7 @@ public class WeaponSystem : ECSSystem
         _bulletPool.DespawnBullet(bullet); // Return to pool
     }
 }
-~~~
+```
 
 ---
 
@@ -365,7 +365,7 @@ public class WeaponSystem : ECSSystem
 
 `SpriteRenderingSystem` automatically batches sprites:
 
-~~~csharp
+```csharp
 // Sprites are automatically batched by:
 // 1. Texture (same texture = same batch)
 // 2. Layer (sort for correct rendering order)
@@ -379,11 +379,11 @@ sprite2.TexturePath = "assets/enemy.png"; // Same texture!
 sprite2.Layer = 10; // Same layer!
 
 // Both sprites rendered in 1 draw call! ✅
-~~~
+```
 
 **Check Batching Efficiency:**
 
-~~~csharp
+```csharp
 var spriteSystem = world.GetSystem<SpriteRenderingSystem>();
 var (spriteCount, drawCalls) = spriteSystem.GetBatchStats();
 var efficiency = (float)spriteCount / drawCalls;
@@ -394,7 +394,7 @@ if (efficiency < 5f)
 {
     Logger.LogWarning("Low batch efficiency! Consider using texture atlases.");
 }
-~~~
+```
 
 ---
 
@@ -402,7 +402,7 @@ if (efficiency < 5f)
 
 Combine multiple textures into one atlas:
 
-~~~csharp
+```csharp
 // ❌ BAD: Many textures = many batches
 sprite1.TexturePath = "assets/enemy1.png";  // Batch 1
 sprite2.TexturePath = "assets/enemy2.png";  // Batch 2
@@ -420,7 +420,7 @@ sprite3.TexturePath = "assets/atlas.png";
 sprite3.SourceRect = new Rectangle(64, 0, 32, 32);   // Player
 
 // 1 draw call for 3 sprites! ✅
-~~~
+```
 
 **Tools for Creating Atlases:**
 - [TexturePacker](https://www.codeandweb.com/texturepacker)
@@ -433,7 +433,7 @@ sprite3.SourceRect = new Rectangle(64, 0, 32, 32);   // Player
 
 Group sprites by layer to minimize state changes:
 
-~~~csharp
+```csharp
 // ✅ GOOD: Group by layer
 background.Layer = 0;   // All backgrounds
 terrain.Layer = 1;      // All terrain
@@ -444,7 +444,7 @@ ui.Layer = 100;         // All UI
 
 // Rendered in order: 0 → 1 → 10 → 15 → 20 → 100
 // Minimal layer switches = better batching!
-~~~
+```
 
 ---
 
@@ -454,7 +454,7 @@ ui.Layer = 100;         // All UI
 
 Use spatial queries to reduce iteration:
 
-~~~csharp
+```csharp
 // ❌ BAD: Check all entities
 foreach (var entity in World.Query().With<EnemyComponent>().Execute())
 {
@@ -475,7 +475,7 @@ foreach (var enemy in nearbyEnemies)
 {
     // Already filtered by distance!
 }
-~~~
+```
 
 ---
 
@@ -483,7 +483,7 @@ foreach (var enemy in nearbyEnemies)
 
 Filter at query level, not in loops:
 
-~~~csharp
+```csharp
 // ❌ BAD: Filter in loop
 foreach (var entity in World.Query().With<HealthComponent>().Execute())
 {
@@ -503,7 +503,7 @@ foreach (var entity in lowHealthEntities)
 {
     // Already filtered!
 }
-~~~
+```
 
 ---
 
@@ -511,7 +511,7 @@ foreach (var entity in lowHealthEntities)
 
 Keep queries simple for best performance:
 
-~~~csharp
+```csharp
 // ⚠️ ACCEPTABLE: Simple predicate
 var result = World.Query()
     .With<HealthComponent>(h => h.CurrentHealth < 50)
@@ -534,7 +534,7 @@ var nearbyLowHealth = World.Query()
     .WithinRadius(playerPos, 200f)
     .With<HealthComponent>(h => h.CurrentHealth < 50)
     .Execute();
-~~~
+```
 
 ---
 
@@ -542,7 +542,7 @@ var nearbyLowHealth = World.Query()
 
 ### Avoid String Allocations
 
-~~~csharp
+```csharp
 // ❌ BAD: Concatenation allocates
 var message = "Player: " + player.Name + " HP: " + player.Health;
 
@@ -557,7 +557,7 @@ sb.Append(" HP: ");
 sb.Append(player.Health);
 var message = sb.ToString();
 sb.Clear(); // Reuse!
-~~~
+```
 
 ---
 
@@ -565,7 +565,7 @@ sb.Clear(); // Reuse!
 
 Use structs for small, immutable data:
 
-~~~csharp
+```csharp
 // ✅ GOOD: Struct for small data (no allocation)
 public struct Velocity
 {
@@ -581,7 +581,7 @@ public struct Velocity
 
 // Use it
 var velocity = new Velocity(10, 20); // Stack allocated!
-~~~
+```
 
 **Guidelines:**
 - ✅ Use structs for < 16 bytes
@@ -595,7 +595,7 @@ var velocity = new Velocity(10, 20); // Stack allocated!
 
 Pre-allocate collections with known sizes:
 
-~~~csharp
+```csharp
 // ❌ BAD: Grows dynamically (allocates multiple times)
 var list = new List<Entity>();
 for (int i = 0; i < 1000; i++)
@@ -609,7 +609,7 @@ for (int i = 0; i < 1000; i++)
 {
     list.Add(CreateEntity()); // No reallocation!
 }
-~~~
+```
 
 ---
 
@@ -619,7 +619,7 @@ for (int i = 0; i < 1000; i++)
 
 Micro-benchmark critical code:
 
-~~~csharp
+```csharp
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Running;
 
@@ -656,7 +656,7 @@ public class QueryBenchmarks
 }
 
 // Run: dotnet run -c Release
-~~~
+```
 
 ---
 
@@ -664,7 +664,7 @@ public class QueryBenchmarks
 
 Track Gen 2 collections:
 
-~~~csharp
+```csharp
 var gen2Before = GC.CollectionCount(2);
 
 // Run your code...
@@ -677,7 +677,7 @@ if (gen2Collections > 0)
 {
     Logger.LogWarning($"Triggered {gen2Collections} Gen 2 collections!");
 }
-~~~
+```
 
 ---
 
@@ -710,9 +710,9 @@ Use the [Performance Monitor](monitoring.md) to identify real bottlenecks.
 
 ✅ **Use cached queries in systems**
 
-~~~csharp
+```csharp
 private readonly CachedQuery<T1, T2> _query = world.CreateCachedQuery<T1, T2>();
-~~~
+```
 
 ✅ **Pool frequently spawned objects**
 
@@ -720,9 +720,9 @@ Bullets, particles, effects, projectiles.
 
 ✅ **Pre-allocate collections**
 
-~~~csharp
+```csharp
 var list = new List<Entity>(capacity: expectedSize);
-~~~
+```
 
 ✅ **Use structs for small data**
 

@@ -11,7 +11,7 @@ Create fire, explosions, smoke, and other visual effects with Brine2D's high-per
 
 Brine2D's particle system uses object pooling to render thousands of particles without allocating memory. Particles are reused from a pool, ensuring smooth performance even with complex effects.
 
-~~~mermaid
+```mermaid
 graph LR
     A[ParticleEmitterComponent] --> B[ObjectPool]
     B --> C[Particle Instance]
@@ -24,7 +24,7 @@ graph LR
     G -->|Yes| H[Return to Pool]
     G -->|No| I[Render]
     H --> B
-~~~
+```
 
 ---
 
@@ -34,7 +34,7 @@ graph LR
 
 Create a simple particle effect:
 
-~~~csharp
+```csharp
 using Brine2D.ECS;
 using Brine2D.ECS.Components;
 using Brine2D.Rendering.ECS;
@@ -70,7 +70,7 @@ public class GameScene : Scene
         emitter.Gravity = new Vector2(0, 100); // Pull down
     }
 }
-~~~
+```
 
 That's it! The `ParticleSystem` will automatically update and render particles.
 
@@ -82,7 +82,7 @@ That's it! The `ParticleSystem` will automatically update and render particles.
 
 Control how particles are spawned:
 
-~~~csharp
+```csharp
 var emitter = entity.AddComponent<ParticleEmitterComponent>();
 
 // Basic emission
@@ -93,11 +93,11 @@ emitter.ParticleLifetime = 2f; // How long each particle lives (seconds)
 
 // Spawn area
 emitter.SpawnRadius = 10f; // Random spawn within radius (0 = point source)
-~~~
+```
 
 **Emission Patterns:**
 
-~~~csharp
+```csharp
 // Point source (SpawnRadius = 0)
 emitter.SpawnRadius = 0f;
 
@@ -107,7 +107,7 @@ emitter.SpawnRadius = 20f;
 // One-shot burst
 emitter.IsEmitting = false;
 emitter.EmitBurst(50); // Emit 50 particles immediately
-~~~
+```
 
 ---
 
@@ -115,7 +115,7 @@ emitter.EmitBurst(50); // Emit 50 particles immediately
 
 Control particle appearance:
 
-~~~csharp
+```csharp
 // Color interpolation (start → end over lifetime)
 emitter.StartColor = new Color(255, 200, 0, 255); // Bright yellow, opaque
 emitter.EndColor = new Color(255, 50, 0, 0); // Dark red, transparent
@@ -123,11 +123,11 @@ emitter.EndColor = new Color(255, 50, 0, 0); // Dark red, transparent
 // Size interpolation (start → end over lifetime)
 emitter.StartSize = 8f; // pixels
 emitter.EndSize = 2f; // Shrink over time
-~~~
+```
 
 **Color Tricks:**
 
-~~~csharp
+```csharp
 // Fade out (keep color, reduce alpha)
 emitter.StartColor = new Color(255, 255, 255, 255); // White, opaque
 emitter.EndColor = new Color(255, 255, 255, 0); // White, transparent
@@ -139,7 +139,7 @@ emitter.EndColor = new Color(0, 0, 255, 255); // Blue
 // Constant color
 emitter.StartColor = Color.White;
 emitter.EndColor = Color.White; // No change
-~~~
+```
 
 ---
 
@@ -147,7 +147,7 @@ emitter.EndColor = Color.White; // No change
 
 Control particle movement:
 
-~~~csharp
+```csharp
 // Initial velocity (pixels per second)
 emitter.InitialVelocity = new Vector2(0, -100); // Upward
 
@@ -159,17 +159,17 @@ emitter.Gravity = new Vector2(0, 200); // Pull down
 
 // No gravity (floating particles)
 emitter.Gravity = Vector2.Zero;
-~~~
+```
 
 **Velocity Spread Visualization:**
 
-~~~
+```
 VelocitySpread = 0°       VelocitySpread = 45°      VelocitySpread = 180°
        ↑                      ╱ ↑ ╲                    ← ↑ →
        ↑                    ╱   ↑   ╲                  ↓ ↑ ↓
        ↑                  ╱     ↑     ╲
   (all same)         (cone shape)            (all directions)
-~~~
+```
 
 ---
 
@@ -177,7 +177,7 @@ VelocitySpread = 0°       VelocitySpread = 45°      VelocitySpread = 180°
 
 ### Fire Effect
 
-~~~csharp
+```csharp
 var fireEmitter = entity.AddComponent<ParticleEmitterComponent>();
 fireEmitter.IsEmitting = true;
 fireEmitter.EmissionRate = 50f;
@@ -197,13 +197,13 @@ fireEmitter.InitialVelocity = new Vector2(0, -100);
 fireEmitter.VelocitySpread = 30f;
 fireEmitter.Gravity = new Vector2(0, 50); // Slight downward pull
 fireEmitter.SpawnRadius = 10f;
-~~~
+```
 
 ---
 
 ### Explosion Effect
 
-~~~csharp
+```csharp
 var explosionEmitter = entity.AddComponent<ParticleEmitterComponent>();
 
 // One-shot burst
@@ -225,13 +225,13 @@ explosionEmitter.EndSize = 2f;
 explosionEmitter.InitialVelocity = new Vector2(0, -200); // Fast
 explosionEmitter.VelocitySpread = 180f; // All directions
 explosionEmitter.Gravity = new Vector2(0, 500); // Strong gravity
-~~~
+```
 
 ---
 
 ### Smoke Effect
 
-~~~csharp
+```csharp
 var smokeEmitter = entity.AddComponent<ParticleEmitterComponent>();
 smokeEmitter.IsEmitting = true;
 smokeEmitter.EmissionRate = 20f; // Slow emission
@@ -251,13 +251,13 @@ smokeEmitter.InitialVelocity = new Vector2(0, -30);
 smokeEmitter.VelocitySpread = 20f;
 smokeEmitter.Gravity = new Vector2(0, -10); // Slight upward drift
 smokeEmitter.SpawnRadius = 5f;
-~~~
+```
 
 ---
 
 ### Sparkle Effect
 
-~~~csharp
+```csharp
 var sparkleEmitter = entity.AddComponent<ParticleEmitterComponent>();
 sparkleEmitter.IsEmitting = true;
 sparkleEmitter.EmissionRate = 30f;
@@ -277,13 +277,13 @@ sparkleEmitter.InitialVelocity = new Vector2(0, -20);
 sparkleEmitter.VelocitySpread = 180f; // All directions
 sparkleEmitter.Gravity = Vector2.Zero; // No gravity (float)
 sparkleEmitter.SpawnRadius = 15f;
-~~~
+```
 
 ---
 
 ### Trail Effect
 
-~~~csharp
+```csharp
 // Attach to moving entity (player, projectile, etc.)
 var trailEmitter = entity.AddComponent<ParticleEmitterComponent>();
 trailEmitter.IsEmitting = true;
@@ -304,7 +304,7 @@ trailEmitter.InitialVelocity = Vector2.Zero;
 trailEmitter.VelocitySpread = 0f;
 trailEmitter.Gravity = Vector2.Zero;
 trailEmitter.SpawnRadius = 0f; // Point source
-~~~
+```
 
 ---
 
@@ -314,7 +314,7 @@ trailEmitter.SpawnRadius = 0f; // Point source
 
 Create rhythmic effects:
 
-~~~csharp
+```csharp
 public class BurstEffectSystem : ECSSystem
 {
     private float _burstTimer = 0f;
@@ -334,7 +334,7 @@ public class BurstEffectSystem : ECSSystem
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -342,7 +342,7 @@ public class BurstEffectSystem : ECSSystem
 
 Change colors based on game state:
 
-~~~csharp
+```csharp
 public class DynamicParticleSystem : ECSSystem
 {
     public override void Update(GameTime gameTime)
@@ -360,7 +360,7 @@ public class DynamicParticleSystem : ECSSystem
         );
     }
 }
-~~~
+```
 
 ---
 
@@ -368,7 +368,7 @@ public class DynamicParticleSystem : ECSSystem
 
 Create attraction/repulsion effects:
 
-~~~csharp
+```csharp
 // Custom particle update (advanced)
 public class GravityWellSystem : ECSSystem
 {
@@ -401,7 +401,7 @@ public class GravityWellSystem : ECSSystem
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -411,7 +411,7 @@ public class GravityWellSystem : ECSSystem
 
 Particles use object pooling automatically - no GC allocations!
 
-~~~csharp
+```csharp
 // Under the hood (you don't need to do this):
 public class ParticleEmitterComponent
 {
@@ -428,7 +428,7 @@ public class ParticleEmitterComponent
         _pool.Return(particle); // ✅ Return to pool
     }
 }
-~~~
+```
 
 **Benefits:**
 - Zero allocation per particle
@@ -439,7 +439,7 @@ public class ParticleEmitterComponent
 
 ### Performance Tips
 
-~~~csharp
+```csharp
 // ✅ GOOD: Reasonable particle counts
 emitter.MaxParticles = 200; // ~200 particles = negligible cost
 
@@ -455,7 +455,7 @@ for (int i = 0; i < 10; i++)
     var smallEmitter = CreateEmitter();
     smallEmitter.MaxParticles = 100; // 10 x 100 = 1000 total
 }
-~~~
+```
 
 **Performance Guidelines:**
 - **< 500 particles per emitter** - Excellent performance
@@ -468,7 +468,7 @@ for (int i = 0; i < 10; i++)
 
 ### Check Particle Count
 
-~~~csharp
+```csharp
 var emitter = entity.GetComponent<ParticleEmitterComponent>();
 
 Logger.LogDebug($"Active particles: {emitter.ParticleCount}/{emitter.MaxParticles}");
@@ -477,7 +477,7 @@ if (emitter.ParticleCount >= emitter.MaxParticles)
 {
     Logger.LogWarning("Particle pool exhausted! Consider increasing MaxParticles.");
 }
-~~~
+```
 
 ---
 
@@ -485,7 +485,7 @@ if (emitter.ParticleCount >= emitter.MaxParticles)
 
 Use the performance overlay to monitor particle impact:
 
-~~~csharp
+```csharp
 // Enable performance monitoring
 builder.Services.AddPerformanceMonitoring(options =>
 {
@@ -496,7 +496,7 @@ builder.Services.AddPerformanceMonitoring(options =>
 // Check stats while particles are active
 // Press F3 to toggle detailed stats
 // Look for "Sprites" count (includes particles)
-~~~
+```
 
 ---
 
@@ -510,25 +510,25 @@ Particles are automatically pooled - just create emitters!
 
 ✅ **Set reasonable MaxParticles**
 
-~~~csharp
+```csharp
 emitter.MaxParticles = 200; // Enough for most effects
-~~~
+```
 
 ✅ **Use bursts for one-shot effects**
 
-~~~csharp
+```csharp
 emitter.IsEmitting = false;
 emitter.EmitBurst(50); // Explosion, impact, etc.
-~~~
+```
 
 ✅ **Disable when not visible**
 
-~~~csharp
+```csharp
 if (!IsVisible(emitter))
 {
     emitter.IsEmitting = false;
 }
-~~~
+```
 
 ### DON'T
 

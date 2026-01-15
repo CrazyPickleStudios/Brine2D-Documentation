@@ -407,12 +407,12 @@ public class PrimitivesDemo : Scene
 
 Check out the **Collision Demo** in FeatureDemos to see `DrawLine` used for velocity vectors!
 
-~~~bash
+```bash
 cd samples/FeatureDemos
 dotnet run
 # Select "Collision Detection" from the menu
 # Press F2 to toggle velocity vectors
-~~~
+```
 
 ---
 

@@ -19,6 +19,7 @@ nav:
   - Overview: index.md
   
   - What's New: 
+      - v0.7.0-beta: whats-new/v0.7.0-beta.md
       - v0.6.0-beta: whats-new/v0.6.0-beta.md
   
   - Getting Started:
@@ -39,6 +40,8 @@ nav:
   - Guides:
       - Overview: guides/index.md
       - Rendering:
+          - Choosing a Renderer: guides/rendering/choosing-renderer.md
+          - GPU Renderer: guides/rendering/gpu-renderer.md
           - Sprites & Textures: guides/rendering/sprites.md
           - Cameras: guides/rendering/cameras.md
           - Drawing Primitives: guides/rendering/primitives.md
@@ -69,6 +72,8 @@ nav:
           - Systems: guides/ecs/systems.md
           - Entities: guides/ecs/entities.md
           - Queries: guides/ecs/queries.md
+      - Events:
+          - Window Events: guides/events/window-events.md
   
   - Concepts:
       - Overview: concepts/index.md
