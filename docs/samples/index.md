@@ -428,7 +428,7 @@ FeatureDemos/
     "WindowWidth": 1280,
     "WindowHeight": 720,
     "VSync": true,
-    "Backend": "LegacyRenderer"
+    "Backend": "GPU"
   }
 }
 ```

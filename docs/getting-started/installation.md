@@ -45,7 +45,7 @@ cd MyGame
 **2. Add Brine2D:**
 
 ```bash
-dotnet add package Brine2D.Desktop --version
+dotnet add package Brine2D.Desktop
 ```
 
 **3. Done!** You're ready to start coding.
@@ -126,7 +126,7 @@ Brine2D offers flexible package options depending on your needs:
 **The all-in-one package.** Includes everything you need for desktop game development.
 
 ```bash
-dotnet add package Brine2D.Desktop --version
+dotnet add package Brine2D.Desktop
 ```
 
 **Includes:**

@@ -312,7 +312,8 @@ Create a `gamesettings.json` file in your project:
     "WindowHeight": 720,
     "VSync": true,
     "Fullscreen": false,
-    "Backend": "LegacyRenderer"
+    "Backend": "GPU",
+    "PreferredGPUDriver": "Vulkan"
   }
 }
 ```

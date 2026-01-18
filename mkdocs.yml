@@ -19,6 +19,7 @@ nav:
   - Overview: index.md
   
   - What's New: 
+      - v0.8.0-beta: whats-new/v0.8.0-beta.md
       - v0.7.0-beta: whats-new/v0.7.0-beta.md
       - v0.6.0-beta: whats-new/v0.6.0-beta.md
   
@@ -43,16 +44,20 @@ nav:
           - Choosing a Renderer: guides/rendering/choosing-renderer.md
           - GPU Renderer: guides/rendering/gpu-renderer.md
           - Sprites & Textures: guides/rendering/sprites.md
+          - Texture Atlasing: guides/rendering/texture-atlasing.md
           - Cameras: guides/rendering/cameras.md
+          - Particles: guides/rendering/particles.md
           - Drawing Primitives: guides/rendering/primitives.md
       - Input:
-          - Keyboard : guides/input/keyboard.md
+          - Keyboard: guides/input/keyboard.md
           - Mouse: guides/input/mouse.md
           - Gamepad Support: guides/input/gamepad.md
           - Input Layers: guides/input/layers.md
       - Audio:
+          - Getting Started: guides/audio/getting-started.md
           - Sound Effects: guides/audio/sound-effects.md
           - Music Playback: guides/audio/music.md
+          - Spatial Audio: guides/audio/spatial-audio.md
       - Scenes:
           - Scene Lifecycle: guides/scenes/lifecycle.md
           - Scene Transitions: guides/scenes/transitions.md

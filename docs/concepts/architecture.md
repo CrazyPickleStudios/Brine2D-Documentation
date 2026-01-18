@@ -36,6 +36,11 @@ graph TB
         SDL_AUDIO["SDL3AudioService"]
     end
     
+    subgraph "ECS Layer"
+        ECS["EntityWorld"]
+        SYSTEMS["Systems (Rendering, Audio, etc.)"]
+    end
+    
     subgraph "Game Systems"
         COLLISION["CollisionSystem"]
         ANIMATION["SpriteAnimator"]
@@ -64,29 +69,34 @@ graph TB
     IINPUT --> SDL_INPUT
     IAUDIO --> SDL_AUDIO
     
+    SCENES --> ECS
+    ECS --> SYSTEMS
+    
     SCENES --> COLLISION
     SCENES --> ANIMATION
     SCENES --> TILEMAP
     SCENES --> UI
 
     style APP fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
-style BUILDER fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
-style ENGINE fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-style LOOP fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-style SCENEMGR fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-style CONTEXT fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-style ISCENE fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
-style IRENDERER fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
-style IINPUT fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
-style IAUDIO fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
-style SDL_RENDER fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-style SDL_INPUT fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-style SDL_AUDIO fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-style COLLISION fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
-style ANIMATION fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
-style TILEMAP fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
-style UI fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
-style SCENES fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
+    style BUILDER fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+    style ENGINE fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style LOOP fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style SCENEMGR fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style CONTEXT fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style ISCENE fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style IRENDERER fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style IINPUT fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style IAUDIO fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style SDL_RENDER fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style SDL_INPUT fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style SDL_AUDIO fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style ECS fill:#3d4a1f,stroke:#b5ce78,stroke-width:2px,color:#fff
+    style SYSTEMS fill:#3d4a1f,stroke:#b5ce78,stroke-width:2px,color:#fff
+    style COLLISION fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
+    style ANIMATION fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
+    style TILEMAP fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
+    style UI fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
+    style SCENES fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
 ```
 
 ---
@@ -99,16 +109,26 @@ Brine2D is organized into distinct modules, each with a specific responsibility:
 
 | Module | Purpose | Key Types |
 |--------|---------|-----------|
-| **Brine2D.Core** | Core abstractions and interfaces | `IScene`, `GameTime`, `CollisionSystem` |
+| **Brine2D.Core** | Core abstractions and interfaces | `IScene`, `GameTime`, `EventBus` |
 | **Brine2D.Engine** | Game loop and scene management | `GameEngine`, `GameLoop`, `SceneManager` |
 | **Brine2D.Hosting** | Application hosting (ASP.NET-like) | `GameApplication`, `GameApplicationBuilder` |
+
+### ECS Modules
+
+| Module | Purpose | Key Types |
+|--------|---------|-----------|
+| **Brine2D.ECS** | Entity Component System | `EntityWorld`, `Entity`, `Component`, `ISystem` |
+| **Brine2D.Rendering.ECS** | ECS rendering systems | `SpriteRenderingSystem`, `ParticleSystem`, `CameraSystem` |
+| **Brine2D.Input.ECS** | ECS input systems | `PlayerControllerSystem` |
+| **Brine2D.Audio.ECS** | ECS audio systems | `AudioSystem`, `AudioSourceComponent`, `AudioListenerComponent` |
 
 ### Rendering Modules
 
 | Module | Purpose | Key Types |
 |--------|---------|-----------|
-| **Brine2D.Rendering** | Rendering abstractions | `IRenderer`, `ICamera`, `Color` |
-| **Brine2D.Rendering.SDL** | SDL3 rendering implementation | `SDL3Renderer`, `SDL3GPURenderer`, `SDL3TextureLoader` |
+| **Brine2D.Rendering** | Rendering abstractions and utilities | `IRenderer`, `ICamera`, `Color`, `TextureAtlas`, `AtlasBuilder` |
+| **Brine2D.Rendering.SDL** | SDL3 rendering implementation | `SDL3Renderer`, `SDL3GPURenderer`, `SDL3TextureLoader`, `SpriteBatcher` |
+| **Brine2D.Rendering.ECS** | ECS rendering systems | `SpriteRenderingSystem`, `ParticleSystem` |
 
 ### Input Modules
 
@@ -123,12 +143,16 @@ Brine2D is organized into distinct modules, each with a specific responsibility:
 |--------|---------|-----------|
 | **Brine2D.Audio** | Audio abstractions | `IAudioService`, `ISoundEffect`, `IMusic` |
 | **Brine2D.Audio.SDL** | SDL3_mixer implementation | `SDL3AudioService` |
+| **Brine2D.Audio.ECS** | ECS audio systems | `AudioSystem`, `AudioSourceComponent`, `AudioListenerComponent` |
 
-### Feature Modules
+### Game Systems Modules
 
 | Module | Purpose | Key Types |
 |--------|---------|-----------|
-| **Brine2D.UI** | Immediate-mode UI system | `UICanvas`, `UIButton`, `UISlider`, `UITextInput` |
+| **Brine2D.Core.Collision** | Collision detection system | `CollisionSystem`, `BoxCollider`, `CircleCollider` |
+| **Brine2D.Core.Animation** | Animation system | `SpriteAnimator`, `AnimationClip` |
+| **Brine2D.Core.Tilemap** | Tilemap rendering | `Tilemap`, `TilemapRenderer`, `TmjLoader` |
+| **Brine2D.UI** | UI framework | `UICanvas`, `UIButton`, `UISlider`, `UITextInput` |
 
 ---
 
@@ -141,12 +165,19 @@ graph LR
         RENDERING["Brine2D.Rendering"]
         INPUT["Brine2D.Input"]
         AUDIO["Brine2D.Audio"]
+        ECS["Brine2D.ECS"]
     end
     
     subgraph "Implementations"
         SDL_RENDER["Brine2D.Rendering.SDL"]
         SDL_INPUT["Brine2D.Input.SDL"]
         SDL_AUDIO["Brine2D.Audio.SDL"]
+    end
+    
+    subgraph "ECS Bridges"
+        RENDER_ECS["Brine2D.Rendering.ECS"]
+        INPUT_ECS["Brine2D.Input.ECS"]
+        AUDIO_ECS["Brine2D.Audio.ECS"]
     end
     
     subgraph "Application"
@@ -159,6 +190,13 @@ graph LR
     SDL_INPUT --> INPUT
     SDL_AUDIO --> AUDIO
     
+    RENDER_ECS --> RENDERING
+    RENDER_ECS --> ECS
+    INPUT_ECS --> INPUT
+    INPUT_ECS --> ECS
+    AUDIO_ECS --> AUDIO
+    AUDIO_ECS --> ECS
+    
     ENGINE --> CORE
     HOSTING --> ENGINE
     HOSTING --> RENDERING
@@ -170,17 +208,22 @@ graph LR
     GAME --> RENDERING
     GAME --> INPUT
     GAME --> AUDIO
+    GAME --> ECS
 
     style CORE fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
-style RENDERING fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
-style INPUT fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
-style AUDIO fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
-style SDL_RENDER fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-style SDL_INPUT fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-style SDL_AUDIO fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-style HOSTING fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
-style ENGINE fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-style GAME fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
+    style RENDERING fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style INPUT fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style AUDIO fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style ECS fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style SDL_RENDER fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style SDL_INPUT fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style SDL_AUDIO fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style RENDER_ECS fill:#3d4a1f,stroke:#b5ce78,stroke-width:2px,color:#fff
+    style INPUT_ECS fill:#3d4a1f,stroke:#b5ce78,stroke-width:2px,color:#fff
+    style AUDIO_ECS fill:#3d4a1f,stroke:#b5ce78,stroke-width:2px,color:#fff
+    style HOSTING fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+    style ENGINE fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style GAME fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
 ```
 
 **Key Principle:** Abstractions (interfaces) never depend on implementations. Implementations depend on abstractions. This enables **pluggable backends** (SDL3, MonoGame, custom implementations).
@@ -252,6 +295,9 @@ public class GameEngine : IGameEngine
 - `IGameContext` - Shared game state
 - `ISceneManager` - Scene management
 
+**Key Types:**
+- `EventBus` - Global event system (moved from ECS in v0.7.0)
+
 **Pattern:** Interface Segregation (small, focused interfaces)
 
 ```csharp
@@ -277,10 +323,12 @@ public interface IScene
 - `ICamera` - Camera abstraction
 - `IFontLoader` - Font loading
 
-**Key Types:**
+**Key Types (Data & Utilities):**
 - `Color` - RGBA color struct
 - `Camera2D` - 2D camera with zoom/rotation
 - `RenderingOptions` - Configuration options
+- `TextureAtlas` - Runtime sprite packing utility **(NEW in v0.8.0)**
+- `AtlasBuilder` - Intelligent bin packing algorithm **(NEW in v0.8.0)**
 
 #### Implementation (`Brine2D.Rendering.SDL`)
 
@@ -289,6 +337,7 @@ public interface IScene
 - `SDL3GPURenderer` - Modern GPU renderer
 - `SDL3TextureLoader` - SDL3 texture loading
 - `SDL3FontLoader` - SDL3_ttf font loading
+- `SpriteBatcher` - Sprite batching utility with rotation support **(Enhanced in v0.8.0)**
 
 **Pattern:** Strategy Pattern (swappable renderers)
 
@@ -299,6 +348,41 @@ builder.Services.AddSDL3Rendering(options =>
     options.Backend = GraphicsBackend.GPU; // or LegacyRenderer
 });
 ```
+
+**Rendering Utilities:**
+
+The rendering layer includes utilities that optimize rendering performance:
+
+- **SpriteBatcher** - Groups sprites by texture to reduce draw calls
+- **TextureAtlas** - Packs multiple textures into one to eliminate texture switching
+- **AtlasBuilder** - Intelligently arranges sprites using bin packing algorithm
+
+```csharp
+// Using texture atlas for performance
+var atlas = await AtlasBuilder.BuildAtlasAsync(
+    _renderer,
+    _textureLoader,
+    textures,
+    padding: 2,
+    maxSize: 2048
+);
+
+// Result: 100 sprites → 1 draw call (90-99% reduction)
+```
+
+#### ECS Bridge (`Brine2D.Rendering.ECS`)
+
+**Key Systems:**
+- `SpriteRenderingSystem` - Renders sprite components
+- `ParticleSystem` - Advanced particle effects **(Enhanced in v0.8.0)**
+- `CameraSystem` - Camera follow behavior
+
+**New in v0.8.0:**
+- Particle textures with custom sprites
+- Rotation (start, end, rotation speed)
+- Trail effects with configurable length
+- Blend modes (additive, alpha, none)
+- 7 emitter shapes (point, circle, ring, box, cone, line, burst)
 
 ---
 
@@ -346,7 +430,7 @@ _inputLayerManager.ProcessInput();
 #### Implementation (`Brine2D.Audio.SDL`)
 
 **Key Classes:**
-- `SDL3AudioService` - SDL3_mixer implementation
+- `SDL3AudioService` - SDL3_mixer implementation with track callbacks **(Enhanced in v0.8.0)**
 
 **Pattern:** Facade Pattern (simplifies SDL3_mixer)
 
@@ -359,28 +443,63 @@ await _audio.LoadMusicAsync("background.mp3");
 _audio.PlayMusic(music, loops: -1);
 ```
 
+#### ECS Bridge (`Brine2D.Audio.ECS`) **(NEW in v0.8.0)**
+
+**Key Components:**
+- `AudioListenerComponent` - Spatial audio listener (player/camera)
+- `AudioSourceComponent` - Positioned audio sources
+
+**Key Systems:**
+- `AudioSystem` - Updates spatial audio every frame
+
+**Features:**
+- Distance-based volume attenuation
+- Stereo panning based on position
+- Configurable falloff curves (linear, quadratic, custom)
+- Real-time spatial audio updates
+
+```csharp
+// Create audio listener (player)
+var player = _world.CreateEntity("Player");
+var listener = player.AddComponent<AudioListenerComponent>();
+listener.GlobalSpatialVolume = 1.0f;
+
+// Create spatial audio source
+var enemy = _world.CreateEntity("Enemy");
+var audioSource = enemy.AddComponent<AudioSourceComponent>();
+audioSource.SoundEffect = enemySound;
+audioSource.EnableSpatialAudio = true;
+audioSource.MinDistance = 100f;
+audioSource.MaxDistance = 500f;
+audioSource.RolloffFactor = 1.0f;
+audioSource.SpatialBlend = 1.0f;
+audioSource.PlayOnEnable = true;
+```
+
 ---
 
 ### 7. Game Systems Layer
 
+Game systems manage game logic and state. Unlike rendering utilities (which optimize performance), game systems implement gameplay features.
+
 **UI System** (`Brine2D.UI`):
 - `UICanvas` - Container for UI components
-- `UIButton`, `UISlider`, `UITextInput`, etc. - Components
-- Input layer integration
+- `UIButton`, `UISlider`, `UITextInput`, etc. - Interactive components
+- Input layer integration for event handling
 
 **Collision System** (`Brine2D.Core.Collision`):
-- `CollisionSystem` - Manages collision shapes
+- `CollisionSystem` - Manages collision shapes and detection
 - `BoxCollider`, `CircleCollider` - Collision shapes
-- Optional spatial partitioning
+- Optional spatial partitioning for performance
 
 **Animation System** (`Brine2D.Core.Animation`):
-- `SpriteAnimator` - Plays animations
+- `SpriteAnimator` - Plays frame-based animations
 - `AnimationClip` - Frame sequences
-- `SpriteFrame` - Individual frames
+- `SpriteFrame` - Individual animation frames
 
 **Tilemap System** (`Brine2D.Core.Tilemap`):
 - `Tilemap` - Tile-based level data
-- `TilemapRenderer` - Renders tilemaps
+- `TilemapRenderer` - Renders tilemaps efficiently
 - `TmjLoader` - Loads Tiled JSON format
 
 ---
@@ -393,11 +512,13 @@ _audio.PlayMusic(music, loops: -1);
 | **Dependency Injection** | Everywhere | Loose coupling, testability |
 | **Strategy** | `IRenderer` implementations | Swappable rendering backends |
 | **Facade** | Audio, Input services | Simplify complex SDL3 APIs |
-| **Observer** | Input events, animations | Event-driven behavior |
-| **Component** | UI system | Composable UI elements |
+| **Observer** | Input events, animations, EventBus | Event-driven behavior |
+| **Component** | UI system, ECS | Composable elements |
 | **Mediator** | `GameEngine` | Coordinate subsystems |
 | **Template Method** | `Scene` base class | Lifecycle hooks |
 | **Chain of Responsibility** | Input layers | Prioritized input handling |
+| **Object Pool** | Particle system | Zero-allocation particle reuse |
+| **Bin Packing** | `AtlasBuilder` | Optimal texture packing **(NEW)** |
 
 ---
 
@@ -442,6 +563,8 @@ sequenceDiagram
     participant ILM as InputLayerManager
     participant SM as SceneManager
     participant SC as Scene
+    participant ECS as EntityWorld
+    participant AS as AudioSystem
     participant R as IRenderer
     
     loop Every Frame
@@ -454,6 +577,9 @@ sequenceDiagram
         
         GL->>SM: Update(gameTime)
         SM->>SC: OnUpdate(gameTime)
+        SC->>ECS: Update systems
+        ECS->>AS: Update spatial audio
+        AS->>ECS: Audio updated
         SC->>SC: Game logic
         SC->>SM: Done
         
@@ -489,22 +615,34 @@ public class MyScene : Scene
 ### 2. Custom Systems
 
 ```csharp
-// Create your own system
-public class ParticleSystem
+// Create your own game system
+public class WeatherSystem
 {
-    public void Update(float deltaTime) { }
-    public void Render(IRenderer renderer) { }
+    private float _rainIntensity;
+    
+    public void Update(float deltaTime)
+    {
+        // Weather logic
+    }
+    
+    public void Render(IRenderer renderer)
+    {
+        // Render rain particles
+    }
 }
 
 // Register with DI
-builder.Services.AddSingleton<ParticleSystem>();
+builder.Services.AddSingleton<WeatherSystem>();
 
 // Inject into scene
 public class GameScene : Scene
 {
-    private readonly ParticleSystem _particles;
+    private readonly WeatherSystem _weather;
     
-    public GameScene(ParticleSystem particles, ...) { }
+    public GameScene(WeatherSystem weather, ...) 
+    {
+        _weather = weather;
+    }
 }
 ```
 
@@ -544,16 +682,42 @@ public class DebugInputLayer : IInputLayer
 _inputLayerManager.RegisterLayer(debugLayer);
 ```
 
+### 5. Custom Audio Components **(NEW in v0.8.0)**
+
+```csharp
+// Extend AudioSourceComponent for custom behavior
+public class DynamicAudioComponent : Component
+{
+    private AudioSourceComponent? _audioSource;
+    
+    protected internal override void OnInitialize()
+    {
+        _audioSource = Entity?.GetComponent<AudioSourceComponent>();
+    }
+    
+    protected internal override void OnUpdate(GameTime gameTime)
+    {
+        // Custom audio behavior (e.g., adjust volume based on health)
+        if (_audioSource != null)
+        {
+            var health = Entity?.GetComponent<HealthComponent>();
+            _audioSource.Volume = health != null ? health.Percentage : 1.0f;
+        }
+    }
+}
+```
+
 ---
 
 ## Performance Considerations
 
 ### Memory Management
 
-- **Object pooling** - Reuse objects instead of allocating
+- **Object pooling** - Particle system reuses particles (zero allocation)
 - **Scoped lifetimes** - `CollisionSystem`, `UICanvas` are scoped per scene
 - **Singleton services** - `IRenderer`, `IInputService` are singletons
 - **Struct types** - `Color`, `GameTime`, `Vector2` are value types
+- **Texture atlasing** - Combines textures to reduce memory and draw calls **(NEW in v0.8.0)**
 
 ### Frame Budget
 
@@ -562,16 +726,25 @@ At 60 FPS, each frame has ~16.67ms:
 | Phase | Typical Budget |
 |-------|----------------|
 | Input | <1ms |
-| Update | ~10ms |
+| Update (Game Logic) | ~8ms |
+| Update (ECS Systems) | ~2ms |
 | Render | ~5ms |
 | Frame limiting | ~1-2ms |
 
 ### Optimization Techniques
 
-- **Spatial partitioning** - `CollisionSystem` supports grid partitioning
+**Rendering Optimizations:**
+- **Texture atlasing** - `AtlasBuilder` combines textures (90-99% draw call reduction) **(NEW)**
+- **Sprite batching** - `SpriteBatcher` groups draw calls by texture
 - **Culling** - Only render visible objects (camera frustum)
-- **Batching** - Group draw calls by texture
-- **Async loading** - Load assets without blocking
+
+**Game Systems Optimizations:**
+- **Spatial partitioning** - `CollisionSystem` supports grid partitioning
+- **Object pooling** - Particle system uses `ObjectPool<T>`
+- **Cached queries** - ECS queries with zero allocation
+
+**General:**
+- **Async loading** - Load assets without blocking the game loop
 
 ---
 
@@ -616,6 +789,7 @@ public class MyScene : Scene
 - **Main thread only** - SDL3 requires all operations on the main thread
 - **Async loading** - Use `Task.Run()` for CPU-bound work, return to main thread for SDL calls
 - **No parallelism** - Game loop is single-threaded by design
+- **Audio callbacks** - SDL3_mixer callbacks are thread-safe **(Enhanced in v0.8.0)**
 
 ```csharp
 protected override async Task OnLoadAsync(CancellationToken ct)
@@ -630,12 +804,56 @@ protected override async Task OnLoadAsync(CancellationToken ct)
 
 ---
 
+## What's New in v0.8.0
+
+### Rendering Utilities
+- **TextureAtlas** - Runtime sprite packing for massive draw call reduction
+- **AtlasBuilder** - Intelligent bin packing algorithm (90-99% fewer draw calls)
+- **SpriteBatcher enhancements** - Rotation support and better batching
+
+### Spatial Audio (ECS)
+- **AudioListenerComponent** - Spatial audio listener
+- **AudioSourceComponent** - Positioned audio sources with distance attenuation
+- **AudioSystem** - Real-time spatial audio updates with stereo panning
+
+### Enhanced Particle System (ECS)
+- **Particle textures** - Custom sprite textures instead of circles
+- **Rotation** - Start, end, and rotation speed properties
+- **Trails** - Motion trails with configurable length
+- **Blend modes** - Additive, alpha, and none
+- **7 emitter shapes** - Point, circle, ring, box, cone, line, burst
+
+### Audio Improvements
+- **Track callbacks** - SDL3_mixer callbacks for proper lifecycle
+- **Thread-safe** - Improved callback handling
+
+---
+
+## Conceptual Distinctions
+
+Understanding the difference between **rendering utilities** and **game systems** helps clarify Brine2D's architecture:
+
+### Rendering Utilities (Performance)
+- **Purpose**: Optimize rendering performance
+- **Examples**: `SpriteBatcher`, `TextureAtlas`, `AtlasBuilder`
+- **Location**: `Brine2D.Rendering` / `Brine2D.Rendering.SDL`
+- **Focus**: Draw call reduction, batching, memory optimization
+
+### Game Systems (Logic & State)
+- **Purpose**: Implement gameplay features and manage state
+- **Examples**: `CollisionSystem`, `UICanvas`, `SpriteAnimator`, `TilemapRenderer`
+- **Location**: `Brine2D.Core.*` / `Brine2D.UI`
+- **Focus**: Game logic, user interaction, entity management
+
+---
+
 ## Next Steps
 
 - **[Dependency Injection](dependency-injection.md)** - Master the DI container
 - **[Builder Pattern](builder-pattern.md)** - Learn `GameApplicationBuilder`
 - **[Scene Management](scenes.md)** - Organize your game
 - **[Game Loop](game-loop.md)** - Understand frame processing
+- **[Entity Component System](entity-component-system.md)** - ECS architecture
 
 ---
 
@@ -646,6 +864,7 @@ Brine2D's architecture is:
 - ✅ **Extensible** - Plugin your own implementations
 - ✅ **Testable** - Dependency injection everywhere
 - ✅ **Familiar** - ASP.NET patterns throughout
-- ✅ **Performant** - Designed for real-time games
+- ✅ **Performant** - Designed for real-time games with modern optimizations
+- ✅ **Production-Ready** - Texture atlasing, spatial audio, advanced particles **(v0.8.0)**
 
 Ready to dive deeper? Explore [Dependency Injection](dependency-injection.md) next!

@@ -4,14 +4,14 @@ title: Home
 
 # Brine2D Game Engine
 
-!!! tip "What's New in v0.6.0-beta"
-    Performance monitoring, zero-allocation systems, sprite batching, spatial queries, camera follow, and particle system! 
+!!! tip "What's New in v0.8.0-beta"
+    Texture atlasing, 2D spatial audio, advanced particles with textures, rotation, trails, and blend modes!
     
-    [:octicons-arrow-right-24: See What's New](whats-new/v0.6.0-beta.md)
+    [:octicons-arrow-right-24: See What's New](whats-new/v0.8.0-beta.md)
 
 ## Modern 2D game development with .NET elegance
 
-Brine2D is a modern .NET 10 engine built on SDL3, inspired by the architecture and developer experience of ASP.NET. If you’ve built ASP.NET Core applications, the development model will feel immediately familiar.
+Brine2D is a modern .NET 10 engine built on SDL3, inspired by the architecture and developer experience of ASP.NET. If you've built ASP.NET Core applications, the development model will feel immediately familiar.
 
 <div class="grid cards" markdown>
 
@@ -166,23 +166,24 @@ That's it! A complete game window with input handling and rendering.
 
 ## Core Features
 
-### **Complete 2D Rendering**
-- Hardware-accelerated rendering via SDL3
+### **Modern GPU Rendering**
+- Hardware-accelerated via SDL3 GPU (Vulkan/Metal/D3D12)
+- Texture atlasing with runtime sprite packing
 - Sprite sheets and animations
 - Camera system with zoom and rotation
-- **Line drawing with configurable thickness**
+- Line drawing with configurable thickness
 
 ### **Hybrid Entity Component System**
 - Components are classes that can contain logic
 - Optional systems for performance optimization
 - Composition over inheritance for flexible entities
-- **ASP.NET-style system pipelines with automatic execution**
+- ASP.NET-style system pipelines with automatic execution
 
 ### **Advanced Query System**
 - Fluent API for complex entity searches
 - Cached queries for zero-allocation performance
+- Spatial queries (within radius/bounds)
 - Multiple filter conditions
-- Real-time entity statistics
 
 ### **Scene Transitions**
 - Smooth fade transitions between scenes
@@ -195,23 +196,30 @@ That's it! A complete game window with input handling and rendering.
 - Input layers (like middleware for input)
 - Event-driven and polling APIs
 
-### **Audio System**
-- Sound effects and music playback
-- SDL3_mixer integration
-- Simple, async-friendly API
+### **2D Spatial Audio System**
+- Distance-based volume attenuation
+- Stereo panning based on position
+- Configurable falloff curves (linear, quadratic, custom)
+- ECS integration with audio sources and listeners
+
+### **Advanced Particle System**
+- Object pooling for zero-allocation performance
+- Particle textures with custom sprites
+- Rotation, trails, and blend modes
+- 7 emitter shapes (point, circle, ring, box, cone, line, burst)
 
 ### **Collision Detection**
 - Box and circle colliders
 - Spatial partitioning for performance
-- **Physics response (bounce, slide, push)**
+- Physics response (bounce, slide, push)
 
 ### **Tilemap Support**
 - Tiled (.tmj) file format
 - Automatic collision generation
 - Layer rendering
 
-### **UI Framework**
-- **Complete component library** (15+ components)
+### **Complete UI Framework**
+- 15+ production-ready components
 - Buttons, sliders, text inputs, dialogs, tabs
 - Scroll views, tooltips, dropdowns
 - Input layer management
@@ -240,19 +248,18 @@ Brine2D/
 
 Each package is focused, testable, and can be swapped with custom implementations.
 
-## What's New in 0.5.0-beta
+## What's New in 0.8.0-beta
 
-Brine2D 0.5.0-beta is here with major improvements:
+Brine2D 0.8.0-beta delivers production-ready audio and visual effects:
 
-- **Scene Transitions** - Smooth fades with `FadeTransition` and custom loading screens
-- **Advanced Queries** - Fluent API for complex entity searches with caching
-- **Automatic Execution** - Systems and frame management run automatically via lifecycle hooks
-- **Complete UI Framework** - 15+ production-ready components (dialogs, tabs, tooltips, scroll views)
-- **Collision Physics** - Bounce, slide, and push collision response
-- **DrawLine Primitive** - Draw lines with configurable thickness
-- **6 Interactive Demos** - FeatureDemos project showcases all major features
+- **Texture Atlasing** - Runtime sprite packing reduces draw calls by 90-99%
+- **2D Spatial Audio** - Distance attenuation and stereo panning bring your world to life
+- **Advanced Particles** - Textures, rotation, trails, blend modes, and 7 emitter shapes
+- **Audio Callbacks** - Proper track lifecycle management via SDL3_mixer
+- **Rotation Support** - SpriteBatcher now respects sprite rotation
+- **8+ Interactive Demos** - New demos for atlasing, spatial audio, and enhanced particles
 
-[Read the full changelog](https://github.com/CrazyPickleStudios/Brine2D/releases/tag/v0.5.0-beta)
+[Read the full changelog](whats-new/v0.8.0-beta.md)
 
 ## Who Is This For?
 
@@ -306,7 +313,7 @@ Build internal tools and games with maintainable code.
 
     ---
 
-    6 interactive demos showcasing 0.5.0 features
+    Interactive demos showcasing all major features
 
     [:octicons-arrow-right-24: Browse Demos](samples/index.md)
 

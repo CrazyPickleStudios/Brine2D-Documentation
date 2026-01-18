@@ -1,15 +1,22 @@
 ---
 title: Particle System
-description: Create stunning particle effects with Brine2D's pooled particle system
+description: Create stunning particle effects with Brine2D's advanced particle system
 ---
 
 # Particle System
 
-Create fire, explosions, smoke, and other visual effects with Brine2D's high-performance particle system featuring automatic object pooling and zero GC pressure.
+Create fire, explosions, smoke, and other visual effects with Brine2D's high-performance particle system featuring textures, rotation, trails, blend modes, and automatic object pooling.
 
 ## Overview
 
 Brine2D's particle system uses object pooling to render thousands of particles without allocating memory. Particles are reused from a pool, ensuring smooth performance even with complex effects.
+
+**New in v0.8.0-beta:**
+- Particle textures (custom sprite textures)
+- Rotation support (start, end, rotation speed)
+- Trail effects (motion trails behind particles)
+- Blend modes (additive, alpha, none)
+- 7 emitter shapes (point, circle, ring, box, cone, line, burst)
 
 ```mermaid
 graph LR
@@ -18,12 +25,14 @@ graph LR
     C --> D[Update Position]
     C --> E[Update Color]
     C --> F[Update Size]
-    D --> G{Expired?}
-    E --> G
-    F --> G
-    G -->|Yes| H[Return to Pool]
-    G -->|No| I[Render]
-    H --> B
+    C --> G[Update Rotation]
+    D --> H{Expired?}
+    E --> H
+    F --> H
+    G --> H
+    H -->|Yes| I[Return to Pool]
+    H -->|No| J[Render]
+    I --> B
 ```
 
 ---
@@ -76,6 +85,162 @@ That's it! The `ParticleSystem` will automatically update and render particles.
 
 ---
 
+## New Features (v0.8.0)
+
+### Particle Textures
+
+Use custom textures instead of solid circles:
+
+```csharp
+var emitter = entity.AddComponent<ParticleEmitterComponent>();
+
+// Use a texture for particles
+emitter.TexturePath = "assets/particles/fire.png";
+emitter.TextureScaleMode = TextureScaleMode.Nearest; // For pixel art
+
+// Texture combines with color tint
+emitter.StartColor = new Color(255, 255, 255, 255); // White = no tint
+emitter.EndColor = new Color(255, 100, 0, 0); // Orange fade
+```
+
+**Best Practices:**
+- Keep textures small (16x16 to 64x64 pixels)
+- Use semi-transparent textures for blending
+- White textures work best for color tinting
+- Use texture atlasing for multiple particle types
+
+### Rotation
+
+Rotate particles over their lifetime:
+
+```csharp
+var emitter = entity.AddComponent<ParticleEmitterComponent>();
+
+// Rotation angles (in radians)
+emitter.StartRotation = 0f; // Starting angle
+emitter.EndRotation = MathF.PI * 2; // End angle (full rotation)
+
+// OR use rotation speed (overrides lerp)
+emitter.RotationSpeed = 2f; // Radians per second (constant spin)
+
+// Random rotation variance
+emitter.RotationSpread = MathF.PI / 4; // ±45 degrees initial rotation
+```
+
+**Rotation Modes:**
+
+```csharp
+// Lerp rotation (smooth start → end)
+emitter.StartRotation = 0f;
+emitter.EndRotation = MathF.PI; // 180 degree rotation over lifetime
+emitter.RotationSpeed = 0f; // Disabled
+
+// Constant spin
+emitter.StartRotation = 0f;
+emitter.RotationSpeed = 3f; // Spin at 3 rad/s regardless of lifetime
+
+// Random initial rotation
+emitter.StartRotation = 0f;
+emitter.RotationSpread = MathF.PI; // Random ±180 degrees
+emitter.RotationSpeed = 1f; // All spin at same speed
+```
+
+### Trail Effects
+
+Add motion trails behind particles:
+
+```csharp
+var emitter = entity.AddComponent<ParticleEmitterComponent>();
+
+// Enable trails
+emitter.TrailEnabled = true;
+emitter.TrailLength = 10; // Number of trail segments
+emitter.TrailColor = new Color(255, 100, 0, 128); // Semi-transparent orange
+
+// Trail particles inherit main particle properties
+// but fade based on trail position
+```
+
+**Trail Configuration:**
+
+```csharp
+// Short, faint trails (subtle)
+emitter.TrailEnabled = true;
+emitter.TrailLength = 5;
+emitter.TrailColor = new Color(255, 255, 255, 50); // Very transparent
+
+// Long, visible trails (dramatic)
+emitter.TrailEnabled = true;
+emitter.TrailLength = 15;
+emitter.TrailColor = new Color(255, 100, 0, 200); // More opaque
+
+// Colored trails (different from particle)
+emitter.StartColor = Color.White; // White particles
+emitter.TrailColor = new Color(100, 150, 255, 150); // Blue trails
+```
+
+### Blend Modes
+
+Control how particles blend with the background:
+
+```csharp
+var emitter = entity.AddComponent<ParticleEmitterComponent>();
+
+// Additive blending (fire, explosions, energy)
+emitter.BlendMode = BlendMode.Additive;
+
+// Alpha blending (smoke, fog, default)
+emitter.BlendMode = BlendMode.AlphaBlend;
+
+// No blending (solid particles)
+emitter.BlendMode = BlendMode.None;
+```
+
+**Blend Mode Effects:**
+
+| Blend Mode | Visual Effect | Best For |
+|------------|---------------|----------|
+| `Additive` | Bright, glowing overlaps | Fire, explosions, energy, magic |
+| `AlphaBlend` | Standard transparency | Smoke, fog, water, dust |
+| `None` | Solid, opaque | Solid objects, debris, sparks |
+
+### Emitter Shapes
+
+Choose from 7 emitter shapes for different spawn patterns:
+
+```csharp
+var emitter = entity.AddComponent<ParticleEmitterComponent>();
+
+// Point emitter (single point)
+emitter.EmitterShape = EmitterShape.Point;
+
+// Circle emitter (spawn anywhere in circle)
+emitter.EmitterShape = EmitterShape.Circle;
+emitter.SpawnRadius = 20f;
+
+// Ring emitter (spawn on circle edge)
+emitter.EmitterShape = EmitterShape.Ring;
+emitter.SpawnRadius = 30f;
+
+// Box emitter (rectangular spawn area)
+emitter.EmitterShape = EmitterShape.Box;
+emitter.SpawnRadius = 50f; // Half-width/height
+
+// Cone emitter (directional spray)
+emitter.EmitterShape = EmitterShape.Cone;
+emitter.ConeAngle = MathF.PI / 4; // 45 degree cone
+
+// Line emitter (spawn along line)
+emitter.EmitterShape = EmitterShape.Line;
+emitter.LineLength = 100f;
+
+// Burst emitter (radial explosion)
+emitter.EmitterShape = EmitterShape.Burst;
+emitter.BurstCount = 50; // Particles per burst
+```
+
+---
+
 ## Particle Properties
 
 ### Emission Properties
@@ -91,25 +256,10 @@ emitter.EmissionRate = 50f; // Particles per second
 emitter.MaxParticles = 200; // Pool size (max concurrent particles)
 emitter.ParticleLifetime = 2f; // How long each particle lives (seconds)
 
-// Spawn area
-emitter.SpawnRadius = 10f; // Random spawn within radius (0 = point source)
+// Emitter shape
+emitter.EmitterShape = EmitterShape.Circle;
+emitter.SpawnRadius = 10f; // Shape-specific size
 ```
-
-**Emission Patterns:**
-
-```csharp
-// Point source (SpawnRadius = 0)
-emitter.SpawnRadius = 0f;
-
-// Area emitter (SpawnRadius > 0)
-emitter.SpawnRadius = 20f;
-
-// One-shot burst
-emitter.IsEmitting = false;
-emitter.EmitBurst(50); // Emit 50 particles immediately
-```
-
----
 
 ### Visual Properties
 
@@ -123,25 +273,25 @@ emitter.EndColor = new Color(255, 50, 0, 0); // Dark red, transparent
 // Size interpolation (start → end over lifetime)
 emitter.StartSize = 8f; // pixels
 emitter.EndSize = 2f; // Shrink over time
+
+// Texture (new in v0.8.0)
+emitter.TexturePath = "assets/particles/spark.png";
+emitter.TextureScaleMode = TextureScaleMode.Linear;
+
+// Rotation (new in v0.8.0)
+emitter.StartRotation = 0f;
+emitter.EndRotation = MathF.PI * 2;
+emitter.RotationSpeed = 2f;
+emitter.RotationSpread = MathF.PI / 4;
+
+// Trails (new in v0.8.0)
+emitter.TrailEnabled = true;
+emitter.TrailLength = 10;
+emitter.TrailColor = new Color(255, 100, 0, 128);
+
+// Blend mode (new in v0.8.0)
+emitter.BlendMode = BlendMode.Additive;
 ```
-
-**Color Tricks:**
-
-```csharp
-// Fade out (keep color, reduce alpha)
-emitter.StartColor = new Color(255, 255, 255, 255); // White, opaque
-emitter.EndColor = new Color(255, 255, 255, 0); // White, transparent
-
-// Color shift (red → blue)
-emitter.StartColor = new Color(255, 0, 0, 255); // Red
-emitter.EndColor = new Color(0, 0, 255, 255); // Blue
-
-// Constant color
-emitter.StartColor = Color.White;
-emitter.EndColor = Color.White; // No change
-```
-
----
 
 ### Physics Properties
 
@@ -161,244 +311,309 @@ emitter.Gravity = new Vector2(0, 200); // Pull down
 emitter.Gravity = Vector2.Zero;
 ```
 
-**Velocity Spread Visualization:**
-
-```
-VelocitySpread = 0°       VelocitySpread = 45°      VelocitySpread = 180°
-       ↑                      ╱ ↑ ╲                    ← ↑ →
-       ↑                    ╱   ↑   ╲                  ↓ ↑ ↓
-       ↑                  ╱     ↑     ╲
-  (all same)         (cone shape)            (all directions)
-```
-
 ---
 
 ## Preset Effects
 
-### Fire Effect
+### Fire Effect (Enhanced)
 
 ```csharp
 var fireEmitter = entity.AddComponent<ParticleEmitterComponent>();
-fireEmitter.IsEmitting = true;
-fireEmitter.EmissionRate = 50f;
-fireEmitter.MaxParticles = 200;
-fireEmitter.ParticleLifetime = 2f;
 
-// Colors: yellow → red → transparent
+// Emission
+fireEmitter.IsEmitting = true;
+fireEmitter.EmissionRate = 100f;
+fireEmitter.MaxParticles = 200;
+fireEmitter.ParticleLifetime = 1.5f;
+fireEmitter.EmitterShape = EmitterShape.Circle;
+fireEmitter.SpawnRadius = 15f;
+
+// Appearance
+fireEmitter.TexturePath = "assets/particles/fire.png"; // ← NEW
+fireEmitter.BlendMode = BlendMode.Additive; // ← NEW
 fireEmitter.StartColor = new Color(255, 200, 0, 255);
 fireEmitter.EndColor = new Color(255, 50, 0, 0);
-
-// Size: shrink over time
 fireEmitter.StartSize = 8f;
 fireEmitter.EndSize = 2f;
 
-// Physics: rise upward with slight spread
+// Rotation (NEW)
+fireEmitter.StartRotation = 0f;
+fireEmitter.RotationSpeed = 2f;
+fireEmitter.RotationSpread = MathF.PI / 2;
+
+// Trails (NEW)
+fireEmitter.TrailEnabled = true;
+fireEmitter.TrailLength = 5;
+fireEmitter.TrailColor = new Color(255, 100, 0, 100);
+
+// Physics
 fireEmitter.InitialVelocity = new Vector2(0, -100);
 fireEmitter.VelocitySpread = 30f;
-fireEmitter.Gravity = new Vector2(0, 50); // Slight downward pull
-fireEmitter.SpawnRadius = 10f;
+fireEmitter.Gravity = new Vector2(0, -20);
 ```
 
----
-
-### Explosion Effect
+### Explosion Effect (Enhanced)
 
 ```csharp
 var explosionEmitter = entity.AddComponent<ParticleEmitterComponent>();
 
-// One-shot burst
+// Emission (burst)
+explosionEmitter.EmitterShape = EmitterShape.Burst; // ← NEW
+explosionEmitter.BurstCount = 100; // ← NEW
 explosionEmitter.IsEmitting = false;
-explosionEmitter.EmitBurst(100); // 100 particles at once
-
 explosionEmitter.MaxParticles = 100;
-explosionEmitter.ParticleLifetime = 1f; // Short-lived
+explosionEmitter.ParticleLifetime = 1f;
 
-// Colors: white → orange → transparent
+// Appearance
+explosionEmitter.TexturePath = "assets/particles/explosion.png"; // ← NEW
+explosionEmitter.BlendMode = BlendMode.Additive; // ← NEW
 explosionEmitter.StartColor = new Color(255, 255, 255, 255);
 explosionEmitter.EndColor = new Color(255, 100, 0, 0);
-
-// Size: start large, shrink
 explosionEmitter.StartSize = 12f;
 explosionEmitter.EndSize = 2f;
 
-// Physics: explode outward in all directions
-explosionEmitter.InitialVelocity = new Vector2(0, -200); // Fast
-explosionEmitter.VelocitySpread = 180f; // All directions
-explosionEmitter.Gravity = new Vector2(0, 500); // Strong gravity
+// Rotation (NEW)
+explosionEmitter.StartRotation = 0f;
+explosionEmitter.RotationSpeed = 5f;
+
+// Physics
+explosionEmitter.InitialVelocity = new Vector2(0, -200);
+explosionEmitter.VelocitySpread = 180f;
+explosionEmitter.Gravity = new Vector2(0, 500);
+
+// Trigger explosion
+explosionEmitter.EmitBurst(100);
 ```
 
----
-
-### Smoke Effect
+### Smoke Effect (Enhanced)
 
 ```csharp
 var smokeEmitter = entity.AddComponent<ParticleEmitterComponent>();
-smokeEmitter.IsEmitting = true;
-smokeEmitter.EmissionRate = 20f; // Slow emission
-smokeEmitter.MaxParticles = 100;
-smokeEmitter.ParticleLifetime = 3f; // Long-lived
 
-// Colors: dark gray → light gray → transparent
+// Emission
+smokeEmitter.IsEmitting = true;
+smokeEmitter.EmissionRate = 20f;
+smokeEmitter.MaxParticles = 100;
+smokeEmitter.ParticleLifetime = 3f;
+smokeEmitter.EmitterShape = EmitterShape.Circle; // ← NEW
+smokeEmitter.SpawnRadius = 5f;
+
+// Appearance
+smokeEmitter.TexturePath = "assets/particles/smoke.png"; // ← NEW
+smokeEmitter.BlendMode = BlendMode.AlphaBlend; // ← NEW
 smokeEmitter.StartColor = new Color(60, 60, 60, 200);
 smokeEmitter.EndColor = new Color(150, 150, 150, 0);
-
-// Size: grow over time
 smokeEmitter.StartSize = 4f;
-smokeEmitter.EndSize = 12f; // Expand
+smokeEmitter.EndSize = 12f;
 
-// Physics: rise slowly with spread
+// Rotation (NEW)
+smokeEmitter.StartRotation = 0f;
+smokeEmitter.RotationSpeed = 0.5f;
+smokeEmitter.RotationSpread = MathF.PI;
+
+// Physics
 smokeEmitter.InitialVelocity = new Vector2(0, -30);
 smokeEmitter.VelocitySpread = 20f;
-smokeEmitter.Gravity = new Vector2(0, -10); // Slight upward drift
-smokeEmitter.SpawnRadius = 5f;
+smokeEmitter.Gravity = new Vector2(0, -10);
 ```
 
----
-
-### Sparkle Effect
+### Magic Spell Effect (NEW)
 
 ```csharp
-var sparkleEmitter = entity.AddComponent<ParticleEmitterComponent>();
-sparkleEmitter.IsEmitting = true;
-sparkleEmitter.EmissionRate = 30f;
-sparkleEmitter.MaxParticles = 150;
-sparkleEmitter.ParticleLifetime = 1.5f;
+var spellEmitter = entity.AddComponent<ParticleEmitterComponent>();
 
-// Colors: bright → transparent (keep brightness)
-sparkleEmitter.StartColor = new Color(255, 255, 200, 255);
-sparkleEmitter.EndColor = new Color(255, 255, 200, 0);
+// Emission
+spellEmitter.EmitterShape = EmitterShape.Ring; // ← Ring shape
+spellEmitter.SpawnRadius = 40f;
+spellEmitter.IsEmitting = true;
+spellEmitter.EmissionRate = 60f;
+spellEmitter.MaxParticles = 200;
+spellEmitter.ParticleLifetime = 2f;
 
-// Size: constant
-sparkleEmitter.StartSize = 3f;
-sparkleEmitter.EndSize = 3f;
+// Appearance
+spellEmitter.TexturePath = "assets/particles/magic.png";
+spellEmitter.BlendMode = BlendMode.Additive; // Glowing effect
+spellEmitter.StartColor = new Color(150, 100, 255, 255); // Purple
+spellEmitter.EndColor = new Color(150, 100, 255, 0);
+spellEmitter.StartSize = 6f;
+spellEmitter.EndSize = 1f;
 
-// Physics: float randomly
-sparkleEmitter.InitialVelocity = new Vector2(0, -20);
-sparkleEmitter.VelocitySpread = 180f; // All directions
-sparkleEmitter.Gravity = Vector2.Zero; // No gravity (float)
-sparkleEmitter.SpawnRadius = 15f;
+// Rotation
+spellEmitter.StartRotation = 0f;
+spellEmitter.RotationSpeed = 3f;
+
+// Trails
+spellEmitter.TrailEnabled = true;
+spellEmitter.TrailLength = 8;
+spellEmitter.TrailColor = new Color(150, 100, 255, 100);
+
+// Physics (spiral inward)
+spellEmitter.InitialVelocity = new Vector2(-50, 0);
+spellEmitter.VelocitySpread = 10f;
+spellEmitter.Gravity = Vector2.Zero;
 ```
 
----
-
-### Trail Effect
+### Projectile Trail (NEW)
 
 ```csharp
-// Attach to moving entity (player, projectile, etc.)
-var trailEmitter = entity.AddComponent<ParticleEmitterComponent>();
+// Attach to moving projectile
+var trailEmitter = projectile.AddComponent<ParticleEmitterComponent>();
+
+// Emission
+trailEmitter.EmitterShape = EmitterShape.Point;
 trailEmitter.IsEmitting = true;
-trailEmitter.EmissionRate = 100f; // High rate for continuous trail
+trailEmitter.EmissionRate = 100f;
 trailEmitter.MaxParticles = 200;
-trailEmitter.ParticleLifetime = 0.5f; // Short-lived
+trailEmitter.ParticleLifetime = 0.5f;
 
-// Colors: bright → fade out
+// Appearance
+trailEmitter.TexturePath = "assets/particles/spark.png";
+trailEmitter.BlendMode = BlendMode.Additive;
 trailEmitter.StartColor = new Color(100, 200, 255, 255);
 trailEmitter.EndColor = new Color(100, 200, 255, 0);
-
-// Size: shrink quickly
 trailEmitter.StartSize = 6f;
 trailEmitter.EndSize = 1f;
 
-// Physics: no velocity (stay where spawned)
+// Rotation
+trailEmitter.RotationSpeed = 10f;
+
+// Trails (trail of a trail!)
+trailEmitter.TrailEnabled = true;
+trailEmitter.TrailLength = 5;
+trailEmitter.TrailColor = new Color(100, 200, 255, 80);
+
+// Physics (no velocity, stay where spawned)
 trailEmitter.InitialVelocity = Vector2.Zero;
-trailEmitter.VelocitySpread = 0f;
 trailEmitter.Gravity = Vector2.Zero;
-trailEmitter.SpawnRadius = 0f; // Point source
+```
+
+### Fountain Effect (NEW)
+
+```csharp
+var fountainEmitter = entity.AddComponent<ParticleEmitterComponent>();
+
+// Emission
+fountainEmitter.EmitterShape = EmitterShape.Cone; // ← Cone shape
+fountainEmitter.ConeAngle = MathF.PI / 6; // 30 degree cone
+fountainEmitter.IsEmitting = true;
+fountainEmitter.EmissionRate = 80f;
+fountainEmitter.MaxParticles = 300;
+fountainEmitter.ParticleLifetime = 2.5f;
+
+// Appearance
+fountainEmitter.TexturePath = "assets/particles/water.png";
+fountainEmitter.BlendMode = BlendMode.AlphaBlend;
+fountainEmitter.StartColor = new Color(100, 150, 255, 200);
+fountainEmitter.EndColor = new Color(100, 150, 255, 0);
+fountainEmitter.StartSize = 4f;
+fountainEmitter.EndSize = 2f;
+
+// Physics (upward spray)
+fountainEmitter.InitialVelocity = new Vector2(0, -300);
+fountainEmitter.VelocitySpread = 15f;
+fountainEmitter.Gravity = new Vector2(0, 500); // Strong gravity
 ```
 
 ---
 
 ## Advanced Techniques
 
-### Burst Patterns
+### Layered Particles
 
-Create rhythmic effects:
+Combine multiple emitters for complex effects:
 
 ```csharp
-public class BurstEffectSystem : ECSSystem
+public void CreateExplosion(Vector2 position)
 {
-    private float _burstTimer = 0f;
-    private const float BURST_INTERVAL = 1f; // Once per second
+    var explosionEntity = _world.CreateEntity("Explosion");
+    var transform = explosionEntity.AddComponent<TransformComponent>();
+    transform.Position = position;
     
-    public override void Update(GameTime gameTime)
-    {
-        _burstTimer += (float)gameTime.DeltaTime;
-        
-        if (_burstTimer >= BURST_INTERVAL)
-        {
-            _burstTimer = 0f;
-            
-            // Emit burst
-            var emitter = GetEmitter();
-            emitter.EmitBurst(20);
-        }
-    }
+    // Layer 1: Bright flash
+    var flashEmitter = explosionEntity.AddComponent<ParticleEmitterComponent>();
+    flashEmitter.EmitterShape = EmitterShape.Burst;
+    flashEmitter.BurstCount = 20;
+    flashEmitter.TexturePath = "assets/particles/flash.png";
+    flashEmitter.BlendMode = BlendMode.Additive;
+    flashEmitter.StartColor = Color.White;
+    flashEmitter.EndColor = new Color(255, 255, 255, 0);
+    flashEmitter.ParticleLifetime = 0.2f;
+    flashEmitter.StartSize = 20f;
+    flashEmitter.EndSize = 40f;
+    
+    // Layer 2: Fire burst
+    var fireEmitter = CreateChildEmitter(explosionEntity);
+    fireEmitter.EmitterShape = EmitterShape.Burst;
+    fireEmitter.BurstCount = 50;
+    fireEmitter.BlendMode = BlendMode.Additive;
+    fireEmitter.StartColor = new Color(255, 200, 0, 255);
+    fireEmitter.EndColor = new Color(255, 50, 0, 0);
+    fireEmitter.ParticleLifetime = 1f;
+    fireEmitter.InitialVelocity = new Vector2(0, -200);
+    fireEmitter.VelocitySpread = 180f;
+    
+    // Layer 3: Smoke aftermath
+    var smokeEmitter = CreateChildEmitter(explosionEntity);
+    smokeEmitter.EmissionRate = 30f;
+    smokeEmitter.BlendMode = BlendMode.AlphaBlend;
+    smokeEmitter.StartColor = new Color(60, 60, 60, 200);
+    smokeEmitter.EndColor = new Color(120, 120, 120, 0);
+    smokeEmitter.ParticleLifetime = 3f;
+    smokeEmitter.StartSize = 4f;
+    smokeEmitter.EndSize = 20f;
+    
+    // Trigger effects
+    flashEmitter.EmitBurst(20);
+    fireEmitter.EmitBurst(50);
 }
 ```
 
----
+### Dynamic Emitter Movement
 
-### Dynamic Colors
-
-Change colors based on game state:
+Create moving particle sources:
 
 ```csharp
-public class DynamicParticleSystem : ECSSystem
+public class MovingEmitterSystem : IUpdateSystem
 {
-    public override void Update(GameTime gameTime)
+    public void Update(GameTime gameTime)
     {
-        var emitter = GetEmitter();
-        var health = GetPlayerHealth();
+        var emitters = _world.GetEntitiesWithComponent<ParticleEmitterComponent>();
         
-        // Red at low health, green at full health
-        var healthPercent = health / 100f;
-        
-        emitter.StartColor = Color.Lerp(
-            Color.Red,
-            Color.Green,
-            healthPercent
-        );
-    }
-}
-```
-
----
-
-### Gravity Wells
-
-Create attraction/repulsion effects:
-
-```csharp
-// Custom particle update (advanced)
-public class GravityWellSystem : ECSSystem
-{
-    private readonly Vector2 _gravityWellPosition;
-    private readonly float _gravityStrength = 500f;
-    
-    public override void Update(GameTime gameTime)
-    {
-        var deltaTime = (float)gameTime.DeltaTime;
-        
-        // Get all particle emitters
-        foreach (var entity in World.Query().With<ParticleEmitterComponent>().Execute())
+        foreach (var entity in emitters)
         {
+            var transform = entity.GetComponent<TransformComponent>();
             var emitter = entity.GetComponent<ParticleEmitterComponent>();
             
-            // Access internal particles (if exposed by API)
-            foreach (var particle in emitter.Particles)
-            {
-                // Calculate gravity toward well
-                var direction = _gravityWellPosition - particle.Position;
-                var distance = direction.Length();
-                
-                if (distance > 0)
-                {
-                    direction /= distance; // Normalize
-                    var force = _gravityStrength / (distance * distance);
-                    particle.Velocity += direction * force * deltaTime;
-                }
-            }
+            // Move in a circle
+            var time = (float)gameTime.TotalTime * 2f;
+            transform.Position = new Vector2(
+                640 + MathF.Cos(time) * 200,
+                360 + MathF.Sin(time) * 200
+            );
         }
+    }
+}
+```
+
+### Conditional Emission
+
+Control emission based on game state:
+
+```csharp
+public class ConditionalParticleSystem : IUpdateSystem
+{
+    public void Update(GameTime gameTime)
+    {
+        var player = GetPlayer();
+        var emitter = player.GetComponent<ParticleEmitterComponent>();
+        var velocity = player.GetComponent<VelocityComponent>();
+        
+        // Only emit when moving fast
+        var speed = velocity.Velocity.Length();
+        emitter.IsEmitting = speed > 100f;
+        
+        // Adjust emission rate based on speed
+        emitter.EmissionRate = speed * 0.5f; // More particles = faster movement
     }
 }
 ```
@@ -412,7 +627,7 @@ public class GravityWellSystem : ECSSystem
 Particles use object pooling automatically - no GC allocations!
 
 ```csharp
-// Under the hood (you don't need to do this):
+// Under the hood (automatic):
 public class ParticleEmitterComponent
 {
     private readonly ObjectPool<Particle> _pool;
@@ -429,13 +644,6 @@ public class ParticleEmitterComponent
     }
 }
 ```
-
-**Benefits:**
-- Zero allocation per particle
-- No GC pressure
-- Thousands of particles at 60 FPS
-
----
 
 ### Performance Tips
 
@@ -461,6 +669,29 @@ for (int i = 0; i < 10; i++)
 - **< 500 particles per emitter** - Excellent performance
 - **500-1000 particles** - Good performance
 - **> 1000 particles** - Consider splitting into multiple emitters
+- **Textures** - Use texture atlasing for multiple particle types
+- **Trails** - Trails multiply particle count (10 trail length = 10x particles)
+- **Blend modes** - Additive blending has similar cost to alpha blending
+
+### Texture Optimization
+
+```csharp
+// ✅ GOOD: Pack particle textures into atlas
+var atlas = await AtlasBuilder.BuildAtlasAsync(
+    _renderer,
+    _textureLoader,
+    new[] {
+        "assets/particles/fire.png",
+        "assets/particles/smoke.png",
+        "assets/particles/spark.png"
+    },
+    padding: 2,
+    maxSize: 1024
+);
+
+// Use atlas regions
+emitter.TexturePath = "assets/particles/fire.png"; // Automatically uses atlas
+```
 
 ---
 
@@ -475,107 +706,154 @@ Logger.LogDebug($"Active particles: {emitter.ParticleCount}/{emitter.MaxParticle
 
 if (emitter.ParticleCount >= emitter.MaxParticles)
 {
-    Logger.LogWarning("Particle pool exhausted! Consider increasing MaxParticles.");
+    Logger.LogWarning("Particle pool exhausted! Increase MaxParticles.");
 }
 ```
 
----
-
 ### Performance Stats
-
-Use the performance overlay to monitor particle impact:
 
 ```csharp
 // Enable performance monitoring
 builder.Services.AddPerformanceMonitoring(options =>
 {
     options.EnableOverlay = true;
-    options.ShowDetailedStats = true;
 });
 
-// Check stats while particles are active
-// Press F3 to toggle detailed stats
-// Look for "Sprites" count (includes particles)
+// Press F3 in-game to toggle detailed stats
+// Look for:
+// - "Sprites" count (includes particles)
+// - "Draw Calls" (should batch with atlasing)
+// - Frame time (< 16.67ms for 60 FPS)
 ```
 
 ---
 
 ## Best Practices
 
-### DO
+### Do
 
-✅ **Use pooling (automatic)**
+- **Use texture atlasing** - Pack all particle textures together
+- **Set reasonable MaxParticles** - Start with 200, adjust as needed
+- **Use additive blending for bright effects** - Fire, explosions, energy
+- **Use alpha blending for soft effects** - Smoke, fog, water
+- **Enable trails sparingly** - They multiply particle count
+- **Test on target hardware** - Performance varies by device
 
-Particles are automatically pooled - just create emitters!
+### Don't
 
-✅ **Set reasonable MaxParticles**
+- **Don't use massive textures** - Keep particles 16x16 to 64x64
+- **Don't create too many emitters** - Prefer fewer, larger emitters
+- **Don't enable trails on all particles** - Use selectively
+- **Don't forget to set BlendMode** - Defaults to AlphaBlend
+- **Don't use None blend mode with transparency** - Use Alpha or Additive
+
+---
+
+## Troubleshooting
+
+### Particles Not Visible
+
+**Problem:** Emitter is active but no particles appear.
+
+**Solutions:**
 
 ```csharp
-emitter.MaxParticles = 200; // Enough for most effects
+// 1. Check emission is enabled
+emitter.IsEmitting = true;
+
+// 2. Verify EmissionRate is reasonable
+emitter.EmissionRate = 50f; // Not 0!
+
+// 3. Check ParticleLifetime
+emitter.ParticleLifetime = 2f; // Not too short
+
+// 4. Verify colors have opacity
+emitter.StartColor = new Color(255, 255, 255, 255); // Alpha = 255
+
+// 5. Check blend mode
+emitter.BlendMode = BlendMode.AlphaBlend; // Or Additive
 ```
 
-✅ **Use bursts for one-shot effects**
+### Textures Not Loading
+
+**Problem:** Particles show as solid circles instead of texture.
+
+**Solution:**
 
 ```csharp
-emitter.IsEmitting = false;
-emitter.EmitBurst(50); // Explosion, impact, etc.
+// Verify texture path is correct
+if (!File.Exists("assets/particles/fire.png"))
+{
+    Logger.LogError("Particle texture not found!");
+}
+
+// Check texture loaded successfully
+emitter.TexturePath = "assets/particles/fire.png";
+
+// Fallback: If no texture, particles render as circles (expected)
 ```
 
-✅ **Disable when not visible**
+### Poor Performance
+
+**Problem:** Frame rate drops with particles active.
+
+**Solutions:**
 
 ```csharp
-if (!IsVisible(emitter))
+// 1. Reduce MaxParticles
+emitter.MaxParticles = 200; // Instead of 2000
+
+// 2. Reduce trail length
+emitter.TrailLength = 5; // Instead of 20
+
+// 3. Use texture atlasing
+// Pack all particle textures into one atlas
+
+// 4. Disable distant emitters
+if (distance > 1000f)
 {
     emitter.IsEmitting = false;
 }
+
+// 5. Check particle count
+Logger.LogInfo($"Total particles: {GetTotalParticleCount()}");
 ```
 
-### DON'T
+### Trails Look Wrong
 
-❌ **Don't create too many emitters**
+**Problem:** Trails appear disconnected or too faint.
 
-Each emitter has overhead - reuse when possible.
+**Solutions:**
 
-❌ **Don't set MaxParticles too high**
+```csharp
+// 1. Increase trail opacity
+emitter.TrailColor = new Color(255, 100, 0, 200); // More opaque
 
-Start small (200), increase if needed.
+// 2. Increase trail length
+emitter.TrailLength = 10; // More segments
 
-❌ **Don't update particles manually**
+// 3. Match trail color to particle
+emitter.StartColor = new Color(255, 100, 0, 255);
+emitter.TrailColor = new Color(255, 100, 0, 150);
 
-Let the `ParticleSystem` handle updates.
-
----
-
-## Next Steps
-
-<div class="grid cards" markdown>
-
--   **Performance Optimization**
-
-    ---
-
-    Learn zero-allocation patterns
-
-    [:octicons-arrow-right-24: Optimization Guide](../performance/optimization.md)
-
--   **Sprite Rendering**
-
-    ---
-
-    Master sprite batching
-
-    [:octicons-arrow-right-24: Sprites Guide](sprites.md)
-
--   **Demo Scenes**
-
-    ---
-
-    See particles in action
-
-    [:octicons-arrow-right-24: Feature Demos](../../samples/index.md)
-
-</div>
+// 4. Increase emission rate for continuous trails
+emitter.EmissionRate = 100f; // More particles = smoother trails
+```
 
 ---
 
-**Remember:** Start simple, profile often, optimize when needed!
+## See Also
+
+- [Texture Atlasing](texture-atlasing.md) - Pack particle textures for better performance
+- [Sprites & Textures](sprites.md) - Learn about texture loading
+- [ECS Systems](../ecs/systems.md#particlesystem) - ParticleSystem implementation details
+- [Performance Optimization](../performance/optimization.md) - General optimization techniques
+
+---
+
+**Next Steps:**
+- Experiment with different emitter shapes
+- Try combining blend modes
+- Create layered particle effects
+- Add particle textures with atlasing
+- Use trails for motion effects
