@@ -45,7 +45,7 @@ A positioned sound emitter in your game world - enemies, pickups, environmental 
 Sound volume decreases with distance from the listener:
 
 ```
-Volume = BaseVolume × AttenuationFactor
+Volume = BaseVolume Ã— AttenuationFactor
 
 Where:
 - AttenuationFactor = 1.0 (full volume) within MinDistance
