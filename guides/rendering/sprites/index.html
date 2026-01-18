@@ -1,0 +1,4690 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Load images, draw sprites, and work with sprite sheets in Brine2D">
+      
+      
+      
+      
+        <link rel="prev" href="../gpu-renderer/">
+      
+      
+        <link rel="next" href="../texture-atlasing/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Sprites & Textures - Brine2D Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/prism-material-slate.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#sprites-textures" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Brine2D Documentation" class="md-header__button md-logo" aria-label="Brine2D Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Brine2D Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Sprites & Textures
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Brine2D Documentation" class="md-nav__button md-logo" aria-label="Brine2D Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Brine2D Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    What's New
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../whats-new/v0.8.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.8.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../whats-new/v0.7.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.7.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../whats-new/v0.6.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.6.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/first-game/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/project-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/moving-sprites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Moving Sprites
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/animations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/collision.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision Detection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/platformer.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building a Platformer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/top-down.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Top-Down Adventure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Rendering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../choosing-renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing a Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gpu-renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GPU Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprites & Textures
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprites & Textures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Example
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#load-and-draw-a-sprite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Load and Draw a Sprite
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#project-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Structure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Project Structure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#synchronous-loading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synchronous Loading
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scale-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scale Modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#supported-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Formats
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drawing-textures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drawing Textures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Drawing Textures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#method-1-draw-at-position" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 1: Draw at Position
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-2-draw-with-scaling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 2: Draw with Scaling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-3-sprite-sheet-partial-draw" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 3: Sprite Sheet (Partial Draw)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sprite-sheets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sprite Sheets
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Sprite Sheets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-a-sprite-sheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a Sprite Sheet?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#drawing-from-sprite-sheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drawing from Sprite Sheet
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-sprite-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Sprite Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sprite-animations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sprite Animations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Memory Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#textures-use-gpu-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Textures Use GPU Memory!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#texture-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Texture Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-texture-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Texture Not Found
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-blurry-pixel-art" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Blurry Pixel Art
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-memory-leak" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Memory Leak
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-texture-appears-blackwrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Texture Appears Black/Wrong
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DO
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DON'T
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Tips
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../texture-atlasing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Texture Atlasing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cameras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cameras
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../particles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Particles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../primitives/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Drawing Primitives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Input
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/keyboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keyboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/mouse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mouse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/gamepad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gamepad Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/layers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input Layers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audio
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Audio
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/sound-effects.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sound Effects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/music.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Music Playback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/spatial-audio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spatial Audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scenes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Scenes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/lifecycle.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/transitions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Transitions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/lifecycle-hooks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle Hooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Collision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../collision/system.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../collision/colliders.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Colliders
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_7" id="__nav_5_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tilemaps
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tilemaps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tilemaps/loading.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Loading Tilemaps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tilemaps/rendering.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering Tiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_8" id="__nav_5_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Framework
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UI Framework
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ui/components.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ui/custom.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom UI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_9" id="__nav_5_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Component System
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Entity Component System
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/systems/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/entities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/queries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Queries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_10" id="__nav_5_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Events
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../events/window-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Window Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/dependency-injection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/game-loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Game Loop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/builder-pattern/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Builder Pattern
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/scenes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/entity-component-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Component System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/core.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Core
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/rendering.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Rendering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/input.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Input
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/audio.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/ecs.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.ECS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Samples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Samples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/basic-game.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/animation-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/collision-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/ecs-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ECS Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Contributing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to Contribute
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/code-style.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Style
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/building.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building from Source
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Example
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#load-and-draw-a-sprite" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Load and Draw a Sprite
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#project-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Structure
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Project Structure">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#synchronous-loading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synchronous Loading
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scale-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scale Modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#supported-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Formats
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#drawing-textures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drawing Textures
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Drawing Textures">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#method-1-draw-at-position" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 1: Draw at Position
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-2-draw-with-scaling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 2: Draw with Scaling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-3-sprite-sheet-partial-draw" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 3: Sprite Sheet (Partial Draw)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sprite-sheets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sprite Sheets
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Sprite Sheets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-a-sprite-sheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a Sprite Sheet?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#drawing-from-sprite-sheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Drawing from Sprite Sheet
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-sprite-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Sprite Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sprite-animations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sprite Animations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#memory-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Memory Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Memory Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#textures-use-gpu-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Textures Use GPU Memory!
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#texture-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Texture Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-texture-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Texture Not Found
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-blurry-pixel-art" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Blurry Pixel Art
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-memory-leak" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Memory Leak
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-texture-appears-blackwrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Texture Appears Black/Wrong
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DO
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DON'T
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Tips
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="sprites-textures">Sprites &amp; Textures<a class="headerlink" href="#sprites-textures" title="Permanent link">&para;</a></h1>
+<p>Learn how to load images, draw sprites, work with sprite sheets, and create animations for your 2D games.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Textures are images loaded into memory for rendering. Sprites are textures (or portions of textures) displayed in your game.</p>
+<p><strong>What you'll learn:</strong></p>
+<ul>
+<li>✅ <strong>Loading textures</strong> from image files</li>
+<li>✅ <strong>Drawing sprites</strong> at any position/size</li>
+<li>✅ <strong>Sprite sheets</strong> for efficient texture atlases</li>
+<li>✅ <strong>Scale modes</strong> for pixel art vs smooth graphics</li>
+<li>✅ <strong>Memory management</strong> (loading/unloading)</li>
+</ul>
+<pre class="mermaid"><code>graph LR
+    A["Image File&lt;br/&gt;(PNG, JPG, BMP)"] --&gt; B["ITextureLoader"]
+    B --&gt; C["ITexture&lt;br/&gt;(GPU Memory)"]
+    C --&gt; D["IRenderer"]
+    D --&gt; E["Screen"]
+
+    F["Sprite Sheet&lt;br/&gt;(Multiple Sprites)"] --&gt; B</code></pre>
+<hr />
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<ul>
+<li>✅ <a href="drawing-basics.md">Drawing Basics</a> - Understanding rendering</li>
+<li>✅ <a href="../getting-started/quick-start.md">Quick Start</a> - Scene setup</li>
+<li>Image files (PNG, JPG, or BMP)</li>
+</ul>
+<hr />
+<h2 id="quick-example">Quick Example<a class="headerlink" href="#quick-example" title="Permanent link">&para;</a></h2>
+<h3 id="load-and-draw-a-sprite">Load and Draw a Sprite<a class="headerlink" href="#load-and-draw-a-sprite" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">using Brine2D.Core;
+using Brine2D.Rendering;
+using Microsoft.Extensions.Logging;
+
+public class SpriteScene : Scene
+{
+    private readonly IRenderer _renderer;
+    private readonly ITextureLoader _textureLoader;
+
+    private ITexture? _playerTexture;
+
+    public SpriteScene(
+        IRenderer renderer,
+        ITextureLoader textureLoader,
+        ILogger&lt;SpriteScene&gt; logger
+    ) : base(logger)
+    {
+        _renderer = renderer;
+        _textureLoader = textureLoader;
+    }
+
+    protected override async Task OnLoadAsync(CancellationToken cancellationToken)
+    {
+        // Load texture asynchronously
+        _playerTexture = await _textureLoader.LoadTextureAsync(
+            "assets/player.png",
+            TextureScaleMode.Nearest, // For pixel art
+            cancellationToken);
+    }
+
+    protected override void OnRender(GameTime gameTime)
+    {
+        _renderer.Clear(Color.Black);
+        _renderer.BeginFrame();
+
+        if (_playerTexture != null)
+        {
+            // Draw at position (100, 100)
+            _renderer.DrawTexture(_playerTexture, 100, 100);
+        }
+
+        _renderer.EndFrame();
+    }
+
+    protected override Task OnUnloadAsync(CancellationToken cancellationToken)
+    {
+        // Important: Always unload textures!
+        if (_playerTexture != null)
+        {
+            _textureLoader.UnloadTexture(_playerTexture);
+        }
+
+        return Task.CompletedTask;
+    }
+}</code></pre>
+<p><strong>Result:</strong> Your sprite appears on screen!</p>
+<hr />
+<h2 id="project-structure">Project Structure<a class="headerlink" href="#project-structure" title="Permanent link">&para;</a></h2>
+<p>Organize your assets:</p>
+<pre class="highlight"><code>YourGame/
+├── Program.cs
+├── GameScene.cs
+├── YourGame.csproj
+├── gamesettings.json
+└── assets/
+    ├── sprites/
+    │   ├── player.png
+    │   ├── enemy.png
+    │   └── character_sheet.png (sprite sheet)
+    ├── backgrounds/
+    │   └── background.png
+    └── ui/
+        └── button.png</code></pre>
+<p><strong>In <code>.csproj</code>, copy assets to output:</strong></p>
+<p>```xml YourGame.csproj
+<ItemGroup>
+  <None Update="assets\**\*">
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+  </None>
+</ItemGroup>
+<pre class="highlight"><code>
+---
+
+## Loading Textures
+
+### Async Loading (Recommended)
+
+```csharp
+protected override async Task OnLoadAsync(CancellationToken cancellationToken)
+{
+    // Load texture asynchronously
+    _texture = await _textureLoader.LoadTextureAsync(
+        "assets/player.png",
+        TextureScaleMode.Nearest,
+        cancellationToken);
+
+    Logger.LogInformation("Texture loaded: {Width}x{Height}", 
+        _texture.Width, _texture.Height);
+}</code></pre></p>
+<p><strong>Parameters:</strong>
+- <code>path</code> - Relative path to image file
+- <code>scaleMode</code> - <code>Nearest</code> (pixel art) or <code>Linear</code> (smooth)
+- <code>cancellationToken</code> - For cancellation support</p>
+<hr />
+<h3 id="synchronous-loading">Synchronous Loading<a class="headerlink" href="#synchronous-loading" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">protected override void OnInitialize()
+{
+    // Load synchronously (blocks thread)
+    _texture = _textureLoader.LoadTexture(
+        "assets/player.png",
+        TextureScaleMode.Nearest);
+}</code></pre>
+<p><strong>⚠️ Warning:</strong> Blocks the thread. Use async loading when possible!</p>
+<hr />
+<h3 id="scale-modes">Scale Modes<a class="headerlink" href="#scale-modes" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Best For</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TextureScaleMode.Nearest</code></td>
+<td><strong>Pixel art</strong>, retro games</td>
+<td>Sharp, pixelated scaling</td>
+</tr>
+<tr>
+<td><code>TextureScaleMode.Linear</code></td>
+<td>Photos, smooth graphics</td>
+<td>Smooth, blurred scaling</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Visual Comparison:</strong></p>
+<pre class="highlight"><code>Nearest (Pixel Art):        Linear (Smooth):
+┌────┬────┐                ┌─────────┐
+│ ██ │ ██ │                │░░░░░░░░░│
+├────┼────┤  Scaled →      │░░░░░░░░░│
+│ ██ │ ██ │   2x           │░░░░░░░░░│
+└────┴────┘                └─────────┘
+ Sharp edges!               Blended edges!</code></pre>
+<p><strong>Choose:</strong>
+- <strong>Nearest</strong> - Pixel art, 8-bit style, sharp edges
+- <strong>Linear</strong> - Realistic graphics, photos, smooth scaling</p>
+<hr />
+<h3 id="supported-formats">Supported Formats<a class="headerlink" href="#supported-formats" title="Permanent link">&para;</a></h3>
+<p>Brine2D supports common image formats via SDL3_image:
+- ✅ <strong>PNG</strong> (recommended, alpha support)
+- ✅ <strong>JPG/JPEG</strong> (no alpha, smaller files)
+- ✅ <strong>BMP</strong> (uncompressed, large files)</p>
+<p><strong>File size tips:</strong>
+- <strong>PNG</strong> - Best for sprites (lossless + transparency)
+- <strong>JPG</strong> - Best for backgrounds (smaller, no alpha)</p>
+<hr />
+<h2 id="drawing-textures">Drawing Textures<a class="headerlink" href="#drawing-textures" title="Permanent link">&para;</a></h2>
+<h3 id="method-1-draw-at-position">Method 1: Draw at Position<a class="headerlink" href="#method-1-draw-at-position" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// Draw at (x, y) with original size
+_renderer.DrawTexture(_texture, 100, 100);</code></pre>
+<p><strong>Result:</strong> Texture drawn at position, original dimensions.</p>
+<hr />
+<h3 id="method-2-draw-with-scaling">Method 2: Draw with Scaling<a class="headerlink" href="#method-2-draw-with-scaling" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// Draw at (x, y) with custom width/height
+_renderer.DrawTexture(_texture, 100, 100, 200, 200);</code></pre>
+<p><strong>Parameters:</strong>
+- <code>x, y</code> - Position
+- <code>width, height</code> - Destination size</p>
+<p><strong>Example:</strong></p>
+<pre class="highlight"><code class="language-csharp">// Double size
+_renderer.DrawTexture(_texture, 100, 100, 
+    _texture.Width * 2, _texture.Height * 2);
+
+// Half size
+_renderer.DrawTexture(_texture, 100, 100, 
+    _texture.Width / 2, _texture.Height / 2);</code></pre>
+<hr />
+<h3 id="method-3-sprite-sheet-partial-draw">Method 3: Sprite Sheet (Partial Draw)<a class="headerlink" href="#method-3-sprite-sheet-partial-draw" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// Draw a portion of texture (for sprite sheets)
+_renderer.DrawTexture(
+    _texture,
+    sourceX, sourceY, sourceWidth, sourceHeight, // Source rectangle in texture
+    destX, destY, destWidth, destHeight);        // Destination on screen</code></pre>
+<p><strong>Use for:</strong>
+- Sprite sheets/texture atlases
+- Animation frames
+- UI elements</p>
+<p><strong>Example:</strong></p>
+<pre class="highlight"><code class="language-csharp">// Draw top-left 32x32 region from sprite sheet
+_renderer.DrawTexture(
+    _spriteSheet,
+    0, 0, 32, 32,      // Source: top-left 32x32 pixels
+    100, 100, 64, 64); // Draw at (100,100) scaled to 64x64</code></pre>
+<hr />
+<h2 id="sprite-sheets">Sprite Sheets<a class="headerlink" href="#sprite-sheets" title="Permanent link">&para;</a></h2>
+<p>A <strong>sprite sheet</strong> (texture atlas) combines multiple sprites into one image for efficiency.</p>
+<h3 id="what-is-a-sprite-sheet">What is a Sprite Sheet?<a class="headerlink" href="#what-is-a-sprite-sheet" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code>character_sheet.png (256x256):
+┌────────┬────────┬────────┬────────┐
+│ Frame 1│ Frame 2│ Frame 3│ Frame 4│  ← Walk animation
+│  32x32 │  32x32 │  32x32 │  32x32 │
+├────────┼────────┼────────┼────────┤
+│ Frame 5│ Frame 6│ Frame 7│ Frame 8│  ← Run animation
+│  32x32 │  32x32 │  32x32 │  32x32 │
+└────────┴────────┴────────┴────────┘
+8 sprites in 1 texture!</code></pre>
+<p><strong>Benefits:</strong>
+- ✅ <strong>Fewer draw calls</strong> (faster rendering)
+- ✅ <strong>Less memory</strong> (one texture vs many)
+- ✅ <strong>Easier management</strong> (one file)</p>
+<hr />
+<h3 id="drawing-from-sprite-sheet">Drawing from Sprite Sheet<a class="headerlink" href="#drawing-from-sprite-sheet" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">public class SpriteSheetScene : Scene
+{
+    private readonly IRenderer _renderer;
+    private readonly ITextureLoader _textureLoader;
+
+    private ITexture? _spriteSheet;
+    private int _currentFrame = 0;
+
+    // Sprite sheet info
+    private const int FrameWidth = 32;
+    private const int FrameHeight = 32;
+    private const int FramesPerRow = 8;
+
+    protected override async Task OnLoadAsync(CancellationToken cancellationToken)
+    {
+        _spriteSheet = await _textureLoader.LoadTextureAsync(
+            "assets/character_sheet.png",
+            TextureScaleMode.Nearest,
+            cancellationToken);
+    }
+
+    protected override void OnRender(GameTime gameTime)
+    {
+        _renderer.Clear(Color.Black);
+        _renderer.BeginFrame();
+
+        if (_spriteSheet != null)
+        {
+            // Calculate source rectangle for current frame
+            int frameX = (_currentFrame % FramesPerRow) * FrameWidth;
+            int frameY = (_currentFrame / FramesPerRow) * FrameHeight;
+
+            // Draw frame scaled 4x
+            _renderer.DrawTexture(
+                _spriteSheet,
+                frameX, frameY, FrameWidth, FrameHeight,    // Source
+                100, 100, FrameWidth * 4, FrameHeight * 4); // Dest (4x scale)
+        }
+
+        _renderer.EndFrame();
+    }
+
+    protected override void OnUpdate(GameTime gameTime)
+    {
+        // Cycle through frames (simple animation)
+        _currentFrame = (_currentFrame + 1) % (FramesPerRow * 2); // 16 frames total
+    }
+}</code></pre>
+<hr />
+<h2 id="complete-sprite-example">Complete Sprite Example<a class="headerlink" href="#complete-sprite-example" title="Permanent link">&para;</a></h2>
+<p>Here's a full scene with player movement:</p>
+<pre class="highlight"><code class="language-csharp">using Brine2D.Core;
+using Brine2D.Input;
+using Brine2D.Rendering;
+using Microsoft.Extensions.Logging;
+using System.Numerics;
+
+public class PlayerSpriteScene : Scene
+{
+    private readonly IRenderer _renderer;
+    private readonly IInputService _input;
+    private readonly ITextureLoader _textureLoader;
+    private readonly IGameContext _gameContext;
+
+    private ITexture? _playerTexture;
+    private Vector2 _playerPosition = new Vector2(400, 300);
+    private float _playerSpeed = 200f;
+
+    public PlayerSpriteScene(
+        IRenderer renderer,
+        IInputService input,
+        ITextureLoader textureLoader,
+        IGameContext gameContext,
+        ILogger&lt;PlayerSpriteScene&gt; logger
+    ) : base(logger)
+    {
+        _renderer = renderer;
+        _input = input;
+        _textureLoader = textureLoader;
+        _gameContext = gameContext;
+    }
+
+    // ============================================
+    // LOAD
+    // ============================================
+    protected override async Task OnLoadAsync(CancellationToken cancellationToken)
+    {
+        Logger.LogInformation("Loading player sprite...");
+
+        _playerTexture = await _textureLoader.LoadTextureAsync(
+            "assets/player.png",
+            TextureScaleMode.Nearest,
+            cancellationToken);
+
+        Logger.LogInformation("Player sprite loaded: {Width}x{Height}",
+            _playerTexture.Width, _playerTexture.Height);
+    }
+
+    // ============================================
+    // UPDATE
+    // ============================================
+    protected override void OnUpdate(GameTime gameTime)
+    {
+        var deltaTime = (float)gameTime.DeltaTime;
+
+        // Exit
+        if (_input.IsKeyPressed(Keys.Escape))
+        {
+            _gameContext.RequestExit();
+        }
+
+        // Movement
+        var movement = Vector2.Zero;
+
+        if (_input.IsKeyDown(Keys.W)) movement.Y -= 1;
+        if (_input.IsKeyDown(Keys.S)) movement.Y += 1;
+        if (_input.IsKeyDown(Keys.A)) movement.X -= 1;
+        if (_input.IsKeyDown(Keys.D)) movement.X += 1;
+
+        if (movement != Vector2.Zero)
+        {
+            movement = Vector2.Normalize(movement);
+            _playerPosition += movement * _playerSpeed * deltaTime;
+
+            // Keep on screen
+            _playerPosition.X = Math.Clamp(_playerPosition.X, 0, 1280);
+            _playerPosition.Y = Math.Clamp(_playerPosition.Y, 0, 720);
+        }
+    }
+
+    // ============================================
+    // RENDER
+    // ============================================
+    protected override void OnRender(GameTime gameTime)
+    {
+        _renderer.Clear(new Color(40, 40, 40));
+        _renderer.BeginFrame();
+
+        if (_playerTexture != null)
+        {
+            // Center sprite on position
+            var drawX = _playerPosition.X - _playerTexture.Width / 2;
+            var drawY = _playerPosition.Y - _playerTexture.Height / 2;
+
+            _renderer.DrawTexture(_playerTexture, drawX, drawY);
+        }
+
+        // Draw instructions
+        _renderer.DrawText("WASD to move", 10, 10, Color.White);
+        _renderer.DrawText("ESC to exit", 10, 30, Color.White);
+
+        _renderer.EndFrame();
+    }
+
+    // ============================================
+    // CLEANUP
+    // ============================================
+    protected override Task OnUnloadAsync(CancellationToken cancellationToken)
+    {
+        // IMPORTANT: Always unload!
+        if (_playerTexture != null)
+        {
+            _textureLoader.UnloadTexture(_playerTexture);
+            Logger.LogInformation("Player sprite unloaded");
+        }
+
+        return Task.CompletedTask;
+    }
+}</code></pre>
+<hr />
+<h2 id="sprite-animations">Sprite Animations<a class="headerlink" href="#sprite-animations" title="Permanent link">&para;</a></h2>
+<p>For frame-by-frame animations, see <a href="animation.md">Animation Guide</a>.</p>
+<p><strong>Quick preview:</strong></p>
+<pre class="highlight"><code class="language-csharp">// Load sprite sheet
+_spriteSheet = await _textureLoader.LoadTextureAsync(
+    "assets/character.png",
+    TextureScaleMode.Nearest,
+    cancellationToken);
+
+// Create animator
+_animator = new SpriteAnimator();
+
+// Create animation from sprite sheet
+var walkAnim = AnimationClip.FromSpriteSheet(
+    "walk",           // Name
+    32,               // Frame width
+    32,               // Frame height
+    4,                // Frame count
+    8,                // Columns
+    0.1f,             // Duration per frame
+    true);            // Loop?
+
+_animator.AddAnimation(walkAnim);
+_animator.Play("walk");
+
+// Update every frame
+_animator.Update(deltaTime);
+
+// Draw current frame
+if (_animator.CurrentFrame != null)
+{
+    var frame = _animator.CurrentFrame.SourceRect;
+    _renderer.DrawTexture(
+        _spriteSheet,
+        frame.X, frame.Y, frame.Width, frame.Height,
+        playerX, playerY, 64, 64);
+}</code></pre>
+<p><strong><a href="animation.md">Full Animation Tutorial →</a></strong></p>
+<hr />
+<h2 id="memory-management">Memory Management<a class="headerlink" href="#memory-management" title="Permanent link">&para;</a></h2>
+<h3 id="textures-use-gpu-memory">Textures Use GPU Memory!<a class="headerlink" href="#textures-use-gpu-memory" title="Permanent link">&para;</a></h3>
+<p><strong>ALWAYS unload textures when done:</strong></p>
+<pre class="highlight"><code class="language-csharp">protected override Task OnUnloadAsync(CancellationToken cancellationToken)
+{
+    if (_playerTexture != null)
+    {
+        _textureLoader.UnloadTexture(_playerTexture);
+    }
+
+    if (_backgroundTexture != null)
+    {
+        _textureLoader.UnloadTexture(_backgroundTexture);
+    }
+
+    return Task.CompletedTask;
+}</code></pre>
+<p><strong>Why?</strong>
+- Textures live in GPU memory
+- Not garbage collected automatically
+- Memory leaks if not unloaded!</p>
+<hr />
+<h3 id="texture-lifecycle">Texture Lifecycle<a class="headerlink" href="#texture-lifecycle" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>stateDiagram-v2
+    [*] --&gt; Loading: LoadTextureAsync()
+    Loading --&gt; Loaded: Success
+    Loading --&gt; [*]: Error
+
+    Loaded --&gt; Drawing: DrawTexture()
+    Drawing --&gt; Loaded: Each Frame
+
+    Loaded --&gt; Unloaded: UnloadTexture()
+    Unloaded --&gt; [*]
+
+    note right of Loaded
+        Texture in GPU memory
+        Uses VRAM!
+    end note
+
+    note right of Unloaded
+        Memory freed
+        No longer usable
+    end note</code></pre>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="problem-texture-not-found">Problem: Texture Not Found<a class="headerlink" href="#problem-texture-not-found" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> <code>FileNotFoundException</code> when loading</p>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li>
+<p><strong>Check file path</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Wrong - absolute path
+"C:/MyGame/assets/player.png"
+
+// ✅ Correct - relative path
+"assets/player.png"</code></pre></p>
+</li>
+<li>
+<p><strong>Verify file exists</strong>
+   <pre class="highlight"><code class="language-csharp">if (!File.Exists("assets/player.png"))
+{
+    Logger.LogError("Texture not found!");
+}</code></pre></p>
+</li>
+<li>
+<p><strong>Check <code>.csproj</code> copy settings</strong>
+   <pre class="highlight"><code class="language-xml">&lt;ItemGroup&gt;
+  &lt;None Update="assets\**\*"&gt;
+    &lt;CopyToOutputDirectory&gt;PreserveNewest&lt;/CopyToOutputDirectory&gt;
+  &lt;/None&gt;
+&lt;/ItemGroup&gt;</code></pre></p>
+</li>
+</ol>
+<hr />
+<h3 id="problem-blurry-pixel-art">Problem: Blurry Pixel Art<a class="headerlink" href="#problem-blurry-pixel-art" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> Pixelated sprites look blurry</p>
+<p><strong>Solution:</strong> Use <code>TextureScaleMode.Nearest</code>:</p>
+<pre class="highlight"><code class="language-csharp">// ❌ Bad - blurry pixel art
+_texture = await _textureLoader.LoadTextureAsync(
+    "assets/player.png",
+    TextureScaleMode.Linear); // WRONG for pixel art
+
+// ✅ Good - sharp pixel art
+_texture = await _textureLoader.LoadTextureAsync(
+    "assets/player.png",
+    TextureScaleMode.Nearest); // CORRECT for pixel art</code></pre>
+<hr />
+<h3 id="problem-memory-leak">Problem: Memory Leak<a class="headerlink" href="#problem-memory-leak" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> Memory usage increases over time</p>
+<p><strong>Cause:</strong> Not unloading textures</p>
+<p><strong>Solution:</strong></p>
+<pre class="highlight"><code class="language-csharp">// ❌ Bad - memory leak!
+protected override Task OnUnloadAsync(CancellationToken cancellationToken)
+{
+    return Task.CompletedTask; // Forgot to unload!
+}
+
+// ✅ Good - proper cleanup
+protected override Task OnUnloadAsync(CancellationToken cancellationToken)
+{
+    if (_texture != null)
+    {
+        _textureLoader.UnloadTexture(_texture);
+    }
+
+    return Task.CompletedTask;
+}</code></pre>
+<hr />
+<h3 id="problem-texture-appears-blackwrong">Problem: Texture Appears Black/Wrong<a class="headerlink" href="#problem-texture-appears-blackwrong" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> Texture renders as solid color</p>
+<p><strong>Causes &amp; Solutions:</strong></p>
+<ol>
+<li><strong>File corrupted</strong></li>
+<li>Re-export image</li>
+<li>
+<p>Try different format (PNG recommended)</p>
+</li>
+<li>
+<p><strong>Wrong color format</strong></p>
+</li>
+<li>Ensure PNG has RGB/RGBA</li>
+<li>
+<p>Avoid grayscale/indexed color</p>
+</li>
+<li>
+<p><strong>Texture not loaded</strong>
+   <pre class="highlight"><code class="language-csharp">if (_texture != null &amp;&amp; _texture.IsLoaded)
+{
+    _renderer.DrawTexture(_texture, x, y);
+}</code></pre></p>
+</li>
+</ol>
+<hr />
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="do">DO<a class="headerlink" href="#do" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Use PNG for sprites</strong>
+   <pre class="highlight"><code class="language-csharp">// ✅ PNG - transparency, lossless
+"assets/player.png"</code></pre></p>
+</li>
+<li>
+<p><strong>Load async in OnLoadAsync</strong>
+   <pre class="highlight"><code class="language-csharp">protected override async Task OnLoadAsync(CancellationToken ct)
+{
+    _texture = await _textureLoader.LoadTextureAsync(..., ct);
+}</code></pre></p>
+</li>
+<li>
+<p><strong>Use Nearest for pixel art</strong>
+   <pre class="highlight"><code class="language-csharp">TextureScaleMode.Nearest // Sharp scaling</code></pre></p>
+</li>
+<li>
+<p><strong>Always unload</strong>
+   <pre class="highlight"><code class="language-csharp">protected override Task OnUnloadAsync(CancellationToken ct)
+{
+    _textureLoader.UnloadTexture(_texture);
+    return Task.CompletedTask;
+}</code></pre></p>
+</li>
+<li>
+<p><strong>Use sprite sheets</strong></p>
+</li>
+<li>One texture vs many = faster rendering</li>
+<li>
+<p>Less texture switches</p>
+</li>
+<li>
+<p><strong>Cache texture references</strong>
+   <pre class="highlight"><code class="language-csharp">private ITexture? _cachedTexture;
+
+// ✅ Load once, use many times
+protected override async Task OnLoadAsync(CancellationToken ct)
+{
+    _cachedTexture = await _textureLoader.LoadTextureAsync(..., ct);
+}</code></pre></p>
+</li>
+</ol>
+<h3 id="dont">DON'T<a class="headerlink" href="#dont" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Don't load every frame</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ TERRIBLE - loads every frame!
+protected override void OnRender(GameTime gt)
+{
+    var texture = _textureLoader.LoadTexture(...); // NO!
+    _renderer.DrawTexture(texture, x, y);
+}</code></pre></p>
+</li>
+<li>
+<p><strong>Don't use absolute paths</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Bad
+"C:/Users/Me/Game/assets/player.png"
+
+// ✅ Good
+"assets/player.png"</code></pre></p>
+</li>
+<li>
+<p><strong>Don't forget to unload</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Memory leak!
+protected override Task OnUnloadAsync(CancellationToken ct)
+{
+    // Forgot _textureLoader.UnloadTexture(_texture);
+    return Task.CompletedTask;
+}</code></pre></p>
+</li>
+<li>
+<p><strong>Don't use Linear for pixel art</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Blurry pixel art
+TextureScaleMode.Linear
+
+// ✅ Sharp pixel art
+TextureScaleMode.Nearest</code></pre></p>
+</li>
+</ol>
+<hr />
+<h2 id="performance-tips">Performance Tips<a class="headerlink" href="#performance-tips" title="Permanent link">&para;</a></h2>
+<ol>
+<li>
+<p><strong>Batch sprites by texture</strong>
+   <pre class="highlight"><code class="language-csharp">// Draw all enemies (same texture) together
+foreach (var enemy in _enemies)
+{
+    _renderer.DrawTexture(_enemyTexture, enemy.X, enemy.Y);
+}
+
+// Then draw all coins (same texture)
+foreach (var coin in _coins)
+{
+    _renderer.DrawTexture(_coinTexture, coin.X, coin.Y);
+}</code></pre></p>
+</li>
+<li>
+<p><strong>Use sprite sheets</strong></p>
+</li>
+<li>Reduces texture switches</li>
+<li>
+<p>Faster than individual files</p>
+</li>
+<li>
+<p><strong>Preload textures</strong></p>
+</li>
+<li>Load in <code>OnLoadAsync</code>, not during gameplay</li>
+<li>
+<p>Show loading screen if many textures</p>
+</li>
+<li>
+<p><strong>Unload unused textures</strong></p>
+</li>
+<li>Free GPU memory when switching levels</li>
+<li>Reload when needed</li>
+</ol>
+<hr />
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Code</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Load texture</strong></td>
+<td><code>LoadTextureAsync(path, scaleMode, ct)</code></td>
+<td>Async, returns ITexture</td>
+</tr>
+<tr>
+<td><strong>Draw at position</strong></td>
+<td><code>DrawTexture(texture, x, y)</code></td>
+<td>Original size</td>
+</tr>
+<tr>
+<td><strong>Draw scaled</strong></td>
+<td><code>DrawTexture(texture, x, y, w, h)</code></td>
+<td>Custom size</td>
+</tr>
+<tr>
+<td><strong>Draw from sheet</strong></td>
+<td><code>DrawTexture(texture, sx, sy, sw, sh, dx, dy, dw, dh)</code></td>
+<td>9 params</td>
+</tr>
+<tr>
+<td><strong>Unload</strong></td>
+<td><code>UnloadTexture(texture)</code></td>
+<td>Free GPU memory</td>
+</tr>
+<tr>
+<td><strong>Scale mode</strong></td>
+<td><code>TextureScaleMode.Nearest</code></td>
+<td>Pixel art</td>
+</tr>
+<tr>
+<td><strong>Scale mode</strong></td>
+<td><code>TextureScaleMode.Linear</code></td>
+<td>Smooth graphics</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><a href="animation.md">Animation</a></strong> - Animate sprites frame-by-frame</li>
+<li><strong><a href="camera.md">Camera</a></strong> - Follow sprites with camera</li>
+<li><strong><a href="../collision/basics.md">Collision</a></strong> - Detect sprite collisions</li>
+<li><strong><a href="../tilemaps/rendering.md">Tilemaps</a></strong> - Build levels with tiles</li>
+</ul>
+<hr />
+<p>Ready to bring sprites to life? Try <a href="animation.md">Sprite Animation</a>!</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["content.code.copy", "content.code.select"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+      
+    
+  </body>
+</html>

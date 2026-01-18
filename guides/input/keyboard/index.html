@@ -1,0 +1,4622 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Handle keyboard input for player controls, shortcuts, and text entry in Brine2D">
+      
+      
+      
+      
+        <link rel="prev" href="../../rendering/primitives/">
+      
+      
+        <link rel="next" href="../mouse/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Keyboard Input - Brine2D Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/prism-material-slate.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#keyboard-input" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Brine2D Documentation" class="md-header__button md-logo" aria-label="Brine2D Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Brine2D Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Keyboard Input
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Brine2D Documentation" class="md-nav__button md-logo" aria-label="Brine2D Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Brine2D Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    What's New
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../whats-new/v0.8.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.8.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../whats-new/v0.7.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.7.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../whats-new/v0.6.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.6.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/first-game/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/project-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/moving-sprites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Moving Sprites
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/animations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/collision.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision Detection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/platformer.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building a Platformer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/top-down.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Top-Down Adventure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Rendering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/choosing-renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing a Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/gpu-renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GPU Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/sprites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprites & Textures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/texture-atlasing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Texture Atlasing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/cameras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cameras
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/particles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Particles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/primitives/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Drawing Primitives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Input
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keyboard
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keyboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key States
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key States">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#iskeydown-continuous-input" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IsKeyDown - Continuous Input
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iskeypressed-single-event" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IsKeyPressed - Single Event
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iskeyreleased-release-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IsKeyReleased - Release Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Available Keys
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Available Keys">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#letters-a-z" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Letters (A-Z)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numbers-0-9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numbers (0-9)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arrow-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arrow Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-keys-f1-f12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Function Keys (F1-F12)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#special-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Special Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modifier-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modifier Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numpad-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numpad Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#full-keys-enum" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full Keys Enum →
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pattern-1-wasd-movement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 1: WASD Movement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-2-arrow-key-menu-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 2: Arrow Key Menu Navigation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-3-number-key-hotbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 3: Number Key Hotbar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-4-toggle-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 4: Toggle Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-5-combo-keys-modifiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 5: Combo Keys (Modifiers)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-techniques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Techniques
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Techniques">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#input-buffering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input Buffering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-rebinding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Rebinding
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-key-not-detected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Key Not Detected
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-movement-too-fastslow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Movement Too Fast/Slow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-diagonal-movement-too-fast" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Diagonal Movement Too Fast
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-keys-stuck-after-alttab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Keys Stuck After Alt+Tab
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DO
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DON'T
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mouse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mouse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gamepad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gamepad Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../layers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input Layers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audio
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Audio
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/sound-effects.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sound Effects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/music.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Music Playback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/spatial-audio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spatial Audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scenes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Scenes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/lifecycle.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/transitions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Transitions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/lifecycle-hooks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle Hooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Collision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../collision/system.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../collision/colliders.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Colliders
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_7" id="__nav_5_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tilemaps
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tilemaps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tilemaps/loading.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Loading Tilemaps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tilemaps/rendering.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering Tiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_8" id="__nav_5_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Framework
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UI Framework
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ui/components.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ui/custom.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom UI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_9" id="__nav_5_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Component System
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Entity Component System
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/systems/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/entities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/queries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Queries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_10" id="__nav_5_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Events
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../events/window-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Window Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/dependency-injection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/game-loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Game Loop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/builder-pattern/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Builder Pattern
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/scenes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/entity-component-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Component System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/core.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Core
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/rendering.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Rendering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/input.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Input
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/audio.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/ecs.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.ECS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Samples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Samples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/basic-game.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/animation-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/collision-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/ecs-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ECS Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Contributing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to Contribute
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/code-style.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Style
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/building.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building from Source
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-states" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key States
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Key States">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#iskeydown-continuous-input" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IsKeyDown - Continuous Input
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iskeypressed-single-event" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IsKeyPressed - Single Event
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#iskeyreleased-release-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IsKeyReleased - Release Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Available Keys
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Available Keys">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#letters-a-z" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Letters (A-Z)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numbers-0-9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numbers (0-9)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arrow-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Arrow Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#function-keys-f1-f12" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Function Keys (F1-F12)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#special-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Special Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#modifier-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Modifier Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#numpad-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Numpad Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#full-keys-enum" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full Keys Enum →
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pattern-1-wasd-movement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 1: WASD Movement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-2-arrow-key-menu-navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 2: Arrow Key Menu Navigation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-3-number-key-hotbar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 3: Number Key Hotbar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-4-toggle-key" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 4: Toggle Key
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-5-combo-keys-modifiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 5: Combo Keys (Modifiers)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-techniques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Techniques
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Techniques">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#input-buffering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input Buffering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-rebinding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Rebinding
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-key-not-detected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Key Not Detected
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-movement-too-fastslow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Movement Too Fast/Slow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-diagonal-movement-too-fast" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Diagonal Movement Too Fast
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-keys-stuck-after-alttab" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Keys Stuck After Alt+Tab
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DO
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DON'T
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="keyboard-input">Keyboard Input<a class="headerlink" href="#keyboard-input" title="Permanent link">&para;</a></h1>
+<p>Master keyboard input handling in Brine2D for player movement, menu navigation, shortcuts, and text entry.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Brine2D provides a simple, frame-based keyboard input system via <code>IInputService</code>:</p>
+<ul>
+<li>✅ <strong>Key down</strong> - Is key currently held?</li>
+<li>✅ <strong>Key pressed</strong> - Was key just pressed this frame?</li>
+<li>✅ <strong>Key released</strong> - Was key just released this frame?</li>
+<li>✅ <strong>100+ keys</strong> supported - Letters, numbers, F-keys, arrows, modifiers, etc.</li>
+</ul>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Game as Your Scene
+    participant Input as IInputService
+    participant SDL as SDL3
+
+    Note over SDL: Player Presses Key
+    SDL-&gt;&gt;Input: KeyDown Event
+
+    Note over Game: Each Frame
+    Game-&gt;&gt;Input: IsKeyPressed(Keys.Space)?
+    Input-&gt;&gt;Game: true (first frame only)
+
+    Game-&gt;&gt;Input: IsKeyDown(Keys.Space)?
+    Input-&gt;&gt;Game: true (every frame held)
+
+    Note over SDL: Player Releases Key
+    SDL-&gt;&gt;Input: KeyUp Event
+
+    Game-&gt;&gt;Input: IsKeyReleased(Keys.Space)?
+    Input-&gt;&gt;Game: true (frame of release)</code></pre>
+<hr />
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<ul>
+<li>✅ <a href="../getting-started/quick-start.md">Quick Start</a> - Basic scene setup</li>
+<li>✅ <a href="../../../concepts/scenes/">Scenes</a> - Understanding OnUpdate</li>
+</ul>
+<hr />
+<h2 id="quick-example">Quick Example<a class="headerlink" href="#quick-example" title="Permanent link">&para;</a></h2>
+<pre class="highlight"><code class="language-csharp">using Brine2D.Core;
+using Brine2D.Input;
+using Brine2D.Rendering;
+using Microsoft.Extensions.Logging;
+using System.Numerics;
+
+public class KeyboardScene : Scene
+{
+    private readonly IInputService _input;
+    private readonly IGameContext _gameContext;
+    private readonly IRenderer _renderer;
+
+    private Vector2 _playerPosition = new Vector2(400, 300);
+    private float _speed = 200f;
+
+    public KeyboardScene(
+        IInputService input,
+        IGameContext gameContext,
+        IRenderer renderer,
+        ILogger&lt;KeyboardScene&gt; logger
+    ) : base(logger)
+    {
+        _input = input;
+        _gameContext = gameContext;
+        _renderer = renderer;
+    }
+
+    protected override void OnUpdate(GameTime gameTime)
+    {
+        var deltaTime = (float)gameTime.DeltaTime;
+
+        // Exit on ESC
+        if (_input.IsKeyPressed(Keys.Escape))
+        {
+            _gameContext.RequestExit();
+        }
+
+        // WASD Movement
+        if (_input.IsKeyDown(Keys.W))
+            _playerPosition.Y -= _speed * deltaTime;
+
+        if (_input.IsKeyDown(Keys.S))
+            _playerPosition.Y += _speed * deltaTime;
+
+        if (_input.IsKeyDown(Keys.A))
+            _playerPosition.X -= _speed * deltaTime;
+
+        if (_input.IsKeyDown(Keys.D))
+            _playerPosition.X += _speed * deltaTime;
+
+        // Jump on Spacebar (once per press)
+        if (_input.IsKeyPressed(Keys.Space))
+        {
+            Logger.LogInformation("Jump!");
+        }
+    }
+
+    protected override void OnRender(GameTime gameTime)
+    {
+        _renderer.Clear(Color.Black);
+        _renderer.BeginFrame();
+
+        // Draw player
+        _renderer.DrawRectangle(
+            _playerPosition.X - 25, _playerPosition.Y - 25,
+            50, 50, Color.Red);
+
+        _renderer.EndFrame();
+    }
+}</code></pre>
+<p><strong>Result:</strong> Player moves with WASD, jumps with Space, exits with ESC! ⌨️</p>
+<hr />
+<h2 id="key-states">Key States<a class="headerlink" href="#key-states" title="Permanent link">&para;</a></h2>
+<h3 id="iskeydown-continuous-input">IsKeyDown - Continuous Input<a class="headerlink" href="#iskeydown-continuous-input" title="Permanent link">&para;</a></h3>
+<p><strong>Use for:</strong> Movement, aiming, holding buttons</p>
+<pre class="highlight"><code class="language-csharp">protected override void OnUpdate(GameTime gameTime)
+{
+    var deltaTime = (float)gameTime.DeltaTime;
+
+    // Returns TRUE while key is held
+    if (_input.IsKeyDown(Keys.W))
+    {
+        _playerY -= _speed * deltaTime; // Move up continuously
+    }
+}</code></pre>
+<p><strong>Behavior:</strong></p>
+<ul>
+<li>✅ Returns <code>true</code> <strong>every frame</strong> while key is held</li>
+<li>✅ Perfect for smooth movement</li>
+<li>✅ Frame-rate independent (use delta time!)</li>
+</ul>
+<hr />
+<h3 id="iskeypressed-single-event">IsKeyPressed - Single Event<a class="headerlink" href="#iskeypressed-single-event" title="Permanent link">&para;</a></h3>
+<p><strong>Use for:</strong> Jumping, shooting, menu actions</p>
+<pre class="highlight"><code class="language-csharp">protected override void OnUpdate(GameTime gameTime)
+{
+    // Returns TRUE only on first frame of press
+    if (_input.IsKeyPressed(Keys.Space))
+    {
+        Jump(); // Only jumps once per press
+    }
+
+    if (_input.IsKeyPressed(Keys.F))
+    {
+        FireWeapon(); // One shot per press
+    }
+}</code></pre>
+<p><strong>Behavior:</strong></p>
+<ul>
+<li>✅ Returns <code>true</code> <strong>only on first frame</strong> of press</li>
+<li>✅ Ignores key repeats</li>
+<li>✅ Perfect for discrete actions</li>
+</ul>
+<hr />
+<h3 id="iskeyreleased-release-detection">IsKeyReleased - Release Detection<a class="headerlink" href="#iskeyreleased-release-detection" title="Permanent link">&para;</a></h3>
+<p><strong>Use for:</strong> Charge attacks, button releases</p>
+<pre class="highlight"><code class="language-csharp">private bool _isCharging = false;
+private float _chargeTime = 0f;
+
+protected override void OnUpdate(GameTime gameTime)
+{
+    var deltaTime = (float)gameTime.DeltaTime;
+
+    // Start charging
+    if (_input.IsKeyPressed(Keys.Space))
+    {
+        _isCharging = true;
+        _chargeTime = 0f;
+    }
+
+    // Accumulate charge
+    if (_isCharging &amp;&amp; _input.IsKeyDown(Keys.Space))
+    {
+        _chargeTime += deltaTime;
+    }
+
+    // Release - fire charged attack
+    if (_input.IsKeyReleased(Keys.Space))
+    {
+        if (_isCharging)
+        {
+            FireChargedAttack(_chargeTime);
+            _isCharging = false;
+        }
+    }
+}</code></pre>
+<p><strong>Behavior:</strong></p>
+<ul>
+<li>✅ Returns <code>true</code> <strong>on frame of release</strong></li>
+<li>✅ Perfect for charge mechanics</li>
+</ul>
+<hr />
+<h2 id="available-keys">Available Keys<a class="headerlink" href="#available-keys" title="Permanent link">&para;</a></h2>
+<h3 id="letters-a-z">Letters (A-Z)<a class="headerlink" href="#letters-a-z" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">Keys.A, Keys.B, Keys.C, ... Keys.Z</code></pre>
+<p><strong>Example:</strong></p>
+<pre class="highlight"><code class="language-csharp">if (_input.IsKeyPressed(Keys.P))
+{
+    TogglePause();
+}</code></pre>
+<hr />
+<h3 id="numbers-0-9">Numbers (0-9)<a class="headerlink" href="#numbers-0-9" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">Keys.D0, Keys.D1, Keys.D2, ... Keys.D9</code></pre>
+<p><strong>Why <code>D</code> prefix?</strong> C# enums can't start with numbers!</p>
+<p><strong>Example:</strong></p>
+<pre class="highlight"><code class="language-csharp">// Weapon selection
+if (_input.IsKeyPressed(Keys.D1)) SelectWeapon(1);
+if (_input.IsKeyPressed(Keys.D2)) SelectWeapon(2);
+if (_input.IsKeyPressed(Keys.D3)) SelectWeapon(3);</code></pre>
+<hr />
+<h3 id="arrow-keys">Arrow Keys<a class="headerlink" href="#arrow-keys" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">Keys.Up, Keys.Down, Keys.Left, Keys.Right</code></pre>
+<p><strong>Example:</strong></p>
+<pre class="highlight"><code class="language-csharp">// Menu navigation
+if (_input.IsKeyPressed(Keys.Up)) SelectPreviousMenuItem();
+if (_input.IsKeyPressed(Keys.Down)) SelectNextMenuItem();
+if (_input.IsKeyPressed(Keys.Enter)) ActivateMenuItem();</code></pre>
+<hr />
+<h3 id="function-keys-f1-f12">Function Keys (F1-F12)<a class="headerlink" href="#function-keys-f1-f12" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">Keys.F1, Keys.F2, ... Keys.F12</code></pre>
+<p><strong>Example:</strong></p>
+<pre class="highlight"><code class="language-csharp">// Debug shortcuts
+if (_input.IsKeyPressed(Keys.F1)) ToggleDebugOverlay();
+if (_input.IsKeyPressed(Keys.F5)) QuickSave();
+if (_input.IsKeyPressed(Keys.F9)) QuickLoad();</code></pre>
+<hr />
+<h3 id="special-keys">Special Keys<a class="headerlink" href="#special-keys" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Keys.Space</code></td>
+<td>Jump, shoot, confirm</td>
+</tr>
+<tr>
+<td><code>Keys.Enter</code></td>
+<td>Confirm, submit</td>
+</tr>
+<tr>
+<td><code>Keys.Escape</code></td>
+<td>Cancel, pause, exit</td>
+</tr>
+<tr>
+<td><code>Keys.Tab</code></td>
+<td>Inventory, map</td>
+</tr>
+<tr>
+<td><code>Keys.Backspace</code></td>
+<td>Delete text</td>
+</tr>
+<tr>
+<td><code>Keys.Delete</code></td>
+<td>Delete forward</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="modifier-keys">Modifier Keys<a class="headerlink" href="#modifier-keys" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">Keys.LeftShift, Keys.RightShift
+Keys.LeftControl, Keys.RightControl
+Keys.LeftAlt, Keys.RightAlt</code></pre>
+<p><strong>Example:</strong></p>
+<pre class="highlight"><code class="language-csharp">// Sprint (hold Shift + W)
+if (_input.IsKeyDown(Keys.W))
+{
+    var speed = _normalSpeed;
+
+    if (_input.IsKeyDown(Keys.LeftShift))
+    {
+        speed = _sprintSpeed; // 2x speed
+    }
+
+    _playerY -= speed * deltaTime;
+}
+
+// Shortcut (Ctrl+S = Save)
+if (_input.IsKeyDown(Keys.LeftControl) &amp;&amp; _input.IsKeyPressed(Keys.S))
+{
+    SaveGame();
+}</code></pre>
+<hr />
+<h3 id="numpad-keys">Numpad Keys<a class="headerlink" href="#numpad-keys" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">Keys.Numpad0, Keys.Numpad1, ... Keys.Numpad9
+Keys.NumpadEnter, Keys.NumpadPlus, Keys.NumpadMinus</code></pre>
+<hr />
+<h3 id="full-keys-enum"><strong><a href="../../api/Keys.md">Full Keys Enum →</a></strong><a class="headerlink" href="#full-keys-enum" title="Permanent link">&para;</a></h3>
+<hr />
+<h2 id="common-patterns">Common Patterns<a class="headerlink" href="#common-patterns" title="Permanent link">&para;</a></h2>
+<h3 id="pattern-1-wasd-movement">Pattern 1: WASD Movement<a class="headerlink" href="#pattern-1-wasd-movement" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">protected override void OnUpdate(GameTime gameTime)
+{
+    var deltaTime = (float)gameTime.DeltaTime;
+    var movement = Vector2.Zero;
+
+    if (_input.IsKeyDown(Keys.W)) movement.Y -= 1;
+    if (_input.IsKeyDown(Keys.S)) movement.Y += 1;
+    if (_input.IsKeyDown(Keys.A)) movement.X -= 1;
+    if (_input.IsKeyDown(Keys.D)) movement.X += 1;
+
+    if (movement != Vector2.Zero)
+    {
+        movement = Vector2.Normalize(movement); // Prevent faster diagonal
+        _playerPosition += movement * _speed * deltaTime;
+    }
+}</code></pre>
+<hr />
+<h3 id="pattern-2-arrow-key-menu-navigation">Pattern 2: Arrow Key Menu Navigation<a class="headerlink" href="#pattern-2-arrow-key-menu-navigation" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">private int _selectedIndex = 0;
+private readonly string[] _menuItems = ["New Game", "Load Game", "Options", "Exit"];
+
+protected override void OnUpdate(GameTime gameTime)
+{
+    // Navigate menu
+    if (_input.IsKeyPressed(Keys.Up))
+    {
+        _selectedIndex = Math.Max(0, _selectedIndex - 1);
+    }
+
+    if (_input.IsKeyPressed(Keys.Down))
+    {
+        _selectedIndex = Math.Min(_menuItems.Length - 1, _selectedIndex + 1);
+    }
+
+    // Confirm selection
+    if (_input.IsKeyPressed(Keys.Enter) || _input.IsKeyPressed(Keys.Space))
+    {
+        ActivateMenuItem(_selectedIndex);
+    }
+}</code></pre>
+<hr />
+<h3 id="pattern-3-number-key-hotbar">Pattern 3: Number Key Hotbar<a class="headerlink" href="#pattern-3-number-key-hotbar" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">protected override void OnUpdate(GameTime gameTime)
+{
+    // Check number keys 1-9
+    for (int i = 0; i &lt; 9; i++)
+    {
+        var key = (Keys)((int)Keys.D1 + i); // D1, D2, D3, etc.
+
+        if (_input.IsKeyPressed(key))
+        {
+            SelectHotbarSlot(i);
+        }
+    }
+}</code></pre>
+<hr />
+<h3 id="pattern-4-toggle-key">Pattern 4: Toggle Key<a class="headerlink" href="#pattern-4-toggle-key" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">private bool _debugMode = false;
+
+protected override void OnUpdate(GameTime gameTime)
+{
+    // Toggle debug mode with F3
+    if (_input.IsKeyPressed(Keys.F3))
+    {
+        _debugMode = !_debugMode;
+        Logger.LogInformation("Debug mode: {Enabled}", _debugMode);
+    }
+}</code></pre>
+<hr />
+<h3 id="pattern-5-combo-keys-modifiers">Pattern 5: Combo Keys (Modifiers)<a class="headerlink" href="#pattern-5-combo-keys-modifiers" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">protected override void OnUpdate(GameTime gameTime)
+{
+    var ctrl = _input.IsKeyDown(Keys.LeftControl) || 
+               _input.IsKeyDown(Keys.RightControl);
+    var shift = _input.IsKeyDown(Keys.LeftShift) || 
+                _input.IsKeyDown(Keys.RightShift);
+
+    // Ctrl+S = Save
+    if (ctrl &amp;&amp; _input.IsKeyPressed(Keys.S))
+    {
+        SaveGame();
+    }
+
+    // Ctrl+Shift+D = Debug save
+    if (ctrl &amp;&amp; shift &amp;&amp; _input.IsKeyPressed(Keys.D))
+    {
+        SaveDebugInfo();
+    }
+}</code></pre>
+<hr />
+<h2 id="advanced-techniques">Advanced Techniques<a class="headerlink" href="#advanced-techniques" title="Permanent link">&para;</a></h2>
+<h3 id="input-buffering">Input Buffering<a class="headerlink" href="#input-buffering" title="Permanent link">&para;</a></h3>
+<p>Store recent inputs for combo systems:</p>
+<pre class="highlight"><code class="language-csharp">private readonly Queue&lt;Keys&gt; _inputBuffer = new();
+private const int BufferSize = 5;
+
+protected override void OnUpdate(GameTime gameTime)
+{
+    // Add pressed keys to buffer
+    foreach (Keys key in Enum.GetValues&lt;Keys&gt;())
+    {
+        if (_input.IsKeyPressed(key))
+        {
+            _inputBuffer.Enqueue(key);
+
+            if (_inputBuffer.Count &gt; BufferSize)
+            {
+                _inputBuffer.Dequeue();
+            }
+        }
+    }
+
+    // Check for combo: Down, Down, Right, A
+    CheckCombo();
+}
+
+private void CheckCombo()
+{
+    var sequence = _inputBuffer.ToArray();
+
+    if (sequence.Length &gt;= 4 &amp;&amp;
+        sequence[^4] == Keys.Down &amp;&amp;
+        sequence[^3] == Keys.Down &amp;&amp;
+        sequence[^2] == Keys.Right &amp;&amp;
+        sequence[^1] == Keys.A)
+    {
+        ExecuteSpecialMove();
+        _inputBuffer.Clear();
+    }
+}</code></pre>
+<hr />
+<h3 id="key-rebinding">Key Rebinding<a class="headerlink" href="#key-rebinding" title="Permanent link">&para;</a></h3>
+<p>Allow players to customize controls:</p>
+<pre class="highlight"><code class="language-csharp">public class InputMapper
+{
+    private readonly Dictionary&lt;string, Keys&gt; _bindings = new()
+    {
+        ["Jump"] = Keys.Space,
+        ["Shoot"] = Keys.LeftControl,
+        ["Reload"] = Keys.R
+    };
+
+    public bool IsActionPressed(IInputService input, string action)
+    {
+        if (_bindings.TryGetValue(action, out var key))
+        {
+            return input.IsKeyPressed(key);
+        }
+
+        return false;
+    }
+
+    public void RebindAction(string action, Keys newKey)
+    {
+        _bindings[action] = newKey;
+        SaveBindings(); // Persist to config file
+    }
+}
+
+// Usage
+if (_inputMapper.IsActionPressed(_input, "Jump"))
+{
+    Jump();
+}</code></pre>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="problem-key-not-detected">Problem: Key Not Detected<a class="headerlink" href="#problem-key-not-detected" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> <code>IsKeyPressed()</code> always returns false</p>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li>
+<p><strong>Check key name</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Wrong
+if (_input.IsKeyPressed(Keys.0)) // Compile error!
+
+// ✅ Correct
+if (_input.IsKeyPressed(Keys.D0)) // Number keys have 'D' prefix</code></pre></p>
+</li>
+<li>
+<p><strong>Check input service is injected</strong>
+   <pre class="highlight"><code class="language-csharp">// Constructor must inject IInputService
+public MyScene(IInputService input, ILogger&lt;MyScene&gt; logger) 
+    : base(logger)
+{
+    _input = input; // Don't forget to store!
+}</code></pre></p>
+</li>
+</ol>
+<hr />
+<h3 id="problem-movement-too-fastslow">Problem: Movement Too Fast/Slow<a class="headerlink" href="#problem-movement-too-fastslow" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> Player zooms or crawls</p>
+<p><strong>Solution:</strong> Use delta time for frame-rate independence:</p>
+<pre class="highlight"><code class="language-csharp">// ❌ Bad - frame-rate dependent
+if (_input.IsKeyDown(Keys.W))
+{
+    _playerY -= 5; // Moves 5 pixels per frame
+}
+
+// ✅ Good - frame-rate independent
+if (_input.IsKeyDown(Keys.W))
+{
+    _playerY -= _speed * deltaTime; // Moves at constant real-world speed
+}</code></pre>
+<hr />
+<h3 id="problem-diagonal-movement-too-fast">Problem: Diagonal Movement Too Fast<a class="headerlink" href="#problem-diagonal-movement-too-fast" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> Moving diagonally (W+D) is √2 faster</p>
+<p><strong>Solution:</strong> Normalize movement vector:</p>
+<pre class="highlight"><code class="language-csharp">// ❌ Bad
+if (_input.IsKeyDown(Keys.W)) _playerY -= speed * dt;
+if (_input.IsKeyDown(Keys.D)) _playerX += speed * dt;
+// Diagonal = speed * √2 ≈ 1.41x!
+
+// ✅ Good
+var movement = Vector2.Zero;
+if (_input.IsKeyDown(Keys.W)) movement.Y -= 1;
+if (_input.IsKeyDown(Keys.D)) movement.X += 1;
+
+if (movement != Vector2.Zero)
+{
+    movement = Vector2.Normalize(movement); // Length = 1
+    _playerPosition += movement * speed * dt;
+}</code></pre>
+<hr />
+<h3 id="problem-keys-stuck-after-alttab">Problem: Keys Stuck After Alt+Tab<a class="headerlink" href="#problem-keys-stuck-after-alttab" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> Keys remain "pressed" after window loses focus</p>
+<p><strong>Note:</strong> SDL3 handles this automatically! Keys are released when window loses focus.</p>
+<hr />
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="do">DO<a class="headerlink" href="#do" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Use <code>IsKeyPressed</code> for discrete actions</strong>
+   <pre class="highlight"><code class="language-csharp">if (_input.IsKeyPressed(Keys.Space)) Jump();</code></pre></p>
+</li>
+<li>
+<p><strong>Use <code>IsKeyDown</code> for continuous actions</strong>
+   <pre class="highlight"><code class="language-csharp">if (_input.IsKeyDown(Keys.W)) MoveForward(deltaTime);</code></pre></p>
+</li>
+<li>
+<p><strong>Always use delta time for movement</strong>
+   <pre class="highlight"><code class="language-csharp">position += velocity * deltaTime;</code></pre></p>
+</li>
+<li>
+<p><strong>Normalize movement vectors</strong>
+   <pre class="highlight"><code class="language-csharp">if (movement != Vector2.Zero)
+    movement = Vector2.Normalize(movement);</code></pre></p>
+</li>
+<li>
+<p><strong>Provide key rebinding</strong></p>
+</li>
+<li>Let players customize controls</li>
+<li>
+<p>Store in config file</p>
+</li>
+<li>
+<p><strong>Support multiple keys for same action</strong>
+   <pre class="highlight"><code class="language-csharp">bool jump = _input.IsKeyPressed(Keys.Space) || 
+            _input.IsKeyPressed(Keys.W);</code></pre></p>
+</li>
+</ol>
+<h3 id="dont">DON'T<a class="headerlink" href="#dont" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Don't poll input outside OnUpdate</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Bad - won't update!
+protected override void OnInitialize()
+{
+    if (_input.IsKeyDown(Keys.W)) // Never true here!
+}</code></pre></p>
+</li>
+<li>
+<p><strong>Don't forget delta time</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Bad
+_playerX += 5; // Frame-rate dependent!
+
+// ✅ Good
+_playerX += _speed * deltaTime;</code></pre></p>
+</li>
+<li>
+<p><strong>Don't check IsKeyPressed in loops</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Bad - only true once per frame!
+while (gameRunning)
+{
+    if (_input.IsKeyPressed(Keys.Space)) // Won't work!
+}</code></pre></p>
+</li>
+</ol>
+<hr />
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>When True</th>
+<th>Use For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>IsKeyDown(key)</code></td>
+<td>Every frame held</td>
+<td>Movement, continuous actions</td>
+</tr>
+<tr>
+<td><code>IsKeyPressed(key)</code></td>
+<td>First frame only</td>
+<td>Jump, shoot, single actions</td>
+</tr>
+<tr>
+<td><code>IsKeyReleased(key)</code></td>
+<td>Frame of release</td>
+<td>Charge attacks, release detection</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><a href="../mouse/">Mouse Input</a></strong> - Handle clicks and cursor</li>
+<li><strong><a href="../gamepad/">Gamepad Support</a></strong> - Add controller support</li>
+<li><strong><a href="input-layers.md">Input Layers</a></strong> - Priority-based input routing</li>
+<li><strong><a href="../mechanics/movement.md">Player Movement</a></strong> - Complete movement system</li>
+</ul>
+<hr />
+<p>Ready to add mouse support? Check out <a href="../mouse/">Mouse Input</a>!</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["content.code.copy", "content.code.select"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+      
+    
+  </body>
+</html>

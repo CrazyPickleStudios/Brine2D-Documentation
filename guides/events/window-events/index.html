@@ -1,0 +1,4842 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Handle window resize, minimize, and lifecycle events in Brine2D">
+      
+      
+      
+      
+        <link rel="prev" href="../../ecs/queries/">
+      
+      
+        <link rel="next" href="../../../concepts/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Window Events - Brine2D Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/prism-material-slate.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#window-events" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Brine2D Documentation" class="md-header__button md-logo" aria-label="Brine2D Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Brine2D Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Window Events
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Brine2D Documentation" class="md-nav__button md-logo" aria-label="Brine2D Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Brine2D Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    What's New
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../whats-new/v0.8.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.8.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../whats-new/v0.7.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.7.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../whats-new/v0.6.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.6.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/first-game/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/project-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/moving-sprites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Moving Sprites
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/animations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/collision.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision Detection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/platformer.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building a Platformer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/top-down.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Top-Down Adventure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Rendering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/choosing-renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing a Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/gpu-renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GPU Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/sprites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprites & Textures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/texture-atlasing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Texture Atlasing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/cameras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cameras
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/particles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Particles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/primitives/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Drawing Primitives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Input
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/keyboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keyboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/mouse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mouse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/gamepad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gamepad Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/layers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input Layers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audio
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Audio
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/sound-effects.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sound Effects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/music.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Music Playback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/spatial-audio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spatial Audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scenes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Scenes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/lifecycle.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/transitions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Transitions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/lifecycle-hooks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle Hooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Collision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../collision/system.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../collision/colliders.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Colliders
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_7" id="__nav_5_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tilemaps
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tilemaps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tilemaps/loading.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Loading Tilemaps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tilemaps/rendering.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering Tiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_8" id="__nav_5_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Framework
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UI Framework
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ui/components.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ui/custom.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom UI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_9" id="__nav_5_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Component System
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Entity Component System
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/systems/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/entities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/queries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Queries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_10" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5_10" id="__nav_5_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_10_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Events
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Window Events
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Window Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Example
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#responding-to-window-resize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Responding to Window Resize
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-window-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Available Window Events
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Available Window Events">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#windowresizedevent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WindowResizedEvent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup-and-registration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup and Registration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setup and Registration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#register-eventbus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Register EventBus
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#subscribing-to-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subscribing to Events
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Subscribing to Events">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#method-1-in-oninitialize-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 1: In OnInitialize (Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-2-lambda-expression" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 2: Lambda Expression
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Use Cases
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Use Cases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-responsive-ui-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Responsive UI Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-camera-viewport-adjustment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Camera Viewport Adjustment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-dynamic-resolution-scaling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Dynamic Resolution Scaling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-hud-repositioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. HUD Repositioning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-aspect-ratio-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Aspect Ratio Maintenance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DO
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DON'T
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#debouncing-resize-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debouncing Resize Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-scene-event-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Scene Event Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#renderer-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Renderer Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-not-receiving-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Not Receiving Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-memory-leak" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Memory Leak
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-event-fired-multiple-times" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Event Fired Multiple Times
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/dependency-injection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/game-loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Game Loop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/builder-pattern/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Builder Pattern
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/scenes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/entity-component-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Component System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/core.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Core
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/rendering.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Rendering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/input.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Input
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/audio.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/ecs.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.ECS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Samples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Samples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/basic-game.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/animation-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/collision-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/ecs-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ECS Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Contributing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to Contribute
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/code-style.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Style
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/building.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building from Source
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Example
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#responding-to-window-resize" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Responding to Window Resize
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#available-window-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Available Window Events
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Available Window Events">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#windowresizedevent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        WindowResizedEvent
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup-and-registration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup and Registration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setup and Registration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#register-eventbus" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Register EventBus
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#subscribing-to-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subscribing to Events
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Subscribing to Events">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#method-1-in-oninitialize-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 1: In OnInitialize (Recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-2-lambda-expression" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 2: Lambda Expression
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Use Cases
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Use Cases">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-responsive-ui-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Responsive UI Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-camera-viewport-adjustment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Camera Viewport Adjustment
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-dynamic-resolution-scaling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Dynamic Resolution Scaling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-hud-repositioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. HUD Repositioning
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-aspect-ratio-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Aspect Ratio Maintenance
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DO
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DON'T
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#debouncing-resize-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debouncing Resize Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multi-scene-event-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multi-Scene Event Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#renderer-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Renderer Integration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-not-receiving-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Not Receiving Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-memory-leak" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Memory Leak
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-event-fired-multiple-times" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Event Fired Multiple Times
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="window-events">Window Events<a class="headerlink" href="#window-events" title="Permanent link">&para;</a></h1>
+<p>Learn how to respond to window state changes like resizing, minimizing, and focus events using Brine2D's event system.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Window events allow your game to respond to changes in the window state, enabling responsive UI, dynamic resolution, and better user experience.</p>
+<p><strong>What you'll learn:</strong></p>
+<ul>
+<li>Subscribing to window events</li>
+<li>Handling window resize</li>
+<li>Responsive UI and camera adjustment</li>
+<li>Window lifecycle management</li>
+<li>Best practices for window event handling</li>
+</ul>
+<p><strong>New in v0.7.0:</strong>
+- <code>EventBus</code> moved to <code>Brine2D.Core</code> for global accessibility
+- Built-in window event support
+- Automatic viewport updates in renderers</p>
+<hr />
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Understanding of <a href="../../../concepts/dependency-injection/">Dependency Injection</a></li>
+<li>Familiarity with <a href="../../../concepts/scenes/">Scenes</a></li>
+<li>Basic knowledge of <a href="../ecs/events.md">EventBus</a> (optional)</li>
+</ul>
+<hr />
+<h2 id="quick-example">Quick Example<a class="headerlink" href="#quick-example" title="Permanent link">&para;</a></h2>
+<h3 id="responding-to-window-resize">Responding to Window Resize<a class="headerlink" href="#responding-to-window-resize" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">using Brine2D.Core;
+using Brine2D.SDL.Common.Events;
+using Microsoft.Extensions.Logging;
+
+public class ResponsiveScene : Scene
+{
+    private readonly EventBus? _eventBus;
+    private readonly IRenderer _renderer;
+
+    private int _windowWidth = 1280;
+    private int _windowHeight = 720;
+
+    public ResponsiveScene(
+        EventBus? eventBus,
+        IRenderer renderer,
+        ILogger&lt;ResponsiveScene&gt; logger) : base(logger)
+    {
+        _eventBus = eventBus;
+        _renderer = renderer;
+    }
+
+    protected override void OnInitialize()
+    {
+        // Subscribe to window resize events
+        _eventBus?.Subscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+    }
+
+    private void OnWindowResized(WindowResizedEvent evt)
+    {
+        Logger.LogInformation("Window resized to {Width}x{Height}", 
+            evt.Width, evt.Height);
+
+        _windowWidth = evt.Width;
+        _windowHeight = evt.Height;
+
+        // Update UI layout
+        UpdateUILayout();
+    }
+
+    private void UpdateUILayout()
+    {
+        // Reposition UI elements based on new window size
+        // e.g., center menu, scale HUD, etc.
+    }
+
+    protected override void OnDispose()
+    {
+        // Always unsubscribe!
+        _eventBus?.Unsubscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+    }
+}</code></pre>
+<hr />
+<h2 id="available-window-events">Available Window Events<a class="headerlink" href="#available-window-events" title="Permanent link">&para;</a></h2>
+<h3 id="windowresizedevent">WindowResizedEvent<a class="headerlink" href="#windowresizedevent" title="Permanent link">&para;</a></h3>
+<p>Raised when the window dimensions change.</p>
+<p><strong>Event Definition:</strong></p>
+<pre class="highlight"><code class="language-csharp">// In Brine2D.SDL.Common.Events namespace
+public record WindowResizedEvent(int Width, int Height);</code></pre>
+<p><strong>When triggered:</strong>
+- User manually resizes window
+- Window maximized/restored
+- Fullscreen toggled
+- Display resolution changed</p>
+<p><strong>Example:</strong></p>
+<pre class="highlight"><code class="language-csharp">_eventBus?.Subscribe&lt;WindowResizedEvent&gt;(evt =&gt;
+{
+    Logger.LogInformation("New size: {Width}x{Height}", evt.Width, evt.Height);
+
+    // Renderer viewport is automatically updated
+    // Your code handles UI/camera adjustments
+});</code></pre>
+<hr />
+<h2 id="setup-and-registration">Setup and Registration<a class="headerlink" href="#setup-and-registration" title="Permanent link">&para;</a></h2>
+<h3 id="register-eventbus">Register EventBus<a class="headerlink" href="#register-eventbus" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">using Brine2D.Core;
+using Brine2D.Hosting;
+using Brine2D.Rendering.SDL;
+
+var builder = GameApplication.CreateBuilder(args);
+
+// Register EventBus (optional, but needed for custom events)
+builder.Services.AddSingleton&lt;EventBus&gt;();
+
+// Renderer automatically receives EventBus
+builder.Services.AddSDL3Rendering(options =&gt;
+{
+    builder.Configuration.GetSection("Rendering").Bind(options);
+    options.Resizable = true;  // Enable window resizing
+});
+
+builder.Services.AddScene&lt;GameScene&gt;();
+
+var game = builder.Build();
+await game.RunAsync&lt;GameScene&gt;();</code></pre>
+<p><strong>Note:</strong> If you don't register <code>EventBus</code>, the renderer still works but you won't receive window events in your scenes.</p>
+<hr />
+<h2 id="subscribing-to-events">Subscribing to Events<a class="headerlink" href="#subscribing-to-events" title="Permanent link">&para;</a></h2>
+<h3 id="method-1-in-oninitialize-recommended">Method 1: In OnInitialize (Recommended)<a class="headerlink" href="#method-1-in-oninitialize-recommended" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">public class GameScene : Scene
+{
+    private readonly EventBus? _eventBus;
+
+    public GameScene(EventBus? eventBus, ILogger&lt;GameScene&gt; logger) : base(logger)
+    {
+        _eventBus = eventBus;
+    }
+
+    protected override void OnInitialize()
+    {
+        // Subscribe during initialization
+        _eventBus?.Subscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+    }
+
+    private void OnWindowResized(WindowResizedEvent evt)
+    {
+        // Handle resize
+    }
+
+    protected override void OnDispose()
+    {
+        // IMPORTANT: Always unsubscribe!
+        _eventBus?.Unsubscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+    }
+}</code></pre>
+<hr />
+<h3 id="method-2-lambda-expression">Method 2: Lambda Expression<a class="headerlink" href="#method-2-lambda-expression" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">protected override void OnInitialize()
+{
+    _eventBus?.Subscribe&lt;WindowResizedEvent&gt;(evt =&gt;
+    {
+        Logger.LogInformation("Resized to {Width}x{Height}", evt.Width, evt.Height);
+        UpdateLayout(evt.Width, evt.Height);
+    });
+}</code></pre>
+<p><strong>⚠️ Warning:</strong> Lambda expressions are harder to unsubscribe from. Use named methods when possible.</p>
+<hr />
+<h2 id="common-use-cases">Common Use Cases<a class="headerlink" href="#common-use-cases" title="Permanent link">&para;</a></h2>
+<h3 id="1-responsive-ui-layout">1. Responsive UI Layout<a class="headerlink" href="#1-responsive-ui-layout" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">public class MenuScene : Scene
+{
+    private readonly EventBus? _eventBus;
+    private readonly UICanvas _uiCanvas;
+
+    private UIButton _playButton;
+    private UIButton _settingsButton;
+    private UIButton _exitButton;
+
+    protected override void OnInitialize()
+    {
+        _eventBus?.Subscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+
+        // Initial layout
+        LayoutUI(_windowWidth, _windowHeight);
+    }
+
+    private void OnWindowResized(WindowResizedEvent evt)
+    {
+        LayoutUI(evt.Width, evt.Height);
+    }
+
+    private void LayoutUI(int width, int height)
+    {
+        // Center menu vertically and horizontally
+        var centerX = width / 2f;
+        var centerY = height / 2f;
+
+        var buttonWidth = 200f;
+        var buttonHeight = 50f;
+        var buttonSpacing = 60f;
+
+        _playButton.Position = new Vector2(
+            centerX - buttonWidth / 2,
+            centerY - buttonSpacing);
+
+        _settingsButton.Position = new Vector2(
+            centerX - buttonWidth / 2,
+            centerY);
+
+        _exitButton.Position = new Vector2(
+            centerX - buttonWidth / 2,
+            centerY + buttonSpacing);
+    }
+
+    protected override void OnDispose()
+    {
+        _eventBus?.Unsubscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+    }
+}</code></pre>
+<hr />
+<h3 id="2-camera-viewport-adjustment">2. Camera Viewport Adjustment<a class="headerlink" href="#2-camera-viewport-adjustment" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">using Brine2D.Rendering;
+
+public class GameScene : Scene
+{
+    private readonly EventBus? _eventBus;
+    private readonly IRenderer _renderer;
+
+    private Camera2D? _camera;
+
+    protected override void OnInitialize()
+    {
+        // Create camera
+        _camera = new Camera2D(1280, 720)
+        {
+            Position = new Vector2(0, 0),
+            Zoom = 1.0f
+        };
+
+        _renderer.Camera = _camera;
+
+        // Subscribe to resize
+        _eventBus?.Subscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+    }
+
+    private void OnWindowResized(WindowResizedEvent evt)
+    {
+        if (_camera != null)
+        {
+            // Update camera viewport
+            _camera.ViewportWidth = evt.Width;
+            _camera.ViewportHeight = evt.Height;
+
+            Logger.LogInformation("Camera viewport updated to {Width}x{Height}",
+                evt.Width, evt.Height);
+        }
+    }
+
+    protected override void OnDispose()
+    {
+        _eventBus?.Unsubscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+    }
+}</code></pre>
+<hr />
+<h3 id="3-dynamic-resolution-scaling">3. Dynamic Resolution Scaling<a class="headerlink" href="#3-dynamic-resolution-scaling" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">public class PerformanceScene : Scene
+{
+    private readonly EventBus? _eventBus;
+
+    private float _renderScale = 1.0f;
+    private int _targetWidth = 1280;
+    private int _targetHeight = 720;
+
+    protected override void OnInitialize()
+    {
+        _eventBus?.Subscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+    }
+
+    private void OnWindowResized(WindowResizedEvent evt)
+    {
+        // Calculate scale factor
+        var widthScale = evt.Width / (float)_targetWidth;
+        var heightScale = evt.Height / (float)_targetHeight;
+
+        // Use smallest scale to maintain aspect ratio
+        _renderScale = Math.Min(widthScale, heightScale);
+
+        Logger.LogInformation("Render scale adjusted to {Scale:F2}", _renderScale);
+
+        // Adjust rendering resolution
+        AdjustRenderResolution(_renderScale);
+    }
+
+    private void AdjustRenderResolution(float scale)
+    {
+        // Scale sprite sizes, font sizes, etc.
+        // Useful for maintaining performance on lower-end hardware
+    }
+
+    protected override void OnDispose()
+    {
+        _eventBus?.Unsubscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+    }
+}</code></pre>
+<hr />
+<h3 id="4-hud-repositioning">4. HUD Repositioning<a class="headerlink" href="#4-hud-repositioning" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">public class GameplayScene : Scene
+{
+    private readonly EventBus? _eventBus;
+    private readonly UICanvas _uiCanvas;
+
+    private UILabel _scoreLabel;
+    private UILabel _healthLabel;
+    private UILabel _fpsLabel;
+
+    protected override void OnInitialize()
+    {
+        _eventBus?.Subscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+
+        // Initial HUD layout
+        PositionHUD(_windowWidth, _windowHeight);
+    }
+
+    private void OnWindowResized(WindowResizedEvent evt)
+    {
+        PositionHUD(evt.Width, evt.Height);
+    }
+
+    private void PositionHUD(int width, int height)
+    {
+        // Top-left: Score
+        _scoreLabel.Position = new Vector2(10, 10);
+
+        // Top-right: FPS
+        _fpsLabel.Position = new Vector2(width - 100, 10);
+
+        // Bottom-left: Health
+        _healthLabel.Position = new Vector2(10, height - 40);
+    }
+
+    protected override void OnDispose()
+    {
+        _eventBus?.Unsubscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+    }
+}</code></pre>
+<hr />
+<h3 id="5-aspect-ratio-maintenance">5. Aspect Ratio Maintenance<a class="headerlink" href="#5-aspect-ratio-maintenance" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">public class AspectRatioScene : Scene
+{
+    private readonly EventBus? _eventBus;
+    private readonly IRenderer _renderer;
+
+    private const float TargetAspectRatio = 16f / 9f;  // 16:9
+
+    private Rectangle _renderArea;
+
+    protected override void OnInitialize()
+    {
+        _eventBus?.Subscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+
+        // Calculate initial render area
+        CalculateRenderArea(_windowWidth, _windowHeight);
+    }
+
+    private void OnWindowResized(WindowResizedEvent evt)
+    {
+        CalculateRenderArea(evt.Width, evt.Height);
+    }
+
+    private void CalculateRenderArea(int windowWidth, int windowHeight)
+    {
+        var windowAspect = windowWidth / (float)windowHeight;
+
+        if (windowAspect &gt; TargetAspectRatio)
+        {
+            // Window is wider than target - letterbox sides
+            var renderWidth = (int)(windowHeight * TargetAspectRatio);
+            var offsetX = (windowWidth - renderWidth) / 2;
+
+            _renderArea = new Rectangle(offsetX, 0, renderWidth, windowHeight);
+        }
+        else
+        {
+            // Window is taller than target - letterbox top/bottom
+            var renderHeight = (int)(windowWidth / TargetAspectRatio);
+            var offsetY = (windowHeight - renderHeight) / 2;
+
+            _renderArea = new Rectangle(0, offsetY, windowWidth, renderHeight);
+        }
+
+        Logger.LogInformation("Render area: {X}, {Y}, {Width}x{Height}",
+            _renderArea.X, _renderArea.Y, _renderArea.Width, _renderArea.Height);
+    }
+
+    protected override void OnRender(GameTime gameTime)
+    {
+        _renderer.Clear(Color.Black);
+        _renderer.BeginFrame();
+
+        // Draw letterbox bars (black)
+        // Your game renders within _renderArea
+
+        _renderer.EndFrame();
+    }
+
+    protected override void OnDispose()
+    {
+        _eventBus?.Unsubscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+    }
+}</code></pre>
+<hr />
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="do">DO<a class="headerlink" href="#do" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Always unsubscribe in OnDispose</strong></li>
+</ol>
+<pre class="highlight"><code class="language-csharp">protected override void OnDispose()
+{
+    _eventBus?.Unsubscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+}</code></pre>
+<ol>
+<li><strong>Use named methods for event handlers</strong></li>
+</ol>
+<pre class="highlight"><code class="language-csharp">// ✅ Good - easy to unsubscribe
+_eventBus?.Subscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+
+private void OnWindowResized(WindowResizedEvent evt)
+{
+    // Handle event
+}</code></pre>
+<ol>
+<li><strong>Check for null EventBus</strong></li>
+</ol>
+<pre class="highlight"><code class="language-csharp">// ✅ Good - EventBus is optional
+_eventBus?.Subscribe&lt;WindowResizedEvent&gt;(OnWindowResized);</code></pre>
+<ol>
+<li><strong>Subscribe in OnInitialize</strong></li>
+</ol>
+<pre class="highlight"><code class="language-csharp">// ✅ Good - consistent lifecycle
+protected override void OnInitialize()
+{
+    _eventBus?.Subscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+}</code></pre>
+<ol>
+<li><strong>Enable window resizing if needed</strong></li>
+</ol>
+<pre class="highlight"><code class="language-csharp">// ✅ In configuration
+options.Resizable = true;</code></pre>
+<hr />
+<h3 id="dont">DON'T<a class="headerlink" href="#dont" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Don't forget to unsubscribe</strong></li>
+</ol>
+<pre class="highlight"><code class="language-csharp">// ❌ Bad - memory leak!
+protected override void OnDispose()
+{
+    // Forgot to unsubscribe!
+}</code></pre>
+<ol>
+<li><strong>Don't use lambdas without storing reference</strong></li>
+</ol>
+<pre class="highlight"><code class="language-csharp">// ❌ Bad - can't unsubscribe
+_eventBus?.Subscribe&lt;WindowResizedEvent&gt;(evt =&gt;
+{
+    // Can't unsubscribe this!
+});</code></pre>
+<ol>
+<li><strong>Don't subscribe multiple times</strong></li>
+</ol>
+<pre class="highlight"><code class="language-csharp">// ❌ Bad - duplicate subscriptions
+protected override void OnInitialize()
+{
+    _eventBus?.Subscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+    _eventBus?.Subscribe&lt;WindowResizedEvent&gt;(OnWindowResized);  // Duplicate!
+}</code></pre>
+<ol>
+<li><strong>Don't assume EventBus exists</strong></li>
+</ol>
+<pre class="highlight"><code class="language-csharp">// ❌ Bad - might be null
+_eventBus.Subscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+
+// ✅ Good - null-conditional
+_eventBus?.Subscribe&lt;WindowResizedEvent&gt;(OnWindowResized);</code></pre>
+<hr />
+<h2 id="advanced-patterns">Advanced Patterns<a class="headerlink" href="#advanced-patterns" title="Permanent link">&para;</a></h2>
+<h3 id="debouncing-resize-events">Debouncing Resize Events<a class="headerlink" href="#debouncing-resize-events" title="Permanent link">&para;</a></h3>
+<p>Handle resize events after user finishes resizing:</p>
+<pre class="highlight"><code class="language-csharp">public class DebouncedResizeScene : Scene
+{
+    private readonly EventBus? _eventBus;
+
+    private DateTime _lastResizeTime;
+    private int _pendingWidth;
+    private int _pendingHeight;
+    private bool _resizePending;
+
+    private const double DebounceMs = 500;  // Wait 500ms after last resize
+
+    protected override void OnInitialize()
+    {
+        _eventBus?.Subscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+    }
+
+    private void OnWindowResized(WindowResizedEvent evt)
+    {
+        // Store resize event
+        _lastResizeTime = DateTime.UtcNow;
+        _pendingWidth = evt.Width;
+        _pendingHeight = evt.Height;
+        _resizePending = true;
+    }
+
+    protected override void OnUpdate(GameTime gameTime)
+    {
+        if (_resizePending)
+        {
+            var elapsed = (DateTime.UtcNow - _lastResizeTime).TotalMilliseconds;
+
+            if (elapsed &gt;= DebounceMs)
+            {
+                // User stopped resizing - apply changes
+                ApplyResize(_pendingWidth, _pendingHeight);
+                _resizePending = false;
+            }
+        }
+    }
+
+    private void ApplyResize(int width, int height)
+    {
+        Logger.LogInformation("Applying resize to {Width}x{Height}", width, height);
+
+        // Expensive operations here (e.g., regenerate UI, reload assets)
+    }
+
+    protected override void OnDispose()
+    {
+        _eventBus?.Unsubscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+    }
+}</code></pre>
+<hr />
+<h3 id="multi-scene-event-handling">Multi-Scene Event Handling<a class="headerlink" href="#multi-scene-event-handling" title="Permanent link">&para;</a></h3>
+<p>Share window state across scenes:</p>
+<pre class="highlight"><code class="language-csharp">// Shared service
+public class WindowStateService
+{
+    public int Width { get; private set; } = 1280;
+    public int Height { get; private set; } = 720;
+
+    public event Action&lt;int, int&gt;? SizeChanged;
+
+    public void UpdateSize(int width, int height)
+    {
+        Width = width;
+        Height = height;
+        SizeChanged?.Invoke(width, height);
+    }
+}</code></pre>
+<pre class="highlight"><code class="language-csharp">// Register as singleton
+builder.Services.AddSingleton&lt;WindowStateService&gt;();
+
+// Initialize with EventBus
+builder.Services.AddSingleton(provider =&gt;
+{
+    var windowState = new WindowStateService();
+    var eventBus = provider.GetService&lt;EventBus&gt;();
+
+    eventBus?.Subscribe&lt;WindowResizedEvent&gt;(evt =&gt;
+    {
+        windowState.UpdateSize(evt.Width, evt.Height);
+    });
+
+    return windowState;
+});</code></pre>
+<pre class="highlight"><code class="language-csharp">// Use in scenes
+public class GameScene : Scene
+{
+    private readonly WindowStateService _windowState;
+
+    public GameScene(WindowStateService windowState, ILogger&lt;GameScene&gt; logger) 
+        : base(logger)
+    {
+        _windowState = windowState;
+        _windowState.SizeChanged += OnSizeChanged;
+    }
+
+    private void OnSizeChanged(int width, int height)
+    {
+        // Handle resize
+    }
+
+    protected override void OnDispose()
+    {
+        _windowState.SizeChanged -= OnSizeChanged;
+    }
+}</code></pre>
+<hr />
+<h2 id="renderer-integration">Renderer Integration<a class="headerlink" href="#renderer-integration" title="Permanent link">&para;</a></h2>
+<p>Both GPU and Legacy renderers automatically handle window events:</p>
+<pre class="highlight"><code class="language-csharp">// In SDL3GPURenderer / SDL3Renderer
+public SDL3Renderer(
+    ILogger&lt;SDL3Renderer&gt; logger,
+    ILoggerFactory loggerFactory,
+    IOptions&lt;RenderingOptions&gt; options,
+    IFontLoader? fontLoader = null,
+    EventBus? eventBus = null)  // EventBus injected
+{
+    _eventBus = eventBus;
+
+    // Renderer subscribes to window events
+    _eventBus?.Subscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+}
+
+private void OnWindowResized(WindowResizedEvent evt)
+{
+    // Renderer updates viewport automatically
+    _viewport.Update(evt.Width, evt.Height);
+    UpdateProjectionMatrix(_viewport.Width, _viewport.Height);
+}</code></pre>
+<p><strong>What this means:</strong>
+- Renderer viewport updates automatically
+- You don't need to update renderer manually
+- Focus on UI/camera adjustments in your scenes</p>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="problem-not-receiving-events">Problem: Not Receiving Events<a class="headerlink" href="#problem-not-receiving-events" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> Window resize handler never called</p>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li>
+<p><strong>Check EventBus registration</strong>
+   <pre class="highlight"><code class="language-csharp">// Make sure EventBus is registered
+builder.Services.AddSingleton&lt;EventBus&gt;();</code></pre></p>
+</li>
+<li>
+<p><strong>Verify subscription</strong>
+   <pre class="highlight"><code class="language-csharp">protected override void OnInitialize()
+{
+    _eventBus?.Subscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+    Logger.LogInformation("Subscribed to WindowResizedEvent");
+}</code></pre></p>
+</li>
+<li>
+<p><strong>Check window is resizable</strong>
+   <pre class="highlight"><code class="language-json">{
+  "Rendering": {
+    "Resizable": true  // Must be true!
+  }
+}</code></pre></p>
+</li>
+</ol>
+<hr />
+<h3 id="problem-memory-leak">Problem: Memory Leak<a class="headerlink" href="#problem-memory-leak" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> Memory usage increases over time</p>
+<p><strong>Cause:</strong> Not unsubscribing from events</p>
+<p><strong>Solution:</strong></p>
+<pre class="highlight"><code class="language-csharp">// ✅ Always unsubscribe
+protected override void OnDispose()
+{
+    _eventBus?.Unsubscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+    base.OnDispose();
+}</code></pre>
+<hr />
+<h3 id="problem-event-fired-multiple-times">Problem: Event Fired Multiple Times<a class="headerlink" href="#problem-event-fired-multiple-times" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> Handler called multiple times for single resize</p>
+<p><strong>Cause:</strong> Multiple subscriptions</p>
+<p><strong>Solution:</strong></p>
+<pre class="highlight"><code class="language-csharp">// ✅ Subscribe only once
+protected override void OnInitialize()
+{
+    // Unsubscribe first (if reinitializing)
+    _eventBus?.Unsubscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+
+    // Then subscribe
+    _eventBus?.Subscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+}</code></pre>
+<hr />
+<h2 id="complete-example">Complete Example<a class="headerlink" href="#complete-example" title="Permanent link">&para;</a></h2>
+<p>Here's a full responsive game scene:</p>
+<pre class="highlight"><code class="language-csharp">using Brine2D.Core;
+using Brine2D.Input;
+using Brine2D.Rendering;
+using Brine2D.SDL.Common.Events;
+using Brine2D.UI;
+using Microsoft.Extensions.Logging;
+using System.Numerics;
+
+public class ResponsiveGameScene : Scene
+{
+    private readonly IRenderer _renderer;
+    private readonly IInputService _input;
+    private readonly IGameContext _gameContext;
+    private readonly EventBus? _eventBus;
+    private readonly UICanvas _uiCanvas;
+
+    private Camera2D? _camera;
+    private int _windowWidth = 1280;
+    private int _windowHeight = 720;
+
+    // UI elements
+    private UILabel? _scoreLabel;
+    private UILabel? _fpsLabel;
+    private UIButton? _pauseButton;
+
+    public ResponsiveGameScene(
+        IRenderer renderer,
+        IInputService input,
+        IGameContext gameContext,
+        EventBus? eventBus,
+        UICanvas uiCanvas,
+        ILogger&lt;ResponsiveGameScene&gt; logger) : base(logger)
+    {
+        _renderer = renderer;
+        _input = input;
+        _gameContext = gameContext;
+        _eventBus = eventBus;
+        _uiCanvas = uiCanvas;
+    }
+
+    protected override void OnInitialize()
+    {
+        // Create camera
+        _camera = new Camera2D(_windowWidth, _windowHeight);
+        _renderer.Camera = _camera;
+
+        // Create UI
+        CreateUI();
+
+        // Subscribe to window events
+        _eventBus?.Subscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+
+        Logger.LogInformation("ResponsiveGameScene initialized");
+    }
+
+    private void CreateUI()
+    {
+        // Score (top-left)
+        _scoreLabel = new UILabel("Score: 0", new Vector2(10, 10))
+        {
+            FontSize = 24,
+            Color = Color.White
+        };
+        _uiCanvas.Add(_scoreLabel);
+
+        // FPS (top-right)
+        _fpsLabel = new UILabel("FPS: 60", new Vector2(_windowWidth - 100, 10))
+        {
+            FontSize = 18,
+            Color = Color.Yellow
+        };
+        _uiCanvas.Add(_fpsLabel);
+
+        // Pause button (center-top)
+        _pauseButton = new UIButton("Pause", new Vector2(0, 10), new Vector2(100, 40));
+        _pauseButton.OnClick += OnPauseClicked;
+        _uiCanvas.Add(_pauseButton);
+
+        // Position pause button
+        PositionPauseButton(_windowWidth);
+    }
+
+    private void OnWindowResized(WindowResizedEvent evt)
+    {
+        Logger.LogInformation("Window resized to {Width}x{Height}", 
+            evt.Width, evt.Height);
+
+        _windowWidth = evt.Width;
+        _windowHeight = evt.Height;
+
+        // Update camera viewport
+        if (_camera != null)
+        {
+            _camera.ViewportWidth = evt.Width;
+            _camera.ViewportHeight = evt.Height;
+        }
+
+        // Update UI layout
+        UpdateUILayout();
+    }
+
+    private void UpdateUILayout()
+    {
+        if (_fpsLabel != null)
+        {
+            // Keep FPS in top-right
+            _fpsLabel.Position = new Vector2(_windowWidth - 100, 10);
+        }
+
+        if (_pauseButton != null)
+        {
+            // Keep pause button centered horizontally
+            PositionPauseButton(_windowWidth);
+        }
+    }
+
+    private void PositionPauseButton(int width)
+    {
+        if (_pauseButton != null)
+        {
+            var buttonWidth = 100f;
+            _pauseButton.Position = new Vector2(
+                (width - buttonWidth) / 2,
+                10);
+        }
+    }
+
+    private void OnPauseClicked()
+    {
+        Logger.LogInformation("Pause clicked");
+        // Handle pause
+    }
+
+    protected override void OnUpdate(GameTime gameTime)
+    {
+        // Exit
+        if (_input.IsKeyPressed(Keys.Escape))
+        {
+            _gameContext.RequestExit();
+        }
+
+        // Update FPS display
+        if (_fpsLabel != null)
+        {
+            var fps = (int)(1.0 / gameTime.DeltaTime);
+            _fpsLabel.Text = $"FPS: {fps}";
+        }
+    }
+
+    protected override void OnRender(GameTime gameTime)
+    {
+        _renderer.Clear(Color.CornflowerBlue);
+        _renderer.BeginFrame();
+
+        // Game rendering here...
+
+        _renderer.EndFrame();
+    }
+
+    protected override void OnDispose()
+    {
+        // IMPORTANT: Unsubscribe from events
+        _eventBus?.Unsubscribe&lt;WindowResizedEvent&gt;(OnWindowResized);
+
+        // Cleanup UI
+        if (_pauseButton != null)
+        {
+            _pauseButton.OnClick -= OnPauseClicked;
+        }
+
+        Logger.LogInformation("ResponsiveGameScene disposed");
+
+        base.OnDispose();
+    }
+}</code></pre>
+<hr />
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Code</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Register EventBus</strong></td>
+<td><code>builder.Services.AddSingleton&lt;EventBus&gt;()</code></td>
+<td>Optional, in Program.cs</td>
+</tr>
+<tr>
+<td><strong>Subscribe</strong></td>
+<td><code>_eventBus?.Subscribe&lt;WindowResizedEvent&gt;(handler)</code></td>
+<td>In OnInitialize</td>
+</tr>
+<tr>
+<td><strong>Unsubscribe</strong></td>
+<td><code>_eventBus?.Unsubscribe&lt;WindowResizedEvent&gt;(handler)</code></td>
+<td>In OnDispose</td>
+</tr>
+<tr>
+<td><strong>Event data</strong></td>
+<td><code>evt.Width</code>, <code>evt.Height</code></td>
+<td>Window dimensions</td>
+</tr>
+<tr>
+<td><strong>Enable resize</strong></td>
+<td><code>options.Resizable = true</code></td>
+<td>In config</td>
+</tr>
+<tr>
+<td><strong>Namespace</strong></td>
+<td><code>using Brine2D.SDL.Common.Events;</code></td>
+<td>For WindowResizedEvent</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><a href="../ui/components.md">UI Components</a></strong> - Build responsive UI</li>
+<li><strong><a href="../../rendering/cameras/">Cameras</a></strong> - Camera viewport management</li>
+<li><strong><a href="../ecs/events.md">Event System</a></strong> - Custom events with EventBus</li>
+<li><strong><a href="../../rendering/gpu-renderer/">GPU Renderer</a></strong> - Modern rendering</li>
+</ul>
+<hr />
+<p><strong>Ready to build responsive games?</strong> Try <a href="../ui/components.md">UI Components</a> next!</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["content.code.copy", "content.code.select"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,4843 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Master sprite sheet animations in Brine2D with AnimationClip and SpriteAnimator">
+      
+      
+      
+      
+        <link rel="prev" href="../moving-sprites/">
+      
+      
+        <link rel="next" href="../../guides/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Animation System Tutorial - Brine2D Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/prism-material-slate.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#animation-system" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Brine2D Documentation" class="md-header__button md-logo" aria-label="Brine2D Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Brine2D Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Animation System Tutorial
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Brine2D Documentation" class="md-nav__button md-logo" aria-label="Brine2D Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Brine2D Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    What's New
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../whats-new/v0.8.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.8.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../whats-new/v0.7.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.7.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../whats-new/v0.6.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.6.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/first-game/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/project-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../moving-sprites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Moving Sprites
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-youll-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You'll Build
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-sprite-sheets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Sprite Sheets
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding Sprite Sheets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#visual-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visual Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frame-coordinates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frame Coordinates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frame-to-rectangle-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frame to Rectangle Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-use-sprite-sheets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Use Sprite Sheets?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-file-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example File Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In Code
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-project-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Project Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 1: Project Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-animatedspritescene" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create AnimatedSpriteScene
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-loading-a-sprite-sheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Loading a Sprite Sheet
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-creating-animation-clips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Creating Animation Clips
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3: Creating Animation Clips">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#method-1-using-fromspritesheet-easy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 1: Using FromSpriteSheet (Easy)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-2-manual-frame-definition-flexible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 2: Manual Frame Definition (Flexible)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-creating-multiple-animations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Creating Multiple Animations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-playing-animations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Playing Animations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-rendering-animated-sprites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Rendering Animated Sprites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-7-animation-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Animation Controls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-8-movement-with-animation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Movement with Animation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Code
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#animation-system-deep-dive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Animation System Deep Dive
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Animation System Deep Dive">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-spriteanimator-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How SpriteAnimator Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frame-timing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frame Timing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loop-vs-one-shot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loop vs One-Shot
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Challenges
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Challenges">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#easy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Easy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#medium" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Medium
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hard
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-learned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Learned
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#animation-not-playing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Animation not playing?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#animation-too-fastslow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Animation too fast/slow?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wrong-frames-showing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wrong frames showing?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#animation-stutters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Animation stutters?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../collision.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision Detection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../platformer.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building a Platformer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../top-down.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Top-Down Adventure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Rendering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/rendering/choosing-renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing a Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/rendering/gpu-renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GPU Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/rendering/sprites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprites & Textures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/rendering/texture-atlasing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Texture Atlasing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/rendering/cameras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cameras
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/rendering/particles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Particles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/rendering/primitives/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Drawing Primitives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Input
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/input/keyboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keyboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/input/mouse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mouse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/input/gamepad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gamepad Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/input/layers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input Layers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audio
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Audio
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/audio/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/audio/sound-effects.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sound Effects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/audio/music.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Music Playback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/audio/spatial-audio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spatial Audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scenes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Scenes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/scenes/lifecycle.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/scenes/transitions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Transitions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/scenes/lifecycle-hooks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle Hooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Collision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/collision/system.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/collision/colliders.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Colliders
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_7" id="__nav_5_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tilemaps
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tilemaps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/tilemaps/loading.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Loading Tilemaps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/tilemaps/rendering.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering Tiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_8" id="__nav_5_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Framework
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UI Framework
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/ui/components.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/ui/custom.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom UI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_9" id="__nav_5_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Component System
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Entity Component System
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/ecs/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/ecs/components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/ecs/systems/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/ecs/entities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/ecs/queries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Queries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_10" id="__nav_5_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Events
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/events/window-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Window Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/dependency-injection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/game-loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Game Loop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/builder-pattern/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Builder Pattern
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/scenes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/entity-component-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Component System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/core.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Core
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/rendering.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Rendering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/input.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Input
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/audio.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/ecs.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.ECS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Samples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Samples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../samples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../samples/basic-game.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../samples/animation-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../samples/collision-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../samples/ecs-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ECS Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Contributing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to Contribute
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/code-style.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Style
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/building.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building from Source
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-youll-build" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You'll Build
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#understanding-sprite-sheets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Understanding Sprite Sheets
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Understanding Sprite Sheets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#visual-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visual Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frame-coordinates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frame Coordinates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frame-to-rectangle-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frame to Rectangle Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-use-sprite-sheets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Use Sprite Sheets?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example-file-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example File Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In Code
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-1-project-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Project Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 1: Project Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-animatedspritescene" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create AnimatedSpriteScene
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-2-loading-a-sprite-sheet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Loading a Sprite Sheet
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-3-creating-animation-clips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Creating Animation Clips
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Step 3: Creating Animation Clips">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#method-1-using-fromspritesheet-easy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 1: Using FromSpriteSheet (Easy)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#method-2-manual-frame-definition-flexible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method 2: Manual Frame Definition (Flexible)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-4-creating-multiple-animations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Creating Multiple Animations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-5-playing-animations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5: Playing Animations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-6-rendering-animated-sprites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6: Rendering Animated Sprites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-7-animation-controls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7: Animation Controls
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#step-8-movement-with-animation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 8: Movement with Animation
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Code
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#animation-system-deep-dive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Animation System Deep Dive
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Animation System Deep Dive">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-spriteanimator-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How SpriteAnimator Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frame-timing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frame Timing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loop-vs-one-shot" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loop vs One-Shot
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Challenges
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Challenges">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#easy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Easy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#medium" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Medium
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hard" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hard
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-learned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Learned
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Issues
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Issues">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#animation-not-playing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Animation not playing?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#animation-too-fastslow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Animation too fast/slow?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#wrong-frames-showing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wrong frames showing?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#animation-stutters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Animation stutters?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="animation-system">Animation System<a class="headerlink" href="#animation-system" title="Permanent link">&para;</a></h1>
+<p><strong>Difficulty:</strong> Beginner | <strong>Time:</strong> 20 minutes</p>
+<p>Learn how to bring your sprites to life with Brine2D's animation system. By the end of this tutorial, you'll have a character with multiple animations (walk, run, jump) that you can switch between.</p>
+<h2 id="what-youll-build">What You'll Build<a class="headerlink" href="#what-youll-build" title="Permanent link">&para;</a></h2>
+<p>An animated character with:
+- Multiple animation clips (walk, run, idle, jump)
+- Smooth frame-by-frame animation
+- Animation switching with keyboard input
+- Pause/resume controls
+- Configurable animation speeds</p>
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Completed <a href="../moving-sprites/">Moving Sprites</a> tutorial</li>
+<li>A sprite sheet image (or use placeholder)</li>
+<li>Understanding of sprite rendering and delta time</li>
+</ul>
+<hr />
+<h2 id="understanding-sprite-sheets">Understanding Sprite Sheets<a class="headerlink" href="#understanding-sprite-sheets" title="Permanent link">&para;</a></h2>
+<p>A <strong>sprite sheet</strong> is a single image containing multiple animation frames arranged in a grid.</p>
+<h3 id="visual-layout">Visual Layout<a class="headerlink" href="#visual-layout" title="Permanent link">&para;</a></h3>
+<p>Here's what a 576x24 pixel sprite sheet with 24 frames looks like:</p>
+<pre class="mermaid"><code>graph LR
+    subgraph "character.png (576x24 pixels)"
+        F0["Frame 0&lt;br/&gt;Walk 1&lt;br/&gt;24x24"]
+        F1["Frame 1&lt;br/&gt;Walk 2&lt;br/&gt;24x24"]
+        F2["Frame 2&lt;br/&gt;Walk 3&lt;br/&gt;24x24"]
+        F3["Frame 3&lt;br/&gt;Walk 4&lt;br/&gt;24x24"]
+        F4["Frame 4&lt;br/&gt;Run 1&lt;br/&gt;24x24"]
+        F5["Frame 5&lt;br/&gt;Run 2&lt;br/&gt;24x24"]
+        F6["..."]
+        F23["Frame 23&lt;br/&gt;24x24"]
+
+        F0 --- F1
+        F1 --- F2
+        F2 --- F3
+        F3 --- F4
+        F4 --- F5
+        F5 --- F6
+        F6 --- F23
+
+        style F0 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style F1 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style F2 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style F3 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style F4 fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+style F5 fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+style F6 fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+style F23 fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    end</code></pre>
+<p>Each frame is 24x24 pixels, arranged horizontally in one row.</p>
+<h3 id="frame-coordinates">Frame Coordinates<a class="headerlink" href="#frame-coordinates" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>graph TD
+    subgraph COORDS["Frame Positions (X coordinates)"]
+        C0["Frame 0&lt;br/&gt;X: 0"]
+        C1["Frame 1&lt;br/&gt;X: 24"]
+        C2["Frame 2&lt;br/&gt;X: 48"]
+        C3["Frame 3&lt;br/&gt;X: 72"]
+        C4["Frame 4&lt;br/&gt;X: 96"]
+        C5["Frame 5&lt;br/&gt;X: 120"]
+
+        C0 -.-&gt;|"+24px"| C1
+        C1 -.-&gt;|"+24px"| C2
+        C2 -.-&gt;|"+24px"| C3
+        C3 -.-&gt;|"+24px"| C4
+        C4 -.-&gt;|"+24px"| C5
+    end
+
+    style C0 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style C1 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style C2 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style C3 fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style C4 fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+    style C5 fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+    style COORDS fill:#1a2332,stroke:#4ec9b0,stroke-width:2px,color:#fff</code></pre>
+<h3 id="frame-to-rectangle-mapping">Frame to Rectangle Mapping<a class="headerlink" href="#frame-to-rectangle-mapping" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Frame #</th>
+<th>X Position</th>
+<th>Y Position</th>
+<th>Code</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td><code>new Rectangle(0, 0, 24, 24)</code></td>
+</tr>
+<tr>
+<td>1</td>
+<td>24</td>
+<td>0</td>
+<td><code>new Rectangle(24, 0, 24, 24)</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>48</td>
+<td>0</td>
+<td><code>new Rectangle(48, 0, 24, 24)</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>72</td>
+<td>0</td>
+<td><code>new Rectangle(72, 0, 24, 24)</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>96</td>
+<td>0</td>
+<td><code>new Rectangle(96, 0, 24, 24)</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="why-use-sprite-sheets">Why Use Sprite Sheets?<a class="headerlink" href="#why-use-sprite-sheets" title="Permanent link">&para;</a></h3>
+<pre class="mermaid"><code>graph LR
+    A["Single PNG File&lt;br/&gt;character.png"] --&gt; B["✅ Faster Loading"]
+    A --&gt; C["✅ Better Performance"]
+    A --&gt; D["✅ Easier Organization"]
+    A --&gt; E["✅ GPU-Friendly"]
+
+    style A fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+style B fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style C fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style D fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+style E fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff</code></pre>
+<p><strong>Key Points:</strong>
+- ✅ One texture load instead of 24 separate files
+- ✅ Fewer texture switches = better GPU performance
+- ✅ All frames stay together = easier to manage
+- ✅ Standard format used by game engines everywhere</p>
+<h3 id="example-file-structure">Example File Structure<a class="headerlink" href="#example-file-structure" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code>YourProject/
+├── assets/
+│   └── sprites/
+│       └── character.png    ← ONE PNG file (576x24 pixels)
+│                               Contains all 24 frames
+├── Program.cs
+└── BasicGame.csproj</code></pre>
+<div class="admonition tip">
+<p class="admonition-title">Creating Sprite Sheets</p>
+<p><strong>Need a sprite sheet?</strong> Here are some great resources:</p>
+<ul>
+<li><strong>Free Assets</strong>: <a href="https://opengameart.org">OpenGameArt.org</a>, <a href="https://kenney.nl">Kenney.nl</a>, <a href="https://itch.io/game-assets/free">itch.io</a></li>
+<li><strong>Pixel Art Tools</strong>: <a href="https://www.aseprite.org/">Aseprite</a>, <a href="https://www.piskelapp.com/">Piskel</a> (free online)</li>
+<li><strong>Sprite Sheet Packers</strong>: <a href="https://www.codeandweb.com/texturepacker">TexturePacker</a></li>
+</ul>
+</div>
+<h3 id="in-code">In Code<a class="headerlink" href="#in-code" title="Permanent link">&para;</a></h3>
+<p>You load <strong>one PNG file</strong> and tell the system which rectangular section to display:</p>
+<pre class="highlight"><code class="language-csharp">// Load the entire sprite sheet (one file)
+_spriteSheet = await _textureLoader.LoadTextureAsync(
+    "assets/sprites/character.png",  // ← Your single PNG
+    TextureScaleMode.Nearest,
+    cancellationToken
+);
+
+// Access individual frames by specifying rectangles
+var frame0 = new Rectangle(0, 0, 24, 24);    // First frame
+var frame1 = new Rectangle(24, 0, 24, 24);   // Second frame
+var frame2 = new Rectangle(48, 0, 24, 24);   // Third frame</code></pre>
+<hr />
+<h2 id="step-1-project-setup">Step 1: Project Setup<a class="headerlink" href="#step-1-project-setup" title="Permanent link">&para;</a></h2>
+<p>We'll build on the Moving Sprites scene.</p>
+<h3 id="create-animatedspritescene">Create AnimatedSpriteScene<a class="headerlink" href="#create-animatedspritescene" title="Permanent link">&para;</a></h3>
+<p>Create <code>AnimatedSpriteScene.cs</code>:</p>
+<pre class="highlight"><code class="language-csharp">using Brine2D.Core;
+using Brine2D.Core.Animation;
+using Brine2D.Input;
+using Brine2D.Rendering;
+using Microsoft.Extensions.Logging;
+using System.Numerics;
+
+namespace MyGame;
+
+public class AnimatedSpriteScene : Scene
+{
+    private readonly IRenderer _renderer;
+    private readonly IInputService _input;
+    private readonly ITextureLoader _textureLoader;
+    private readonly IGameContext _gameContext;
+    private readonly ILoggerFactory _loggerFactory;
+
+    public AnimatedSpriteScene(
+        IRenderer renderer,
+        IInputService input,
+        ITextureLoader textureLoader,
+        IGameContext gameContext,
+        ILoggerFactory loggerFactory,
+        ILogger&lt;AnimatedSpriteScene&gt; logger
+    ) : base(logger)
+    {
+        _renderer = renderer;
+        _input = input;
+        _textureLoader = textureLoader;
+        _gameContext = gameContext;
+        _loggerFactory = loggerFactory;
+    }
+
+    protected override void OnInitialize()
+    {
+        Logger.LogInformation("Animated Sprite Scene initialized!");
+    }
+}</code></pre>
+<hr />
+<h2 id="step-2-loading-a-sprite-sheet">Step 2: Loading a Sprite Sheet<a class="headerlink" href="#step-2-loading-a-sprite-sheet" title="Permanent link">&para;</a></h2>
+<p>Add fields for texture and animator:</p>
+<pre class="highlight"><code class="language-csharp">private ITexture? _spriteSheet;
+private SpriteAnimator? _animator;
+private Vector2 _position = new Vector2(640, 360);
+private float _speed = 200f;</code></pre>
+<p>Load the sprite sheet in <code>OnLoadAsync</code>:</p>
+<pre class="highlight"><code class="language-csharp">protected override async Task OnLoadAsync(CancellationToken cancellationToken)
+{
+    Logger.LogInformation("Loading sprite sheet...");
+
+    var spriteSheetPath = "assets/sprites/character.png";
+
+    if (File.Exists(spriteSheetPath))
+    {
+        _spriteSheet = await _textureLoader.LoadTextureAsync(
+            spriteSheetPath,
+            TextureScaleMode.Nearest, // Important for pixel art!
+            cancellationToken
+        );
+
+        Logger.LogInformation("Sprite sheet loaded: {Width}x{Height}",
+            _spriteSheet.Width, _spriteSheet.Height);
+    }
+    else
+    {
+        Logger.LogWarning("Sprite sheet not found, using placeholder");
+        // 576x24 = 24 frames at 24x24 each
+        _spriteSheet = _textureLoader.CreateTexture(576, 24, TextureScaleMode.Nearest);
+    }
+
+    // Create the animator (we'll add animations next)
+    _animator = new SpriteAnimator(_loggerFactory.CreateLogger&lt;SpriteAnimator&gt;());
+}</code></pre>
+<hr />
+<h2 id="step-3-creating-animation-clips">Step 3: Creating Animation Clips<a class="headerlink" href="#step-3-creating-animation-clips" title="Permanent link">&para;</a></h2>
+<p>An <code>AnimationClip</code> is a collection of frames that play in sequence.</p>
+<h3 id="method-1-using-fromspritesheet-easy">Method 1: Using FromSpriteSheet (Easy)<a class="headerlink" href="#method-1-using-fromspritesheet-easy" title="Permanent link">&para;</a></h3>
+<p>For uniform frame sizes:</p>
+<pre class="highlight"><code class="language-csharp">// Add after creating _animator
+const int frameWidth = 24;
+const int frameHeight = 24;
+const int columns = 24;  // Number of frames per row
+
+// Walk animation: frames 0-3 (first 4 frames)
+var walkAnim = AnimationClip.FromSpriteSheet(
+    name: "walk",
+    frameWidth: frameWidth,
+    frameHeight: frameHeight,
+    frameCount: 4,           // Use 4 frames
+    columns: columns,         // 24 frames per row
+    frameDuration: 0.15f,    // Each frame lasts 0.15 seconds
+    loop: true               // Loop the animation
+);
+
+_animator.AddAnimation(walkAnim);</code></pre>
+<p><strong>What's happening:</strong>
+- <code>FromSpriteSheet</code> automatically calculates frame positions
+- Frames are read left-to-right, top-to-bottom
+- Each frame displays for <code>frameDuration</code> seconds</p>
+<h3 id="method-2-manual-frame-definition-flexible">Method 2: Manual Frame Definition (Flexible)<a class="headerlink" href="#method-2-manual-frame-definition-flexible" title="Permanent link">&para;</a></h3>
+<p>For non-uniform animations or precise control:</p>
+<pre class="highlight"><code class="language-csharp">// Run animation: frames 4-9
+var runAnim = new AnimationClip("run") { Loop = true };
+
+for (int i = 4; i &lt; 10; i++)
+{
+    var rect = new Rectangle(
+        x: i * frameWidth,
+        y: 0,
+        width: frameWidth,
+        height: frameHeight
+    );
+
+    runAnim.Frames.Add(new SpriteFrame(rect, duration: 0.08f));
+}
+
+_animator.AddAnimation(runAnim);</code></pre>
+<p><strong>Use manual method when:</strong>
+- Frames have different sizes
+- You need variable frame durations
+- Animation frames aren't in a simple grid</p>
+<hr />
+<h2 id="step-4-creating-multiple-animations">Step 4: Creating Multiple Animations<a class="headerlink" href="#step-4-creating-multiple-animations" title="Permanent link">&para;</a></h2>
+<p>Let's add a full set of animations:</p>
+<pre class="highlight"><code class="language-csharp">protected override async Task OnLoadAsync(CancellationToken cancellationToken)
+{
+    // ... sprite sheet loading code ...
+
+    _animator = new SpriteAnimator(_loggerFactory.CreateLogger&lt;SpriteAnimator&gt;());
+
+    const int frameWidth = 24;
+    const int frameHeight = 24;
+    const int columns = 24;
+
+    // Walk: frames 0-3
+    var walkAnim = AnimationClip.FromSpriteSheet(
+        "walk", frameWidth, frameHeight, 4, columns, 0.15f, true);
+
+    // Run: frames 4-9
+    var runAnim = new AnimationClip("run") { Loop = true };
+    for (int i = 4; i &lt; 10; i++)
+    {
+        runAnim.Frames.Add(new SpriteFrame(
+            new Rectangle(i * frameWidth, 0, frameWidth, frameHeight),
+            0.08f));
+    }
+
+    // Jump: frames 10-12 (one-shot, doesn't loop)
+    var jumpAnim = new AnimationClip("jump") { Loop = false };
+    for (int i = 10; i &lt; 13; i++)
+    {
+        jumpAnim.Frames.Add(new SpriteFrame(
+            new Rectangle(i * frameWidth, 0, frameWidth, frameHeight),
+            0.1f));
+    }
+
+    // Idle: single frame (frame 13)
+    var idleAnim = new AnimationClip("idle") { Loop = true };
+    idleAnim.Frames.Add(new SpriteFrame(
+        new Rectangle(13 * frameWidth, 0, frameWidth, frameHeight),
+        1.0f)); // Hold for 1 second
+
+    // Add all animations to the animator
+    _animator.AddAnimation(walkAnim);
+    _animator.AddAnimation(runAnim);
+    _animator.AddAnimation(jumpAnim);
+    _animator.AddAnimation(idleAnim);
+
+    // Start with idle animation
+    _animator.Play("idle");
+
+    Logger.LogInformation("Loaded {Count} animations", 4);
+}</code></pre>
+<hr />
+<h2 id="step-5-playing-animations">Step 5: Playing Animations<a class="headerlink" href="#step-5-playing-animations" title="Permanent link">&para;</a></h2>
+<p>Use <code>_animator.Play()</code> to switch animations:</p>
+<pre class="highlight"><code class="language-csharp">protected override void OnUpdate(GameTime gameTime)
+{
+    var deltaTime = (float)gameTime.DeltaTime;
+
+    if (_input.IsKeyPressed(Keys.Escape))
+    {
+        _gameContext.RequestExit();
+    }
+
+    // Animation switching
+    if (_input.IsKeyPressed(Keys.D1))
+    {
+        _animator?.Play("idle");
+        Logger.LogInformation("Playing: idle");
+    }
+    if (_input.IsKeyPressed(Keys.D2))
+    {
+        _animator?.Play("walk");
+        Logger.LogInformation("Playing: walk");
+    }
+    if (_input.IsKeyPressed(Keys.D3))
+    {
+        _animator?.Play("run");
+        Logger.LogInformation("Playing: run");
+    }
+    if (_input.IsKeyPressed(Keys.D4))
+    {
+        _animator?.Play("jump");
+        Logger.LogInformation("Playing: jump");
+    }
+
+    // Update the animator (CRITICAL!)
+    _animator?.Update(deltaTime);
+}</code></pre>
+<p><strong>Key Point:</strong> You MUST call <code>_animator.Update(deltaTime)</code> every frame!</p>
+<hr />
+<h2 id="step-6-rendering-animated-sprites">Step 6: Rendering Animated Sprites<a class="headerlink" href="#step-6-rendering-animated-sprites" title="Permanent link">&para;</a></h2>
+<p>Now we draw the current animation frame:</p>
+<pre class="highlight"><code class="language-csharp">protected override void OnRender(GameTime gameTime)
+{
+    _renderer.Clear(new Color(40, 40, 40));
+    _renderer.BeginFrame();
+
+    if (_spriteSheet != null &amp;&amp; _animator?.CurrentFrame != null)
+    {
+        var frame = _animator.CurrentFrame;
+        var rect = frame.SourceRect;
+
+        // Scale up for visibility (optional)
+        var scale = 4.0f;
+        var destWidth = rect.Width * scale;
+        var destHeight = rect.Height * scale;
+
+        var drawX = _position.X - (destWidth / 2);
+        var drawY = _position.Y - (destHeight / 2);
+
+        // Draw the current frame
+        _renderer.DrawTexture(
+            _spriteSheet,
+            rect.X, rect.Y, rect.Width, rect.Height,  // Source rectangle
+            drawX, drawY, destWidth, destHeight       // Destination rectangle
+        );
+    }
+
+    _renderer.EndFrame();
+}</code></pre>
+<p><strong>What's happening:</strong>
+- <code>_animator.CurrentFrame</code> gives us the current frame to display
+- <code>frame.SourceRect</code> tells us where in the sprite sheet to read from
+- We draw that portion of the texture to the screen</p>
+<hr />
+<h2 id="step-7-animation-controls">Step 7: Animation Controls<a class="headerlink" href="#step-7-animation-controls" title="Permanent link">&para;</a></h2>
+<p>Add pause/resume and speed controls:</p>
+<pre class="highlight"><code class="language-csharp">protected override void OnUpdate(GameTime gameTime)
+{
+    var deltaTime = (float)gameTime.DeltaTime;
+
+    if (_input.IsKeyPressed(Keys.Escape))
+    {
+        _gameContext.RequestExit();
+    }
+
+    // Pause/Resume
+    if (_input.IsKeyPressed(Keys.Space))
+    {
+        if (_animator?.IsPlaying == true)
+        {
+            _animator.Pause();
+            Logger.LogInformation("Animation paused");
+        }
+        else
+        {
+            _animator?.Resume();
+            Logger.LogInformation("Animation resumed");
+        }
+    }
+
+    // Speed control
+    if (_animator != null)
+    {
+        if (_input.IsKeyDown(Keys.LeftShift))
+        {
+            _animator.Speed = 2.0f; // 2x faster
+        }
+        else if (_input.IsKeyDown(Keys.LeftControl))
+        {
+            _animator.Speed = 0.5f; // Half speed (slow-mo)
+        }
+        else
+        {
+            _animator.Speed = 1.0f; // Normal speed
+        }
+    }
+
+    // Animation switching (1-4 keys)
+    if (_input.IsKeyPressed(Keys.D1)) _animator?.Play("idle");
+    if (_input.IsKeyPressed(Keys.D2)) _animator?.Play("walk");
+    if (_input.IsKeyPressed(Keys.D3)) _animator?.Play("run");
+    if (_input.IsKeyPressed(Keys.D4)) _animator?.Play("jump");
+
+    _animator?.Update(deltaTime);
+}</code></pre>
+<hr />
+<h2 id="step-8-movement-with-animation">Step 8: Movement with Animation<a class="headerlink" href="#step-8-movement-with-animation" title="Permanent link">&para;</a></h2>
+<p>Let's make the character move AND animate:</p>
+<pre class="highlight"><code class="language-csharp">protected override void OnUpdate(GameTime gameTime)
+{
+    var deltaTime = (float)gameTime.DeltaTime;
+
+    if (_input.IsKeyPressed(Keys.Escape))
+    {
+        _gameContext.RequestExit();
+    }
+
+    // Calculate movement
+    var movement = Vector2.Zero;
+    if (_input.IsKeyDown(Keys.W)) movement.Y -= 1;
+    if (_input.IsKeyDown(Keys.S)) movement.Y += 1;
+    if (_input.IsKeyDown(Keys.A)) movement.X -= 1;
+    if (_input.IsKeyDown(Keys.D)) movement.X += 1;
+
+    // Choose animation based on movement
+    if (movement != Vector2.Zero)
+    {
+        movement = Vector2.Normalize(movement);
+        _position += movement * _speed * deltaTime;
+
+        // Run if holding Shift, otherwise walk
+        if (_input.IsKeyDown(Keys.LeftShift))
+        {
+            _animator?.Play("run");
+        }
+        else
+        {
+            _animator?.Play("walk");
+        }
+    }
+    else
+    {
+        // Not moving, play idle
+        _animator?.Play("idle");
+    }
+
+    // Jump animation (overrides movement)
+    if (_input.IsKeyPressed(Keys.Space))
+    {
+        _animator?.Play("jump");
+    }
+
+    _animator?.Update(deltaTime);
+}</code></pre>
+<hr />
+<h2 id="complete-code">Complete Code<a class="headerlink" href="#complete-code" title="Permanent link">&para;</a></h2>
+<p>Here's the full <code>AnimatedSpriteScene.cs</code>:</p>
+<pre class="highlight"><code class="language-csharp">using Brine2D.Core;
+using Brine2D.Core.Animation;
+using Brine2D.Input;
+using Brine2D.Rendering;
+using Microsoft.Extensions.Logging;
+using System.Numerics;
+
+namespace MyGame;
+
+public class AnimatedSpriteScene : Scene
+{
+    private readonly IRenderer _renderer;
+    private readonly IInputService _input;
+    private readonly ITextureLoader _textureLoader;
+    private readonly IGameContext _gameContext;
+    private readonly ILoggerFactory _loggerFactory;
+
+    private ITexture? _spriteSheet;
+    private SpriteAnimator? _animator;
+    private Vector2 _position = new Vector2(640, 360);
+    private float _speed = 200f;
+
+    public AnimatedSpriteScene(
+        IRenderer renderer,
+        IInputService input,
+        ITextureLoader textureLoader,
+        IGameContext gameContext,
+        ILoggerFactory loggerFactory,
+        ILogger&lt;AnimatedSpriteScene&gt; logger
+    ) : base(logger)
+    {
+        _renderer = renderer;
+        _input = input;
+        _textureLoader = textureLoader;
+        _gameContext = gameContext;
+        _loggerFactory = loggerFactory;
+    }
+
+    protected override void OnInitialize()
+    {
+        Logger.LogInformation("Animated Sprite Scene initialized!");
+        Logger.LogInformation("Controls:");
+        Logger.LogInformation("  WASD - Move");
+        Logger.LogInformation("  Shift - Run");
+        Logger.LogInformation("  Space - Jump");
+        Logger.LogInformation("  1-4 - Manual animation select");
+        Logger.LogInformation("  ESC - Exit");
+    }
+
+    protected override async Task OnLoadAsync(CancellationToken cancellationToken)
+    {
+        Logger.LogInformation("Loading sprite sheet...");
+
+        var spriteSheetPath = "assets/sprites/character.png";
+
+        if (File.Exists(spriteSheetPath))
+        {
+            _spriteSheet = await _textureLoader.LoadTextureAsync(
+                spriteSheetPath,
+                TextureScaleMode.Nearest,
+                cancellationToken
+            );
+
+            Logger.LogInformation("Sprite sheet loaded: {Width}x{Height}",
+                _spriteSheet.Width, _spriteSheet.Height);
+        }
+        else
+        {
+            Logger.LogWarning("Sprite sheet not found, using placeholder");
+            _spriteSheet = _textureLoader.CreateTexture(576, 24, TextureScaleMode.Nearest);
+        }
+
+        _animator = new SpriteAnimator(_loggerFactory.CreateLogger&lt;SpriteAnimator&gt;());
+
+        const int frameWidth = 24;
+        const int frameHeight = 24;
+        const int columns = 24;
+
+        // Walk: frames 0-3
+        var walkAnim = AnimationClip.FromSpriteSheet(
+            "walk", frameWidth, frameHeight, 4, columns, 0.15f, true);
+
+        // Run: frames 4-9
+        var runAnim = new AnimationClip("run") { Loop = true };
+        for (int i = 4; i &lt; 10; i++)
+        {
+            runAnim.Frames.Add(new SpriteFrame(
+                new Rectangle(i * frameWidth, 0, frameWidth, frameHeight),
+                0.08f));
+        }
+
+        // Jump: frames 10-12
+        var jumpAnim = new AnimationClip("jump") { Loop = false };
+        for (int i = 10; i &lt; 13; i++)
+        {
+            jumpAnim.Frames.Add(new SpriteFrame(
+                new Rectangle(i * frameWidth, 0, frameWidth, frameHeight),
+                0.1f));
+        }
+
+        // Idle: frame 13
+        var idleAnim = new AnimationClip("idle") { Loop = true };
+        idleAnim.Frames.Add(new SpriteFrame(
+            new Rectangle(13 * frameWidth, 0, frameWidth, frameHeight),
+            1.0f));
+
+        _animator.AddAnimation(walkAnim);
+        _animator.AddAnimation(runAnim);
+        _animator.AddAnimation(jumpAnim);
+        _animator.AddAnimation(idleAnim);
+
+        _animator.Play("idle");
+
+        Logger.LogInformation("Loaded {Count} animations", 4);
+    }
+
+    protected override void OnUpdate(GameTime gameTime)
+    {
+        var deltaTime = (float)gameTime.DeltaTime;
+
+        if (_input.IsKeyPressed(Keys.Escape))
+        {
+            _gameContext.RequestExit();
+        }
+
+        // Manual animation selection (1-4 keys)
+        if (_input.IsKeyPressed(Keys.D1)) _animator?.Play("idle");
+        if (_input.IsKeyPressed(Keys.D2)) _animator?.Play("walk");
+        if (_input.IsKeyPressed(Keys.D3)) _animator?.Play("run");
+        if (_input.IsKeyPressed(Keys.D4)) _animator?.Play("jump");
+
+        // Movement-based animation
+        var movement = Vector2.Zero;
+        if (_input.IsKeyDown(Keys.W)) movement.Y -= 1;
+        if (_input.IsKeyDown(Keys.S)) movement.Y += 1;
+        if (_input.IsKeyDown(Keys.A)) movement.X -= 1;
+        if (_input.IsKeyDown(Keys.D)) movement.X += 1;
+
+        if (movement != Vector2.Zero)
+        {
+            movement = Vector2.Normalize(movement);
+            _position += movement * _speed * deltaTime;
+
+            // Only auto-play movement animations if not manually selected
+            if (!_input.IsKeyPressed(Keys.D1) &amp;&amp; 
+                !_input.IsKeyPressed(Keys.D2) &amp;&amp; 
+                !_input.IsKeyPressed(Keys.D3) &amp;&amp; 
+                !_input.IsKeyPressed(Keys.D4))
+            {
+                if (_input.IsKeyDown(Keys.LeftShift))
+                {
+                    _animator?.Play("run");
+                }
+                else
+                {
+                    _animator?.Play("walk");
+                }
+            }
+        }
+        else if (!_input.IsKeyPressed(Keys.D1) &amp;&amp; 
+                 !_input.IsKeyPressed(Keys.D2) &amp;&amp; 
+                 !_input.IsKeyPressed(Keys.D3) &amp;&amp; 
+                 !_input.IsKeyPressed(Keys.D4))
+        {
+            _animator?.Play("idle");
+        }
+
+        // Jump overrides other animations
+        if (_input.IsKeyPressed(Keys.Space))
+        {
+            _animator?.Play("jump");
+        }
+
+        _animator?.Update(deltaTime);
+    }
+
+    protected override void OnRender(GameTime gameTime)
+    {
+        _renderer.Clear(new Color(40, 40, 40));
+        _renderer.BeginFrame();
+
+        if (_spriteSheet != null &amp;&amp; _animator?.CurrentFrame != null)
+        {
+            var frame = _animator.CurrentFrame;
+            var rect = frame.SourceRect;
+
+            var scale = 4.0f;
+            var destWidth = rect.Width * scale;
+            var destHeight = rect.Height * scale;
+
+            var drawX = _position.X - (destWidth / 2);
+            var drawY = _position.Y - (destHeight / 2);
+
+            _renderer.DrawTexture(
+                _spriteSheet,
+                rect.X, rect.Y, rect.Width, rect.Height,
+                drawX, drawY, destWidth, destHeight);
+        }
+
+        _renderer.EndFrame();
+    }
+
+    protected override Task OnUnloadAsync(CancellationToken cancellationToken)
+    {
+        if (_spriteSheet != null)
+        {
+            _textureLoader.UnloadTexture(_spriteSheet);
+        }
+
+        return Task.CompletedTask;
+    }
+}</code></pre>
+<hr />
+<h2 id="animation-system-deep-dive">Animation System Deep Dive<a class="headerlink" href="#animation-system-deep-dive" title="Permanent link">&para;</a></h2>
+<h3 id="how-spriteanimator-works">How SpriteAnimator Works<a class="headerlink" href="#how-spriteanimator-works" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>You add animations</strong>: <code>_animator.AddAnimation(clip)</code></li>
+<li><strong>You play an animation</strong>: <code>_animator.Play("walk")</code></li>
+<li><strong>Update advances frames</strong>: <code>_animator.Update(deltaTime)</code></li>
+<li><strong>You render the current frame</strong>: <code>_animator.CurrentFrame</code></li>
+</ol>
+<h3 id="frame-timing">Frame Timing<a class="headerlink" href="#frame-timing" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// Each frame displays for its duration
+frameTimer += deltaTime;
+
+if (frameTimer &gt;= currentFrame.Duration)
+{
+    frameTimer -= currentFrame.Duration;
+    currentFrameIndex++;
+}</code></pre>
+<h3 id="loop-vs-one-shot">Loop vs One-Shot<a class="headerlink" href="#loop-vs-one-shot" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">var loopingAnim = new AnimationClip("walk") { Loop = true };   // Repeats
+var oneShotAnim = new AnimationClip("jump") { Loop = false };  // Plays once</code></pre>
+<p>When a one-shot animation finishes, <code>IsPlaying</code> becomes false.</p>
+<hr />
+<h2 id="challenges">Challenges<a class="headerlink" href="#challenges" title="Permanent link">&para;</a></h2>
+<h3 id="easy">Easy<a class="headerlink" href="#easy" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>More animations</strong> - Add crouch, hurt, or attack animations</li>
+<li><strong>Animation speed</strong> - Experiment with different frame durations</li>
+<li><strong>Direction flipping</strong> - Flip the sprite horizontally when moving left</li>
+</ol>
+<h3 id="medium">Medium<a class="headerlink" href="#medium" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Animation events</strong> - Trigger sound effects when certain frames play</li>
+<li><strong>Blend animations</strong> - Smoothly transition between animations</li>
+<li><strong>Animation queuing</strong> - Queue the next animation to play after current finishes</li>
+</ol>
+<h3 id="hard">Hard<a class="headerlink" href="#hard" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>State machine</strong> - Build a proper animation state machine with transitions</li>
+<li><strong>Multi-layer animation</strong> - Animate body and legs separately</li>
+<li><strong>Procedural animation</strong> - Generate animations at runtime</li>
+</ol>
+<hr />
+<h2 id="what-you-learned">What You Learned<a class="headerlink" href="#what-you-learned" title="Permanent link">&para;</a></h2>
+<p>✅ <strong>Sprite sheets</strong> - Organizing multiple frames in one texture<br />
+✅ <strong>AnimationClip</strong> - Creating frame-based animations<br />
+✅ <strong>SpriteAnimator</strong> - Managing and playing animations<br />
+✅ <strong>Frame timing</strong> - Using delta time for smooth playback<br />
+✅ <strong>Animation control</strong> - Play, pause, resume, speed control<br />
+✅ <strong>State-driven animation</strong> - Choosing animations based on game state<br />
+✅ <strong>Loop vs one-shot</strong> - Different animation behaviors</p>
+<hr />
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<p>Ready for more? Check out:</p>
+<ul>
+<li><strong><a href="collision.md">Collision Detection</a></strong> - Make your animated character interact with the world</li>
+<li><strong><a href="platformer.md">Building a Platformer</a></strong> - Combine movement, animation, and physics</li>
+<li><strong><a href="../guides/rendering/animations.md">Animation Guide</a></strong> - Advanced animation techniques</li>
+<li><strong><a href="../../guides/rendering/sprites/">Sprite Guide</a></strong> - More sprite rendering tricks</li>
+</ul>
+<hr />
+<h2 id="common-issues">Common Issues<a class="headerlink" href="#common-issues" title="Permanent link">&para;</a></h2>
+<h3 id="animation-not-playing">Animation not playing?<a class="headerlink" href="#animation-not-playing" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Did you call <code>_animator.Update(deltaTime)</code> in <code>OnUpdate</code>?</li>
+<li>Check if the animation name is correct</li>
+<li>Verify frames were added to the clip</li>
+</ul>
+<h3 id="animation-too-fastslow">Animation too fast/slow?<a class="headerlink" href="#animation-too-fastslow" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Adjust <code>frameDuration</code> in each frame</li>
+<li>Or use <code>_animator.Speed</code> to change playback speed globally</li>
+</ul>
+<h3 id="wrong-frames-showing">Wrong frames showing?<a class="headerlink" href="#wrong-frames-showing" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Double-check your frame indices and sprite sheet layout</li>
+<li>Verify <code>frameWidth</code>, <code>frameHeight</code>, and <code>columns</code> are correct</li>
+<li>Use a sprite sheet viewer tool to confirm frame positions</li>
+</ul>
+<h3 id="animation-stutters">Animation stutters?<a class="headerlink" href="#animation-stutters" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Make sure you're using <code>deltaTime</code> correctly</li>
+<li>Check frame rate is consistent (enable VSync)</li>
+<li>Verify frame durations add up correctly</li>
+</ul>
+<hr />
+<p>Great job! You've mastered sprite animation in Brine2D. Your characters are now ready to come alive!</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "content.code.select"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,4654 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Complete working examples demonstrating Brine2D features">
+      
+      
+      
+      
+        <link rel="prev" href="../guides/events/window-events/">
+      
+      
+        <link rel="next" href="architecture/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Samples Overview - Brine2D Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../stylesheets/prism-material-slate.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#samples" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Brine2D Documentation" class="md-header__button md-logo" aria-label="Brine2D Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Brine2D Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Samples Overview
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Brine2D Documentation" class="md-nav__button md-logo" aria-label="Brine2D Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Brine2D Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    What's New
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../whats-new/v0.8.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.8.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../whats-new/v0.7.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.7.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../whats-new/v0.6.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.6.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/first-game/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/project-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/moving-sprites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Moving Sprites
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/animations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/collision.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision Detection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/platformer.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building a Platformer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../tutorials/top-down.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Top-Down Adventure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Rendering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/rendering/choosing-renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing a Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/rendering/gpu-renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GPU Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/rendering/sprites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprites & Textures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/rendering/texture-atlasing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Texture Atlasing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/rendering/cameras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cameras
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/rendering/particles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Particles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/rendering/primitives/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Drawing Primitives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Input
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/input/keyboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keyboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/input/mouse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mouse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/input/gamepad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gamepad Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/input/layers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input Layers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audio
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Audio
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/audio/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/audio/sound-effects.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sound Effects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/audio/music.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Music Playback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/audio/spatial-audio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spatial Audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scenes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Scenes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/scenes/lifecycle.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/scenes/transitions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Transitions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/scenes/lifecycle-hooks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle Hooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Collision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/collision/system.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/collision/colliders.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Colliders
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_7" id="__nav_5_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tilemaps
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tilemaps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/tilemaps/loading.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Loading Tilemaps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/tilemaps/rendering.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering Tiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_8" id="__nav_5_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Framework
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UI Framework
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/ui/components.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/ui/custom.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom UI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_9" id="__nav_5_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Component System
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Entity Component System
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/ecs/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/ecs/components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/ecs/systems/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/ecs/entities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/ecs/queries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Queries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_10" id="__nav_5_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Events
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../guides/events/window-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Window Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#featuredemos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FeatureDemos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FeatureDemos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#demo-scenes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Demo Scenes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-the-demos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running the Demos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Running the Demos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-1-run-from-visual-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 1: Run from Visual Studio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-2-run-from-command-line" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 2: Run from Command Line
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Navigation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#demo-deep-dive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Demo Deep Dive
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Demo Deep Dive">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-query-system-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Query System Demo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-particle-system-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Particle System Demo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-texture-atlas-demo-new" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Texture Atlas Demo (NEW)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-spatial-audio-demo-new" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Spatial Audio Demo (NEW)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-collision-detection-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Collision Detection Demo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-scene-transitions-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Scene Transitions Demo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-ui-components-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. UI Components Demo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-manual-control-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Manual Control Demo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#project-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-injection-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Injection Setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#learning-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Learning Path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-demos-as-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Demos as Templates
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#menu-doesnt-appear" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Menu doesn't appear?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demos-run-slowly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Demos run slowly?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#texture-atlas-demo-shows-no-improvement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Texture Atlas Demo shows no improvement?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spatial-audio-demo-is-silent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Audio Demo is silent?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#particles-dont-show-textures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Particles don't show textures?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Tips
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Tips">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#texture-atlas-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Texture Atlas Demo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spatial-audio-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Audio Demo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#particle-system-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Particle System Demo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="dependency-injection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="game-loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Game Loop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="builder-pattern/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Builder Pattern
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="scenes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="entity-component-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Component System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/core.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Core
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/rendering.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Rendering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/input.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Input
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/audio.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../api/ecs.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.ECS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Samples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Samples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../samples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../samples/basic-game.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../samples/animation-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../samples/collision-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../samples/ecs-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ECS Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Contributing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to Contribute
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/code-style.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Style
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../contributing/building.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building from Source
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#featuredemos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        FeatureDemos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="FeatureDemos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#demo-scenes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Demo Scenes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-the-demos" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running the Demos
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Running the Demos">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-1-run-from-visual-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 1: Run from Visual Studio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-2-run-from-command-line" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option 2: Run from Command Line
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#navigation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Navigation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#demo-deep-dive" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Demo Deep Dive
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Demo Deep Dive">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-query-system-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Query System Demo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-particle-system-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Particle System Demo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-texture-atlas-demo-new" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Texture Atlas Demo (NEW)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-spatial-audio-demo-new" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Spatial Audio Demo (NEW)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-collision-detection-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Collision Detection Demo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-scene-transitions-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Scene Transitions Demo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-ui-components-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. UI Components Demo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#8-manual-control-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        8. Manual Control Demo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#project-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-injection-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Injection Setup
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#learning-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Learning Path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#using-demos-as-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Demos as Templates
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#menu-doesnt-appear" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Menu doesn't appear?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#demos-run-slowly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Demos run slowly?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#texture-atlas-demo-shows-no-improvement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Texture Atlas Demo shows no improvement?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spatial-audio-demo-is-silent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Audio Demo is silent?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#particles-dont-show-textures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Particles don't show textures?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Tips
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Tips">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#texture-atlas-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Texture Atlas Demo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spatial-audio-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Audio Demo
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#particle-system-demo" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Particle System Demo
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="samples">Samples<a class="headerlink" href="#samples" title="Permanent link">&para;</a></h1>
+<p>Learn by example! The Brine2D samples demonstrate real-world usage of the engine's features. Each sample is a complete, runnable project that showcases specific functionality.</p>
+<h2 id="featuredemos">FeatureDemos<a class="headerlink" href="#featuredemos" title="Permanent link">&para;</a></h2>
+<p><strong>Location:</strong> <code>samples/FeatureDemos/</code><br />
+<strong>Difficulty:</strong> Beginner to Advanced<br />
+<strong>Topics Covered:</strong> ECS Queries, Particles, Texture Atlasing, Spatial Audio, Collision, Scene Transitions, UI, Manual Control</p>
+<p>The FeatureDemos project is an interactive showcase of Brine2D's major features. Run the project to see a <strong>menu-driven demo selector</strong> where you can explore each feature independently.</p>
+<pre class="mermaid"><code>graph TD
+    A["FeatureDemos Project"] --&gt; B["MainMenuScene"]
+    B --&gt; C["Query System Demo"]
+    B --&gt; D["Particle System Demo"]
+    B --&gt; E["Texture Atlas Demo"]
+    B --&gt; F["Spatial Audio Demo"]
+    B --&gt; G["Collision Demo"]
+    B --&gt; H["Scene Transitions Demo"]
+    B --&gt; I["UI Components Demo"]
+    B --&gt; J["Manual Control Demo"]
+
+    C --&gt; K["Fluent Query API"]
+    C --&gt; L["Cached Queries"]
+    C --&gt; M["Complex Filters"]
+
+    D --&gt; N["Textures &amp; Rotation"]
+    D --&gt; O["Trails &amp; Blend Modes"]
+    D --&gt; P["7 Emitter Shapes"]
+
+    E --&gt; Q["Runtime Packing"]
+    E --&gt; R["Bin Packing Algorithm"]
+    E --&gt; S["Draw Call Reduction"]
+
+    F --&gt; T["Distance Attenuation"]
+    F --&gt; U["Stereo Panning"]
+    F --&gt; V["Real-Time Visualization"]
+
+    G --&gt; W["AABB Colliders"]
+    G --&gt; X["Circle Colliders"]
+    G --&gt; Y["Physics Response"]
+
+    H --&gt; Z["FadeTransition"]
+    H --&gt; AA["Loading Screens"]
+    H --&gt; AB["Scene Chaining"]
+
+    I --&gt; AC["Complete UI Library"]
+    I --&gt; AD["Tooltips &amp; Dialogs"]
+    I --&gt; AE["Input Layers"]
+
+    J --&gt; AF["Lifecycle Hooks"]
+    J --&gt; AG["Manual Pipelines"]
+    J --&gt; AH["Power User Features"]
+
+    style A fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+    style B fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style C fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style D fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style E fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style F fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style G fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style H fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style I fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style J fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff</code></pre>
+<h3 id="demo-scenes">Demo Scenes<a class="headerlink" href="#demo-scenes" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Demo</th>
+<th>Description</th>
+<th>Key Features</th>
+<th>Category</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Query System</strong></td>
+<td>Advanced entity queries</td>
+<td>Fluent API, cached queries, complex filters</td>
+<td>ECS</td>
+</tr>
+<tr>
+<td><strong>Particle System</strong></td>
+<td>Advanced particle effects</td>
+<td>Textures, rotation, trails, blend modes, 7 shapes</td>
+<td>ECS</td>
+</tr>
+<tr>
+<td><strong>Texture Atlas</strong></td>
+<td>Runtime sprite packing</td>
+<td>Bin packing, draw call reduction, performance</td>
+<td>Rendering</td>
+</tr>
+<tr>
+<td><strong>Spatial Audio</strong></td>
+<td>2D positional audio</td>
+<td>Distance attenuation, stereo panning, visualization</td>
+<td>Audio</td>
+</tr>
+<tr>
+<td><strong>Collision Detection</strong></td>
+<td>Physics and collision</td>
+<td>AABB/circle colliders, bounce, slide, push</td>
+<td>Collision</td>
+</tr>
+<tr>
+<td><strong>Scene Transitions</strong></td>
+<td>Smooth scene changes</td>
+<td>FadeTransition, loading screens, async loading</td>
+<td>Transitions</td>
+</tr>
+<tr>
+<td><strong>UI Components</strong></td>
+<td>Complete UI showcase</td>
+<td>All 15+ components, tooltips, dialogs, tabs</td>
+<td>UI</td>
+</tr>
+<tr>
+<td><strong>Manual Control</strong></td>
+<td>Power user features</td>
+<td>Opt-out of automatic execution, custom pipelines</td>
+<td>Advanced</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="running-the-demos">Running the Demos<a class="headerlink" href="#running-the-demos" title="Permanent link">&para;</a></h2>
+<h3 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h3>
+<ul>
+<li>.NET 10 SDK</li>
+<li>Visual Studio 2022 or VS Code</li>
+<li>SDL3 (auto-installed via NuGet)</li>
+</ul>
+<h3 id="option-1-run-from-visual-studio">Option 1: Run from Visual Studio<a class="headerlink" href="#option-1-run-from-visual-studio" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Open <code>Brine2D.sln</code> in Visual Studio</li>
+<li>Set <code>FeatureDemos</code> as startup project</li>
+<li>Press <strong>F5</strong> to run</li>
+<li>Select a demo from the menu</li>
+</ol>
+<h3 id="option-2-run-from-command-line">Option 2: Run from Command Line<a class="headerlink" href="#option-2-run-from-command-line" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-bash">cd samples/FeatureDemos
+dotnet run</code></pre>
+<h3 id="navigation">Navigation<a class="headerlink" href="#navigation" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Use number keys (1-8)</strong> to select a demo</li>
+<li><strong>ESC</strong> returns to menu from any demo</li>
+<li><strong>F1-F5</strong> toggle debug options in some demos</li>
+</ul>
+<hr />
+<h2 id="demo-deep-dive">Demo Deep Dive<a class="headerlink" href="#demo-deep-dive" title="Permanent link">&para;</a></h2>
+<h3 id="1-query-system-demo">1. Query System Demo<a class="headerlink" href="#1-query-system-demo" title="Permanent link">&para;</a></h3>
+<p><strong>What it demonstrates:</strong>
+- Fluent query API for complex entity searches
+- Cached queries for performance
+- Multiple filter conditions (<code>With</code>, <code>Without</code>, <code>Where</code>)
+- Real-time entity statistics</p>
+<p><strong>Controls:</strong>
+- <strong>SPACE</strong> - Spawn entities
+- <strong>C</strong> - Clear entities
+- <strong>ESC</strong> - Return to menu</p>
+<p><strong>Key Code:</strong></p>
+<pre class="highlight"><code class="language-csharp">// Find low-health enemies near the player
+var weakEnemies = _world.Query()
+    .With&lt;HealthComponent&gt;()
+    .With&lt;TransformComponent&gt;()
+    .Without&lt;DeadComponent&gt;()
+    .WithTag("Enemy")
+    .Where(e =&gt; 
+    {
+        var health = e.GetComponent&lt;HealthComponent&gt;();
+        var transform = e.GetComponent&lt;TransformComponent&gt;();
+        var distance = Vector2.Distance(transform.Position, playerPos);
+
+        return health.CurrentHealth &lt; 50 &amp;&amp; distance &lt; 200f;
+    })
+    .Execute();
+
+// Cached queries (no allocation!)
+var movingEntities = _world.CreateCachedQuery&lt;TransformComponent, VelocityComponent&gt;();
+foreach (var (transform, velocity) in movingEntities)
+{
+    transform.Position += velocity.Velocity * deltaTime;
+}</code></pre>
+<hr />
+<h3 id="2-particle-system-demo">2. Particle System Demo<a class="headerlink" href="#2-particle-system-demo" title="Permanent link">&para;</a></h3>
+<p><strong>What it demonstrates:</strong>
+- <strong>NEW:</strong> Particle textures with custom sprites
+- <strong>NEW:</strong> Rotation (start, end, rotation speed)
+- <strong>NEW:</strong> Trail effects with configurable length
+- <strong>NEW:</strong> Blend modes (additive, alpha, none)
+- <strong>NEW:</strong> 7 emitter shapes (point, circle, ring, box, cone, line, burst)
+- Object pooling for 10,000+ particles at 60 FPS
+- Performance monitoring</p>
+<p><strong>Controls:</strong>
+- <strong>1-7</strong> - Change emitter shape
+- <strong>T</strong> - Toggle particle textures
+- <strong>R</strong> - Toggle rotation
+- <strong>L</strong> - Toggle trails
+- <strong>B</strong> - Cycle blend modes
+- <strong>SPACE</strong> - Toggle emission
+- <strong>ESC</strong> - Return to menu</p>
+<p><strong>Key Code:</strong></p>
+<pre class="highlight"><code class="language-csharp">// Create advanced particle emitter
+var emitter = entity.AddComponent&lt;ParticleEmitterComponent&gt;();
+
+// NEW: Particle textures
+emitter.TexturePath = "assets/particles/fire.png";
+emitter.TextureScaleMode = TextureScaleMode.Nearest;
+
+// NEW: Rotation
+emitter.StartRotation = 0f;
+emitter.EndRotation = MathF.PI * 2;
+emitter.RotationSpeed = 2f;
+
+// NEW: Trails
+emitter.TrailEnabled = true;
+emitter.TrailLength = 10;
+emitter.TrailColor = new Color(255, 100, 0, 128);
+
+// NEW: Blend modes
+emitter.BlendMode = BlendMode.Additive; // Fire/explosions
+
+// NEW: Emitter shapes
+emitter.EmitterShape = EmitterShape.Cone;
+emitter.ConeAngle = MathF.PI / 4;
+
+// Standard properties
+emitter.EmissionRate = 100f;
+emitter.MaxParticles = 500;
+emitter.ParticleLifetime = 2f;
+emitter.StartColor = new Color(255, 200, 0, 255);
+emitter.EndColor = new Color(255, 50, 0, 0);</code></pre>
+<hr />
+<h3 id="3-texture-atlas-demo-new">3. Texture Atlas Demo (NEW)<a class="headerlink" href="#3-texture-atlas-demo-new" title="Permanent link">&para;</a></h3>
+<p><strong>What it demonstrates:</strong>
+- Runtime texture packing with intelligent bin packing
+- Massive draw call reduction (90-99%)
+- Before/after performance comparison
+- Visual atlas preview
+- Real-time draw call monitoring</p>
+<p><strong>Controls:</strong>
+- <strong>SPACE</strong> - Toggle atlas usage
+- <strong>1-3</strong> - Change sprite count (100/500/1000)
+- <strong>F3</strong> - Toggle performance overlay
+- <strong>A</strong> - Show atlas texture
+- <strong>ESC</strong> - Return to menu</p>
+<p><strong>Performance Impact:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Sprite Count</th>
+<th>Without Atlas</th>
+<th>With Atlas</th>
+<th>Draw Call Reduction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>100 sprites</td>
+<td>10-15 calls</td>
+<td>1 call</td>
+<td><strong>90-93%</strong></td>
+</tr>
+<tr>
+<td>500 sprites</td>
+<td>40-50 calls</td>
+<td>1-2 calls</td>
+<td><strong>96-98%</strong></td>
+</tr>
+<tr>
+<td>1000 sprites</td>
+<td>80-100 calls</td>
+<td>1-2 calls</td>
+<td><strong>98-99%</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key Code:</strong></p>
+<pre class="highlight"><code class="language-csharp">// Load individual textures
+var textures = new List&lt;ITexture&gt;();
+for (int i = 0; i &lt; 10; i++)
+{
+    textures.Add(await _textureLoader.LoadTextureAsync($"assets/sprite{i}.png"));
+}
+
+// Build atlas at runtime
+var atlas = await AtlasBuilder.BuildAtlasAsync(
+    _renderer,
+    _textureLoader,
+    textures,
+    padding: 2,      // Prevent texture bleeding
+    maxSize: 2048    // Max atlas dimension
+);
+
+// Draw using atlas (automatic batching)
+var region = atlas.GetRegion(textures[0]);
+_renderer.DrawTexture(
+    atlas.AtlasTexture,
+    region.SourceRect.X, region.SourceRect.Y,
+    region.SourceRect.Width, region.SourceRect.Height,
+    x, y, width, height
+);
+
+// Result: All sprites drawn in 1-2 draw calls!
+Logger.LogInfo($"Draw calls reduced from {textures.Count} to {atlas.RegionCount}");</code></pre>
+<p><strong>Visual Feedback:</strong>
+- Shows before/after FPS comparison
+- Real-time draw call counter
+- Visual atlas texture preview
+- Bin packing efficiency percentage</p>
+<hr />
+<h3 id="4-spatial-audio-demo-new">4. Spatial Audio Demo (NEW)<a class="headerlink" href="#4-spatial-audio-demo-new" title="Permanent link">&para;</a></h3>
+<p><strong>What it demonstrates:</strong>
+- 2D spatial audio with distance-based volume attenuation
+- Stereo panning based on horizontal position
+- Multiple falloff curves (linear, quadratic, custom)
+- Real-time audio visualization
+- ECS integration with audio sources and listeners</p>
+<p><strong>Controls:</strong>
+- <strong>WASD</strong> - Move player (audio listener)
+- <strong>1-3</strong> - Toggle sound sources
+- <strong>SPACE</strong> - Trigger one-shot explosion sound
+- <strong>+/-</strong> - Adjust master volume
+- <strong>ESC</strong> - Return to menu</p>
+<p><strong>Audio Sources:</strong>
+- <strong>Left (Beep)</strong> - Continuous looping sound, linear falloff
+- <strong>Right (Explosion)</strong> - One-shot triggered sound, quadratic falloff
+- <strong>Top (Ambient)</strong> - Background ambience, partial stereo</p>
+<p><strong>Visual Feedback:</strong>
+- Distance circles (min/max audio range)
+- Connection lines showing distance
+- Real-time volume/pan values
+- Color-coded audio sources</p>
+<p><strong>Key Code:</strong></p>
+<pre class="highlight"><code class="language-csharp">// Create audio listener (player)
+var player = _world.CreateEntity("Player");
+var listener = player.AddComponent&lt;AudioListenerComponent&gt;();
+listener.GlobalSpatialVolume = 1.0f;
+
+// Create spatial audio source
+var enemy = _world.CreateEntity("Enemy");
+var audioSource = enemy.AddComponent&lt;AudioSourceComponent&gt;();
+audioSource.SoundEffect = enemySound;
+audioSource.EnableSpatialAudio = true;
+
+// Configure distance attenuation
+audioSource.MinDistance = 100f;  // Full volume within 100 pixels
+audioSource.MaxDistance = 500f;  // Silent beyond 500 pixels
+audioSource.RolloffFactor = 1.0f;  // 1.0 = linear, 2.0 = quadratic
+
+// Configure stereo panning
+audioSource.SpatialBlend = 1.0f;  // 0.0 = mono, 1.0 = full stereo
+
+// Start playing
+audioSource.Loop = true;
+audioSource.LoopCount = -1;
+audioSource.PlayOnEnable = true;
+
+// AudioSystem automatically updates spatial audio every frame!
+// Volume and panning adjust as entities move</code></pre>
+<p><strong>Distance Attenuation:</strong>
+<pre class="highlight"><code>Linear (RolloffFactor = 1.0):
+Volume = 1.0 at MinDistance, 0.0 at MaxDistance
+
+Quadratic (RolloffFactor = 2.0):
+Drops quickly near source, gradually far away</code></pre></p>
+<p><strong>Stereo Panning:</strong>
+<pre class="highlight"><code>SpatialBlend = 0.0: Mono (center)
+SpatialBlend = 0.5: Partial stereo
+SpatialBlend = 1.0: Full stereo (clear left/right)</code></pre></p>
+<hr />
+<h3 id="5-collision-detection-demo">5. Collision Detection Demo<a class="headerlink" href="#5-collision-detection-demo" title="Permanent link">&para;</a></h3>
+<p><strong>What it demonstrates:</strong>
+- AABB (box) and circle colliders
+- Collision detection with <code>CollisionSystem</code>
+- Physics response: bounce, slide, push
+- Dynamic vs static objects
+- Trigger colliders (collectibles)
+- Debug visualization</p>
+<p><strong>Controls:</strong>
+- <strong>WASD</strong> - Move player
+- <strong>R</strong> - Kick ball (when nearby)
+- <strong>F1</strong> - Toggle collider visualization
+- <strong>F2</strong> - Toggle velocity vectors
+- <strong>SPACE</strong> - Reset scene
+- <strong>ESC</strong> - Return to menu</p>
+<p><strong>Key Code:</strong></p>
+<pre class="highlight"><code class="language-csharp">// Player slides along walls
+var newPosition = _playerPosition + moveVector;
+_playerCollider.Position = newPosition;
+
+var collisions = _collisionSystem.GetCollisions(_playerCollider);
+if (collisions.Any(c =&gt; _walls.Contains(c)))
+{
+    // Try sliding along X axis
+    var slideX = _playerPosition + new Vector2(moveVector.X, 0);
+    _playerCollider.Position = slideX;
+
+    if (!_collisionSystem.GetCollisions(_playerCollider).Any())
+    {
+        _playerPosition = slideX;
+    }
+}
+
+// Ball bounces with physics
+_ballVelocity = CollisionResponse.Bounce(_ballVelocity, penetration, 0.7f);</code></pre>
+<hr />
+<h3 id="6-scene-transitions-demo">6. Scene Transitions Demo<a class="headerlink" href="#6-scene-transitions-demo" title="Permanent link">&para;</a></h3>
+<p><strong>What it demonstrates:</strong>
+- <code>FadeTransition</code> between scenes
+- Custom loading screens with progress bars
+- Async scene loading
+- Scene chaining (A → B → C → A)
+- Transition customization (duration, color)</p>
+<p><strong>Controls:</strong>
+- <strong>ENTER</strong> - Go to next scene
+- <strong>Number keys</strong> - Jump to specific scene
+- <strong>ESC</strong> - Return to menu</p>
+<p><strong>Key Code:</strong></p>
+<pre class="highlight"><code class="language-csharp">// Fade transition
+await _sceneManager.LoadSceneAsync&lt;SceneB&gt;(
+    new FadeTransition(duration: 0.5f, color: Color.Black)
+);
+
+// Custom loading screen
+public class CustomLoadingScreen : LoadingScene
+{
+    protected override void OnRender(GameTime gameTime)
+    {
+        _renderer.DrawText($"Loading... {Progress:P0}", 500, 300, Color.White);
+        _renderer.DrawRectangleFilled(400, 350, Progress * 400, 20, Color.Green);
+    }
+}
+
+await _sceneManager.LoadSceneAsync&lt;GameScene&gt;(
+    loadingScreen: new CustomLoadingScreen(),
+    transition: new FadeTransition(0.5f, Color.Black)
+);</code></pre>
+<hr />
+<h3 id="7-ui-components-demo">7. UI Components Demo<a class="headerlink" href="#7-ui-components-demo" title="Permanent link">&para;</a></h3>
+<p><strong>What it demonstrates:</strong>
+- <strong>Complete UI library</strong> - All 15+ components
+- Buttons, labels, text inputs
+- Sliders, checkboxes, radio buttons
+- Progress bars, dropdowns
+- Tab containers, scroll views
+- Dialogs with multiple buttons
+- Tooltips on hover
+- Input layer management</p>
+<p><strong>Controls:</strong>
+- <strong>Mouse</strong> - Interact with all UI elements
+- <strong>TAB</strong> - Navigate between inputs
+- <strong>ESC</strong> - Return to menu</p>
+<p><strong>Components Showcased:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Demo Feature</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>UILabel</code></td>
+<td>Title, status messages</td>
+</tr>
+<tr>
+<td><code>UIButton</code></td>
+<td>Click counter, actions</td>
+</tr>
+<tr>
+<td><code>UITextInput</code></td>
+<td>Name entry with placeholder</td>
+</tr>
+<tr>
+<td><code>UISlider</code></td>
+<td>Volume control (0-100)</td>
+</tr>
+<tr>
+<td><code>UIProgressBar</code></td>
+<td>Health bar with +/- buttons</td>
+</tr>
+<tr>
+<td><code>UIDropdown</code></td>
+<td>Graphics quality selector</td>
+</tr>
+<tr>
+<td><code>UICheckbox</code></td>
+<td>Sound/VSync toggles</td>
+</tr>
+<tr>
+<td><code>UIRadioButton</code></td>
+<td>Difficulty selection</td>
+</tr>
+<tr>
+<td><code>UITabContainer</code></td>
+<td>Settings organization</td>
+</tr>
+<tr>
+<td><code>UIScrollView</code></td>
+<td>25-item scrollable list</td>
+</tr>
+<tr>
+<td><code>UIDialog</code></td>
+<td>Confirmation popups</td>
+</tr>
+<tr>
+<td><code>UITooltip</code></td>
+<td>Hover help text</td>
+</tr>
+<tr>
+<td><code>UIPanel</code></td>
+<td>Visual grouping</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key Code:</strong></p>
+<pre class="highlight"><code class="language-csharp">// Button with event
+var button = new UIButton("Click Me!", pos, size);
+button.OnClick += () =&gt; Logger.LogInformation("Clicked!");
+_uiCanvas.Add(button);
+
+// Slider with value display
+var slider = new UISlider(pos, size)
+{
+    MinValue = 0f,
+    MaxValue = 100f,
+    Value = 75f,
+    ShowValue = true,
+    Tooltip = new UITooltip("Adjust volume")
+};
+slider.OnValueChanged += (value) =&gt; Logger.LogDebug("Volume: {Volume}", value);
+_uiCanvas.Add(slider);
+
+// Dialog with multiple buttons
+var dialog = new UIDialog("Confirm", "Are you sure?", new Vector2(400, 250));
+dialog.AddButton("Yes", () =&gt; dialog.Visible = false);
+dialog.AddButton("No", () =&gt; dialog.Visible = false);
+_uiCanvas.Add(dialog);</code></pre>
+<hr />
+<h3 id="8-manual-control-demo">8. Manual Control Demo<a class="headerlink" href="#8-manual-control-demo" title="Permanent link">&para;</a></h3>
+<p><strong>What it demonstrates:</strong>
+- Opt-out of automatic execution
+- Manual pipeline control
+- Manual frame management
+- When and why to use manual control
+- Power user scenarios (fixed timestep, conditional execution)</p>
+<p><strong>Controls:</strong>
+- <strong>ESC</strong> - Return to menu</p>
+<p><strong>Key Code:</strong></p>
+<pre class="highlight"><code class="language-csharp">public class ManualControlScene : Scene
+{
+    public override bool EnableLifecycleHooks =&gt; false; // Disable automatic execution
+    public override bool EnableAutomaticFrameManagement =&gt; false; // Full manual control
+
+    protected override void OnUpdate(GameTime gameTime)
+    {
+        // You control when systems run
+        _updatePipeline.Execute(gameTime);
+        _world.Update(gameTime);
+    }
+
+    protected override void OnRender(GameTime gameTime)
+    {
+        // You control frame management
+        _renderer.Clear(Color.Black);
+        _renderer.BeginFrame();
+
+        _renderPipeline.Execute(_renderer);
+
+        _renderer.EndFrame();
+    }
+}</code></pre>
+<p>See <a href="../guides/scenes/lifecycle-hooks/">Lifecycle Hooks Guide</a> for full documentation.</p>
+<hr />
+<h2 id="project-structure">Project Structure<a class="headerlink" href="#project-structure" title="Permanent link">&para;</a></h2>
+<pre class="highlight"><code>FeatureDemos/
+├── Scenes/
+│   ├── MainMenuScene.cs               # Interactive demo selector
+│   ├── DemoSceneBase.cs               # Shared base class
+│   ├── ECS/
+│   │   ├── QueryDemoScene.cs          # Query system showcase
+│   │   └── ParticleDemoScene.cs       # Particle effects (enhanced v0.8.0)
+│   ├── Rendering/
+│   │   └── TextureAtlasDemoScene.cs   # NEW: Texture atlas demo
+│   ├── Audio/
+│   │   └── SpatialAudioDemoScene.cs   # NEW: Spatial audio demo
+│   ├── Collision/
+│   │   └── CollisionDemoScene.cs      # Physics demo
+│   ├── Transitions/
+│   │   ├── TransitionDemoScene.cs     # Transition showcase
+│   │   ├── SceneA.cs                  # Chain scene A
+│   │   ├── SceneB.cs                  # Chain scene B
+│   │   └── SceneC.cs                  # Chain scene C
+│   ├── UI/
+│   │   └── UIDemoScene.cs             # Complete UI showcase
+│   └── Advanced/
+│       └── ManualControlScene.cs      # Power user demo
+├── Program.cs                          # Entry point
+├── gamesettings.json                   # Configuration
+└── FeatureDemos.csproj                 # Project file</code></pre>
+<hr />
+<h2 id="configuration">Configuration<a class="headerlink" href="#configuration" title="Permanent link">&para;</a></h2>
+<pre class="highlight"><code class="language-json">{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Brine2D": "Debug"
+    }
+  },
+  "Rendering": {
+    "WindowTitle": "Brine2D Feature Demos",
+    "WindowWidth": 1280,
+    "WindowHeight": 720,
+    "VSync": true,
+    "Backend": "GPU"
+  }
+}</code></pre>
+<hr />
+<h2 id="dependency-injection-setup">Dependency Injection Setup<a class="headerlink" href="#dependency-injection-setup" title="Permanent link">&para;</a></h2>
+<p>FeatureDemos demonstrates complete service configuration:</p>
+<pre class="highlight"><code class="language-csharp">var builder = GameApplication.CreateBuilder(args);
+
+// Core services
+builder.Services.AddSDL3Rendering(options =&gt;
+{
+    builder.Configuration.GetSection("Rendering").Bind(options);
+});
+builder.Services.AddInputLayerManager().AddSDL3Input();
+builder.Services.AddSDL3Audio();
+
+// ECS and systems
+builder.Services.AddCollisionSystem();
+builder.Services.AddUICanvas();
+
+// Register all demo scenes
+builder.Services.AddScene&lt;MainMenuScene&gt;();
+builder.Services.AddScene&lt;QueryDemoScene&gt;();
+builder.Services.AddScene&lt;ParticleDemoScene&gt;();
+builder.Services.AddScene&lt;TextureAtlasDemoScene&gt;();  // NEW
+builder.Services.AddScene&lt;SpatialAudioDemoScene&gt;();  // NEW
+builder.Services.AddScene&lt;CollisionDemoScene&gt;();
+builder.Services.AddScene&lt;TransitionDemoScene&gt;();
+builder.Services.AddScene&lt;UIDemoScene&gt;();
+builder.Services.AddScene&lt;ManualControlScene&gt;();
+
+var game = builder.Build();
+await game.RunAsync&lt;MainMenuScene&gt;();</code></pre>
+<hr />
+<h2 id="learning-path">Learning Path<a class="headerlink" href="#learning-path" title="Permanent link">&para;</a></h2>
+<p>We recommend exploring the demos in this order:</p>
+<ol>
+<li><strong>Query System</strong> - Understand ECS queries (if using ECS)</li>
+<li><strong>Texture Atlas</strong> - Learn performance optimization with sprite packing</li>
+<li><strong>Particle System</strong> - Master advanced visual effects</li>
+<li><strong>Spatial Audio</strong> - Add immersive positional sound</li>
+<li><strong>Collision Detection</strong> - Learn physics and collision response</li>
+<li><strong>UI Components</strong> - Master the UI framework</li>
+<li><strong>Scene Transitions</strong> - Build polished scene changes</li>
+<li><strong>Manual Control</strong> - Advanced power user techniques</li>
+</ol>
+<hr />
+<h2 id="using-demos-as-templates">Using Demos as Templates<a class="headerlink" href="#using-demos-as-templates" title="Permanent link">&para;</a></h2>
+<p>The demo code is production-ready and designed to be copied:</p>
+<ol>
+<li><strong>Copy a scene class</strong> - Use as a starting point</li>
+<li><strong>Modify for your game</strong> - Change colors, sizes, behaviors</li>
+<li><strong>Extract patterns</strong> - Query builders, UI layouts, collision response, audio setups</li>
+<li><strong>Build on top</strong> - Extend with your own features</li>
+</ol>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="menu-doesnt-appear">Menu doesn't appear?<a class="headerlink" href="#menu-doesnt-appear" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Check that <code>MainMenuScene</code> is registered</li>
+<li>Verify <code>game.RunAsync&lt;MainMenuScene&gt;()</code> is called</li>
+</ul>
+<h3 id="demos-run-slowly">Demos run slowly?<a class="headerlink" href="#demos-run-slowly" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Press <strong>F3</strong> to check FPS and draw calls</li>
+<li>Ensure VSync is enabled in <code>gamesettings.json</code></li>
+<li>Verify GPU backend is being used (not Legacy)</li>
+</ul>
+<h3 id="texture-atlas-demo-shows-no-improvement">Texture Atlas Demo shows no improvement?<a class="headerlink" href="#texture-atlas-demo-shows-no-improvement" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Make sure multiple unique textures are being used</li>
+<li>Check that sprites aren't all using the same texture</li>
+<li>Verify atlas is actually being created (check logs)</li>
+</ul>
+<h3 id="spatial-audio-demo-is-silent">Spatial Audio Demo is silent?<a class="headerlink" href="#spatial-audio-demo-is-silent" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Ensure sound files exist in <code>assets/sounds/</code> folder</li>
+<li>Check master volume (use +/- keys)</li>
+<li>Verify audio source <code>IsEnabled = true</code></li>
+<li>Move player close to sound sources</li>
+</ul>
+<h3 id="particles-dont-show-textures">Particles don't show textures?<a class="headerlink" href="#particles-dont-show-textures" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Check that <code>TexturePath</code> is set on emitter</li>
+<li>Verify texture files exist in <code>assets/particles/</code></li>
+<li>Ensure <code>TextureScaleMode</code> is set appropriately</li>
+</ul>
+<hr />
+<h2 id="performance-tips">Performance Tips<a class="headerlink" href="#performance-tips" title="Permanent link">&para;</a></h2>
+<h3 id="texture-atlas-demo">Texture Atlas Demo<a class="headerlink" href="#texture-atlas-demo" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Keep atlas size ≤ 2048x2048 for compatibility</li>
+<li>Use 2-4px padding between sprites</li>
+<li>Pack sprites that render together</li>
+</ul>
+<h3 id="spatial-audio-demo">Spatial Audio Demo<a class="headerlink" href="#spatial-audio-demo" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Disable spatial audio for UI/music sounds</li>
+<li>Use appropriate <code>MaxDistance</code> values</li>
+<li>Limit concurrent spatial audio sources to &lt; 50</li>
+</ul>
+<h3 id="particle-system-demo">Particle System Demo<a class="headerlink" href="#particle-system-demo" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Keep <code>MaxParticles</code> ≤ 500 per emitter</li>
+<li>Use trails sparingly (they multiply particle count)</li>
+<li>Pack particle textures into an atlas</li>
+</ul>
+<hr />
+<h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><a href="../guides/">Guides</a></strong> - Detailed feature documentation</li>
+<li><strong><a href="../tutorials/">Tutorials</a></strong> - Step-by-step learning</li>
+<li><strong><a href="../api/index.md">API Reference</a></strong> - Complete API docs</li>
+<li><strong><a href="../whats-new/v0.8.0-beta.md">What's New</a></strong> - v0.8.0-beta features</li>
+</ul>
+<hr />
+<p>Ready to explore? Run the demos and start building your own games with Brine2D!</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["content.code.copy", "content.code.select"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+      
+    
+  </body>
+</html>

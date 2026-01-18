@@ -1,0 +1,4769 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Introduction to audio in Brine2D - setup, loading, and playback">
+      
+      
+      
+      
+        <link rel="prev" href="../../input/layers/">
+      
+      
+        <link rel="next" href="../spatial-audio/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Getting Started with Audio - Brine2D Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/prism-material-slate.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#getting-started-with-audio" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Brine2D Documentation" class="md-header__button md-logo" aria-label="Brine2D Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Brine2D Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Getting Started with Audio
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Brine2D Documentation" class="md-nav__button md-logo" aria-label="Brine2D Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Brine2D Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    What's New
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../whats-new/v0.8.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.8.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../whats-new/v0.7.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.7.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../whats-new/v0.6.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.6.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/first-game/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/project-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/moving-sprites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Moving Sprites
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/animations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/collision.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision Detection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/platformer.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building a Platformer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/top-down.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Top-Down Adventure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Rendering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/choosing-renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing a Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/gpu-renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GPU Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/sprites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprites & Textures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/texture-atlasing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Texture Atlasing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/cameras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cameras
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/particles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Particles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/primitives/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Drawing Primitives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Input
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/keyboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keyboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/mouse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mouse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/gamepad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gamepad Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/layers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input Layers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audio
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Audio
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#register-audio-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Register Audio Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inject-iaudioservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inject IAudioService
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audio-assets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audio Assets
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Audio Assets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#supported-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Formats
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Organization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loading-audio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loading Audio
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Loading Audio">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sound-effects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sound Effects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#music" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Music
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loading-multiple-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loading Multiple Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#playing-audio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Playing Audio
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Playing Audio">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sound-effects_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sound Effects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#music_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Music
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-volume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With Volume
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#looping-sounds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Looping Sounds
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#volume-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Volume Control
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Volume Control">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#master-volume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Master Volume
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sound-effects-volume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sound Effects Volume
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#music-volume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Music Volume
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#settings-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Settings Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#music-playback-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Music Playback Control
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Music Playback Control">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#play-and-stop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Play and Stop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pause-and-resume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pause and Resume
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#music-loops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Music Loops
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#loading-screen-audio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loading Screen Audio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audio-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audio Manager
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scene-based-music" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scene-Based Music
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Do
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Don't
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volume-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Volume Guidelines
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#no-sound-playing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        No Sound Playing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#playback-lag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Playback Lag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#music-wont-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Music Won't Loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sounds-too-quiet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sounds Too Quiet
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sound-effects.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sound Effects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../music.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Music Playback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../spatial-audio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spatial Audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scenes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Scenes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/lifecycle.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/transitions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Transitions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/lifecycle-hooks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle Hooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Collision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../collision/system.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../collision/colliders.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Colliders
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_7" id="__nav_5_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tilemaps
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tilemaps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tilemaps/loading.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Loading Tilemaps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tilemaps/rendering.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering Tiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_8" id="__nav_5_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Framework
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UI Framework
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ui/components.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ui/custom.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom UI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_9" id="__nav_5_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Component System
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Entity Component System
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/systems/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/entities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/queries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Queries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_10" id="__nav_5_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Events
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../events/window-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Window Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/dependency-injection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/game-loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Game Loop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/builder-pattern/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Builder Pattern
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/scenes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/entity-component-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Component System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/core.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Core
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/rendering.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Rendering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/input.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Input
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/audio.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/ecs.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.ECS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Samples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Samples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/basic-game.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/animation-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/collision-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/ecs-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ECS Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Contributing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to Contribute
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/code-style.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Style
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/building.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building from Source
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#register-audio-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Register Audio Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inject-iaudioservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inject IAudioService
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audio-assets" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audio Assets
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Audio Assets">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#supported-formats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Supported Formats
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-organization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Organization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#loading-audio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loading Audio
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Loading Audio">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sound-effects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sound Effects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#music" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Music
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#loading-multiple-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loading Multiple Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#playing-audio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Playing Audio
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Playing Audio">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sound-effects_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sound Effects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#music_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Music
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#with-volume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With Volume
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#looping-sounds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Looping Sounds
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#volume-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Volume Control
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Volume Control">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#master-volume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Master Volume
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sound-effects-volume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sound Effects Volume
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#music-volume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Music Volume
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#settings-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Settings Integration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#music-playback-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Music Playback Control
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Music Playback Control">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#play-and-stop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Play and Stop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pause-and-resume" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pause and Resume
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#music-loops" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Music Loops
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#loading-screen-audio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Loading Screen Audio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#audio-manager" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audio Manager
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scene-based-music" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scene-Based Music
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Do
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Don't
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#volume-guidelines" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Volume Guidelines
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#no-sound-playing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        No Sound Playing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#playback-lag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Playback Lag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#music-wont-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Music Won't Loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sounds-too-quiet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sounds Too Quiet
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="getting-started-with-audio">Getting Started with Audio<a class="headerlink" href="#getting-started-with-audio" title="Permanent link">&para;</a></h1>
+<p>Learn the basics of audio in Brine2D, from setup to playing your first sound effects and music.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Brine2D provides a complete audio system powered by SDL3_mixer with support for:</p>
+<ul>
+<li><strong>Sound Effects</strong> - Short audio clips (explosions, jumps, UI sounds)</li>
+<li><strong>Music</strong> - Long-form audio tracks (background music, ambience)</li>
+<li><strong>Spatial Audio</strong> - 2D positional audio with distance and panning</li>
+<li><strong>Volume Control</strong> - Master, music, and sound effect volume</li>
+<li><strong>Multiple Formats</strong> - WAV, MP3, OGG, FLAC support</li>
+</ul>
+<h2 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h2>
+<h3 id="register-audio-service">Register Audio Service<a class="headerlink" href="#register-audio-service" title="Permanent link">&para;</a></h3>
+<p>Add SDL3 audio to your game:</p>
+<pre class="highlight"><code class="language-csharp">using Brine2D.Audio.SDL;
+
+var builder = GameApplication.CreateBuilder(args);
+
+// Add SDL3 audio service
+builder.Services.AddSDL3Audio();
+
+// Other services...
+builder.Services.AddSDL3Rendering();
+builder.Services.AddSDL3Input();
+
+var game = builder.Build();
+await game.RunAsync&lt;GameScene&gt;();</code></pre>
+<h3 id="inject-iaudioservice">Inject IAudioService<a class="headerlink" href="#inject-iaudioservice" title="Permanent link">&para;</a></h3>
+<p>Access audio in your scenes:</p>
+<pre class="highlight"><code class="language-csharp">using Brine2D.Audio;
+using Brine2D.Core;
+
+public class GameScene : Scene
+{
+    private readonly IAudioService _audio;
+
+    public GameScene(
+        IAudioService audio,
+        ILogger&lt;GameScene&gt; logger) : base(logger)
+    {
+        _audio = audio;
+    }
+}</code></pre>
+<h2 id="audio-assets">Audio Assets<a class="headerlink" href="#audio-assets" title="Permanent link">&para;</a></h2>
+<h3 id="supported-formats">Supported Formats<a class="headerlink" href="#supported-formats" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Format</th>
+<th>Use Case</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>WAV</strong></td>
+<td>Sound effects</td>
+<td>Uncompressed, instant playback</td>
+</tr>
+<tr>
+<td><strong>MP3</strong></td>
+<td>Music</td>
+<td>Compressed, smaller files</td>
+</tr>
+<tr>
+<td><strong>OGG</strong></td>
+<td>Music, sounds</td>
+<td>Open format, good compression</td>
+</tr>
+<tr>
+<td><strong>FLAC</strong></td>
+<td>High-quality music</td>
+<td>Lossless compression</td>
+</tr>
+</tbody>
+</table>
+<h3 id="file-organization">File Organization<a class="headerlink" href="#file-organization" title="Permanent link">&para;</a></h3>
+<p>Organize audio files in your project:</p>
+<pre class="highlight"><code>MyGame/
+├── assets/
+│   ├── sounds/
+│   │   ├── jump.wav
+│   │   ├── explosion.wav
+│   │   ├── coin.wav
+│   │   └── hit.wav
+│   └── music/
+│       ├── menu.mp3
+│       ├── level1.mp3
+│       └── boss.mp3
+├── Program.cs
+└── MyGame.csproj</code></pre>
+<p><strong>Best Practices:</strong>
+- Use WAV for short sound effects (&lt; 2 seconds)
+- Use MP3/OGG for music (&gt; 30 seconds)
+- Keep sound effects under 100KB each
+- Use consistent sample rates (44.1 kHz recommended)</p>
+<h2 id="loading-audio">Loading Audio<a class="headerlink" href="#loading-audio" title="Permanent link">&para;</a></h2>
+<h3 id="sound-effects">Sound Effects<a class="headerlink" href="#sound-effects" title="Permanent link">&para;</a></h3>
+<p>Load sound effects during scene initialization:</p>
+<pre class="highlight"><code class="language-csharp">public class GameScene : Scene
+{
+    private ISoundEffect? _jumpSound;
+    private ISoundEffect? _coinSound;
+
+    protected override async Task OnLoadAsync(CancellationToken cancellationToken)
+    {
+        // Load sound effects
+        _jumpSound = await _audio.LoadSoundAsync(
+            "assets/sounds/jump.wav", 
+            cancellationToken);
+
+        _coinSound = await _audio.LoadSoundAsync(
+            "assets/sounds/coin.wav", 
+            cancellationToken);
+
+        Logger.LogInformation("Sound effects loaded");
+    }
+}</code></pre>
+<h3 id="music">Music<a class="headerlink" href="#music" title="Permanent link">&para;</a></h3>
+<p>Load music files:</p>
+<pre class="highlight"><code class="language-csharp">public class GameScene : Scene
+{
+    private IMusic? _backgroundMusic;
+
+    protected override async Task OnLoadAsync(CancellationToken cancellationToken)
+    {
+        // Load background music
+        _backgroundMusic = await _audio.LoadMusicAsync(
+            "assets/music/level1.mp3", 
+            cancellationToken);
+
+        Logger.LogInformation("Music loaded");
+    }
+}</code></pre>
+<h3 id="loading-multiple-files">Loading Multiple Files<a class="headerlink" href="#loading-multiple-files" title="Permanent link">&para;</a></h3>
+<p>Load all audio at once:</p>
+<pre class="highlight"><code class="language-csharp">protected override async Task OnLoadAsync(CancellationToken cancellationToken)
+{
+    // Load all sound effects
+    var soundPaths = new[]
+    {
+        "assets/sounds/jump.wav",
+        "assets/sounds/coin.wav",
+        "assets/sounds/explosion.wav",
+        "assets/sounds/hit.wav"
+    };
+
+    var soundTasks = soundPaths.Select(path =&gt; 
+        _audio.LoadSoundAsync(path, cancellationToken));
+
+    var sounds = await Task.WhenAll(soundTasks);
+
+    _jumpSound = sounds[0];
+    _coinSound = sounds[1];
+    _explosionSound = sounds[2];
+    _hitSound = sounds[3];
+
+    // Load music
+    _backgroundMusic = await _audio.LoadMusicAsync(
+        "assets/music/level1.mp3", 
+        cancellationToken);
+
+    Logger.LogInformation("All audio loaded");
+}</code></pre>
+<h2 id="playing-audio">Playing Audio<a class="headerlink" href="#playing-audio" title="Permanent link">&para;</a></h2>
+<h3 id="sound-effects_1">Sound Effects<a class="headerlink" href="#sound-effects_1" title="Permanent link">&para;</a></h3>
+<p>Play sound effects in response to events:</p>
+<pre class="highlight"><code class="language-csharp">protected override void OnUpdate(GameTime gameTime)
+{
+    // Play jump sound when spacebar pressed
+    if (_input.IsKeyPressed(Keys.Space) &amp;&amp; _jumpSound != null)
+    {
+        _audio.PlaySound(_jumpSound);
+    }
+
+    // Play coin sound when collecting coins
+    if (CollectedCoin() &amp;&amp; _coinSound != null)
+    {
+        _audio.PlaySound(_coinSound);
+    }
+}</code></pre>
+<h3 id="music_1">Music<a class="headerlink" href="#music_1" title="Permanent link">&para;</a></h3>
+<p>Play background music:</p>
+<pre class="highlight"><code class="language-csharp">protected override async Task OnLoadAsync(CancellationToken cancellationToken)
+{
+    _backgroundMusic = await _audio.LoadMusicAsync(
+        "assets/music/level1.mp3", 
+        cancellationToken);
+
+    // Start playing music (loops by default)
+    _audio.PlayMusic(_backgroundMusic);
+}</code></pre>
+<h3 id="with-volume">With Volume<a class="headerlink" href="#with-volume" title="Permanent link">&para;</a></h3>
+<p>Control playback volume:</p>
+<pre class="highlight"><code class="language-csharp">// Play at 50% volume
+_audio.PlaySound(_explosionSound, volume: 0.5f);
+
+// Play at full volume
+_audio.PlaySound(_coinSound, volume: 1.0f);
+
+// Play quietly
+_audio.PlaySound(_footstepSound, volume: 0.2f);</code></pre>
+<h3 id="looping-sounds">Looping Sounds<a class="headerlink" href="#looping-sounds" title="Permanent link">&para;</a></h3>
+<p>Play sounds repeatedly:</p>
+<pre class="highlight"><code class="language-csharp">// Loop 3 times
+_audio.PlaySound(_engineSound, loops: 3);
+
+// Loop infinitely (-1)
+_audio.PlaySound(_ambientSound, loops: -1);</code></pre>
+<h2 id="volume-control">Volume Control<a class="headerlink" href="#volume-control" title="Permanent link">&para;</a></h2>
+<h3 id="master-volume">Master Volume<a class="headerlink" href="#master-volume" title="Permanent link">&para;</a></h3>
+<p>Control overall audio volume:</p>
+<pre class="highlight"><code class="language-csharp">// Set master volume (0.0 to 1.0)
+_audio.MasterVolume = 0.8f;
+
+// Get current master volume
+var currentVolume = _audio.MasterVolume;
+
+// Mute all audio
+_audio.MasterVolume = 0f;</code></pre>
+<h3 id="sound-effects-volume">Sound Effects Volume<a class="headerlink" href="#sound-effects-volume" title="Permanent link">&para;</a></h3>
+<p>Control all sound effects:</p>
+<pre class="highlight"><code class="language-csharp">// Set sound effects volume (0.0 to 1.0)
+_audio.SoundVolume = 0.7f;
+
+// Individual sounds are multiplied by this
+// PlaySound(sound, volume: 0.5f) with SoundVolume = 0.7f
+// Results in: 0.5 × 0.7 = 0.35 final volume</code></pre>
+<h3 id="music-volume">Music Volume<a class="headerlink" href="#music-volume" title="Permanent link">&para;</a></h3>
+<p>Control background music:</p>
+<pre class="highlight"><code class="language-csharp">// Set music volume (0.0 to 1.0)
+_audio.MusicVolume = 0.5f;
+
+// Fade music down
+for (float t = 1f; t &gt;= 0f; t -= 0.01f)
+{
+    _audio.MusicVolume = t;
+    await Task.Delay(50);
+}</code></pre>
+<h3 id="settings-integration">Settings Integration<a class="headerlink" href="#settings-integration" title="Permanent link">&para;</a></h3>
+<p>Save volume preferences:</p>
+<pre class="highlight"><code class="language-csharp">public class SettingsScene : Scene
+{
+    private float _masterVolume = 0.8f;
+    private float _musicVolume = 0.6f;
+    private float _soundVolume = 0.7f;
+
+    private void ApplySettings()
+    {
+        _audio.MasterVolume = _masterVolume;
+        _audio.MusicVolume = _musicVolume;
+        _audio.SoundVolume = _soundVolume;
+
+        // Save to config file
+        SaveSettings();
+    }
+
+    private void LoadSettings()
+    {
+        // Load from config file
+        var settings = LoadFromFile();
+        _masterVolume = settings.MasterVolume;
+        _musicVolume = settings.MusicVolume;
+        _soundVolume = settings.SoundVolume;
+
+        ApplySettings();
+    }
+}</code></pre>
+<h2 id="music-playback-control">Music Playback Control<a class="headerlink" href="#music-playback-control" title="Permanent link">&para;</a></h2>
+<h3 id="play-and-stop">Play and Stop<a class="headerlink" href="#play-and-stop" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// Start music
+_audio.PlayMusic(_backgroundMusic);
+
+// Stop music
+_audio.StopMusic();
+
+// Check if music is playing
+if (_audio.IsMusicPlaying)
+{
+    Logger.LogInfo("Music is playing");
+}</code></pre>
+<h3 id="pause-and-resume">Pause and Resume<a class="headerlink" href="#pause-and-resume" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// Pause music
+_audio.PauseMusic();
+
+// Resume music
+_audio.ResumeMusic();
+
+// Check if paused
+if (_audio.IsMusicPaused)
+{
+    Logger.LogInfo("Music is paused");
+}</code></pre>
+<h3 id="music-loops">Music Loops<a class="headerlink" href="#music-loops" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// Play once (stops after finish)
+_audio.PlayMusic(_bossMusic, loops: 0);
+
+// Play 3 times
+_audio.PlayMusic(_victoryMusic, loops: 3);
+
+// Loop forever (default)
+_audio.PlayMusic(_backgroundMusic, loops: -1);</code></pre>
+<h2 id="complete-example">Complete Example<a class="headerlink" href="#complete-example" title="Permanent link">&para;</a></h2>
+<p>Here's a full scene with audio:</p>
+<pre class="highlight"><code class="language-csharp">using Brine2D.Audio;
+using Brine2D.Core;
+using Brine2D.Input;
+
+public class GameScene : Scene
+{
+    private readonly IAudioService _audio;
+    private readonly IInputService _input;
+
+    private ISoundEffect? _jumpSound;
+    private ISoundEffect? _coinSound;
+    private ISoundEffect? _explosionSound;
+    private IMusic? _backgroundMusic;
+
+    public GameScene(
+        IAudioService audio,
+        IInputService input,
+        ILogger&lt;GameScene&gt; logger) : base(logger)
+    {
+        _audio = audio;
+        _input = input;
+    }
+
+    protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
+    {
+        // Set initial volumes
+        _audio.MasterVolume = 0.8f;
+        _audio.MusicVolume = 0.6f;
+        _audio.SoundVolume = 0.7f;
+    }
+
+    protected override async Task OnLoadAsync(CancellationToken cancellationToken)
+    {
+        // Load sound effects
+        _jumpSound = await _audio.LoadSoundAsync(
+            "assets/sounds/jump.wav", cancellationToken);
+        _coinSound = await _audio.LoadSoundAsync(
+            "assets/sounds/coin.wav", cancellationToken);
+        _explosionSound = await _audio.LoadSoundAsync(
+            "assets/sounds/explosion.wav", cancellationToken);
+
+        // Load and play music
+        _backgroundMusic = await _audio.LoadMusicAsync(
+            "assets/music/level1.mp3", cancellationToken);
+        _audio.PlayMusic(_backgroundMusic);
+
+        Logger.LogInformation("Audio loaded and music started");
+    }
+
+    protected override void OnUpdate(GameTime gameTime)
+    {
+        // Play jump sound
+        if (_input.IsKeyPressed(Keys.Space))
+        {
+            _audio.PlaySound(_jumpSound);
+        }
+
+        // Play coin sound at 80% volume
+        if (_input.IsKeyPressed(Keys.C))
+        {
+            _audio.PlaySound(_coinSound, volume: 0.8f);
+        }
+
+        // Play explosion sound
+        if (_input.IsKeyPressed(Keys.E))
+        {
+            _audio.PlaySound(_explosionSound, volume: 1.0f);
+        }
+
+        // Pause/resume music
+        if (_input.IsKeyPressed(Keys.M))
+        {
+            if (_audio.IsMusicPaused)
+            {
+                _audio.ResumeMusic();
+                Logger.LogInfo("Music resumed");
+            }
+            else if (_audio.IsMusicPlaying)
+            {
+                _audio.PauseMusic();
+                Logger.LogInfo("Music paused");
+            }
+        }
+    }
+
+    protected override void OnDispose()
+    {
+        // Stop music when scene ends
+        _audio.StopMusic();
+
+        // Optionally unload audio (will be cleaned up automatically)
+        if (_jumpSound != null) _audio.UnloadSound(_jumpSound);
+        if (_coinSound != null) _audio.UnloadSound(_coinSound);
+        if (_explosionSound != null) _audio.UnloadSound(_explosionSound);
+        if (_backgroundMusic != null) _audio.UnloadMusic(_backgroundMusic);
+    }
+}</code></pre>
+<h2 id="common-patterns">Common Patterns<a class="headerlink" href="#common-patterns" title="Permanent link">&para;</a></h2>
+<h3 id="loading-screen-audio">Loading Screen Audio<a class="headerlink" href="#loading-screen-audio" title="Permanent link">&para;</a></h3>
+<p>Load audio during a loading screen:</p>
+<pre class="highlight"><code class="language-csharp">public class LoadingScene : Scene
+{
+    protected override async Task OnLoadAsync(CancellationToken cancellationToken)
+    {
+        // Load all audio for next scene
+        var audioFiles = new[]
+        {
+            ("jump", "assets/sounds/jump.wav"),
+            ("coin", "assets/sounds/coin.wav"),
+            ("music", "assets/music/level1.mp3")
+        };
+
+        int loaded = 0;
+        foreach (var (name, path) in audioFiles)
+        {
+            if (path.EndsWith(".mp3") || path.EndsWith(".ogg"))
+            {
+                await _audio.LoadMusicAsync(path, cancellationToken);
+            }
+            else
+            {
+                await _audio.LoadSoundAsync(path, cancellationToken);
+            }
+
+            loaded++;
+            UpdateProgress(loaded / (float)audioFiles.Length);
+        }
+
+        // Transition to game scene
+        await _sceneManager.LoadSceneAsync&lt;GameScene&gt;();
+    }
+}</code></pre>
+<h3 id="audio-manager">Audio Manager<a class="headerlink" href="#audio-manager" title="Permanent link">&para;</a></h3>
+<p>Create a centralized audio manager:</p>
+<pre class="highlight"><code class="language-csharp">public class AudioManager
+{
+    private readonly IAudioService _audio;
+    private readonly Dictionary&lt;string, ISoundEffect&gt; _sounds = new();
+    private readonly Dictionary&lt;string, IMusic&gt; _music = new();
+
+    public AudioManager(IAudioService audio)
+    {
+        _audio = audio;
+    }
+
+    public async Task LoadSoundAsync(string name, string path, CancellationToken ct = default)
+    {
+        var sound = await _audio.LoadSoundAsync(path, ct);
+        _sounds[name] = sound;
+    }
+
+    public void PlaySound(string name, float volume = 1.0f)
+    {
+        if (_sounds.TryGetValue(name, out var sound))
+        {
+            _audio.PlaySound(sound, volume);
+        }
+    }
+
+    public async Task LoadMusicAsync(string name, string path, CancellationToken ct = default)
+    {
+        var music = await _audio.LoadMusicAsync(path, ct);
+        _music[name] = music;
+    }
+
+    public void PlayMusic(string name)
+    {
+        if (_music.TryGetValue(name, out var music))
+        {
+            _audio.PlayMusic(music);
+        }
+    }
+}</code></pre>
+<h3 id="scene-based-music">Scene-Based Music<a class="headerlink" href="#scene-based-music" title="Permanent link">&para;</a></h3>
+<p>Change music per scene:</p>
+<pre class="highlight"><code class="language-csharp">public class MenuScene : Scene
+{
+    protected override async Task OnLoadAsync(CancellationToken cancellationToken)
+    {
+        var menuMusic = await _audio.LoadMusicAsync(
+            "assets/music/menu.mp3", cancellationToken);
+        _audio.PlayMusic(menuMusic);
+    }
+}
+
+public class GameScene : Scene
+{
+    protected override async Task OnLoadAsync(CancellationToken cancellationToken)
+    {
+        // Stop menu music, start game music
+        _audio.StopMusic();
+
+        var gameMusic = await _audio.LoadMusicAsync(
+            "assets/music/level1.mp3", cancellationToken);
+        _audio.PlayMusic(gameMusic);
+    }
+}</code></pre>
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="do">Do<a class="headerlink" href="#do" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Load audio during scene initialization</strong> - Not during gameplay</li>
+<li><strong>Use appropriate formats</strong> - WAV for sounds, MP3/OGG for music</li>
+<li><strong>Respect volume levels</strong> - Honor user settings</li>
+<li><strong>Stop music when changing scenes</strong> - Avoid overlapping tracks</li>
+<li><strong>Unload audio when done</strong> - Free memory (or rely on scene cleanup)</li>
+</ul>
+<h3 id="dont">Don't<a class="headerlink" href="#dont" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Load audio synchronously in Update()</strong> - Causes frame drops</li>
+<li><strong>Play too many sounds at once</strong> - Causes audio mud</li>
+<li><strong>Use uncompressed formats for music</strong> - Wastes disk space</li>
+<li><strong>Forget to handle null sounds</strong> - Check if loading succeeded</li>
+<li><strong>Play music without volume control</strong> - Always respect settings</li>
+</ul>
+<h3 id="volume-guidelines">Volume Guidelines<a class="headerlink" href="#volume-guidelines" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// Master volume: Overall control
+_audio.MasterVolume = 0.8f;  // 80% - reasonable default
+
+// Music volume: Background audio
+_audio.MusicVolume = 0.6f;   // 60% - quieter than effects
+
+// Sound effects volume: Gameplay sounds
+_audio.SoundVolume = 0.7f;   // 70% - clear but not overwhelming
+
+// Individual sounds
+_audio.PlaySound(uiClick, volume: 0.5f);       // UI - subtle
+_audio.PlaySound(footstep, volume: 0.3f);      // Ambient - quiet
+_audio.PlaySound(explosion, volume: 1.0f);     // Important - full volume
+_audio.PlaySound(playerJump, volume: 0.8f);    // Player action - clear</code></pre>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="no-sound-playing">No Sound Playing<a class="headerlink" href="#no-sound-playing" title="Permanent link">&para;</a></h3>
+<p><strong>Problem:</strong> Audio doesn't play.</p>
+<p><strong>Solutions:</strong></p>
+<pre class="highlight"><code class="language-csharp">// 1. Verify audio service is registered
+builder.Services.AddSDL3Audio();
+
+// 2. Check file exists
+if (!File.Exists("assets/sounds/jump.wav"))
+{
+    Logger.LogError("Sound file not found!");
+}
+
+// 3. Verify sound loaded successfully
+var sound = await _audio.LoadSoundAsync("assets/sounds/jump.wav");
+if (sound == null)
+{
+    Logger.LogError("Failed to load sound!");
+}
+
+// 4. Check volume levels
+Logger.LogInfo($"Master: {_audio.MasterVolume}, Sound: {_audio.SoundVolume}");</code></pre>
+<h3 id="playback-lag">Playback Lag<a class="headerlink" href="#playback-lag" title="Permanent link">&para;</a></h3>
+<p><strong>Problem:</strong> Delay between input and sound.</p>
+<p><strong>Solution:</strong> Use WAV files for immediate response:</p>
+<pre class="highlight"><code class="language-csharp">// Good: WAV loads instantly
+var jumpSound = await _audio.LoadSoundAsync("assets/sounds/jump.wav");
+
+// Bad: MP3 has decode overhead for short sounds
+var jumpSound = await _audio.LoadSoundAsync("assets/sounds/jump.mp3");</code></pre>
+<h3 id="music-wont-loop">Music Won't Loop<a class="headerlink" href="#music-wont-loop" title="Permanent link">&para;</a></h3>
+<p><strong>Problem:</strong> Music plays once and stops.</p>
+<p><strong>Solution:</strong> Set loops to -1 (default):</p>
+<pre class="highlight"><code class="language-csharp">// Music loops by default
+_audio.PlayMusic(backgroundMusic);
+
+// Or explicitly set infinite loop
+_audio.PlayMusic(backgroundMusic, loops: -1);</code></pre>
+<h3 id="sounds-too-quiet">Sounds Too Quiet<a class="headerlink" href="#sounds-too-quiet" title="Permanent link">&para;</a></h3>
+<p><strong>Problem:</strong> Can barely hear audio.</p>
+<p><strong>Solution:</strong> Check volume multipliers:</p>
+<pre class="highlight"><code class="language-csharp">// Sound effects are multiplied:
+// Final Volume = SoundVolume × PlaySound volume
+
+_audio.SoundVolume = 0.7f;  // Sound effects at 70%
+_audio.PlaySound(sound, volume: 0.5f);  // 50% of sound effects
+// Result: 0.7 × 0.5 = 0.35 (35% final volume)
+
+// Fix: Increase base volumes
+_audio.SoundVolume = 1.0f;
+_audio.PlaySound(sound, volume: 0.8f);</code></pre>
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<p>Now that you understand the basics, explore advanced audio features:</p>
+<ul>
+<li><strong><a href="sound-effects.md">Sound Effects</a></strong> - Advanced sound playback techniques</li>
+<li><strong><a href="music.md">Music Playback</a></strong> - Music control and transitions</li>
+<li><strong><a href="../spatial-audio/">Spatial Audio</a></strong> - 2D positional audio with distance and panning</li>
+<li><strong><a href="../../ecs/systems/#audiosystem">ECS Audio</a></strong> - Component-based audio sources</li>
+</ul>
+<hr />
+<p><strong>Quick Reference:</strong></p>
+<pre class="highlight"><code class="language-csharp">// Setup
+builder.Services.AddSDL3Audio();
+
+// Loading
+var sound = await _audio.LoadSoundAsync("path/to/sound.wav");
+var music = await _audio.LoadMusicAsync("path/to/music.mp3");
+
+// Playing
+_audio.PlaySound(sound, volume: 0.8f, loops: 0);
+_audio.PlayMusic(music, loops: -1);
+
+// Control
+_audio.MasterVolume = 0.8f;
+_audio.MusicVolume = 0.6f;
+_audio.SoundVolume = 0.7f;
+
+// Music
+_audio.PauseMusic();
+_audio.ResumeMusic();
+_audio.StopMusic();
+
+// Cleanup
+_audio.UnloadSound(sound);
+_audio.UnloadMusic(music);</code></pre>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["content.code.copy", "content.code.select"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+      
+    
+  </body>
+</html>

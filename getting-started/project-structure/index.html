@@ -1,0 +1,4681 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Understanding Brine2D's modular architecture and how components fit together">
+      
+      
+      
+      
+        <link rel="prev" href="../first-game/">
+      
+      
+        <link rel="next" href="../configuration/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Project Structure - Brine2D Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/prism-material-slate.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#project-structure" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Brine2D Documentation" class="md-header__button md-logo" aria-label="Brine2D Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Brine2D Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Project Structure
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Brine2D Documentation" class="md-nav__button md-logo" aria-label="Brine2D Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Brine2D Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    What's New
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../whats-new/v0.8.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.8.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../whats-new/v0.7.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.7.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../whats-new/v0.6.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.6.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../first-game/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Structure
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-packages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Packages
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Packages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#brine2dcore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brine2D.Core
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#brine2dengine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brine2D.Engine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#brine2dhosting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brine2D.Hosting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rendering-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rendering System
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Rendering System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#brine2drendering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brine2D.Rendering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#brine2drenderingsdl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brine2D.Rendering.SDL
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#input-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input System
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Input System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#brine2dinput" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brine2D.Input
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#brine2dinputsdl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brine2D.Input.SDL
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audio-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audio System
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Audio System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#brine2daudio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brine2D.Audio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#brine2daudiosdl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brine2D.Audio.SDL
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ui-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UI System
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="UI System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#brine2dui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brine2D.UI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optional-packages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional Packages
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Optional Packages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#brine2dcoreanimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brine2D.Core.Animation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#brine2dcorecollision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brine2D.Core.Collision
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#brine2dcoretilemap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brine2D.Core.Tilemap
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Directory Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Principles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Design Principles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-dependency-inversion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Dependency Inversion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-single-responsibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Single Responsibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-openclosed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Open/Closed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-dependency-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Dependency Injection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-configuration-over-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Configuration Over Code
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extending-brine2d" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extending Brine2D
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Extending Brine2D">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#add-a-custom-renderer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add a Custom Renderer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-a-custom-input-provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add a Custom Input Provider
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-custom-ui-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create Custom UI Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#do-depend-on-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DO: Depend on Interfaces
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#do-use-constructor-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DO: Use Constructor Injection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#do-keep-scenes-focused" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DO: Keep Scenes Focused
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#do-use-async-for-loading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DO: Use Async for Loading
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont-directly-reference-sdl3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DON'T: Directly Reference SDL3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont-use-static-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DON'T: Use Static State
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/moving-sprites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Moving Sprites
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/animations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/collision.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision Detection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/platformer.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building a Platformer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/top-down.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Top-Down Adventure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Rendering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/rendering/choosing-renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing a Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/rendering/gpu-renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GPU Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/rendering/sprites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprites & Textures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/rendering/texture-atlasing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Texture Atlasing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/rendering/cameras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cameras
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/rendering/particles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Particles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/rendering/primitives/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Drawing Primitives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Input
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/input/keyboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keyboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/input/mouse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mouse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/input/gamepad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gamepad Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/input/layers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input Layers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audio
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Audio
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/audio/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/audio/sound-effects.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sound Effects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/audio/music.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Music Playback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/audio/spatial-audio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spatial Audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scenes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Scenes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/scenes/lifecycle.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/scenes/transitions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Transitions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/scenes/lifecycle-hooks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle Hooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Collision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/collision/system.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/collision/colliders.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Colliders
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_7" id="__nav_5_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tilemaps
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tilemaps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/tilemaps/loading.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Loading Tilemaps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/tilemaps/rendering.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering Tiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_8" id="__nav_5_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Framework
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UI Framework
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/ui/components.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/ui/custom.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom UI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_9" id="__nav_5_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Component System
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Entity Component System
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/ecs/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/ecs/components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/ecs/systems/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/ecs/entities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/ecs/queries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Queries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_10" id="__nav_5_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Events
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../guides/events/window-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Window Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/dependency-injection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/game-loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Game Loop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/builder-pattern/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Builder Pattern
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/scenes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../concepts/entity-component-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Component System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/core.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Core
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/rendering.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Rendering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/input.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Input
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/audio.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/ecs.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.ECS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Samples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Samples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../samples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../samples/basic-game.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../samples/animation-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../samples/collision-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../samples/ecs-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ECS Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Contributing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to Contribute
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/code-style.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Style
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/building.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building from Source
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#architecture-overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#core-packages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Packages
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Core Packages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#brine2dcore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brine2D.Core
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#brine2dengine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brine2D.Engine
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#brine2dhosting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brine2D.Hosting
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rendering-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rendering System
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Rendering System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#brine2drendering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brine2D.Rendering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#brine2drenderingsdl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brine2D.Rendering.SDL
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#input-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input System
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Input System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#brine2dinput" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brine2D.Input
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#brine2dinputsdl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brine2D.Input.SDL
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#audio-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Audio System
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Audio System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#brine2daudio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brine2D.Audio
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#brine2daudiosdl" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brine2D.Audio.SDL
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ui-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        UI System
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="UI System">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#brine2dui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brine2D.UI
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#optional-packages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional Packages
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Optional Packages">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#brine2dcoreanimation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brine2D.Core.Animation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#brine2dcorecollision" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brine2D.Core.Collision
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#brine2dcoretilemap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Brine2D.Core.Tilemap
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Flow
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Directory Structure
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-principles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Principles
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Design Principles">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-dependency-inversion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Dependency Inversion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-single-responsibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Single Responsibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-openclosed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Open/Closed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-dependency-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Dependency Injection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-configuration-over-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Configuration Over Code
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#extending-brine2d" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extending Brine2D
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Extending Brine2D">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#add-a-custom-renderer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add a Custom Renderer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#add-a-custom-input-provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Add a Custom Input Provider
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#create-custom-ui-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create Custom UI Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#do-depend-on-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DO: Depend on Interfaces
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#do-use-constructor-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DO: Use Constructor Injection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#do-keep-scenes-focused" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DO: Keep Scenes Focused
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#do-use-async-for-loading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DO: Use Async for Loading
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont-directly-reference-sdl3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DON'T: Directly Reference SDL3
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont-use-static-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DON'T: Use Static State
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="project-structure">Project Structure<a class="headerlink" href="#project-structure" title="Permanent link">&para;</a></h1>
+<p>Brine2D follows a <strong>clean, modular architecture</strong> inspired by ASP.NET Core's design principles. Each package has a single responsibility and depends only on what it needs.</p>
+<h2 id="architecture-overview">Architecture Overview<a class="headerlink" href="#architecture-overview" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>graph TB
+    Game["&lt;b&gt;Your Game Project&lt;/b&gt;&lt;br/&gt;&lt;i&gt;FeatureDemos.csproj&lt;/i&gt;"]
+
+    subgraph Direct["Direct References"]
+        Hosting["&lt;b&gt;Brine2D.Hosting&lt;/b&gt;"]
+        RenderingSDL["&lt;b&gt;Brine2D.Rendering.SDL&lt;/b&gt;"]
+        InputSDL["&lt;b&gt;Brine2D.Input.SDL&lt;/b&gt;"]
+        AudioSDL["&lt;b&gt;Brine2D.Audio.SDL&lt;/b&gt;"]
+        UI["&lt;b&gt;Brine2D.UI&lt;/b&gt;"]
+    end
+
+    subgraph Transitive["Transitive Dependencies"]
+        Engine["&lt;b&gt;Brine2D.Engine&lt;/b&gt;"]
+        Rendering["&lt;b&gt;Brine2D.Rendering&lt;/b&gt;"]
+        Input["&lt;b&gt;Brine2D.Input&lt;/b&gt;"]
+        Audio["&lt;b&gt;Brine2D.Audio&lt;/b&gt;"]
+        Core["&lt;b&gt;Brine2D.Core&lt;/b&gt;"]
+    end
+
+    Game --&gt; Hosting
+    Game --&gt; RenderingSDL
+    Game --&gt; InputSDL
+    Game --&gt; AudioSDL
+    Game --&gt; UI
+
+    Hosting --&gt; Engine
+    Engine --&gt; Core
+
+    RenderingSDL --&gt; Rendering
+    InputSDL --&gt; Input
+    AudioSDL --&gt; Audio
+    UI --&gt; Core
+    UI --&gt; Rendering
+    UI --&gt; Input
+
+    Rendering --&gt; Core
+    Input --&gt; Core
+    Audio -.-&gt; Core
+
+    style Game fill:#264f78,stroke:#4fc1ff,stroke-width:3px,color:#fff
+    style Hosting fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+    style RenderingSDL fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style InputSDL fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style AudioSDL fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style UI fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
+    style Engine fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style Rendering fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style Input fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style Audio fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style Core fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style Direct fill:#1a2332,stroke:#c586c0,stroke-width:2px,color:#fff
+    style Transitive fill:#1a2332,stroke:#4ec9b0,stroke-width:2px,color:#fff</code></pre>
+<p>This design follows the <strong>Dependency Inversion Principle</strong>: high-level modules (your game) depend on abstractions (interfaces), not concrete implementations.</p>
+<h2 id="core-packages">Core Packages<a class="headerlink" href="#core-packages" title="Permanent link">&para;</a></h2>
+<h3 id="brine2dcore">Brine2D.Core<a class="headerlink" href="#brine2dcore" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Core abstractions and data structures used throughout the engine.</p>
+<p><strong>Key Types:</strong></p>
+<ul>
+<li><code>IScene</code> - Interface for game scenes</li>
+<li><code>Scene</code> - Base class with lifecycle methods</li>
+<li><code>GameTime</code> - Holds frame timing information</li>
+<li><code>IGameContext</code> - Access to game state and exit control</li>
+<li><code>Color</code>, <code>Rectangle</code>, <code>RectangleF</code> - Common data types</li>
+</ul>
+<p><strong>Namespaces:</strong></p>
+<ul>
+<li><code>Brine2D.Core</code> - Core interfaces and base classes</li>
+<li><code>Brine2D.Core.Animation</code> - Sprite animation system</li>
+<li><code>Brine2D.Core.Collision</code> - Collision detection</li>
+<li><code>Brine2D.Core.Tilemap</code> - Tilemap loading and rendering</li>
+</ul>
+<p><strong>No Dependencies</strong> - This package is the foundation and doesn't depend on other Brine2D packages.</p>
+<pre class="highlight"><code class="language-csharp">// Example: Implementing a custom scene
+public class MyScene : Scene
+{
+    public MyScene(ILogger&lt;MyScene&gt; logger) : base(logger) { }
+
+    protected override void OnUpdate(GameTime gameTime) { }
+    protected override void OnRender(GameTime gameTime) { }
+}</code></pre>
+<hr />
+<h3 id="brine2dengine">Brine2D.Engine<a class="headerlink" href="#brine2dengine" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Game loop, scene management, and engine coordination.</p>
+<p><strong>Key Types:</strong></p>
+<ul>
+<li><code>IGameEngine</code> - Core engine interface</li>
+<li><code>GameEngine</code> - Coordinates subsystems</li>
+<li><code>IGameLoop</code> - Game loop abstraction</li>
+<li><code>GameLoop</code> - Frame timing and update/render cycle</li>
+<li><code>ISceneManager</code> - Scene loading and transitions</li>
+<li><code>SceneManager</code> - Manages active scene</li>
+</ul>
+<p><strong>Dependencies:</strong></p>
+<ul>
+<li><code>Brine2D.Core</code></li>
+<li><code>Microsoft.Extensions.*</code> (DI, Logging, Configuration)</li>
+</ul>
+<pre class="highlight"><code class="language-csharp">// The engine coordinates everything
+var engine = serviceProvider.GetRequiredService&lt;IGameEngine&gt;();
+await engine.InitializeAsync();
+
+// Scene manager handles scene transitions
+var sceneManager = serviceProvider.GetRequiredService&lt;ISceneManager&gt;();
+await sceneManager.LoadSceneAsync&lt;MenuScene&gt;();</code></pre>
+<hr />
+<h3 id="brine2dhosting">Brine2D.Hosting<a class="headerlink" href="#brine2dhosting" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> ASP.NET-style application hosting and builder pattern.</p>
+<p><strong>Key Types:</strong></p>
+<ul>
+<li><code>GameApplication</code> - The main application host</li>
+<li><code>GameApplicationBuilder</code> - Fluent API for configuration</li>
+<li>Service registration extensions</li>
+</ul>
+<p><strong>Dependencies:</strong></p>
+<ul>
+<li><code>Brine2D.Core</code></li>
+<li><code>Brine2D.Engine</code></li>
+<li><code>Microsoft.Extensions.Hosting</code></li>
+</ul>
+<p><strong>This is your entry point:</strong></p>
+<pre class="highlight"><code class="language-csharp">// Familiar ASP.NET-style builder
+var builder = GameApplication.CreateBuilder(args);
+
+// Configure services
+builder.Services.AddSDL3Rendering();
+builder.Services.AddSDL3Input();
+builder.Services.AddScene&lt;GameScene&gt;();
+
+// Build and run
+var game = builder.Build();
+await game.RunAsync&lt;GameScene&gt;();</code></pre>
+<hr />
+<h2 id="rendering-system">Rendering System<a class="headerlink" href="#rendering-system" title="Permanent link">&para;</a></h2>
+<h3 id="brine2drendering">Brine2D.Rendering<a class="headerlink" href="#brine2drendering" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Rendering abstractions (interfaces and options).</p>
+<p><strong>Key Types:</strong></p>
+<ul>
+<li><code>IRenderer</code> - Core rendering interface</li>
+<li><code>ITexture</code> - Texture abstraction</li>
+<li><code>ITextureLoader</code> - Async texture loading</li>
+<li><code>IFont</code>, <code>IFontLoader</code> - Font rendering</li>
+<li><code>ICamera</code> - Camera abstraction</li>
+<li><code>Camera2D</code> - 2D camera implementation</li>
+<li><code>Color</code> - Color representation</li>
+<li><code>RenderingOptions</code> - Configuration</li>
+</ul>
+<p><strong>Dependencies:</strong></p>
+<ul>
+<li><code>Brine2D.Core</code></li>
+</ul>
+<pre class="highlight"><code class="language-csharp">// All rendering goes through IRenderer
+public class GameScene : Scene
+{
+    private readonly IRenderer _renderer;
+
+    protected override void OnRender(GameTime gameTime)
+    {
+        _renderer.Clear(Color.Black);
+        _renderer.BeginFrame();
+        _renderer.DrawTexture(texture, x, y);
+        _renderer.EndFrame();
+    }
+}</code></pre>
+<hr />
+<h3 id="brine2drenderingsdl">Brine2D.Rendering.SDL<a class="headerlink" href="#brine2drenderingsdl" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> SDL3-based rendering implementation.</p>
+<p><strong>Key Types:</strong></p>
+<ul>
+<li><code>SDL3Renderer</code> - Implements <code>IRenderer</code> using SDL3</li>
+<li><code>SDL3Texture</code> - SDL3 texture wrapper</li>
+<li><code>SDL3TextureLoader</code> - Loads textures via SDL3_image</li>
+<li><code>SDL3Font</code>, <code>SDL3FontLoader</code> - Font rendering via SDL3_ttf</li>
+<li>Service registration extensions</li>
+</ul>
+<p><strong>Dependencies:</strong></p>
+<ul>
+<li><code>Brine2D.Rendering</code></li>
+<li><code>SDL3-CS</code> (NuGet package - C# bindings for SDL3)</li>
+</ul>
+<p><strong>Registration:</strong></p>
+<pre class="highlight"><code class="language-csharp">builder.Services.AddSDL3Rendering(options =&gt;
+{
+    options.WindowTitle = "My Game";
+    options.WindowWidth = 1280;
+    options.WindowHeight = 720;
+    options.VSync = true;
+    options.Backend = GraphicsBackend.GPU; // or Legacy
+});</code></pre>
+<hr />
+<h2 id="input-system">Input System<a class="headerlink" href="#input-system" title="Permanent link">&para;</a></h2>
+<h3 id="brine2dinput">Brine2D.Input<a class="headerlink" href="#brine2dinput" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Input abstractions for keyboard, mouse, and gamepad.</p>
+<p><strong>Key Types:</strong></p>
+<ul>
+<li><code>IInputService</code> - Unified input interface</li>
+<li><code>Keys</code> - Keyboard key enumeration</li>
+<li><code>MouseButton</code> - Mouse button enumeration</li>
+<li><code>GamepadButton</code>, <code>GamepadAxis</code> - Gamepad enums</li>
+<li><code>IInputLayer</code> - For layered input processing (like middleware)</li>
+<li><code>InputLayerManager</code> - Manages input layers</li>
+</ul>
+<p><strong>Dependencies:</strong></p>
+<ul>
+<li><code>Brine2D.Core</code></li>
+</ul>
+<pre class="highlight"><code class="language-csharp">// Unified input API
+if (_input.IsKeyPressed(Keys.Space))
+{
+    Jump();
+}
+
+if (_input.IsMouseButtonDown(MouseButton.Left))
+{
+    Shoot();
+}
+
+var stick = _input.GetGamepadLeftStick();</code></pre>
+<hr />
+<h3 id="brine2dinputsdl">Brine2D.Input.SDL<a class="headerlink" href="#brine2dinputsdl" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> SDL3-based input implementation.</p>
+<p><strong>Key Types:</strong></p>
+<ul>
+<li><code>SDL3InputService</code> - Implements <code>IInputService</code></li>
+<li>Service registration extensions</li>
+</ul>
+<p><strong>Dependencies:</strong></p>
+<ul>
+<li><code>Brine2D.Input</code></li>
+<li><code>SDL3-CS</code></li>
+</ul>
+<p><strong>Registration:</strong></p>
+<pre class="highlight"><code class="language-csharp">builder.Services.AddSDL3Input();</code></pre>
+<hr />
+<h2 id="audio-system">Audio System<a class="headerlink" href="#audio-system" title="Permanent link">&para;</a></h2>
+<h3 id="brine2daudio">Brine2D.Audio<a class="headerlink" href="#brine2daudio" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Audio abstractions for sound effects and music.</p>
+<p><strong>Key Types:</strong></p>
+<ul>
+<li><code>IAudioService</code> - Audio playback interface</li>
+<li><code>ISoundEffect</code> - Short sound effect</li>
+<li><code>IMusic</code> - Background music</li>
+</ul>
+<p><strong>Dependencies:</strong></p>
+<ul>
+<li>None (pure abstractions)</li>
+</ul>
+<pre class="highlight"><code class="language-csharp">// Simple audio API
+var jumpSound = await _audio.LoadSoundAsync("jump.wav");
+_audio.PlaySound(jumpSound);
+
+var bgMusic = await _audio.LoadMusicAsync("theme.mp3");
+_audio.PlayMusic(bgMusic, loops: -1); // Loop forever</code></pre>
+<hr />
+<h3 id="brine2daudiosdl">Brine2D.Audio.SDL<a class="headerlink" href="#brine2daudiosdl" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> SDL3_mixer-based audio implementation.</p>
+<p><strong>Key Types:</strong></p>
+<ul>
+<li><code>SDL3AudioService</code> - Implements <code>IAudioService</code></li>
+<li><code>SDL3SoundEffect</code>, <code>SDL3Music</code> - SDL3 wrappers</li>
+<li>Service registration extensions</li>
+</ul>
+<p><strong>Dependencies:</strong></p>
+<ul>
+<li><code>Brine2D.Audio</code></li>
+<li><code>SDL3-CS</code> (includes SDL3_mixer bindings)</li>
+</ul>
+<p><strong>Registration:</strong></p>
+<pre class="highlight"><code class="language-csharp">builder.Services.AddSDL3Audio();</code></pre>
+<hr />
+<h2 id="ui-system">UI System<a class="headerlink" href="#ui-system" title="Permanent link">&para;</a></h2>
+<h3 id="brine2dui">Brine2D.UI<a class="headerlink" href="#brine2dui" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> Immediate-mode UI framework.</p>
+<p><strong>Key Types:</strong></p>
+<ul>
+<li><code>UICanvas</code> - Container for UI components</li>
+<li><code>UIButton</code>, <code>UILabel</code>, <code>UISlider</code> - Basic components</li>
+<li><code>UITextInput</code>, <code>UICheckbox</code>, <code>UIDropdown</code> - Form controls</li>
+<li><code>UIDialog</code>, <code>UITooltip</code> - Advanced components</li>
+<li><code>UIPanel</code>, <code>UIScrollView</code> - Layout containers</li>
+<li><code>IUIComponent</code> - Interface for custom UI</li>
+</ul>
+<p><strong>Dependencies:</strong></p>
+<ul>
+<li><code>Brine2D.Core</code></li>
+<li><code>Brine2D.Rendering</code></li>
+<li><code>Brine2D.Input</code></li>
+</ul>
+<pre class="highlight"><code class="language-csharp">// Add UI canvas to your scene
+private readonly UICanvas _uiCanvas;
+
+var button = new UIButton("Click Me", new Vector2(10, 10), new Vector2(100, 30));
+button.OnClick += () =&gt; Logger.LogInformation("Clicked!");
+_uiCanvas.Add(button);
+
+// Update and render
+_uiCanvas.Update(deltaTime);
+_uiCanvas.Render(_renderer);</code></pre>
+<hr />
+<h2 id="optional-packages">Optional Packages<a class="headerlink" href="#optional-packages" title="Permanent link">&para;</a></h2>
+<h3 id="brine2dcoreanimation">Brine2D.Core.Animation<a class="headerlink" href="#brine2dcoreanimation" title="Permanent link">&para;</a></h3>
+<p><strong>Included in:</strong> <code>Brine2D.Core</code></p>
+<p><strong>Purpose:</strong> Sprite animation system.</p>
+<p><strong>Key Types:</strong></p>
+<ul>
+<li><code>SpriteAnimator</code> - Plays animation clips</li>
+<li><code>AnimationClip</code> - Sequence of frames</li>
+<li><code>SpriteFrame</code> - Single frame with duration</li>
+</ul>
+<pre class="highlight"><code class="language-csharp">var animator = new SpriteAnimator();
+var walkAnim = AnimationClip.FromSpriteSheet("walk", 32, 32, 8, columns: 10);
+animator.AddAnimation(walkAnim);
+animator.Play("walk");</code></pre>
+<hr />
+<h3 id="brine2dcorecollision">Brine2D.Core.Collision<a class="headerlink" href="#brine2dcorecollision" title="Permanent link">&para;</a></h3>
+<p><strong>Included in:</strong> <code>Brine2D.Core</code></p>
+<p><strong>Purpose:</strong> Collision detection system.</p>
+<p><strong>Key Types:</strong></p>
+<ul>
+<li><code>CollisionSystem</code> - Manages collision checks</li>
+<li><code>CollisionShape</code> - Base for all colliders</li>
+<li><code>BoxCollider</code>, <code>CircleCollider</code> - Shape types</li>
+<li><code>RectangleF</code> - Floating-point rectangle</li>
+<li><code>CollisionResponse</code> - Helper methods for collision resolution</li>
+</ul>
+<pre class="highlight"><code class="language-csharp">var collisionSystem = new CollisionSystem();
+var playerCollider = new BoxCollider(32, 32);
+collisionSystem.AddShape(playerCollider);
+
+var collisions = collisionSystem.GetCollisions(playerCollider);</code></pre>
+<hr />
+<h3 id="brine2dcoretilemap">Brine2D.Core.Tilemap<a class="headerlink" href="#brine2dcoretilemap" title="Permanent link">&para;</a></h3>
+<p><strong>Included in:</strong> <code>Brine2D.Core</code></p>
+<p><strong>Purpose:</strong> Tilemap loading and rendering (Tiled format).</p>
+<p><strong>Key Types:</strong></p>
+<ul>
+<li><code>Tilemap</code> - Loaded tilemap data</li>
+<li><code>ITilemapLoader</code> - Loads <code>.tmj</code> files</li>
+<li><code>TilemapRenderer</code> - Renders tilemaps</li>
+</ul>
+<p><strong>Supports:</strong></p>
+<ul>
+<li>Tiled Editor <code>.tmj</code> format</li>
+<li>Multiple layers</li>
+<li>Automatic collision generation</li>
+</ul>
+<pre class="highlight"><code class="language-csharp">var tilemap = await _tilemapLoader.LoadAsync("level1.tmj");
+await _tilemapRenderer.LoadTilesetAsync(tilemap, _textureLoader);
+_tilemapRenderer.Render(tilemap, _renderer, _camera);
+
+// Generate collision from tilemap
+var colliders = tilemap.GenerateColliders("collision");</code></pre>
+<hr />
+<h2 id="dependency-flow">Dependency Flow<a class="headerlink" href="#dependency-flow" title="Permanent link">&para;</a></h2>
+<p>Understanding how packages depend on each other:</p>
+<pre class="highlight"><code>Your Game
+    ↓ references
+Brine2D.Hosting
+    ↓ uses
+Brine2D.Engine + Brine2D.Core
+    ↓ abstractions
+Brine2D.Rendering ← Brine2D.Rendering.SDL (implementation)
+Brine2D.Input ← Brine2D.Input.SDL (implementation)
+Brine2D.Audio ← Brine2D.Audio.SDL (implementation)</code></pre>
+<p><strong>Key insight:</strong> Your game references <strong>abstractions</strong> (interfaces), and the <strong>hosting layer</strong> wires up concrete implementations via dependency injection.</p>
+<hr />
+<h2 id="directory-structure">Directory Structure<a class="headerlink" href="#directory-structure" title="Permanent link">&para;</a></h2>
+<pre class="highlight"><code>Brine2D/
+├── src/
+│   ├── Brine2D.Core/
+│   │   ├── Scene.cs, IScene.cs
+│   │   ├── GameTime.cs, IGameContext.cs
+│   │   ├── Animation/
+│   │   │   ├── SpriteAnimator.cs
+│   │   │   └── AnimationClip.cs
+│   │   ├── Collision/
+│   │   │   ├── CollisionSystem.cs
+│   │   │   └── CollisionShape.cs
+│   │   └── Tilemap/
+│   │       ├── Tilemap.cs
+│   │       └── TilemapLoader.cs
+│   │
+│   ├── Brine2D.Engine/
+│   │   ├── GameEngine.cs
+│   │   ├── GameLoop.cs
+│   │   └── SceneManager.cs
+│   │
+│   ├── Brine2D.Hosting/
+│   │   ├── GameApplication.cs
+│   │   └── GameApplicationBuilder.cs
+│   │
+│   ├── Brine2D.Rendering/
+│   │   ├── IRenderer.cs
+│   │   ├── ITexture.cs, ITextureLoader.cs
+│   │   ├── IFont.cs, IFontLoader.cs
+│   │   ├── ICamera.cs, Camera2D.cs
+│   │   ├── Color.cs
+│   │   └── RenderingOptions.cs
+│   │
+│   ├── Brine2D.Rendering.SDL/
+│   │   ├── SDL3Renderer.cs
+│   │   ├── SDL3Texture.cs, SDL3TextureLoader.cs
+│   │   └── SDL3Font.cs, SDL3FontLoader.cs
+│   │
+│   ├── Brine2D.Input/
+│   │   ├── IInputService.cs
+│   │   ├── Keys.cs, MouseButton.cs
+│   │   ├── GamepadButton.cs, GamepadAxis.cs
+│   │   └── IInputLayer.cs, InputLayerManager.cs
+│   │
+│   ├── Brine2D.Input.SDL/
+│   │   └── SDL3InputService.cs
+│   │
+│   ├── Brine2D.Audio/
+│   │   ├── IAudioService.cs
+│   │   ├── ISoundEffect.cs
+│   │   └── IMusic.cs
+│   │
+│   ├── Brine2D.Audio.SDL/
+│   │   ├── SDL3AudioService.cs
+│   │   ├── SDL3SoundEffect.cs
+│   │   └── SDL3Music.cs
+│   │
+│   └── Brine2D.UI/
+│       ├── UICanvas.cs
+│       ├── IUIComponent.cs
+│       ├── UIButton.cs, UILabel.cs
+│       ├── UISlider.cs, UITextInput.cs
+│       └── UIDialog.cs, UITooltip.cs
+│
+├── samples/
+│   ├── FeatureDemos/
+│   ├── PlatformerGame/
+│   └── AdvancedGame/
+│
+└── tests/
+    ├── Brine2D.Core.Tests/
+    ├── Brine2D.Engine.Tests/
+    └── ...</code></pre>
+<hr />
+<h2 id="design-principles">Design Principles<a class="headerlink" href="#design-principles" title="Permanent link">&para;</a></h2>
+<p>Brine2D's architecture follows these key principles:</p>
+<h3 id="1-dependency-inversion">1. <strong>Dependency Inversion</strong><a class="headerlink" href="#1-dependency-inversion" title="Permanent link">&para;</a></h3>
+<p>High-level modules (your game) depend on abstractions (<code>IRenderer</code>), not implementations (<code>SDL3Renderer</code>).</p>
+<h3 id="2-single-responsibility">2. <strong>Single Responsibility</strong><a class="headerlink" href="#2-single-responsibility" title="Permanent link">&para;</a></h3>
+<p>Each package has one job:</p>
+<ul>
+<li><code>Core</code> = abstractions</li>
+<li><code>Engine</code> = game loop</li>
+<li><code>Rendering</code> = draw things</li>
+<li><code>Input</code> = handle input</li>
+<li>etc.</li>
+</ul>
+<h3 id="3-openclosed">3. <strong>Open/Closed</strong><a class="headerlink" href="#3-openclosed" title="Permanent link">&para;</a></h3>
+<p>Open for extension (implement <code>IRenderer</code> with DirectX, Metal, etc.), closed for modification (core interfaces rarely change).</p>
+<h3 id="4-dependency-injection">4. <strong>Dependency Injection</strong><a class="headerlink" href="#4-dependency-injection" title="Permanent link">&para;</a></h3>
+<p>Everything is resolved via DI container—testable, mockable, swappable.</p>
+<h3 id="5-configuration-over-code">5. <strong>Configuration Over Code</strong><a class="headerlink" href="#5-configuration-over-code" title="Permanent link">&para;</a></h3>
+<p>Prefer <code>gamesettings.json</code> over hardcoded values.</p>
+<hr />
+<h2 id="extending-brine2d">Extending Brine2D<a class="headerlink" href="#extending-brine2d" title="Permanent link">&para;</a></h2>
+<h3 id="add-a-custom-renderer">Add a Custom Renderer<a class="headerlink" href="#add-a-custom-renderer" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// 1. Implement IRenderer
+public class MyCustomRenderer : IRenderer
+{
+    public void DrawTexture(ITexture texture, float x, float y) { ... }
+    // ... implement all methods
+}
+
+// 2. Register it
+builder.Services.AddSingleton&lt;IRenderer, MyCustomRenderer&gt;();</code></pre>
+<h3 id="add-a-custom-input-provider">Add a Custom Input Provider<a class="headerlink" href="#add-a-custom-input-provider" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// 1. Implement IInputService
+public class MyInputService : IInputService
+{
+    public bool IsKeyDown(Keys key) { ... }
+    // ... implement all methods
+}
+
+// 2. Register it
+builder.Services.AddSingleton&lt;IInputService, MyInputService&gt;();</code></pre>
+<h3 id="create-custom-ui-components">Create Custom UI Components<a class="headerlink" href="#create-custom-ui-components" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">public class MyCustomWidget : IUIComponent
+{
+    public Vector2 Position { get; set; }
+    public Vector2 Size { get; set; }
+    public bool Visible { get; set; } = true;
+    public bool Enabled { get; set; } = true;
+    public UITooltip? Tooltip { get; set; }
+
+    public void Update(float deltaTime) { }
+    public void Render(IRenderer renderer) { }
+    public bool Contains(Vector2 screenPosition) { return false; }
+}</code></pre>
+<hr />
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="do-depend-on-interfaces"><strong>DO: Depend on Interfaces</strong><a class="headerlink" href="#do-depend-on-interfaces" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// Good
+private readonly IRenderer _renderer;
+
+// Bad
+private readonly SDL3Renderer _renderer;</code></pre>
+<h3 id="do-use-constructor-injection"><strong>DO: Use Constructor Injection</strong><a class="headerlink" href="#do-use-constructor-injection" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">public MyScene(IRenderer renderer, IInputService input, ILogger&lt;MyScene&gt; logger)
+    : base(logger)
+{
+    _renderer = renderer;
+    _input = input;
+}</code></pre>
+<h3 id="do-keep-scenes-focused"><strong>DO: Keep Scenes Focused</strong><a class="headerlink" href="#do-keep-scenes-focused" title="Permanent link">&para;</a></h3>
+<p>Each scene should represent one game state (Menu, Gameplay, GameOver, etc.).</p>
+<h3 id="do-use-async-for-loading"><strong>DO: Use Async for Loading</strong><a class="headerlink" href="#do-use-async-for-loading" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">protected override async Task OnLoadAsync(CancellationToken cancellationToken)
+{
+    _texture = await _textureLoader.LoadTextureAsync("sprite.png", cancellationToken);
+}</code></pre>
+<h3 id="dont-directly-reference-sdl3"><strong>DON'T: Directly Reference SDL3</strong><a class="headerlink" href="#dont-directly-reference-sdl3" title="Permanent link">&para;</a></h3>
+<p>Let the SDL implementations handle SDL—your game should only use Brine2D abstractions.</p>
+<h3 id="dont-use-static-state"><strong>DON'T: Use Static State</strong><a class="headerlink" href="#dont-use-static-state" title="Permanent link">&para;</a></h3>
+<p>Use DI instead of singletons or static classes.</p>
+<hr />
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../configuration/">Configuration</a> - Learn about <code>gamesettings.json</code> and options</li>
+<li><a href="../../concepts/architecture/">Core Concepts</a> - Deep dive into architecture</li>
+<li><a href="../../concepts/scenes/">Scene Management</a> - Understanding scene lifecycle</li>
+<li><a href="../../concepts/dependency-injection/">Dependency Injection</a> - How DI works in Brine2D</li>
+</ul>
+<hr />
+<p>Understanding Brine2D's structure makes it easy to navigate, extend, and maintain. The modular design means you can swap out any piece—just like ASP.NET!</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "content.code.select"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+      
+    
+  </body>
+</html>

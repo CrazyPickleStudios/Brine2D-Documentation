@@ -1,0 +1,209 @@
+/* Visual Studio Dark+ JSON Theme for Prism.js */
+
+/* C#-specific token styling */
+
+/* Keywords */
+.language-csharp .token.keyword {
+    color: #569cd6; /* Blue for keywords: if, class, public, void, etc. */
+}
+
+/* Class names and types */
+.language-csharp .token.class-name {
+    color: #4ec9b0; /* Teal for class/interface/type names */
+}
+
+/* Strings */
+.language-csharp .token.string {
+    color: #ce9178; /* Orange for strings */
+}
+
+/* Numbers */
+.language-csharp .token.number {
+    color: #b5cea8; /* Light green for numbers */
+}
+
+/* Comments */
+.language-csharp .token.comment {
+    color: #6a9955; /* Green for comments */
+    font-style: italic;
+}
+
+/* Functions/Methods */
+.language-csharp .token.function {
+    color: #dcdcaa; /* Light yellow for method names */
+}
+
+/* Properties */
+.language-csharp .token.property {
+    color: #9cdcfe; /* Light blue for properties */
+}
+
+/* Variables and parameters */
+.language-csharp .token.variable,
+.language-csharp .token.parameter {
+    color: #9cdcfe; /* Light blue for variables */
+}
+
+/* Operators */
+.language-csharp .token.operator {
+    color: #d4d4d4; /* Light gray for operators */
+}
+
+/* Punctuation */
+.language-csharp .token.punctuation {
+    color: #d4d4d4; /* Light gray for punctuation */
+}
+
+/* Attributes */
+.language-csharp .token.annotation,
+.language-csharp .token.attr-name {
+    color: #4ec9b0; /* Teal for attributes like [Attribute] */
+}
+
+/* Namespaces */
+.language-csharp .token.namespace {
+    color: #d4d4d4; /* Light gray for namespace names */
+}
+
+/* Generic type parameters */
+.language-csharp .token.generic {
+    color: #4ec9b0; /* Teal for <T> generic parameters */
+}
+
+/* Control flow keywords (special highlight) */
+.language-csharp .token.keyword.control {
+    color: #c586c0; /* Purple for return, break, continue, throw */
+}
+
+/* Boolean and null literals */
+.language-csharp .token.boolean,
+.language-csharp .token.null {
+    color: #569cd6; /* Blue for true, false, null */
+}
+
+/* Preprocessor directives */
+.language-csharp .token.directive {
+    color: #9b9b9b; /* Gray for #region, #if, etc. */
+}
+
+    .language-csharp .token.directive .token.keyword {
+        color: #9b9b9b;
+    }
+
+/* XML doc comments */
+.language-csharp .token.doc-comment {
+    color: #6a9955; /* Green for /// comments */
+    font-style: italic;
+}
+
+/* Interpolated strings */
+.language-csharp .token.interpolation {
+    color: #d4d4d4;
+}
+
+    .language-csharp .token.interpolation .token.punctuation {
+        color: #569cd6; /* Blue for ${ } in interpolated strings */
+    }
+
+/* this and base keywords */
+.language-csharp .token.keyword.this,
+.language-csharp .token.keyword.base {
+    color: #569cd6;
+    font-style: italic;
+}
+
+/* JSON-specific token styling */
+
+.language-json .token.property {
+    color: #d7ba7d;
+}
+
+.language-json .token.string {
+    color: #d69d85; 
+}
+
+.language-json .token.number {
+    color: #b5cea8; 
+}
+
+.language-json .token.boolean {
+    color: #569cd6; 
+}
+
+.language-json .token.null {
+    color: #569cd6;
+}
+
+.language-json .token.punctuation {
+    color: #d4d4d4; 
+}
+
+.language-json .token.operator {
+    color: #b4b4b4; 
+}
+
+.language-json .token.property.string {
+    color: #d7ba7d;
+}
+
+.language-json .token.comment {
+    color: #57a64a;
+    font-style: italic;
+}
+
+.language-xml .token.tag {
+    color: #569cd6;
+}
+
+    .language-xml .token.tag .token.tag {
+        color: #569cd6;
+    }
+
+    .language-xml .token.tag .token.punctuation {
+        color: gray;
+    }
+
+.language-xml .token.attr-name {
+    color: #92caf4;
+}
+
+.language-xml .token.attr-value {
+    color: #c8c8c8;
+}
+
+    .language-xml .token.attr-value .token.punctuation {
+        color: gray;
+    }
+
+.language-xml .token.punctuation {
+    color: #808080; /* Gray for punctuation */
+}
+
+.language-xml .token.comment {
+    color: #6a9955; /* Green for comments */
+    font-style: italic;
+}
+
+.language-xml .token.cdata {
+    color: #e9d585; /* Light yellow for CDATA sections */
+}
+
+.language-xml .token.doctype {
+    color: #569cd6; /* Blue for DOCTYPE */
+}
+
+.language-xml .token.prolog {
+    color: #569cd6; /* Blue for XML declaration */
+}
+
+.language-xml .token.entity {
+    color: #d7ba7d; /* Tan/beige for entities like &lt; &gt; */
+}
+
+/* Make sure MSBuild/csproj specific elements stand out */
+.language-xml .token.tag.project,
+.language-xml .token.tag.propertygroup,
+.language-xml .token.tag.itemgroup,
+.language-xml .token.tag.projectreference {
+    color: #4ec9b0; /* Teal for common MSBuild elements */
+}

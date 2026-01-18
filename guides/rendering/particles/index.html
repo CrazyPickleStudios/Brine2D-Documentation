@@ -1,0 +1,4856 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Create stunning particle effects with Brine2D's advanced particle system">
+      
+      
+      
+      
+        <link rel="prev" href="../cameras/">
+      
+      
+        <link rel="next" href="../primitives/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Particle System - Brine2D Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/prism-material-slate.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#particle-system" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Brine2D Documentation" class="md-header__button md-logo" aria-label="Brine2D Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Brine2D Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Particle System
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Brine2D Documentation" class="md-nav__button md-logo" aria-label="Brine2D Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Brine2D Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    What's New
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../whats-new/v0.8.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.8.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../whats-new/v0.7.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.7.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../whats-new/v0.6.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.6.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/first-game/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/project-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/moving-sprites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Moving Sprites
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/animations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/collision.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision Detection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/platformer.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building a Platformer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/top-down.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Top-Down Adventure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Rendering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../choosing-renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing a Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gpu-renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GPU Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../sprites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprites & Textures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../texture-atlasing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Texture Atlasing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cameras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cameras
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Particles
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Particles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-particle-emitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Particle Emitter
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#new-features-v080" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Features (v0.8.0)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="New Features (v0.8.0)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#particle-textures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Particle Textures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rotation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rotation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trail-effects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trail Effects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#blend-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Blend Modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emitter-shapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emitter Shapes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#particle-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Particle Properties
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Particle Properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#emission-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emission Properties
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visual-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visual Properties
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#physics-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physics Properties
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preset-effects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preset Effects
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preset Effects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fire-effect-enhanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fire Effect (Enhanced)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#explosion-effect-enhanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Explosion Effect (Enhanced)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#smoke-effect-enhanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Smoke Effect (Enhanced)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#magic-spell-effect-new" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Magic Spell Effect (NEW)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#projectile-trail-new" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Projectile Trail (NEW)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fountain-effect-new" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fountain Effect (NEW)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-techniques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Techniques
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Techniques">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layered-particles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layered Particles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamic-emitter-movement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamic Emitter Movement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conditional-emission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditional Emission
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#object-pooling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Object Pooling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Tips
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#texture-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Texture Optimization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#check-particle-count" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check Particle Count
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-stats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Stats
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Do
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Don't
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#particles-not-visible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Particles Not Visible
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#textures-not-loading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Textures Not Loading
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poor-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Poor Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trails-look-wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trails Look Wrong
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../primitives/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Drawing Primitives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Input
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/keyboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keyboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/mouse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mouse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/gamepad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gamepad Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/layers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input Layers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audio
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Audio
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/sound-effects.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sound Effects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/music.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Music Playback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/spatial-audio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spatial Audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scenes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Scenes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/lifecycle.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/transitions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Transitions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/lifecycle-hooks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle Hooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Collision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../collision/system.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../collision/colliders.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Colliders
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_7" id="__nav_5_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tilemaps
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tilemaps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tilemaps/loading.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Loading Tilemaps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tilemaps/rendering.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering Tiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_8" id="__nav_5_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Framework
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UI Framework
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ui/components.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ui/custom.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom UI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_9" id="__nav_5_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Component System
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Entity Component System
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/systems/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/entities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/queries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Queries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_10" id="__nav_5_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Events
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../events/window-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Window Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/dependency-injection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/game-loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Game Loop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/builder-pattern/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Builder Pattern
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/scenes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/entity-component-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Component System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/core.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Core
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/rendering.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Rendering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/input.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Input
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/audio.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/ecs.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.ECS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Samples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Samples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/basic-game.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/animation-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/collision-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/ecs-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ECS Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Contributing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to Contribute
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/code-style.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Style
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/building.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building from Source
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Start
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Start">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-particle-emitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Particle Emitter
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#new-features-v080" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New Features (v0.8.0)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="New Features (v0.8.0)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#particle-textures" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Particle Textures
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rotation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rotation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trail-effects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trail Effects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#blend-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Blend Modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emitter-shapes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emitter Shapes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#particle-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Particle Properties
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Particle Properties">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#emission-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emission Properties
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visual-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visual Properties
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#physics-properties" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physics Properties
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preset-effects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Preset Effects
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Preset Effects">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#fire-effect-enhanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fire Effect (Enhanced)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#explosion-effect-enhanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Explosion Effect (Enhanced)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#smoke-effect-enhanced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Smoke Effect (Enhanced)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#magic-spell-effect-new" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Magic Spell Effect (NEW)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#projectile-trail-new" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Projectile Trail (NEW)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fountain-effect-new" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fountain Effect (NEW)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-techniques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Techniques
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Techniques">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layered-particles" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layered Particles
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamic-emitter-movement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamic Emitter Movement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conditional-emission" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditional Emission
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#object-pooling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Object Pooling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Tips
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#texture-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Texture Optimization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#check-particle-count" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check Particle Count
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#performance-stats" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Stats
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Do
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Don't
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#particles-not-visible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Particles Not Visible
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#textures-not-loading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Textures Not Loading
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#poor-performance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Poor Performance
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trails-look-wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trails Look Wrong
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See Also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="particle-system">Particle System<a class="headerlink" href="#particle-system" title="Permanent link">&para;</a></h1>
+<p>Create fire, explosions, smoke, and other visual effects with Brine2D's high-performance particle system featuring textures, rotation, trails, blend modes, and automatic object pooling.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Brine2D's particle system uses object pooling to render thousands of particles without allocating memory. Particles are reused from a pool, ensuring smooth performance even with complex effects.</p>
+<p><strong>New in v0.8.0-beta:</strong>
+- Particle textures (custom sprite textures)
+- Rotation support (start, end, rotation speed)
+- Trail effects (motion trails behind particles)
+- Blend modes (additive, alpha, none)
+- 7 emitter shapes (point, circle, ring, box, cone, line, burst)</p>
+<pre class="mermaid"><code>graph LR
+    A[ParticleEmitterComponent] --&gt; B[ObjectPool]
+    B --&gt; C[Particle Instance]
+    C --&gt; D[Update Position]
+    C --&gt; E[Update Color]
+    C --&gt; F[Update Size]
+    C --&gt; G[Update Rotation]
+    D --&gt; H{Expired?}
+    E --&gt; H
+    F --&gt; H
+    G --&gt; H
+    H --&gt;|Yes| I[Return to Pool]
+    H --&gt;|No| J[Render]
+    I --&gt; B</code></pre>
+<hr />
+<h2 id="quick-start">Quick Start<a class="headerlink" href="#quick-start" title="Permanent link">&para;</a></h2>
+<h3 id="basic-particle-emitter">Basic Particle Emitter<a class="headerlink" href="#basic-particle-emitter" title="Permanent link">&para;</a></h3>
+<p>Create a simple particle effect:</p>
+<pre class="highlight"><code class="language-csharp">using Brine2D.ECS;
+using Brine2D.ECS.Components;
+using Brine2D.Rendering.ECS;
+using System.Numerics;
+
+public class GameScene : Scene
+{
+    private readonly IEntityWorld _world;
+
+    protected override void OnInitialize()
+    {
+        // Create entity with particle emitter
+        var fireEffect = _world.CreateEntity("Fire");
+
+        var transform = fireEffect.AddComponent&lt;TransformComponent&gt;();
+        transform.Position = new Vector2(400, 300);
+
+        var emitter = fireEffect.AddComponent&lt;ParticleEmitterComponent&gt;();
+        emitter.IsEmitting = true;
+        emitter.EmissionRate = 50f; // 50 particles per second
+        emitter.MaxParticles = 200;
+        emitter.ParticleLifetime = 2f; // Seconds
+
+        // Appearance
+        emitter.StartColor = new Color(255, 200, 0, 255); // Bright yellow
+        emitter.EndColor = new Color(255, 50, 0, 0); // Dark red, transparent
+        emitter.StartSize = 8f;
+        emitter.EndSize = 2f;
+
+        // Physics
+        emitter.InitialVelocity = new Vector2(0, -50); // Upward
+        emitter.VelocitySpread = 30f; // Random angle variance
+        emitter.Gravity = new Vector2(0, 100); // Pull down
+    }
+}</code></pre>
+<p>That's it! The <code>ParticleSystem</code> will automatically update and render particles.</p>
+<hr />
+<h2 id="new-features-v080">New Features (v0.8.0)<a class="headerlink" href="#new-features-v080" title="Permanent link">&para;</a></h2>
+<h3 id="particle-textures">Particle Textures<a class="headerlink" href="#particle-textures" title="Permanent link">&para;</a></h3>
+<p>Use custom textures instead of solid circles:</p>
+<pre class="highlight"><code class="language-csharp">var emitter = entity.AddComponent&lt;ParticleEmitterComponent&gt;();
+
+// Use a texture for particles
+emitter.TexturePath = "assets/particles/fire.png";
+emitter.TextureScaleMode = TextureScaleMode.Nearest; // For pixel art
+
+// Texture combines with color tint
+emitter.StartColor = new Color(255, 255, 255, 255); // White = no tint
+emitter.EndColor = new Color(255, 100, 0, 0); // Orange fade</code></pre>
+<p><strong>Best Practices:</strong>
+- Keep textures small (16x16 to 64x64 pixels)
+- Use semi-transparent textures for blending
+- White textures work best for color tinting
+- Use texture atlasing for multiple particle types</p>
+<h3 id="rotation">Rotation<a class="headerlink" href="#rotation" title="Permanent link">&para;</a></h3>
+<p>Rotate particles over their lifetime:</p>
+<pre class="highlight"><code class="language-csharp">var emitter = entity.AddComponent&lt;ParticleEmitterComponent&gt;();
+
+// Rotation angles (in radians)
+emitter.StartRotation = 0f; // Starting angle
+emitter.EndRotation = MathF.PI * 2; // End angle (full rotation)
+
+// OR use rotation speed (overrides lerp)
+emitter.RotationSpeed = 2f; // Radians per second (constant spin)
+
+// Random rotation variance
+emitter.RotationSpread = MathF.PI / 4; // ±45 degrees initial rotation</code></pre>
+<p><strong>Rotation Modes:</strong></p>
+<pre class="highlight"><code class="language-csharp">// Lerp rotation (smooth start → end)
+emitter.StartRotation = 0f;
+emitter.EndRotation = MathF.PI; // 180 degree rotation over lifetime
+emitter.RotationSpeed = 0f; // Disabled
+
+// Constant spin
+emitter.StartRotation = 0f;
+emitter.RotationSpeed = 3f; // Spin at 3 rad/s regardless of lifetime
+
+// Random initial rotation
+emitter.StartRotation = 0f;
+emitter.RotationSpread = MathF.PI; // Random ±180 degrees
+emitter.RotationSpeed = 1f; // All spin at same speed</code></pre>
+<h3 id="trail-effects">Trail Effects<a class="headerlink" href="#trail-effects" title="Permanent link">&para;</a></h3>
+<p>Add motion trails behind particles:</p>
+<pre class="highlight"><code class="language-csharp">var emitter = entity.AddComponent&lt;ParticleEmitterComponent&gt;();
+
+// Enable trails
+emitter.TrailEnabled = true;
+emitter.TrailLength = 10; // Number of trail segments
+emitter.TrailColor = new Color(255, 100, 0, 128); // Semi-transparent orange
+
+// Trail particles inherit main particle properties
+// but fade based on trail position</code></pre>
+<p><strong>Trail Configuration:</strong></p>
+<pre class="highlight"><code class="language-csharp">// Short, faint trails (subtle)
+emitter.TrailEnabled = true;
+emitter.TrailLength = 5;
+emitter.TrailColor = new Color(255, 255, 255, 50); // Very transparent
+
+// Long, visible trails (dramatic)
+emitter.TrailEnabled = true;
+emitter.TrailLength = 15;
+emitter.TrailColor = new Color(255, 100, 0, 200); // More opaque
+
+// Colored trails (different from particle)
+emitter.StartColor = Color.White; // White particles
+emitter.TrailColor = new Color(100, 150, 255, 150); // Blue trails</code></pre>
+<h3 id="blend-modes">Blend Modes<a class="headerlink" href="#blend-modes" title="Permanent link">&para;</a></h3>
+<p>Control how particles blend with the background:</p>
+<pre class="highlight"><code class="language-csharp">var emitter = entity.AddComponent&lt;ParticleEmitterComponent&gt;();
+
+// Additive blending (fire, explosions, energy)
+emitter.BlendMode = BlendMode.Additive;
+
+// Alpha blending (smoke, fog, default)
+emitter.BlendMode = BlendMode.AlphaBlend;
+
+// No blending (solid particles)
+emitter.BlendMode = BlendMode.None;</code></pre>
+<p><strong>Blend Mode Effects:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Blend Mode</th>
+<th>Visual Effect</th>
+<th>Best For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Additive</code></td>
+<td>Bright, glowing overlaps</td>
+<td>Fire, explosions, energy, magic</td>
+</tr>
+<tr>
+<td><code>AlphaBlend</code></td>
+<td>Standard transparency</td>
+<td>Smoke, fog, water, dust</td>
+</tr>
+<tr>
+<td><code>None</code></td>
+<td>Solid, opaque</td>
+<td>Solid objects, debris, sparks</td>
+</tr>
+</tbody>
+</table>
+<h3 id="emitter-shapes">Emitter Shapes<a class="headerlink" href="#emitter-shapes" title="Permanent link">&para;</a></h3>
+<p>Choose from 7 emitter shapes for different spawn patterns:</p>
+<pre class="highlight"><code class="language-csharp">var emitter = entity.AddComponent&lt;ParticleEmitterComponent&gt;();
+
+// Point emitter (single point)
+emitter.EmitterShape = EmitterShape.Point;
+
+// Circle emitter (spawn anywhere in circle)
+emitter.EmitterShape = EmitterShape.Circle;
+emitter.SpawnRadius = 20f;
+
+// Ring emitter (spawn on circle edge)
+emitter.EmitterShape = EmitterShape.Ring;
+emitter.SpawnRadius = 30f;
+
+// Box emitter (rectangular spawn area)
+emitter.EmitterShape = EmitterShape.Box;
+emitter.SpawnRadius = 50f; // Half-width/height
+
+// Cone emitter (directional spray)
+emitter.EmitterShape = EmitterShape.Cone;
+emitter.ConeAngle = MathF.PI / 4; // 45 degree cone
+
+// Line emitter (spawn along line)
+emitter.EmitterShape = EmitterShape.Line;
+emitter.LineLength = 100f;
+
+// Burst emitter (radial explosion)
+emitter.EmitterShape = EmitterShape.Burst;
+emitter.BurstCount = 50; // Particles per burst</code></pre>
+<hr />
+<h2 id="particle-properties">Particle Properties<a class="headerlink" href="#particle-properties" title="Permanent link">&para;</a></h2>
+<h3 id="emission-properties">Emission Properties<a class="headerlink" href="#emission-properties" title="Permanent link">&para;</a></h3>
+<p>Control how particles are spawned:</p>
+<pre class="highlight"><code class="language-csharp">var emitter = entity.AddComponent&lt;ParticleEmitterComponent&gt;();
+
+// Basic emission
+emitter.IsEmitting = true; // Toggle emission on/off
+emitter.EmissionRate = 50f; // Particles per second
+emitter.MaxParticles = 200; // Pool size (max concurrent particles)
+emitter.ParticleLifetime = 2f; // How long each particle lives (seconds)
+
+// Emitter shape
+emitter.EmitterShape = EmitterShape.Circle;
+emitter.SpawnRadius = 10f; // Shape-specific size</code></pre>
+<h3 id="visual-properties">Visual Properties<a class="headerlink" href="#visual-properties" title="Permanent link">&para;</a></h3>
+<p>Control particle appearance:</p>
+<pre class="highlight"><code class="language-csharp">// Color interpolation (start → end over lifetime)
+emitter.StartColor = new Color(255, 200, 0, 255); // Bright yellow, opaque
+emitter.EndColor = new Color(255, 50, 0, 0); // Dark red, transparent
+
+// Size interpolation (start → end over lifetime)
+emitter.StartSize = 8f; // pixels
+emitter.EndSize = 2f; // Shrink over time
+
+// Texture (new in v0.8.0)
+emitter.TexturePath = "assets/particles/spark.png";
+emitter.TextureScaleMode = TextureScaleMode.Linear;
+
+// Rotation (new in v0.8.0)
+emitter.StartRotation = 0f;
+emitter.EndRotation = MathF.PI * 2;
+emitter.RotationSpeed = 2f;
+emitter.RotationSpread = MathF.PI / 4;
+
+// Trails (new in v0.8.0)
+emitter.TrailEnabled = true;
+emitter.TrailLength = 10;
+emitter.TrailColor = new Color(255, 100, 0, 128);
+
+// Blend mode (new in v0.8.0)
+emitter.BlendMode = BlendMode.Additive;</code></pre>
+<h3 id="physics-properties">Physics Properties<a class="headerlink" href="#physics-properties" title="Permanent link">&para;</a></h3>
+<p>Control particle movement:</p>
+<pre class="highlight"><code class="language-csharp">// Initial velocity (pixels per second)
+emitter.InitialVelocity = new Vector2(0, -100); // Upward
+
+// Velocity spread (random angle variance in degrees)
+emitter.VelocitySpread = 45f; // ±45° cone
+
+// Gravity (acceleration, pixels per second²)
+emitter.Gravity = new Vector2(0, 200); // Pull down
+
+// No gravity (floating particles)
+emitter.Gravity = Vector2.Zero;</code></pre>
+<hr />
+<h2 id="preset-effects">Preset Effects<a class="headerlink" href="#preset-effects" title="Permanent link">&para;</a></h2>
+<h3 id="fire-effect-enhanced">Fire Effect (Enhanced)<a class="headerlink" href="#fire-effect-enhanced" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">var fireEmitter = entity.AddComponent&lt;ParticleEmitterComponent&gt;();
+
+// Emission
+fireEmitter.IsEmitting = true;
+fireEmitter.EmissionRate = 100f;
+fireEmitter.MaxParticles = 200;
+fireEmitter.ParticleLifetime = 1.5f;
+fireEmitter.EmitterShape = EmitterShape.Circle;
+fireEmitter.SpawnRadius = 15f;
+
+// Appearance
+fireEmitter.TexturePath = "assets/particles/fire.png"; // ← NEW
+fireEmitter.BlendMode = BlendMode.Additive; // ← NEW
+fireEmitter.StartColor = new Color(255, 200, 0, 255);
+fireEmitter.EndColor = new Color(255, 50, 0, 0);
+fireEmitter.StartSize = 8f;
+fireEmitter.EndSize = 2f;
+
+// Rotation (NEW)
+fireEmitter.StartRotation = 0f;
+fireEmitter.RotationSpeed = 2f;
+fireEmitter.RotationSpread = MathF.PI / 2;
+
+// Trails (NEW)
+fireEmitter.TrailEnabled = true;
+fireEmitter.TrailLength = 5;
+fireEmitter.TrailColor = new Color(255, 100, 0, 100);
+
+// Physics
+fireEmitter.InitialVelocity = new Vector2(0, -100);
+fireEmitter.VelocitySpread = 30f;
+fireEmitter.Gravity = new Vector2(0, -20);</code></pre>
+<h3 id="explosion-effect-enhanced">Explosion Effect (Enhanced)<a class="headerlink" href="#explosion-effect-enhanced" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">var explosionEmitter = entity.AddComponent&lt;ParticleEmitterComponent&gt;();
+
+// Emission (burst)
+explosionEmitter.EmitterShape = EmitterShape.Burst; // ← NEW
+explosionEmitter.BurstCount = 100; // ← NEW
+explosionEmitter.IsEmitting = false;
+explosionEmitter.MaxParticles = 100;
+explosionEmitter.ParticleLifetime = 1f;
+
+// Appearance
+explosionEmitter.TexturePath = "assets/particles/explosion.png"; // ← NEW
+explosionEmitter.BlendMode = BlendMode.Additive; // ← NEW
+explosionEmitter.StartColor = new Color(255, 255, 255, 255);
+explosionEmitter.EndColor = new Color(255, 100, 0, 0);
+explosionEmitter.StartSize = 12f;
+explosionEmitter.EndSize = 2f;
+
+// Rotation (NEW)
+explosionEmitter.StartRotation = 0f;
+explosionEmitter.RotationSpeed = 5f;
+
+// Physics
+explosionEmitter.InitialVelocity = new Vector2(0, -200);
+explosionEmitter.VelocitySpread = 180f;
+explosionEmitter.Gravity = new Vector2(0, 500);
+
+// Trigger explosion
+explosionEmitter.EmitBurst(100);</code></pre>
+<h3 id="smoke-effect-enhanced">Smoke Effect (Enhanced)<a class="headerlink" href="#smoke-effect-enhanced" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">var smokeEmitter = entity.AddComponent&lt;ParticleEmitterComponent&gt;();
+
+// Emission
+smokeEmitter.IsEmitting = true;
+smokeEmitter.EmissionRate = 20f;
+smokeEmitter.MaxParticles = 100;
+smokeEmitter.ParticleLifetime = 3f;
+smokeEmitter.EmitterShape = EmitterShape.Circle; // ← NEW
+smokeEmitter.SpawnRadius = 5f;
+
+// Appearance
+smokeEmitter.TexturePath = "assets/particles/smoke.png"; // ← NEW
+smokeEmitter.BlendMode = BlendMode.AlphaBlend; // ← NEW
+smokeEmitter.StartColor = new Color(60, 60, 60, 200);
+smokeEmitter.EndColor = new Color(150, 150, 150, 0);
+smokeEmitter.StartSize = 4f;
+smokeEmitter.EndSize = 12f;
+
+// Rotation (NEW)
+smokeEmitter.StartRotation = 0f;
+smokeEmitter.RotationSpeed = 0.5f;
+smokeEmitter.RotationSpread = MathF.PI;
+
+// Physics
+smokeEmitter.InitialVelocity = new Vector2(0, -30);
+smokeEmitter.VelocitySpread = 20f;
+smokeEmitter.Gravity = new Vector2(0, -10);</code></pre>
+<h3 id="magic-spell-effect-new">Magic Spell Effect (NEW)<a class="headerlink" href="#magic-spell-effect-new" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">var spellEmitter = entity.AddComponent&lt;ParticleEmitterComponent&gt;();
+
+// Emission
+spellEmitter.EmitterShape = EmitterShape.Ring; // ← Ring shape
+spellEmitter.SpawnRadius = 40f;
+spellEmitter.IsEmitting = true;
+spellEmitter.EmissionRate = 60f;
+spellEmitter.MaxParticles = 200;
+spellEmitter.ParticleLifetime = 2f;
+
+// Appearance
+spellEmitter.TexturePath = "assets/particles/magic.png";
+spellEmitter.BlendMode = BlendMode.Additive; // Glowing effect
+spellEmitter.StartColor = new Color(150, 100, 255, 255); // Purple
+spellEmitter.EndColor = new Color(150, 100, 255, 0);
+spellEmitter.StartSize = 6f;
+spellEmitter.EndSize = 1f;
+
+// Rotation
+spellEmitter.StartRotation = 0f;
+spellEmitter.RotationSpeed = 3f;
+
+// Trails
+spellEmitter.TrailEnabled = true;
+spellEmitter.TrailLength = 8;
+spellEmitter.TrailColor = new Color(150, 100, 255, 100);
+
+// Physics (spiral inward)
+spellEmitter.InitialVelocity = new Vector2(-50, 0);
+spellEmitter.VelocitySpread = 10f;
+spellEmitter.Gravity = Vector2.Zero;</code></pre>
+<h3 id="projectile-trail-new">Projectile Trail (NEW)<a class="headerlink" href="#projectile-trail-new" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// Attach to moving projectile
+var trailEmitter = projectile.AddComponent&lt;ParticleEmitterComponent&gt;();
+
+// Emission
+trailEmitter.EmitterShape = EmitterShape.Point;
+trailEmitter.IsEmitting = true;
+trailEmitter.EmissionRate = 100f;
+trailEmitter.MaxParticles = 200;
+trailEmitter.ParticleLifetime = 0.5f;
+
+// Appearance
+trailEmitter.TexturePath = "assets/particles/spark.png";
+trailEmitter.BlendMode = BlendMode.Additive;
+trailEmitter.StartColor = new Color(100, 200, 255, 255);
+trailEmitter.EndColor = new Color(100, 200, 255, 0);
+trailEmitter.StartSize = 6f;
+trailEmitter.EndSize = 1f;
+
+// Rotation
+trailEmitter.RotationSpeed = 10f;
+
+// Trails (trail of a trail!)
+trailEmitter.TrailEnabled = true;
+trailEmitter.TrailLength = 5;
+trailEmitter.TrailColor = new Color(100, 200, 255, 80);
+
+// Physics (no velocity, stay where spawned)
+trailEmitter.InitialVelocity = Vector2.Zero;
+trailEmitter.Gravity = Vector2.Zero;</code></pre>
+<h3 id="fountain-effect-new">Fountain Effect (NEW)<a class="headerlink" href="#fountain-effect-new" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">var fountainEmitter = entity.AddComponent&lt;ParticleEmitterComponent&gt;();
+
+// Emission
+fountainEmitter.EmitterShape = EmitterShape.Cone; // ← Cone shape
+fountainEmitter.ConeAngle = MathF.PI / 6; // 30 degree cone
+fountainEmitter.IsEmitting = true;
+fountainEmitter.EmissionRate = 80f;
+fountainEmitter.MaxParticles = 300;
+fountainEmitter.ParticleLifetime = 2.5f;
+
+// Appearance
+fountainEmitter.TexturePath = "assets/particles/water.png";
+fountainEmitter.BlendMode = BlendMode.AlphaBlend;
+fountainEmitter.StartColor = new Color(100, 150, 255, 200);
+fountainEmitter.EndColor = new Color(100, 150, 255, 0);
+fountainEmitter.StartSize = 4f;
+fountainEmitter.EndSize = 2f;
+
+// Physics (upward spray)
+fountainEmitter.InitialVelocity = new Vector2(0, -300);
+fountainEmitter.VelocitySpread = 15f;
+fountainEmitter.Gravity = new Vector2(0, 500); // Strong gravity</code></pre>
+<hr />
+<h2 id="advanced-techniques">Advanced Techniques<a class="headerlink" href="#advanced-techniques" title="Permanent link">&para;</a></h2>
+<h3 id="layered-particles">Layered Particles<a class="headerlink" href="#layered-particles" title="Permanent link">&para;</a></h3>
+<p>Combine multiple emitters for complex effects:</p>
+<pre class="highlight"><code class="language-csharp">public void CreateExplosion(Vector2 position)
+{
+    var explosionEntity = _world.CreateEntity("Explosion");
+    var transform = explosionEntity.AddComponent&lt;TransformComponent&gt;();
+    transform.Position = position;
+
+    // Layer 1: Bright flash
+    var flashEmitter = explosionEntity.AddComponent&lt;ParticleEmitterComponent&gt;();
+    flashEmitter.EmitterShape = EmitterShape.Burst;
+    flashEmitter.BurstCount = 20;
+    flashEmitter.TexturePath = "assets/particles/flash.png";
+    flashEmitter.BlendMode = BlendMode.Additive;
+    flashEmitter.StartColor = Color.White;
+    flashEmitter.EndColor = new Color(255, 255, 255, 0);
+    flashEmitter.ParticleLifetime = 0.2f;
+    flashEmitter.StartSize = 20f;
+    flashEmitter.EndSize = 40f;
+
+    // Layer 2: Fire burst
+    var fireEmitter = CreateChildEmitter(explosionEntity);
+    fireEmitter.EmitterShape = EmitterShape.Burst;
+    fireEmitter.BurstCount = 50;
+    fireEmitter.BlendMode = BlendMode.Additive;
+    fireEmitter.StartColor = new Color(255, 200, 0, 255);
+    fireEmitter.EndColor = new Color(255, 50, 0, 0);
+    fireEmitter.ParticleLifetime = 1f;
+    fireEmitter.InitialVelocity = new Vector2(0, -200);
+    fireEmitter.VelocitySpread = 180f;
+
+    // Layer 3: Smoke aftermath
+    var smokeEmitter = CreateChildEmitter(explosionEntity);
+    smokeEmitter.EmissionRate = 30f;
+    smokeEmitter.BlendMode = BlendMode.AlphaBlend;
+    smokeEmitter.StartColor = new Color(60, 60, 60, 200);
+    smokeEmitter.EndColor = new Color(120, 120, 120, 0);
+    smokeEmitter.ParticleLifetime = 3f;
+    smokeEmitter.StartSize = 4f;
+    smokeEmitter.EndSize = 20f;
+
+    // Trigger effects
+    flashEmitter.EmitBurst(20);
+    fireEmitter.EmitBurst(50);
+}</code></pre>
+<h3 id="dynamic-emitter-movement">Dynamic Emitter Movement<a class="headerlink" href="#dynamic-emitter-movement" title="Permanent link">&para;</a></h3>
+<p>Create moving particle sources:</p>
+<pre class="highlight"><code class="language-csharp">public class MovingEmitterSystem : IUpdateSystem
+{
+    public void Update(GameTime gameTime)
+    {
+        var emitters = _world.GetEntitiesWithComponent&lt;ParticleEmitterComponent&gt;();
+
+        foreach (var entity in emitters)
+        {
+            var transform = entity.GetComponent&lt;TransformComponent&gt;();
+            var emitter = entity.GetComponent&lt;ParticleEmitterComponent&gt;();
+
+            // Move in a circle
+            var time = (float)gameTime.TotalTime * 2f;
+            transform.Position = new Vector2(
+                640 + MathF.Cos(time) * 200,
+                360 + MathF.Sin(time) * 200
+            );
+        }
+    }
+}</code></pre>
+<h3 id="conditional-emission">Conditional Emission<a class="headerlink" href="#conditional-emission" title="Permanent link">&para;</a></h3>
+<p>Control emission based on game state:</p>
+<pre class="highlight"><code class="language-csharp">public class ConditionalParticleSystem : IUpdateSystem
+{
+    public void Update(GameTime gameTime)
+    {
+        var player = GetPlayer();
+        var emitter = player.GetComponent&lt;ParticleEmitterComponent&gt;();
+        var velocity = player.GetComponent&lt;VelocityComponent&gt;();
+
+        // Only emit when moving fast
+        var speed = velocity.Velocity.Length();
+        emitter.IsEmitting = speed &gt; 100f;
+
+        // Adjust emission rate based on speed
+        emitter.EmissionRate = speed * 0.5f; // More particles = faster movement
+    }
+}</code></pre>
+<hr />
+<h2 id="performance">Performance<a class="headerlink" href="#performance" title="Permanent link">&para;</a></h2>
+<h3 id="object-pooling">Object Pooling<a class="headerlink" href="#object-pooling" title="Permanent link">&para;</a></h3>
+<p>Particles use object pooling automatically - no GC allocations!</p>
+<pre class="highlight"><code class="language-csharp">// Under the hood (automatic):
+public class ParticleEmitterComponent
+{
+    private readonly ObjectPool&lt;Particle&gt; _pool;
+
+    private void EmitParticle()
+    {
+        var particle = _pool.Get(); // ✅ Reuse from pool
+        // Configure particle...
+    }
+
+    private void KillParticle(Particle particle)
+    {
+        _pool.Return(particle); // ✅ Return to pool
+    }
+}</code></pre>
+<h3 id="performance-tips">Performance Tips<a class="headerlink" href="#performance-tips" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// ✅ GOOD: Reasonable particle counts
+emitter.MaxParticles = 200; // ~200 particles = negligible cost
+
+// ⚠️ ACCEPTABLE: Many particles
+emitter.MaxParticles = 1000; // ~1000 particles = minor cost
+
+// ❌ BAD: Too many particles
+emitter.MaxParticles = 10000; // &gt; 10k particles = significant cost
+
+// ✅ SOLUTION: Use multiple smaller emitters
+for (int i = 0; i &lt; 10; i++)
+{
+    var smallEmitter = CreateEmitter();
+    smallEmitter.MaxParticles = 100; // 10 x 100 = 1000 total
+}</code></pre>
+<p><strong>Performance Guidelines:</strong>
+- <strong>&lt; 500 particles per emitter</strong> - Excellent performance
+- <strong>500-1000 particles</strong> - Good performance
+- <strong>&gt; 1000 particles</strong> - Consider splitting into multiple emitters
+- <strong>Textures</strong> - Use texture atlasing for multiple particle types
+- <strong>Trails</strong> - Trails multiply particle count (10 trail length = 10x particles)
+- <strong>Blend modes</strong> - Additive blending has similar cost to alpha blending</p>
+<h3 id="texture-optimization">Texture Optimization<a class="headerlink" href="#texture-optimization" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// ✅ GOOD: Pack particle textures into atlas
+var atlas = await AtlasBuilder.BuildAtlasAsync(
+    _renderer,
+    _textureLoader,
+    new[] {
+        "assets/particles/fire.png",
+        "assets/particles/smoke.png",
+        "assets/particles/spark.png"
+    },
+    padding: 2,
+    maxSize: 1024
+);
+
+// Use atlas regions
+emitter.TexturePath = "assets/particles/fire.png"; // Automatically uses atlas</code></pre>
+<hr />
+<h2 id="monitoring">Monitoring<a class="headerlink" href="#monitoring" title="Permanent link">&para;</a></h2>
+<h3 id="check-particle-count">Check Particle Count<a class="headerlink" href="#check-particle-count" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">var emitter = entity.GetComponent&lt;ParticleEmitterComponent&gt;();
+
+Logger.LogDebug($"Active particles: {emitter.ParticleCount}/{emitter.MaxParticles}");
+
+if (emitter.ParticleCount &gt;= emitter.MaxParticles)
+{
+    Logger.LogWarning("Particle pool exhausted! Increase MaxParticles.");
+}</code></pre>
+<h3 id="performance-stats">Performance Stats<a class="headerlink" href="#performance-stats" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// Enable performance monitoring
+builder.Services.AddPerformanceMonitoring(options =&gt;
+{
+    options.EnableOverlay = true;
+});
+
+// Press F3 in-game to toggle detailed stats
+// Look for:
+// - "Sprites" count (includes particles)
+// - "Draw Calls" (should batch with atlasing)
+// - Frame time (&lt; 16.67ms for 60 FPS)</code></pre>
+<hr />
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="do">Do<a class="headerlink" href="#do" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Use texture atlasing</strong> - Pack all particle textures together</li>
+<li><strong>Set reasonable MaxParticles</strong> - Start with 200, adjust as needed</li>
+<li><strong>Use additive blending for bright effects</strong> - Fire, explosions, energy</li>
+<li><strong>Use alpha blending for soft effects</strong> - Smoke, fog, water</li>
+<li><strong>Enable trails sparingly</strong> - They multiply particle count</li>
+<li><strong>Test on target hardware</strong> - Performance varies by device</li>
+</ul>
+<h3 id="dont">Don't<a class="headerlink" href="#dont" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Don't use massive textures</strong> - Keep particles 16x16 to 64x64</li>
+<li><strong>Don't create too many emitters</strong> - Prefer fewer, larger emitters</li>
+<li><strong>Don't enable trails on all particles</strong> - Use selectively</li>
+<li><strong>Don't forget to set BlendMode</strong> - Defaults to AlphaBlend</li>
+<li><strong>Don't use None blend mode with transparency</strong> - Use Alpha or Additive</li>
+</ul>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="particles-not-visible">Particles Not Visible<a class="headerlink" href="#particles-not-visible" title="Permanent link">&para;</a></h3>
+<p><strong>Problem:</strong> Emitter is active but no particles appear.</p>
+<p><strong>Solutions:</strong></p>
+<pre class="highlight"><code class="language-csharp">// 1. Check emission is enabled
+emitter.IsEmitting = true;
+
+// 2. Verify EmissionRate is reasonable
+emitter.EmissionRate = 50f; // Not 0!
+
+// 3. Check ParticleLifetime
+emitter.ParticleLifetime = 2f; // Not too short
+
+// 4. Verify colors have opacity
+emitter.StartColor = new Color(255, 255, 255, 255); // Alpha = 255
+
+// 5. Check blend mode
+emitter.BlendMode = BlendMode.AlphaBlend; // Or Additive</code></pre>
+<h3 id="textures-not-loading">Textures Not Loading<a class="headerlink" href="#textures-not-loading" title="Permanent link">&para;</a></h3>
+<p><strong>Problem:</strong> Particles show as solid circles instead of texture.</p>
+<p><strong>Solution:</strong></p>
+<pre class="highlight"><code class="language-csharp">// Verify texture path is correct
+if (!File.Exists("assets/particles/fire.png"))
+{
+    Logger.LogError("Particle texture not found!");
+}
+
+// Check texture loaded successfully
+emitter.TexturePath = "assets/particles/fire.png";
+
+// Fallback: If no texture, particles render as circles (expected)</code></pre>
+<h3 id="poor-performance">Poor Performance<a class="headerlink" href="#poor-performance" title="Permanent link">&para;</a></h3>
+<p><strong>Problem:</strong> Frame rate drops with particles active.</p>
+<p><strong>Solutions:</strong></p>
+<pre class="highlight"><code class="language-csharp">// 1. Reduce MaxParticles
+emitter.MaxParticles = 200; // Instead of 2000
+
+// 2. Reduce trail length
+emitter.TrailLength = 5; // Instead of 20
+
+// 3. Use texture atlasing
+// Pack all particle textures into one atlas
+
+// 4. Disable distant emitters
+if (distance &gt; 1000f)
+{
+    emitter.IsEmitting = false;
+}
+
+// 5. Check particle count
+Logger.LogInfo($"Total particles: {GetTotalParticleCount()}");</code></pre>
+<h3 id="trails-look-wrong">Trails Look Wrong<a class="headerlink" href="#trails-look-wrong" title="Permanent link">&para;</a></h3>
+<p><strong>Problem:</strong> Trails appear disconnected or too faint.</p>
+<p><strong>Solutions:</strong></p>
+<pre class="highlight"><code class="language-csharp">// 1. Increase trail opacity
+emitter.TrailColor = new Color(255, 100, 0, 200); // More opaque
+
+// 2. Increase trail length
+emitter.TrailLength = 10; // More segments
+
+// 3. Match trail color to particle
+emitter.StartColor = new Color(255, 100, 0, 255);
+emitter.TrailColor = new Color(255, 100, 0, 150);
+
+// 4. Increase emission rate for continuous trails
+emitter.EmissionRate = 100f; // More particles = smoother trails</code></pre>
+<hr />
+<h2 id="see-also">See Also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../texture-atlasing/">Texture Atlasing</a> - Pack particle textures for better performance</li>
+<li><a href="../sprites/">Sprites &amp; Textures</a> - Learn about texture loading</li>
+<li><a href="../../ecs/systems/#particlesystem">ECS Systems</a> - ParticleSystem implementation details</li>
+<li><a href="../../performance/optimization/">Performance Optimization</a> - General optimization techniques</li>
+</ul>
+<hr />
+<p><strong>Next Steps:</strong>
+- Experiment with different emitter shapes
+- Try combining blend modes
+- Create layered particle effects
+- Add particle textures with atlasing
+- Use trails for motion effects</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["content.code.copy", "content.code.select"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+      
+    
+  </body>
+</html>

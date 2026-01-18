@@ -1,0 +1,4878 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Priority-based input routing to prevent UI and game from receiving input simultaneously">
+      
+      
+      
+      
+        <link rel="prev" href="../gamepad/">
+      
+      
+        <link rel="next" href="../../audio/getting-started/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Input Layers - Brine2D Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/prism-material-slate.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#input-layers" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Brine2D Documentation" class="md-header__button md-logo" aria-label="Brine2D Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Brine2D Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Input Layers
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Brine2D Documentation" class="md-nav__button md-logo" aria-label="Brine2D Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Brine2D Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    What's New
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../whats-new/v0.8.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.8.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../whats-new/v0.7.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.7.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../whats-new/v0.6.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.6.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/first-game/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/project-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/moving-sprites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Moving Sprites
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/animations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/collision.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision Detection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/platformer.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building a Platformer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/top-down.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Top-Down Adventure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Rendering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/choosing-renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing a Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/gpu-renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GPU Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/sprites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprites & Textures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/texture-atlasing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Texture Atlasing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/cameras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cameras
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/particles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Particles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/primitives/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Drawing Primitives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Input
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../keyboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keyboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../mouse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mouse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gamepad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gamepad Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input Layers
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input Layers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Example
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-ui-clicks-affect-game" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: UI Clicks Affect Game
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solution-input-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solution: Input Layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-register-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Register Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-inject-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Inject Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-register-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Register Layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-process-input-every-frame" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Process Input Every Frame
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#input-layer-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input Layer Interface
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Input Layer Interface">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#iinputlayer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IInputLayer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#priority-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Priority System
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consumption-flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consumption Flags
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Consumption Flags">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#check-consumption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check Consumption
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-input-is-consumed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Input is Consumed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pattern-1-game-with-ui-overlay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 1: Game with UI Overlay
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-2-pause-menu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 2: Pause Menu
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-3-console-overlay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 3: Console Overlay
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-4-multiple-ui-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 4: Multiple UI Layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-input-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🛠️ Custom Input Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ Custom Input Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-custom-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create Custom Layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-custom-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Custom Layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-techniques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Techniques
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Techniques">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#conditional-consumption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditional Consumption
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamic-priority" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamic Priority
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#input-recording" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input Recording
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-game-still-receives-ui-clicks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Game Still Receives UI Clicks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-ui-not-consuming-input" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: UI Not Consuming Input
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-text-input-leaks-to-game" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Text Input Leaks to Game
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DO
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DON'T
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audio
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Audio
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/sound-effects.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sound Effects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/music.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Music Playback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/spatial-audio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spatial Audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scenes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Scenes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/lifecycle.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/transitions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Transitions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/lifecycle-hooks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle Hooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Collision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../collision/system.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../collision/colliders.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Colliders
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_7" id="__nav_5_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tilemaps
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tilemaps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tilemaps/loading.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Loading Tilemaps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tilemaps/rendering.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering Tiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_8" id="__nav_5_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Framework
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UI Framework
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ui/components.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ui/custom.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom UI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_9" id="__nav_5_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Component System
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Entity Component System
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/systems/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/entities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/queries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Queries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_10" id="__nav_5_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Events
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../events/window-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Window Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/dependency-injection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/game-loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Game Loop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/builder-pattern/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Builder Pattern
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/scenes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/entity-component-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Component System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/core.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Core
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/rendering.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Rendering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/input.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Input
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/audio.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/ecs.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.ECS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Samples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Samples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/basic-game.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/animation-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/collision-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/ecs-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ECS Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Contributing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to Contribute
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/code-style.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Style
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/building.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building from Source
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Example
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-ui-clicks-affect-game" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: UI Clicks Affect Game
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solution-input-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solution: Input Layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-register-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Register Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-inject-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Inject Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-register-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Register Layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-process-input-every-frame" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Process Input Every Frame
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#input-layer-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input Layer Interface
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Input Layer Interface">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#iinputlayer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IInputLayer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#priority-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Priority System
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#consumption-flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Consumption Flags
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Consumption Flags">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#check-consumption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Check Consumption
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-input-is-consumed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Input is Consumed
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pattern-1-game-with-ui-overlay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 1: Game with UI Overlay
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-2-pause-menu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 2: Pause Menu
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-3-console-overlay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 3: Console Overlay
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-4-multiple-ui-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 4: Multiple UI Layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#custom-input-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🛠️ Custom Input Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🛠️ Custom Input Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#create-custom-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Create Custom Layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-custom-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Custom Layer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-techniques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Techniques
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Techniques">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#conditional-consumption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditional Consumption
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dynamic-priority" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dynamic Priority
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#input-recording" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Input Recording
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-game-still-receives-ui-clicks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Game Still Receives UI Clicks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-ui-not-consuming-input" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: UI Not Consuming Input
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-text-input-leaks-to-game" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Text Input Leaks to Game
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DO
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DON'T
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="input-layers">Input Layers<a class="headerlink" href="#input-layers" title="Permanent link">&para;</a></h1>
+<p>Master priority-based input routing to handle UI overlays, pause menus, and complex input scenarios in Brine2D.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p><strong>Input Layers</strong> solve a common problem: when a player clicks a button on a pause menu, the game world shouldn't also react to that click!</p>
+<p>Brine2D's <code>InputLayerManager</code> routes input through <strong>priority-based layers</strong>:</p>
+<ul>
+<li>✅ <strong>UI Layer</strong> (Priority 1000) - Menus, dialogs, HUD</li>
+<li>✅ <strong>Game Layer</strong> (Priority 0) - Game world, player controls</li>
+<li>✅ <strong>Input consumption</strong> - Higher priority layers can block lower ones</li>
+<li>✅ <strong>Automatic routing</strong> - No manual checks needed</li>
+</ul>
+<pre class="mermaid"><code>graph TB
+    A["Player Input&lt;br/&gt;(Keyboard/Mouse)"] --&gt; B["InputLayerManager"]
+
+    B --&gt; C["Layer 1: UI Canvas&lt;br/&gt;(Priority 1000)"]
+    C --&gt;|"Consumed?&lt;br/&gt;YES"| D["Stop&lt;br/&gt;(Game doesn't see input)"]
+    C --&gt;|"Consumed?&lt;br/&gt;NO"| E["Layer 2: Game&lt;br/&gt;(Priority 0)"]
+
+    E --&gt; F["Game Handles Input"]
+
+    style A fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
+    style B fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style C fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+    style D fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style E fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style F fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff</code></pre>
+<p><strong>Example Scenario:</strong>
+1. Player opens pause menu (UI layer)
+2. Player clicks "Resume" button
+3. UI layer <strong>consumes</strong> the click (handles it)
+4. Game layer <strong>never sees</strong> the click (doesn't spawn units, shoot, etc.)</p>
+<hr />
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<ul>
+<li>✅ <a href="../keyboard/">Keyboard Input</a> - Basic input handling</li>
+<li>✅ <a href="../mouse/">Mouse Input</a> - Mouse handling</li>
+<li>✅ <a href="../../../concepts/scenes/">Scenes</a> - Scene structure</li>
+</ul>
+<hr />
+<h2 id="quick-example">Quick Example<a class="headerlink" href="#quick-example" title="Permanent link">&para;</a></h2>
+<h3 id="problem-ui-clicks-affect-game">Problem: UI Clicks Affect Game<a class="headerlink" href="#problem-ui-clicks-affect-game" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// ❌ BAD - Both UI and game handle the same click!
+protected override void OnUpdate(GameTime gameTime)
+{
+    // UI handles click
+    if (_input.IsMouseButtonPressed(MouseButton.Left))
+    {
+        CheckButtonClicked(); // Button clicked!
+    }
+
+    // Game ALSO handles same click!
+    if (_input.IsMouseButtonPressed(MouseButton.Left))
+    {
+        SpawnUnitAtMouse(); // Oops! Spawned unit under button!
+    }
+}</code></pre>
+<h3 id="solution-input-layers">Solution: Input Layers<a class="headerlink" href="#solution-input-layers" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">using Brine2D.Core;
+using Brine2D.Input;
+using Brine2D.Rendering;
+using Brine2D.UI;
+using Microsoft.Extensions.Logging;
+
+public class InputLayerScene : Scene
+{
+    private readonly IInputService _input;
+    private readonly InputLayerManager _inputLayerManager;
+    private readonly UICanvas _uiCanvas;
+    private readonly IRenderer _renderer;
+
+    public InputLayerScene(
+        IInputService input,
+        InputLayerManager inputLayerManager,
+        UICanvas uiCanvas,
+        IRenderer renderer,
+        ILogger&lt;InputLayerScene&gt; logger
+    ) : base(logger)
+    {
+        _input = input;
+        _inputLayerManager = inputLayerManager;
+        _uiCanvas = uiCanvas;
+        _renderer = renderer;
+    }
+
+    protected override void OnInitialize()
+    {
+        // Register UI layer (high priority)
+        _inputLayerManager.RegisterLayer(_uiCanvas);
+
+        // Add a button
+        var button = new UIButton("Click Me", new Vector2(100, 100), new Vector2(150, 50));
+        button.OnClick += () =&gt; Logger.LogInformation("Button clicked!");
+        _uiCanvas.Add(button);
+    }
+
+    protected override void OnUpdate(GameTime gameTime)
+    {
+        // Process input through layers
+        _inputLayerManager.ProcessInput();
+
+        // ✅ GOOD - Only handle game input if NOT consumed by UI
+        if (!_inputLayerManager.MouseConsumed)
+        {
+            if (_input.IsMouseButtonPressed(MouseButton.Left))
+            {
+                SpawnUnitAtMouse(); // Only spawns if NOT clicking UI!
+            }
+        }
+
+        if (!_inputLayerManager.KeyboardConsumed)
+        {
+            HandleGameKeyboard(); // Only if UI isn't typing
+        }
+    }
+}</code></pre>
+<p><strong>Result:</strong> Clicking button doesn't affect game world! 🎯</p>
+<hr />
+<h2 id="setup">Setup<a class="headerlink" href="#setup" title="Permanent link">&para;</a></h2>
+<h3 id="1-register-service">1. Register Service<a class="headerlink" href="#1-register-service" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">using Brine2D.Hosting;
+using Brine2D.Input;
+using Brine2D.UI;
+
+var builder = GameApplication.CreateBuilder(args);
+
+// Add input layer manager
+builder.Services.AddInputLayerManager();
+
+// Add UI canvas (implements IInputLayer)
+builder.Services.AddSingleton&lt;UICanvas&gt;();
+
+// ... other services ...
+
+var game = builder.Build();
+await game.RunAsync&lt;MyScene&gt;();</code></pre>
+<hr />
+<h3 id="2-inject-dependencies">2. Inject Dependencies<a class="headerlink" href="#2-inject-dependencies" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">public class MyScene : Scene
+{
+    private readonly IInputService _input;
+    private readonly InputLayerManager _layerManager;
+    private readonly UICanvas _uiCanvas;
+
+    public MyScene(
+        IInputService input,
+        InputLayerManager layerManager,
+        UICanvas uiCanvas,
+        ILogger&lt;MyScene&gt; logger
+    ) : base(logger)
+    {
+        _input = input;
+        _layerManager = layerManager;
+        _uiCanvas = uiCanvas;
+    }
+}</code></pre>
+<hr />
+<h3 id="3-register-layers">3. Register Layers<a class="headerlink" href="#3-register-layers" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">protected override void OnInitialize()
+{
+    // Register UI layer (priority 1000)
+    _layerManager.RegisterLayer(_uiCanvas);
+
+    // Can register custom layers too
+    // _layerManager.RegisterLayer(myCustomLayer);
+}</code></pre>
+<hr />
+<h3 id="4-process-input-every-frame">4. Process Input Every Frame<a class="headerlink" href="#4-process-input-every-frame" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">protected override void OnUpdate(GameTime gameTime)
+{
+    // IMPORTANT: Call this BEFORE checking input!
+    _layerManager.ProcessInput();
+
+    // Now safe to check consumption
+    if (!_layerManager.MouseConsumed)
+    {
+        HandleGameMouseInput();
+    }
+
+    if (!_layerManager.KeyboardConsumed)
+    {
+        HandleGameKeyboardInput();
+    }
+}</code></pre>
+<hr />
+<h2 id="input-layer-interface">Input Layer Interface<a class="headerlink" href="#input-layer-interface" title="Permanent link">&para;</a></h2>
+<h3 id="iinputlayer">IInputLayer<a class="headerlink" href="#iinputlayer" title="Permanent link">&para;</a></h3>
+<p>Implement this interface to create custom layers:</p>
+<pre class="highlight"><code class="language-csharp">public interface IInputLayer
+{
+    /// &lt;summary&gt;
+    /// Priority (higher = processed first).
+    /// UI = 1000, Game = 0
+    /// &lt;/summary&gt;
+    int Priority { get; }
+
+    /// &lt;summary&gt;
+    /// Process keyboard input.
+    /// Return TRUE to consume (block lower layers).
+    /// &lt;/summary&gt;
+    bool ProcessKeyboardInput(IInputService input);
+
+    /// &lt;summary&gt;
+    /// Process mouse input.
+    /// Return TRUE to consume (block lower layers).
+    /// &lt;/summary&gt;
+    bool ProcessMouseInput(IInputService input);
+}</code></pre>
+<hr />
+<h3 id="priority-system">Priority System<a class="headerlink" href="#priority-system" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Priority</th>
+<th>Layer Type</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1000+</strong></td>
+<td>Critical UI</td>
+<td>Modal dialogs, error messages</td>
+</tr>
+<tr>
+<td><strong>1000</strong></td>
+<td>UI</td>
+<td>Menus, HUD, buttons</td>
+</tr>
+<tr>
+<td><strong>500</strong></td>
+<td>Overlay</td>
+<td>Console, debug menu</td>
+</tr>
+<tr>
+<td><strong>0</strong></td>
+<td>Game</td>
+<td>Player controls, world interaction</td>
+</tr>
+<tr>
+<td><strong>-1000</strong></td>
+<td>Background</td>
+<td>Always processes (logging, etc.)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Rule:</strong> Higher priority = processed first, can block lower priorities.</p>
+<hr />
+<h2 id="consumption-flags">Consumption Flags<a class="headerlink" href="#consumption-flags" title="Permanent link">&para;</a></h2>
+<h3 id="check-consumption">Check Consumption<a class="headerlink" href="#check-consumption" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">protected override void OnUpdate(GameTime gameTime)
+{
+    _layerManager.ProcessInput();
+
+    // Check if keyboard was consumed
+    if (_layerManager.KeyboardConsumed)
+    {
+        // UI is typing, don't handle game keyboard
+        return;
+    }
+
+    // Check if mouse was consumed
+    if (_layerManager.MouseConsumed)
+    {
+        // UI is clicking, don't handle game mouse
+        return;
+    }
+
+    // Safe to process game input
+    HandleGameInput();
+}</code></pre>
+<hr />
+<h3 id="when-input-is-consumed">When Input is Consumed<a class="headerlink" href="#when-input-is-consumed" title="Permanent link">&para;</a></h3>
+<p><strong>Keyboard consumed when:</strong>
+- Text input field is focused
+- Dropdown is open (arrow keys)
+- Dialog is active (Enter/Escape)</p>
+<p><strong>Mouse consumed when:</strong>
+- Hovering over button
+- Dragging slider
+- Clicking checkbox
+- Scrolling in UI element</p>
+<hr />
+<h2 id="common-patterns">Common Patterns<a class="headerlink" href="#common-patterns" title="Permanent link">&para;</a></h2>
+<h3 id="pattern-1-game-with-ui-overlay">Pattern 1: Game with UI Overlay<a class="headerlink" href="#pattern-1-game-with-ui-overlay" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">public class GameWithUIScene : Scene
+{
+    private readonly IInputService _input;
+    private readonly InputLayerManager _layerManager;
+    private readonly UICanvas _uiCanvas;
+
+    private Vector2 _playerPosition = new Vector2(400, 300);
+
+    protected override void OnInitialize()
+    {
+        // Register UI layer
+        _layerManager.RegisterLayer(_uiCanvas);
+
+        // Add pause button
+        var pauseBtn = new UIButton("Pause", new Vector2(10, 10), new Vector2(100, 40));
+        pauseBtn.OnClick += TogglePause;
+        _uiCanvas.Add(pauseBtn);
+    }
+
+    protected override void OnUpdate(GameTime gameTime)
+    {
+        // Process layers
+        _layerManager.ProcessInput();
+
+        // Only handle game input if UI didn't consume it
+        if (!_layerManager.KeyboardConsumed)
+        {
+            HandlePlayerMovement(gameTime);
+        }
+
+        if (!_layerManager.MouseConsumed)
+        {
+            HandleWorldClicks();
+        }
+    }
+
+    private void HandlePlayerMovement(GameTime gameTime)
+    {
+        var deltaTime = (float)gameTime.DeltaTime;
+        var movement = Vector2.Zero;
+
+        if (_input.IsKeyDown(Keys.W)) movement.Y -= 1;
+        if (_input.IsKeyDown(Keys.S)) movement.Y += 1;
+        if (_input.IsKeyDown(Keys.A)) movement.X -= 1;
+        if (_input.IsKeyDown(Keys.D)) movement.X += 1;
+
+        if (movement != Vector2.Zero)
+        {
+            movement = Vector2.Normalize(movement);
+            _playerPosition += movement * 200f * deltaTime;
+        }
+    }
+}</code></pre>
+<hr />
+<h3 id="pattern-2-pause-menu">Pattern 2: Pause Menu<a class="headerlink" href="#pattern-2-pause-menu" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">public class PauseMenuLayer : IInputLayer
+{
+    private readonly IInputService _input;
+    private bool _isPaused = false;
+
+    public int Priority =&gt; 2000; // Higher than normal UI
+
+    public bool ProcessKeyboardInput(IInputService input)
+    {
+        // Toggle pause on Escape
+        if (input.IsKeyPressed(Keys.Escape))
+        {
+            _isPaused = !_isPaused;
+        }
+
+        // Consume ALL keyboard when paused
+        return _isPaused;
+    }
+
+    public bool ProcessMouseInput(IInputService input)
+    {
+        // Consume ALL mouse when paused
+        return _isPaused;
+    }
+}
+
+// Register it:
+protected override void OnInitialize()
+{
+    var pauseLayer = new PauseMenuLayer(_input);
+    _layerManager.RegisterLayer(pauseLayer);
+}</code></pre>
+<hr />
+<h3 id="pattern-3-console-overlay">Pattern 3: Console Overlay<a class="headerlink" href="#pattern-3-console-overlay" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">public class DebugConsoleLayer : IInputLayer
+{
+    private bool _consoleOpen = false;
+
+    public int Priority =&gt; 500; // Between UI and game
+
+    public bool ProcessKeyboardInput(IInputService input)
+    {
+        // Toggle with ~ key
+        if (input.IsKeyPressed(Keys.Grave))
+        {
+            _consoleOpen = !_consoleOpen;
+            return true; // Consume the ~ key
+        }
+
+        // Consume all keyboard if console is open
+        if (_consoleOpen)
+        {
+            HandleConsoleInput(input);
+            return true;
+        }
+
+        return false; // Don't consume if closed
+    }
+
+    public bool ProcessMouseInput(IInputService input)
+    {
+        // Console doesn't use mouse
+        return false;
+    }
+}</code></pre>
+<hr />
+<h3 id="pattern-4-multiple-ui-layers">Pattern 4: Multiple UI Layers<a class="headerlink" href="#pattern-4-multiple-ui-layers" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">protected override void OnInitialize()
+{
+    // Layer 1: Modal dialog (highest priority)
+    var dialogLayer = new DialogLayer();
+    _layerManager.RegisterLayer(dialogLayer); // Priority: 2000
+
+    // Layer 2: Main UI
+    _layerManager.RegisterLayer(_uiCanvas); // Priority: 1000
+
+    // Layer 3: Game
+    var gameLayer = new GameInputLayer();
+    _layerManager.RegisterLayer(gameLayer); // Priority: 0
+}
+
+// Processing order:
+// 1. Dialog (if active, blocks everything else)
+// 2. Main UI (if clicking buttons, blocks game)
+// 3. Game (only if neither dialog nor UI consumed input)</code></pre>
+<hr />
+<h2 id="custom-input-layer">🛠️ Custom Input Layer<a class="headerlink" href="#custom-input-layer" title="Permanent link">&para;</a></h2>
+<h3 id="create-custom-layer">Create Custom Layer<a class="headerlink" href="#create-custom-layer" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">using Brine2D.Input;
+using System.Numerics;
+
+public class GameInputLayer : IInputLayer
+{
+    private readonly IInputService _input;
+    private readonly Action&lt;Vector2&gt; _onWorldClick;
+
+    public int Priority =&gt; 0; // Game priority
+
+    public GameInputLayer(IInputService input, Action&lt;Vector2&gt; onWorldClick)
+    {
+        _input = input;
+        _onWorldClick = onWorldClick;
+    }
+
+    public bool ProcessKeyboardInput(IInputService input)
+    {
+        // Game doesn't consume keyboard (allows other layers to see it)
+        return false;
+    }
+
+    public bool ProcessMouseInput(IInputService input)
+    {
+        if (input.IsMouseButtonPressed(MouseButton.Left))
+        {
+            var mousePos = input.MousePosition;
+            _onWorldClick?.Invoke(mousePos);
+
+            // Don't consume - allow lower layers (if any)
+            return false;
+        }
+
+        return false;
+    }
+}</code></pre>
+<hr />
+<h3 id="use-custom-layer">Use Custom Layer<a class="headerlink" href="#use-custom-layer" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">protected override void OnInitialize()
+{
+    // Create custom game layer
+    var gameLayer = new GameInputLayer(_input, OnWorldClick);
+    _layerManager.RegisterLayer(gameLayer);
+
+    // Also register UI layer
+    _layerManager.RegisterLayer(_uiCanvas);
+}
+
+private void OnWorldClick(Vector2 position)
+{
+    Logger.LogInformation("Clicked world at: {Pos}", position);
+}</code></pre>
+<hr />
+<h2 id="advanced-techniques">Advanced Techniques<a class="headerlink" href="#advanced-techniques" title="Permanent link">&para;</a></h2>
+<h3 id="conditional-consumption">Conditional Consumption<a class="headerlink" href="#conditional-consumption" title="Permanent link">&para;</a></h3>
+<p>Only consume input under certain conditions:</p>
+<pre class="highlight"><code class="language-csharp">public class ConditionalUILayer : IInputLayer
+{
+    private readonly UICanvas _canvas;
+    private bool _isMenuOpen = false;
+
+    public int Priority =&gt; 1000;
+
+    public bool ProcessKeyboardInput(IInputService input)
+    {
+        // Only consume if menu is open
+        if (!_isMenuOpen)
+            return false;
+
+        // Handle menu keyboard
+        // ...
+
+        return true; // Consume
+    }
+
+    public bool ProcessMouseInput(IInputService input)
+    {
+        // Only consume if actually hovering UI
+        var mousePos = input.MousePosition;
+        bool hoveringUI = IsMouseOverUI(mousePos);
+
+        if (hoveringUI)
+        {
+            // Handle UI click
+            return true; // Consume
+        }
+
+        return false; // Don't consume, game can handle
+    }
+}</code></pre>
+<hr />
+<h3 id="dynamic-priority">Dynamic Priority<a class="headerlink" href="#dynamic-priority" title="Permanent link">&para;</a></h3>
+<p>Change priority at runtime:</p>
+<pre class="highlight"><code class="language-csharp">public class DynamicPriorityLayer : IInputLayer
+{
+    private int _priority = 0;
+
+    public int Priority =&gt; _priority;
+
+    public void SetPriority(int priority)
+    {
+        _priority = priority;
+        // Re-sort layers (not automatic - would need manager support)
+    }
+
+    // ... ProcessInput methods ...
+}</code></pre>
+<hr />
+<h3 id="input-recording">Input Recording<a class="headerlink" href="#input-recording" title="Permanent link">&para;</a></h3>
+<p>Log all input through layers:</p>
+<pre class="highlight"><code class="language-csharp">public class InputRecorderLayer : IInputLayer
+{
+    private readonly ILogger _logger;
+
+    public int Priority =&gt; -1000; // Lowest (always processes)
+
+    public bool ProcessKeyboardInput(IInputService input)
+    {
+        // Log keyboard input (for replay/debug)
+        // ...
+
+        return false; // Never consume (always pass through)
+    }
+
+    public bool ProcessMouseInput(IInputService input)
+    {
+        // Log mouse input
+        // ...
+
+        return false; // Never consume
+    }
+}</code></pre>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="problem-game-still-receives-ui-clicks">Problem: Game Still Receives UI Clicks<a class="headerlink" href="#problem-game-still-receives-ui-clicks" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> Clicking button also spawns unit</p>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li>
+<p><strong>Check ProcessInput is called</strong>
+   <pre class="highlight"><code class="language-csharp">protected override void OnUpdate(GameTime gameTime)
+{
+    // ❌ Forgot this!
+    // _layerManager.ProcessInput();
+
+    // ✅ Call it FIRST
+    _layerManager.ProcessInput();
+
+    if (!_layerManager.MouseConsumed)
+    {
+        HandleGameInput();
+    }
+}</code></pre></p>
+</li>
+<li>
+<p><strong>Check consumption flag</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Bad - ignores consumption
+if (_input.IsMouseButtonPressed(MouseButton.Left))
+{
+    SpawnUnit();
+}
+
+// ✅ Good - respects consumption
+if (!_layerManager.MouseConsumed &amp;&amp; 
+    _input.IsMouseButtonPressed(MouseButton.Left))
+{
+    SpawnUnit();
+}</code></pre></p>
+</li>
+<li>
+<p><strong>Verify layer is registered</strong>
+   <pre class="highlight"><code class="language-csharp">protected override void OnInitialize()
+{
+    _layerManager.RegisterLayer(_uiCanvas); // Don't forget!
+}</code></pre></p>
+</li>
+</ol>
+<hr />
+<h3 id="problem-ui-not-consuming-input">Problem: UI Not Consuming Input<a class="headerlink" href="#problem-ui-not-consuming-input" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> UI layer doesn't block game input</p>
+<p><strong>Solution:</strong> Ensure UICanvas returns true when appropriate:</p>
+<pre class="highlight"><code class="language-csharp">// UICanvas.ProcessMouseInput should return true when:
+// - Hovering over button
+// - Clicking UI element
+// - Dragging slider
+// etc.
+
+public bool ProcessMouseInput(IInputService input)
+{
+    HandleButtonInput();
+    // ... other UI handling ...
+
+    bool isInteractingWithUI = 
+        _hoveredButton != null || 
+        _pressedButton != null || 
+        _activeSlider?.IsDragging == true;
+
+    return isInteractingWithUI; // TRUE = consume
+}</code></pre>
+<hr />
+<h3 id="problem-text-input-leaks-to-game">Problem: Text Input Leaks to Game<a class="headerlink" href="#problem-text-input-leaks-to-game" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> Typing "W" in textbox also moves player</p>
+<p><strong>Solution:</strong> UICanvas consumes ALL keyboard when focused:</p>
+<pre class="highlight"><code class="language-csharp">public bool ProcessKeyboardInput(IInputService input)
+{
+    // If text input is focused, consume ALL keyboard
+    if (_focusedTextInput != null &amp;&amp; _focusedTextInput.IsFocused)
+    {
+        HandleTextInputKeyboard();
+        return true; // Block game from seeing ANY keys
+    }
+
+    return false;
+}</code></pre>
+<hr />
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="do">DO<a class="headerlink" href="#do" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Always call ProcessInput first</strong>
+   <pre class="highlight"><code class="language-csharp">protected override void OnUpdate(GameTime gameTime)
+{
+    _layerManager.ProcessInput(); // First!
+
+    if (!_layerManager.KeyboardConsumed)
+    {
+        // Game keyboard
+    }
+}</code></pre></p>
+</li>
+<li>
+<p><strong>Check consumption flags</strong>
+   <pre class="highlight"><code class="language-csharp">if (!_layerManager.MouseConsumed)
+{
+    HandleGameMouse();
+}</code></pre></p>
+</li>
+<li>
+<p><strong>Use appropriate priorities</strong></p>
+</li>
+<li>Critical UI: 2000+</li>
+<li>Normal UI: 1000</li>
+<li>Game: 0</li>
+<li>
+<p>Background: -1000</p>
+</li>
+<li>
+<p><strong>Return true when consuming</strong>
+   <pre class="highlight"><code class="language-csharp">public bool ProcessKeyboardInput(IInputService input)
+{
+    if (ShouldBlockGameInput())
+    {
+        return true; // Consume
+    }
+
+    return false; // Pass through
+}</code></pre></p>
+</li>
+<li>
+<p><strong>Unregister layers when done</strong>
+   <pre class="highlight"><code class="language-csharp">protected override Task OnUnloadAsync(CancellationToken ct)
+{
+    _layerManager.UnregisterLayer(_myLayer);
+    return Task.CompletedTask;
+}</code></pre></p>
+</li>
+</ol>
+<h3 id="dont">DON'T<a class="headerlink" href="#dont" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Don't forget ProcessInput</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Bad
+protected override void OnUpdate(GameTime gameTime)
+{
+    // Forgot _layerManager.ProcessInput();
+
+    if (_input.IsKeyDown(Keys.W)) // Wrong!
+}</code></pre></p>
+</li>
+<li>
+<p><strong>Don't check input before ProcessInput</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Bad order
+if (_input.IsMouseButtonPressed(MouseButton.Left)) // Too early!
+    SpawnUnit();
+
+_layerManager.ProcessInput(); // Too late!
+
+// ✅ Good order
+_layerManager.ProcessInput(); // First
+
+if (!_layerManager.MouseConsumed &amp;&amp; 
+    _input.IsMouseButtonPressed(MouseButton.Left))
+    SpawnUnit();</code></pre></p>
+</li>
+<li>
+<p><strong>Don't ignore consumption flags</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Bad
+if (_input.IsKeyDown(Keys.W))
+    MovePlayer(); // Moves even when typing!
+
+// ✅ Good
+if (!_layerManager.KeyboardConsumed &amp;&amp; 
+    _input.IsKeyDown(Keys.W))
+    MovePlayer();</code></pre></p>
+</li>
+<li>
+<p><strong>Don't hardcode priorities</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Bad
+public int Priority =&gt; 1237; // Magic number!
+
+// ✅ Good
+public const int UI_PRIORITY = 1000;
+public int Priority =&gt; UI_PRIORITY;</code></pre></p>
+</li>
+</ol>
+<hr />
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Input Layer</strong></td>
+<td>Object that processes input at a priority</td>
+</tr>
+<tr>
+<td><strong>InputLayerManager</strong></td>
+<td>Routes input through layers by priority</td>
+</tr>
+<tr>
+<td><strong>Priority</strong></td>
+<td>Higher values = processed first</td>
+</tr>
+<tr>
+<td><strong>Consumption</strong></td>
+<td>Returning true = block lower layers</td>
+</tr>
+<tr>
+<td><strong>KeyboardConsumed</strong></td>
+<td>Check before handling game keyboard</td>
+</tr>
+<tr>
+<td><strong>MouseConsumed</strong></td>
+<td>Check before handling game mouse</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Typical Priorities:</strong>
+- Dialog/Modal: <strong>2000</strong>
+- UI/Menu: <strong>1000</strong>
+- Game: <strong>0</strong>
+- Background: <strong>-1000</strong></p>
+<hr />
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><a href="../ui/buttons.md">UI Components</a></strong> - Build interactive UI</li>
+<li><strong><a href="text-input.md">Text Input</a></strong> - Handle text fields</li>
+<li><strong><a href="../mechanics/movement.md">Player Movement</a></strong> - Implement player controls</li>
+<li><strong><a href="../ui/menus.md">Pause Menu</a></strong> - Create pause/menu systems</li>
+</ul>
+<hr />
+<p>Ready to build UI? Check out <a href="../ui/buttons.md">UI Components</a>!</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["content.code.copy", "content.code.select"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+      
+    
+  </body>
+</html>

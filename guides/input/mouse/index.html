@@ -1,0 +1,4630 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Handle mouse clicks, movement, and scroll wheel in Brine2D">
+      
+      
+      
+      
+        <link rel="prev" href="../keyboard/">
+      
+      
+        <link rel="next" href="../gamepad/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Mouse Input - Brine2D Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/prism-material-slate.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#mouse-input" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Brine2D Documentation" class="md-header__button md-logo" aria-label="Brine2D Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Brine2D Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Mouse Input
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Brine2D Documentation" class="md-nav__button md-logo" aria-label="Brine2D Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Brine2D Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    What's New
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../whats-new/v0.8.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.8.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../whats-new/v0.7.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.7.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../whats-new/v0.6.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.6.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/first-game/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/project-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/moving-sprites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Moving Sprites
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/animations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/collision.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision Detection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/platformer.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building a Platformer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/top-down.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Top-Down Adventure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Rendering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/choosing-renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing a Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/gpu-renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GPU Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/sprites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprites & Textures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/texture-atlasing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Texture Atlasing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/cameras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cameras
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/particles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Particles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/primitives/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Drawing Primitives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Input
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../keyboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keyboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mouse
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mouse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mouse-position" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mouse Position
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Mouse Position">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-current-position" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get Current Position
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mouse-delta-movement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mouse Delta (Movement)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mouse-buttons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mouse Buttons
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Mouse Buttons">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#available-buttons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Available Buttons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ismousebuttonpressed-click-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IsMouseButtonPressed - Click Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ismousebuttondown-held-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IsMouseButtonDown - Held Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ismousebuttonreleased-release-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IsMouseButtonReleased - Release Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scroll-wheel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scroll Wheel
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scroll Wheel">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-scroll-delta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get Scroll Delta
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pattern-1-point-and-click-movement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 1: Point-and-Click Movement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-2-click-detection-on-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 2: Click Detection on Objects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-3-drag-and-drop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 3: Drag and Drop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-4-camera-zoom-with-scroll" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 4: Camera Zoom with Scroll
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-5-right-click-context-menu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 5: Right-Click Context Menu
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#world-space-conversion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        World Space Conversion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-techniques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Techniques
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Techniques">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#double-click-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Double-Click Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mouse-hover-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mouse Hover Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mouse-lock-fps-camera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mouse Lock (FPS Camera)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-wrong-mouse-coordinates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Wrong Mouse Coordinates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-clicks-not-detected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Clicks Not Detected
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-scroll-wheel-not-working" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Scroll Wheel Not Working
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DO
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DON'T
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../gamepad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gamepad Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../layers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input Layers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audio
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Audio
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/sound-effects.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sound Effects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/music.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Music Playback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/spatial-audio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spatial Audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scenes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Scenes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/lifecycle.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/transitions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Transitions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/lifecycle-hooks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle Hooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Collision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../collision/system.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../collision/colliders.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Colliders
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_7" id="__nav_5_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tilemaps
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tilemaps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tilemaps/loading.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Loading Tilemaps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tilemaps/rendering.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering Tiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_8" id="__nav_5_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Framework
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UI Framework
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ui/components.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ui/custom.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom UI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_9" id="__nav_5_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Component System
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Entity Component System
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/systems/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/entities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ecs/queries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Queries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_10" id="__nav_5_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Events
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../events/window-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Window Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/dependency-injection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/game-loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Game Loop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/builder-pattern/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Builder Pattern
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/scenes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/entity-component-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Component System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/core.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Core
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/rendering.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Rendering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/input.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Input
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/audio.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/ecs.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.ECS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Samples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Samples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/basic-game.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/animation-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/collision-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/ecs-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ECS Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Contributing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to Contribute
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/code-style.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Style
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/building.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building from Source
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Example
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mouse-position" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mouse Position
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Mouse Position">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-current-position" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get Current Position
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mouse-delta-movement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mouse Delta (Movement)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mouse-buttons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mouse Buttons
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Mouse Buttons">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#available-buttons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Available Buttons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ismousebuttonpressed-click-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IsMouseButtonPressed - Click Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ismousebuttondown-held-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IsMouseButtonDown - Held Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ismousebuttonreleased-release-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IsMouseButtonReleased - Release Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scroll-wheel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scroll Wheel
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scroll Wheel">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-scroll-delta" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get Scroll Delta
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pattern-1-point-and-click-movement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 1: Point-and-Click Movement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-2-click-detection-on-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 2: Click Detection on Objects
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-3-drag-and-drop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 3: Drag and Drop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-4-camera-zoom-with-scroll" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 4: Camera Zoom with Scroll
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pattern-5-right-click-context-menu" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pattern 5: Right-Click Context Menu
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#world-space-conversion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        World Space Conversion
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-techniques" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Techniques
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Techniques">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#double-click-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Double-Click Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mouse-hover-detection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mouse Hover Detection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mouse-lock-fps-camera" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mouse Lock (FPS Camera)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-wrong-mouse-coordinates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Wrong Mouse Coordinates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-clicks-not-detected" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Clicks Not Detected
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-scroll-wheel-not-working" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Scroll Wheel Not Working
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DO
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DON'T
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="mouse-input">Mouse Input<a class="headerlink" href="#mouse-input" title="Permanent link">&para;</a></h1>
+<p>Master mouse input handling in Brine2D for point-and-click gameplay, UI interaction, and camera control.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Brine2D provides comprehensive mouse input via <code>IInputService</code>:
+- ✅ <strong>Mouse buttons</strong> - Left, right, middle, X1, X2
+- ✅ <strong>Mouse position</strong> - Screen coordinates
+- ✅ <strong>Mouse delta</strong> - Movement since last frame
+- ✅ <strong>Scroll wheel</strong> - Zoom, scroll, etc.</p>
+<pre class="mermaid"><code>sequenceDiagram
+    participant Game as Your Scene
+    participant Input as IInputService
+    participant SDL as SDL3
+
+    Note over SDL: Player Clicks Mouse
+    SDL-&gt;&gt;Input: MouseButtonDown Event
+
+    Note over Game: Each Frame
+    Game-&gt;&gt;Input: MousePosition?
+    Input-&gt;&gt;Game: Vector2(125, 340)
+
+    Game-&gt;&gt;Input: IsMouseButtonPressed(Left)?
+    Input-&gt;&gt;Game: true (first frame only)
+
+    Game-&gt;&gt;Input: IsMouseButtonDown(Left)?
+    Input-&gt;&gt;Game: true (while held)
+
+    Note over SDL: Player Moves Mouse
+    SDL-&gt;&gt;Input: MouseMotion Event
+
+    Game-&gt;&gt;Input: MouseDelta?
+    Input-&gt;&gt;Game: Vector2(5, -2)
+
+    Note over SDL: Player Scrolls Wheel
+    SDL-&gt;&gt;Input: MouseWheel Event
+
+    Game-&gt;&gt;Input: ScrollWheelDelta?
+    Input-&gt;&gt;Game: 1.0 (scroll up)</code></pre>
+<hr />
+<h2 id="prerequisites">Prerequisites<a class="headerlink" href="#prerequisites" title="Permanent link">&para;</a></h2>
+<ul>
+<li>✅ <a href="../getting-started/quickstart.md">Quick Start</a> - Basic scene setup</li>
+<li>✅ <a href="../keyboard/">Keyboard Input</a> - Understanding input basics</li>
+</ul>
+<hr />
+<h2 id="quick-example">Quick Example<a class="headerlink" href="#quick-example" title="Permanent link">&para;</a></h2>
+<pre class="highlight"><code class="language-csharp">using Brine2D.Core;
+using Brine2D.Input;
+using Brine2D.Rendering;
+using Microsoft.Extensions.Logging;
+using System.Numerics;
+
+public class MouseScene : Scene
+{
+    private readonly IInputService _input;
+    private readonly IRenderer _renderer;
+
+    private Vector2 _cursorPosition;
+
+    public MouseScene(
+        IInputService input,
+        IRenderer renderer,
+        ILogger&lt;MouseScene&gt; logger
+    ) : base(logger)
+    {
+        _input = input;
+        _renderer = renderer;
+    }
+
+    protected override void OnUpdate(GameTime gameTime)
+    {
+        // Get mouse position
+        _cursorPosition = _input.MousePosition;
+
+        // Handle left click
+        if (_input.IsMouseButtonPressed(MouseButton.Left))
+        {
+            Logger.LogInformation("Clicked at: ({X}, {Y})", 
+                _cursorPosition.X, _cursorPosition.Y);
+        }
+    }
+
+    protected override void OnRender(GameTime gameTime)
+    {
+        _renderer.Clear(Color.Black);
+        _renderer.BeginFrame();
+
+        // Draw cursor position indicator
+        _renderer.DrawCircle(_cursorPosition.X, _cursorPosition.Y, 10, Color.Red);
+
+        // Show coordinates
+        _renderer.DrawText($"Mouse: ({(int)_cursorPosition.X}, {(int)_cursorPosition.Y})", 
+            10, 10, Color.White);
+
+        _renderer.EndFrame();
+    }
+}</code></pre>
+<p><strong>Result:</strong> Red circle follows cursor, displays coordinates!</p>
+<hr />
+<h2 id="mouse-position">Mouse Position<a class="headerlink" href="#mouse-position" title="Permanent link">&para;</a></h2>
+<h3 id="get-current-position">Get Current Position<a class="headerlink" href="#get-current-position" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">protected override void OnUpdate(GameTime gameTime)
+{
+    // Get current mouse position (screen coordinates)
+    var mousePos = _input.MousePosition;
+
+    Logger.LogInformation("Mouse at: X={X}, Y={Y}", mousePos.X, mousePos.Y);
+}</code></pre>
+<p><strong>Coordinates:</strong>
+- Origin <code>(0, 0)</code> = top-left corner
+- X increases → right
+- Y increases → down</p>
+<pre class="highlight"><code>Screen Coordinates:
+(0,0) ───────────────► X
+  │
+  │     (400, 300)
+  │         ●
+  │
+  │
+  ▼
+  Y</code></pre>
+<hr />
+<h3 id="mouse-delta-movement">Mouse Delta (Movement)<a class="headerlink" href="#mouse-delta-movement" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">protected override void OnUpdate(GameTime gameTime)
+{
+    // Get movement since last frame
+    var mouseDelta = _input.MouseDelta;
+
+    if (mouseDelta.LengthSquared() &gt; 0)
+    {
+        Logger.LogInformation("Mouse moved: ({X}, {Y})", 
+            mouseDelta.X, mouseDelta.Y);
+    }
+}</code></pre>
+<p><strong>Use for:</strong>
+- Camera rotation (first-person)
+- Dragging objects
+- Mouse-look controls</p>
+<hr />
+<h2 id="mouse-buttons">Mouse Buttons<a class="headerlink" href="#mouse-buttons" title="Permanent link">&para;</a></h2>
+<h3 id="available-buttons">Available Buttons<a class="headerlink" href="#available-buttons" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">MouseButton.Left     // Primary button (left)
+MouseButton.Right    // Secondary button (right)
+MouseButton.Middle   // Scroll wheel click
+MouseButton.X1       // Extra button 1 (back)
+MouseButton.X2       // Extra button 2 (forward)</code></pre>
+<hr />
+<h3 id="ismousebuttonpressed-click-detection">IsMouseButtonPressed - Click Detection<a class="headerlink" href="#ismousebuttonpressed-click-detection" title="Permanent link">&para;</a></h3>
+<p><strong>Use for:</strong> Clicking UI, shooting, selecting</p>
+<pre class="highlight"><code class="language-csharp">protected override void OnUpdate(GameTime gameTime)
+{
+    // Returns TRUE only on first frame of press
+    if (_input.IsMouseButtonPressed(MouseButton.Left))
+    {
+        var mousePos = _input.MousePosition;
+        SpawnObjectAt(mousePos);
+    }
+
+    if (_input.IsMouseButtonPressed(MouseButton.Right))
+    {
+        ShowContextMenu();
+    }
+}</code></pre>
+<hr />
+<h3 id="ismousebuttondown-held-detection">IsMouseButtonDown - Held Detection<a class="headerlink" href="#ismousebuttondown-held-detection" title="Permanent link">&para;</a></h3>
+<p><strong>Use for:</strong> Dragging, continuous shooting</p>
+<pre class="highlight"><code class="language-csharp">protected override void OnUpdate(GameTime gameTime)
+{
+    // Returns TRUE every frame while held
+    if (_input.IsMouseButtonDown(MouseButton.Left))
+    {
+        var mousePos = _input.MousePosition;
+        ContinuousPaint(mousePos);
+    }
+}</code></pre>
+<hr />
+<h3 id="ismousebuttonreleased-release-detection">IsMouseButtonReleased - Release Detection<a class="headerlink" href="#ismousebuttonreleased-release-detection" title="Permanent link">&para;</a></h3>
+<p><strong>Use for:</strong> Drag-and-drop, charge attacks</p>
+<pre class="highlight"><code class="language-csharp">private Vector2? _dragStart = null;
+
+protected override void OnUpdate(GameTime gameTime)
+{
+    // Start drag
+    if (_input.IsMouseButtonPressed(MouseButton.Left))
+    {
+        _dragStart = _input.MousePosition;
+    }
+
+    // End drag
+    if (_input.IsMouseButtonReleased(MouseButton.Left))
+    {
+        if (_dragStart.HasValue)
+        {
+            var dragEnd = _input.MousePosition;
+            HandleDrag(_dragStart.Value, dragEnd);
+            _dragStart = null;
+        }
+    }
+}</code></pre>
+<hr />
+<h2 id="scroll-wheel">Scroll Wheel<a class="headerlink" href="#scroll-wheel" title="Permanent link">&para;</a></h2>
+<h3 id="get-scroll-delta">Get Scroll Delta<a class="headerlink" href="#get-scroll-delta" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">protected override void OnUpdate(GameTime gameTime)
+{
+    var scroll = _input.ScrollWheelDelta;
+
+    if (scroll &gt; 0)
+    {
+        // Scrolled up
+        ZoomIn();
+    }
+    else if (scroll &lt; 0)
+    {
+        // Scrolled down
+        ZoomOut();
+    }
+}</code></pre>
+<p><strong>Values:</strong>
+- <code>&gt; 0</code> = Scroll up
+- <code>&lt; 0</code> = Scroll down
+- <code>0</code> = No scroll this frame</p>
+<hr />
+<h2 id="common-patterns">Common Patterns<a class="headerlink" href="#common-patterns" title="Permanent link">&para;</a></h2>
+<h3 id="pattern-1-point-and-click-movement">Pattern 1: Point-and-Click Movement<a class="headerlink" href="#pattern-1-point-and-click-movement" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">private Vector2 _playerPosition = new Vector2(400, 300);
+private Vector2? _targetPosition = null;
+private float _moveSpeed = 200f;
+
+protected override void OnUpdate(GameTime gameTime)
+{
+    var deltaTime = (float)gameTime.DeltaTime;
+
+    // Click to set target
+    if (_input.IsMouseButtonPressed(MouseButton.Left))
+    {
+        _targetPosition = _input.MousePosition;
+    }
+
+    // Move towards target
+    if (_targetPosition.HasValue)
+    {
+        var direction = _targetPosition.Value - _playerPosition;
+        var distance = direction.Length();
+
+        if (distance &gt; 5f) // Close enough threshold
+        {
+            direction = Vector2.Normalize(direction);
+            _playerPosition += direction * _moveSpeed * deltaTime;
+        }
+        else
+        {
+            _targetPosition = null; // Arrived!
+        }
+    }
+}</code></pre>
+<hr />
+<h3 id="pattern-2-click-detection-on-objects">Pattern 2: Click Detection on Objects<a class="headerlink" href="#pattern-2-click-detection-on-objects" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">public class ClickableObject
+{
+    public Vector2 Position { get; set; }
+    public float Radius { get; set; }
+
+    public bool Contains(Vector2 point)
+    {
+        var offset = point - Position;
+        return offset.Length() &lt;= Radius;
+    }
+}
+
+private readonly List&lt;ClickableObject&gt; _objects = new();
+
+protected override void OnUpdate(GameTime gameTime)
+{
+    if (_input.IsMouseButtonPressed(MouseButton.Left))
+    {
+        var mousePos = _input.MousePosition;
+
+        foreach (var obj in _objects)
+        {
+            if (obj.Contains(mousePos))
+            {
+                Logger.LogInformation("Clicked object at {Pos}", obj.Position);
+                break; // First object only
+            }
+        }
+    }
+}</code></pre>
+<hr />
+<h3 id="pattern-3-drag-and-drop">Pattern 3: Drag and Drop<a class="headerlink" href="#pattern-3-drag-and-drop" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">private object? _draggedObject = null;
+private Vector2 _dragOffset;
+
+protected override void OnUpdate(GameTime gameTime)
+{
+    var mousePos = _input.MousePosition;
+
+    // Start drag
+    if (_input.IsMouseButtonPressed(MouseButton.Left) &amp;&amp; _draggedObject == null)
+    {
+        _draggedObject = GetObjectUnderMouse(mousePos);
+
+        if (_draggedObject != null)
+        {
+            _dragOffset = mousePos - _draggedObject.Position;
+        }
+    }
+
+    // During drag
+    if (_input.IsMouseButtonDown(MouseButton.Left) &amp;&amp; _draggedObject != null)
+    {
+        _draggedObject.Position = mousePos - _dragOffset;
+    }
+
+    // End drag
+    if (_input.IsMouseButtonReleased(MouseButton.Left))
+    {
+        if (_draggedObject != null)
+        {
+            SnapToGrid(_draggedObject);
+            _draggedObject = null;
+        }
+    }
+}</code></pre>
+<hr />
+<h3 id="pattern-4-camera-zoom-with-scroll">Pattern 4: Camera Zoom with Scroll<a class="headerlink" href="#pattern-4-camera-zoom-with-scroll" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">private float _cameraZoom = 1.0f;
+
+protected override void OnUpdate(GameTime gameTime)
+{
+    var scroll = _input.ScrollWheelDelta;
+
+    if (Math.Abs(scroll) &gt; 0.001f)
+    {
+        // Zoom in/out
+        _cameraZoom += scroll * 0.1f;
+        _cameraZoom = Math.Clamp(_cameraZoom, 0.5f, 3.0f);
+
+        if (_camera != null)
+        {
+            _camera.Zoom = _cameraZoom;
+        }
+    }
+}</code></pre>
+<hr />
+<h3 id="pattern-5-right-click-context-menu">Pattern 5: Right-Click Context Menu<a class="headerlink" href="#pattern-5-right-click-context-menu" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">private bool _showContextMenu = false;
+private Vector2 _contextMenuPosition;
+
+protected override void OnUpdate(GameTime gameTime)
+{
+    // Show menu on right-click
+    if (_input.IsMouseButtonPressed(MouseButton.Right))
+    {
+        _contextMenuPosition = _input.MousePosition;
+        _showContextMenu = true;
+    }
+
+    // Hide menu on left-click elsewhere
+    if (_input.IsMouseButtonPressed(MouseButton.Left))
+    {
+        _showContextMenu = false;
+    }
+}
+
+protected override void OnRender(GameTime gameTime)
+{
+    // ... render game ...
+
+    if (_showContextMenu)
+    {
+        DrawContextMenu(_contextMenuPosition);
+    }
+}</code></pre>
+<hr />
+<h2 id="world-space-conversion">World Space Conversion<a class="headerlink" href="#world-space-conversion" title="Permanent link">&para;</a></h2>
+<p>When using a camera, convert mouse position from screen to world:</p>
+<pre class="highlight"><code class="language-csharp">protected override void OnUpdate(GameTime gameTime)
+{
+    // Mouse position in screen space
+    var mouseScreen = _input.MousePosition;
+
+    // Convert to world space
+    var mouseWorld = _camera?.ScreenToWorld(mouseScreen) ?? mouseScreen;
+
+    // Now use world position
+    if (_input.IsMouseButtonPressed(MouseButton.Left))
+    {
+        SpawnObjectInWorld(mouseWorld);
+    }
+}</code></pre>
+<p><strong><a href="../rendering/camera.md">See Camera Guide</a> for details</strong></p>
+<hr />
+<h2 id="advanced-techniques">Advanced Techniques<a class="headerlink" href="#advanced-techniques" title="Permanent link">&para;</a></h2>
+<h3 id="double-click-detection">Double-Click Detection<a class="headerlink" href="#double-click-detection" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">private float _lastClickTime = 0f;
+private const float DoubleClickThreshold = 0.3f; // seconds
+
+protected override void OnUpdate(GameTime gameTime)
+{
+    var currentTime = (float)gameTime.TotalTime;
+
+    if (_input.IsMouseButtonPressed(MouseButton.Left))
+    {
+        var timeSinceLastClick = currentTime - _lastClickTime;
+
+        if (timeSinceLastClick &lt; DoubleClickThreshold)
+        {
+            // Double click!
+            OnDoubleClick();
+        }
+
+        _lastClickTime = currentTime;
+    }
+}</code></pre>
+<hr />
+<h3 id="mouse-hover-detection">Mouse Hover Detection<a class="headerlink" href="#mouse-hover-detection" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">private IUIComponent? _hoveredComponent = null;
+
+protected override void OnUpdate(GameTime gameTime)
+{
+    var mousePos = _input.MousePosition;
+
+    // Find hovered component
+    IUIComponent? newHovered = null;
+
+    foreach (var component in _uiComponents)
+    {
+        if (component.Contains(mousePos))
+        {
+            newHovered = component;
+            break;
+        }
+    }
+
+    // Handle hover state changes
+    if (newHovered != _hoveredComponent)
+    {
+        _hoveredComponent?.OnHoverExit();
+        newHovered?.OnHoverEnter();
+        _hoveredComponent = newHovered;
+    }
+}</code></pre>
+<hr />
+<h3 id="mouse-lock-fps-camera">Mouse Lock (FPS Camera)<a class="headerlink" href="#mouse-lock-fps-camera" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">private bool _mouseLocked = false;
+private Vector2 _cameraRotation;
+
+protected override void OnUpdate(GameTime gameTime)
+{
+    // Toggle mouse lock with Tab
+    if (_input.IsKeyPressed(Keys.Tab))
+    {
+        _mouseLocked = !_mouseLocked;
+
+        if (_mouseLocked)
+        {
+            // Hide cursor, center it
+            // (SDL3 API needed - not yet exposed)
+        }
+    }
+
+    if (_mouseLocked)
+    {
+        var mouseDelta = _input.MouseDelta;
+        var sensitivity = 0.002f;
+
+        _cameraRotation.X += mouseDelta.X * sensitivity;
+        _cameraRotation.Y -= mouseDelta.Y * sensitivity;
+
+        // Clamp vertical rotation
+        _cameraRotation.Y = Math.Clamp(_cameraRotation.Y, -1.5f, 1.5f);
+
+        ApplyCameraRotation(_cameraRotation);
+    }
+}</code></pre>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="problem-wrong-mouse-coordinates">Problem: Wrong Mouse Coordinates<a class="headerlink" href="#problem-wrong-mouse-coordinates" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> Mouse position doesn't match visual location</p>
+<p><strong>Causes &amp; Solutions:</strong></p>
+<ol>
+<li>
+<p><strong>Camera active</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Problem: Using screen coords with camera
+var mousePos = _input.MousePosition;
+SpawnAt(mousePos); // Wrong when camera moved!
+
+// ✅ Solution: Convert to world space
+var mouseWorld = _camera.ScreenToWorld(_input.MousePosition);
+SpawnAt(mouseWorld);</code></pre></p>
+</li>
+<li>
+<p><strong>Window scaling/DPI</strong></p>
+</li>
+<li>Usually handled automatically by SDL3</li>
+<li>Check <code>RenderingOptions.WindowWidth/Height</code> matches actual size</li>
+</ol>
+<hr />
+<h3 id="problem-clicks-not-detected">Problem: Clicks Not Detected<a class="headerlink" href="#problem-clicks-not-detected" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> <code>IsMouseButtonPressed()</code> always false</p>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li>
+<p><strong>Check correct button</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Wrong button
+if (_input.IsMouseButtonPressed(MouseButton.Middle))
+
+// ✅ Left button
+if (_input.IsMouseButtonPressed(MouseButton.Left))</code></pre></p>
+</li>
+<li>
+<p><strong>UI consuming clicks</strong>
+   <pre class="highlight"><code class="language-csharp">// Check if UI consumed the click
+if (!_inputLayerManager.MouseConsumed)
+{
+    // Now safe to check game input
+    if (_input.IsMouseButtonPressed(MouseButton.Left))
+    {
+        // Handle game click
+    }
+}</code></pre></p>
+</li>
+</ol>
+<hr />
+<h3 id="problem-scroll-wheel-not-working">Problem: Scroll Wheel Not Working<a class="headerlink" href="#problem-scroll-wheel-not-working" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> <code>ScrollWheelDelta</code> always 0</p>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li>
+<p><strong>Check each frame</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Bad - only true for one frame
+if (_input.ScrollWheelDelta != 0)
+
+// ✅ Good - explicit check
+var scroll = _input.ScrollWheelDelta;
+if (scroll &gt; 0) ZoomIn();
+else if (scroll &lt; 0) ZoomOut();</code></pre></p>
+</li>
+<li>
+<p><strong>Verify window has focus</strong></p>
+</li>
+<li>Scroll only works when window is focused</li>
+</ol>
+<hr />
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="do">DO<a class="headerlink" href="#do" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Use <code>IsMouseButtonPressed</code> for clicks</strong>
+   <pre class="highlight"><code class="language-csharp">if (_input.IsMouseButtonPressed(MouseButton.Left))
+    HandleClick();</code></pre></p>
+</li>
+<li>
+<p><strong>Convert to world space when using camera</strong>
+   <pre class="highlight"><code class="language-csharp">var worldPos = _camera.ScreenToWorld(_input.MousePosition);</code></pre></p>
+</li>
+<li>
+<p><strong>Respect UI input consumption</strong>
+   <pre class="highlight"><code class="language-csharp">if (!_inputLayerManager.MouseConsumed)
+{
+    // Game input here
+}</code></pre></p>
+</li>
+<li>
+<p><strong>Use smooth scrolling</strong>
+   <pre class="highlight"><code class="language-csharp">_targetZoom += _input.ScrollWheelDelta * 0.1f;
+_currentZoom = Lerp(_currentZoom, _targetZoom, 10f * deltaTime);</code></pre></p>
+</li>
+<li>
+<p><strong>Provide visual feedback</strong>
+   <pre class="highlight"><code class="language-csharp">// Change cursor appearance on hover
+if (IsHoveringButton())
+    DrawHighlightedCursor();</code></pre></p>
+</li>
+</ol>
+<h3 id="dont">DON'T<a class="headerlink" href="#dont" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Don't ignore UI layers</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Bad - clicks UI AND game
+if (_input.IsMouseButtonPressed(MouseButton.Left))
+    SpawnUnit(); // Spawns even when clicking UI!
+
+// ✅ Good
+if (!_inputLayerManager.MouseConsumed &amp;&amp; 
+    _input.IsMouseButtonPressed(MouseButton.Left))
+    SpawnUnit();</code></pre></p>
+</li>
+<li>
+<p><strong>Don't forget camera transform</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Bad with camera
+var mousePos = _input.MousePosition;
+
+// ✅ Good
+var mousePos = _camera.ScreenToWorld(_input.MousePosition);</code></pre></p>
+</li>
+<li>
+<p><strong>Don't hardcode button checks</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Hard to rebind
+if (_input.IsMouseButtonPressed(MouseButton.Left))
+
+// ✅ Use action mapping
+if (_inputMapper.IsActionPressed("PrimaryAction"))</code></pre></p>
+</li>
+</ol>
+<hr />
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Returns</th>
+<th>Use For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MousePosition</code></td>
+<td><code>Vector2</code></td>
+<td>Current cursor position</td>
+</tr>
+<tr>
+<td><code>MouseDelta</code></td>
+<td><code>Vector2</code></td>
+<td>Movement since last frame</td>
+</tr>
+<tr>
+<td><code>ScrollWheelDelta</code></td>
+<td><code>float</code></td>
+<td>Scroll amount (+ = up)</td>
+</tr>
+<tr>
+<td><code>IsMouseButtonPressed(btn)</code></td>
+<td><code>bool</code></td>
+<td>Clicking (first frame)</td>
+</tr>
+<tr>
+<td><code>IsMouseButtonDown(btn)</code></td>
+<td><code>bool</code></td>
+<td>Held (continuous)</td>
+</tr>
+<tr>
+<td><code>IsMouseButtonReleased(btn)</code></td>
+<td><code>bool</code></td>
+<td>Release detection</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><a href="input-layers.md">Input Layers</a></strong> - Priority-based input routing</li>
+<li><strong><a href="../gamepad/">Gamepad Support</a></strong> - Add controller support</li>
+<li><strong><a href="../ui/buttons.md">UI Components</a></strong> - Build interactive UI</li>
+<li><strong><a href="../rendering/camera.md">Camera System</a></strong> - Handle world/screen conversion</li>
+</ul>
+<hr />
+<p>Ready to support controllers? Check out <a href="../gamepad/">Gamepad Support</a>!</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["content.code.copy", "content.code.select"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+      
+    
+  </body>
+</html>

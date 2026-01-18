@@ -1,0 +1,4832 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Master entity creation, management, and querying in Brine2D">
+      
+      
+      
+      
+        <link rel="prev" href="../systems/">
+      
+      
+        <link rel="next" href="../queries/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>ECS Entities - Brine2D Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/prism-material-slate.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="slate" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ecs-entities" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Brine2D Documentation" class="md-header__button md-logo" aria-label="Brine2D Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Brine2D Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ECS Entities
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+    
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Brine2D Documentation" class="md-nav__button md-logo" aria-label="Brine2D Documentation" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Brine2D Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    What's New
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../whats-new/v0.8.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.8.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../whats-new/v0.7.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.7.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../whats-new/v0.6.0-beta.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.6.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/first-game/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/project-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/moving-sprites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Moving Sprites
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/animations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/collision.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision Detection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/platformer.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building a Platformer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../tutorials/top-down.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Top-Down Adventure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guides
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Guides
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_2" id="__nav_5_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Rendering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/choosing-renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Choosing a Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/gpu-renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GPU Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/sprites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprites & Textures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/texture-atlasing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Texture Atlasing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/cameras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cameras
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/particles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Particles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/primitives/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Drawing Primitives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_3" id="__nav_5_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Input
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/keyboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keyboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/mouse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mouse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/gamepad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gamepad Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/layers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input Layers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_4" id="__nav_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audio
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Audio
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/sound-effects.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sound Effects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/music.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Music Playback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/spatial-audio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spatial Audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_5" id="__nav_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scenes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Scenes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/lifecycle.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Lifecycle
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/transitions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Transitions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/lifecycle-hooks/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Lifecycle Hooks
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_6" id="__nav_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Collision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../collision/system.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../collision/colliders.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Colliders
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_7" id="__nav_5_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tilemaps
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tilemaps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tilemaps/loading.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Loading Tilemaps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tilemaps/rendering.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering Tiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_8" id="__nav_5_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Framework
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UI Framework
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ui/components.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ui/custom.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom UI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_9" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5_9" id="__nav_5_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Component System
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_9_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Entity Component System
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../systems/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entities
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-are-entities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Are Entities?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-entities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Entities
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Creating Entities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Creation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adding-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-prefabs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Prefabs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entity-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity Lifecycle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entity Lifecycle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lifecycle-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lifecycle Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entity-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#managing-entities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Managing Entities
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Managing Entities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#activatingdeactivating" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Activating/Deactivating
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#destroying-entities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Destroying Entities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parent-child-relationships" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parent-Child Relationships
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#querying-entities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Querying Entities
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Querying Entities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-all-entities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get All Entities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query-by-component" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query by Component
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query-by-multiple-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query by Multiple Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query-by-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query by Tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#find-specific-entity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Find Specific Entity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entity-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entity Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#factory-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Factory Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#builder-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Builder Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#object-pool-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Object Pool Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entity-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity Groups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-querying" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Querying
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Querying">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#filtering-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtering Queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spatial-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#component-based-filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component-Based Filtering
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Tips
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Tips">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#query-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query Caching
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minimize-lookups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimize Lookups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-tags-wisely" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Tags Wisely
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#debugging-entities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debugging Entities
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Debugging Entities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#entity-inspector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity Inspector
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#entity-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity Creation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entity-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity Queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entity-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../queries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Queries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5_10" >
+        
+          
+          <label class="md-nav__link" for="__nav_5_10" id="__nav_5_10_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_5_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Events
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../events/window-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Window Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Concepts
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Concepts
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/dependency-injection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/game-loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Game Loop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/builder-pattern/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Builder Pattern
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/scenes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../concepts/entity-component-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entity Component System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/core.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Core
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/rendering.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Rendering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/input.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Input
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/audio.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../api/ecs.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.ECS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Samples
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Samples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/basic-game.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/animation-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/collision-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../samples/ecs-demo.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ECS Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <label class="md-nav__link" for="__nav_9" id="__nav_9_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Contributing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/index.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to Contribute
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/code-style.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Style
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../contributing/building.md" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building from Source
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-are-entities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Are Entities?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-entities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Entities
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Creating Entities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Creation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adding-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-prefabs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using Prefabs
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entity-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity Lifecycle
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entity Lifecycle">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lifecycle-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lifecycle Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entity-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#managing-entities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Managing Entities
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Managing Entities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#activatingdeactivating" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Activating/Deactivating
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#destroying-entities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Destroying Entities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parent-child-relationships" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parent-Child Relationships
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#querying-entities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Querying Entities
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Querying Entities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#get-all-entities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Get All Entities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query-by-component" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query by Component
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query-by-multiple-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query by Multiple Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#query-by-tag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query by Tag
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#find-specific-entity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Find Specific Entity
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entity-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Entity Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#factory-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Factory Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#builder-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Builder Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#object-pool-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Object Pool Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#entity-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity Groups
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-querying" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Querying
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Querying">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#filtering-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtering Queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spatial-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#component-based-filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component-Based Filtering
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-tips" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Tips
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Tips">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#query-caching" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Query Caching
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#minimize-lookups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Minimize Lookups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#use-tags-wisely" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Use Tags Wisely
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#debugging-entities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debugging Entities
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Debugging Entities">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#entity-inspector" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity Inspector
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Quick Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#entity-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity Creation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entity-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity Queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#entity-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Entity Management
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="ecs-entities">ECS Entities<a class="headerlink" href="#ecs-entities" title="Permanent link">&para;</a></h1>
+<p>Entities are the <strong>fundamental building blocks</strong> of Brine2D's ECS. They're lightweight containers that hold components and represent game objects. Think of them as rows in a database or GameObjects in Unity, but simpler and more flexible.</p>
+<h2 id="what-are-entities">What Are Entities?<a class="headerlink" href="#what-are-entities" title="Permanent link">&para;</a></h2>
+<p><strong>Entities are containers</strong> with:
+- Unique ID (Guid)
+- Optional name (for debugging)
+- Tags (for grouping/querying)
+- Components (data and behavior)
+- Lifecycle state (active/inactive)</p>
+<pre class="highlight"><code class="language-csharp">using Brine2D.ECS;
+
+var player = world.CreateEntity("Player");
+
+Console.WriteLine(player.Id);       // Guid: "123e4567-e89b-12d3..."
+Console.WriteLine(player.Name);     // "Player"
+Console.WriteLine(player.IsActive); // true
+Console.WriteLine(player.Tags);     // HashSet&lt;string&gt;</code></pre>
+<hr />
+<h2 id="creating-entities">Creating Entities<a class="headerlink" href="#creating-entities" title="Permanent link">&para;</a></h2>
+<h3 id="basic-creation">Basic Creation<a class="headerlink" href="#basic-creation" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// Simple entity
+var entity = world.CreateEntity();
+
+// Entity with name
+var player = world.CreateEntity("Player");
+
+// Add tags for grouping
+player.Tags.Add("Player");
+player.Tags.Add("Controllable");</code></pre>
+<h3 id="adding-components">Adding Components<a class="headerlink" href="#adding-components" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// Method 1: Add and configure separately
+var transform = player.AddComponent&lt;TransformComponent&gt;();
+transform.Position = new Vector2(100, 200);
+transform.Rotation = 0;
+
+// Method 2: Add and configure inline
+player.AddComponent&lt;VelocityComponent&gt;().MaxSpeed = 200f;
+
+// Method 3: Fluent syntax (chainable)
+var enemy = world.CreateEntity("Enemy")
+    .AddComponent&lt;TransformComponent&gt;()
+    .AddComponent&lt;VelocityComponent&gt;()
+    .AddComponent&lt;SpriteComponent&gt;()
+    .AddComponent&lt;HealthComponent&gt;();</code></pre>
+<h3 id="using-prefabs">Using Prefabs<a class="headerlink" href="#using-prefabs" title="Permanent link">&para;</a></h3>
+<p>For reusable entity templates:</p>
+<pre class="highlight"><code class="language-csharp">using Brine2D.ECS;
+
+// Create prefab
+var bulletPrefab = new EntityPrefab("Bullet");
+bulletPrefab.Tags.Add("Projectile");
+
+bulletPrefab.AddComponent&lt;TransformComponent&gt;();
+bulletPrefab.AddComponent&lt;VelocityComponent&gt;(v =&gt; v.MaxSpeed = 500f);
+bulletPrefab.AddComponent&lt;SpriteComponent&gt;(s =&gt; s.TexturePath = "assets/bullet.png");
+bulletPrefab.AddComponent&lt;LifetimeComponent&gt;(l =&gt; l.Lifetime = 3f);
+
+// Register prefab
+prefabLibrary.Register(bulletPrefab);
+
+// Instantiate many times
+for (int i = 0; i &lt; 10; i++)
+{
+    var bullet = bulletPrefab.Instantiate(world, new Vector2(i * 50, 100));
+}</code></pre>
+<hr />
+<h2 id="entity-lifecycle">Entity Lifecycle<a class="headerlink" href="#entity-lifecycle" title="Permanent link">&para;</a></h2>
+<p>Entities have several states and lifecycle events:</p>
+<pre class="mermaid"><code>stateDiagram-v2
+    [*] --&gt; Created: CreateEntity()
+    Created --&gt; Initialized: OnInitialize()
+    Initialized --&gt; Active: IsActive = true
+    Active --&gt; Inactive: IsActive = false
+    Inactive --&gt; Active: IsActive = true
+    Active --&gt; Destroyed: Destroy()
+    Inactive --&gt; Destroyed: Destroy()
+    Destroyed --&gt; [*]
+
+    Active --&gt; Active: OnUpdate() every frame</code></pre>
+<h3 id="lifecycle-methods">Lifecycle Methods<a class="headerlink" href="#lifecycle-methods" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">public class MyEntity : Entity
+{
+    protected internal override void OnInitialize()
+    {
+        // Called once when entity is created
+        // Set up initial state
+    }
+
+    protected internal override void OnUpdate(GameTime gameTime)
+    {
+        // Called every frame if entity is active
+        // Updates all enabled components
+    }
+
+    protected internal override void OnDestroy()
+    {
+        // Called when entity is destroyed
+        // Clean up resources
+    }
+}</code></pre>
+<h3 id="entity-events">Entity Events<a class="headerlink" href="#entity-events" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">var entity = world.CreateEntity("Player");
+
+// Subscribe to entity events
+entity.OnComponentAdded += (e, component) =&gt;
+{
+    Logger.LogInformation($"Added {component.GetType().Name}");
+};
+
+entity.OnComponentRemoved += (e, component) =&gt;
+{
+    Logger.LogInformation($"Removed {component.GetType().Name}");
+};
+
+entity.OnDestroyed += (e) =&gt;
+{
+    Logger.LogInformation($"Entity {e.Name} destroyed");
+};</code></pre>
+<hr />
+<h2 id="managing-entities">Managing Entities<a class="headerlink" href="#managing-entities" title="Permanent link">&para;</a></h2>
+<h3 id="activatingdeactivating">Activating/Deactivating<a class="headerlink" href="#activatingdeactivating" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// Disable entity (stops updates, keeps in world)
+entity.IsActive = false;
+
+// Re-enable entity
+entity.IsActive = true;
+
+// Check state
+if (entity.IsActive)
+{
+    // Entity is updating
+}</code></pre>
+<p>When deactivated:
+- Entity remains in world
+- Components don't update
+- Still queryable
+- Still renders (unless system checks <code>IsActive</code>)</p>
+<h3 id="destroying-entities">Destroying Entities<a class="headerlink" href="#destroying-entities" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// Method 1: Via entity
+entity.Destroy();
+
+// Method 2: Via world
+world.DestroyEntity(entity);
+
+// Destruction:
+// - Fires OnDestroy event
+// - Calls OnRemoved on all components
+// - Removes from world
+// - Cannot be reused</code></pre>
+<h3 id="parent-child-relationships">Parent-Child Relationships<a class="headerlink" href="#parent-child-relationships" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// Create parent
+var player = world.CreateEntity("Player");
+player.AddComponent&lt;TransformComponent&gt;();
+
+// Create child
+var weapon = world.CreateEntity("Sword");
+weapon.AddComponent&lt;TransformComponent&gt;();
+
+// Set parent (requires transform hierarchy)
+weapon.SetParent(player);
+
+// Unparent
+weapon.SetParent(null);
+
+// When parent is destroyed, children are also destroyed</code></pre>
+<hr />
+<h2 id="querying-entities">Querying Entities<a class="headerlink" href="#querying-entities" title="Permanent link">&para;</a></h2>
+<p>Brine2D provides several ways to find entities:</p>
+<h3 id="get-all-entities">Get All Entities<a class="headerlink" href="#get-all-entities" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// Get all entities in world
+var allEntities = world.Entities;
+
+foreach (var entity in allEntities)
+{
+    Console.WriteLine(entity.Name);
+}</code></pre>
+<h3 id="query-by-component">Query by Component<a class="headerlink" href="#query-by-component" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// Get entities with specific component
+var withHealth = world.GetEntitiesWithComponent&lt;HealthComponent&gt;();
+
+foreach (var entity in withHealth)
+{
+    var health = entity.GetComponent&lt;HealthComponent&gt;()!;
+    Console.WriteLine($"{entity.Name}: {health.Current}/{health.Max}");
+}</code></pre>
+<h3 id="query-by-multiple-components">Query by Multiple Components<a class="headerlink" href="#query-by-multiple-components" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// Get entities with Transform AND Velocity
+var moving = world.GetEntitiesWithComponents&lt;TransformComponent, VelocityComponent&gt;();
+
+foreach (var entity in moving)
+{
+    var transform = entity.GetComponent&lt;TransformComponent&gt;()!;
+    var velocity = entity.GetComponent&lt;VelocityComponent&gt;()!;
+
+    // Process moving entity
+}</code></pre>
+<h3 id="query-by-tag">Query by Tag<a class="headerlink" href="#query-by-tag" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// Get all enemies
+var enemies = world.GetEntitiesByTag("Enemy");
+
+// Get entities with multiple tags (AND logic)
+var bossEnemies = world.GetEntitiesByTag("Enemy")
+    .Where(e =&gt; e.Tags.Contains("Boss"));</code></pre>
+<h3 id="find-specific-entity">Find Specific Entity<a class="headerlink" href="#find-specific-entity" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// Find by name
+var player = world.GetEntityByName("Player");
+
+// Find by ID
+var entity = world.GetEntityById(someGuid);
+
+// Find by predicate (custom logic)
+var boss = world.FindEntity(e =&gt; 
+    e.Tags.Contains("Enemy") &amp;&amp; 
+    e.Name.Contains("Boss") &amp;&amp;
+    e.GetComponent&lt;HealthComponent&gt;()?.Max &gt; 500
+);</code></pre>
+<hr />
+<h2 id="entity-patterns">Entity Patterns<a class="headerlink" href="#entity-patterns" title="Permanent link">&para;</a></h2>
+<h3 id="factory-pattern">Factory Pattern<a class="headerlink" href="#factory-pattern" title="Permanent link">&para;</a></h3>
+<p>Create entities through factory methods:</p>
+<pre class="highlight"><code class="language-csharp">public class EntityFactory
+{
+    private readonly IEntityWorld _world;
+    private readonly ITextureLoader _textureLoader;
+
+    public EntityFactory(IEntityWorld world, ITextureLoader textureLoader)
+    {
+        _world = world;
+        _textureLoader = textureLoader;
+    }
+
+    public Entity CreatePlayer(Vector2 position)
+    {
+        var player = _world.CreateEntity("Player");
+        player.Tags.Add("Player");
+        player.Tags.Add("Controllable");
+
+        player.AddComponent&lt;TransformComponent&gt;().Position = position;
+        player.AddComponent&lt;VelocityComponent&gt;().MaxSpeed = 200f;
+        player.AddComponent&lt;PlayerControllerComponent&gt;();
+        player.AddComponent&lt;HealthComponent&gt;().Max = 100;
+
+        var sprite = player.AddComponent&lt;SpriteComponent&gt;();
+        sprite.TexturePath = "assets/player.png";
+
+        return player;
+    }
+
+    public Entity CreateEnemy(Vector2 position, EnemyType type)
+    {
+        var enemy = _world.CreateEntity($"Enemy_{type}");
+        enemy.Tags.Add("Enemy");
+
+        enemy.AddComponent&lt;TransformComponent&gt;().Position = position;
+        enemy.AddComponent&lt;VelocityComponent&gt;();
+        enemy.AddComponent&lt;AIControllerComponent&gt;().Behavior = AIBehavior.Chase;
+
+        switch (type)
+        {
+            case EnemyType.Weak:
+                enemy.AddComponent&lt;HealthComponent&gt;().Max = 30;
+                break;
+            case EnemyType.Strong:
+                enemy.AddComponent&lt;HealthComponent&gt;().Max = 100;
+                break;
+            case EnemyType.Boss:
+                enemy.AddComponent&lt;HealthComponent&gt;().Max = 500;
+                enemy.Tags.Add("Boss");
+                break;
+        }
+
+        return enemy;
+    }
+
+    public Entity CreateBullet(Vector2 position, Vector2 direction)
+    {
+        var bullet = _world.CreateEntity("Bullet");
+        bullet.Tags.Add("Projectile");
+
+        bullet.AddComponent&lt;TransformComponent&gt;().Position = position;
+        bullet.AddComponent&lt;VelocityComponent&gt;().Velocity = direction * 500f;
+        bullet.AddComponent&lt;LifetimeComponent&gt;().Lifetime = 3f;
+
+        return bullet;
+    }
+}
+
+public enum EnemyType
+{
+    Weak,
+    Strong,
+    Boss
+}</code></pre>
+<h3 id="builder-pattern">Builder Pattern<a class="headerlink" href="#builder-pattern" title="Permanent link">&para;</a></h3>
+<p>Fluent API for entity construction:</p>
+<pre class="highlight"><code class="language-csharp">public class EntityBuilder
+{
+    private readonly IEntityWorld _world;
+    private readonly Entity _entity;
+
+    public EntityBuilder(IEntityWorld world, string name = "")
+    {
+        _world = world;
+        _entity = world.CreateEntity(name);
+    }
+
+    public EntityBuilder WithTag(string tag)
+    {
+        _entity.Tags.Add(tag);
+        return this;
+    }
+
+    public EntityBuilder WithTransform(Vector2 position)
+    {
+        _entity.AddComponent&lt;TransformComponent&gt;().Position = position;
+        return this;
+    }
+
+    public EntityBuilder WithVelocity(float maxSpeed)
+    {
+        _entity.AddComponent&lt;VelocityComponent&gt;().MaxSpeed = maxSpeed;
+        return this;
+    }
+
+    public EntityBuilder WithSprite(string texturePath)
+    {
+        _entity.AddComponent&lt;SpriteComponent&gt;().TexturePath = texturePath;
+        return this;
+    }
+
+    public EntityBuilder WithHealth(float max)
+    {
+        var health = _entity.AddComponent&lt;HealthComponent&gt;();
+        health.Max = max;
+        health.Current = max;
+        return this;
+    }
+
+    public EntityBuilder WithComponent&lt;T&gt;() where T : Component, new()
+    {
+        _entity.AddComponent&lt;T&gt;();
+        return this;
+    }
+
+    public EntityBuilder WithComponent&lt;T&gt;(Action&lt;T&gt; configure) where T : Component, new()
+    {
+        var component = _entity.AddComponent&lt;T&gt;();
+        configure(component);
+        return this;
+    }
+
+    public Entity Build() =&gt; _entity;
+}
+
+// Usage
+var player = new EntityBuilder(world, "Player")
+    .WithTag("Player")
+    .WithTag("Controllable")
+    .WithTransform(new Vector2(400, 300))
+    .WithVelocity(200f)
+    .WithSprite("assets/player.png")
+    .WithHealth(100)
+    .WithComponent&lt;PlayerControllerComponent&gt;()
+    .Build();</code></pre>
+<h3 id="object-pool-pattern">Object Pool Pattern<a class="headerlink" href="#object-pool-pattern" title="Permanent link">&para;</a></h3>
+<p>Reuse entities instead of creating/destroying:</p>
+<pre class="highlight"><code class="language-csharp">public class EntityPool
+{
+    private readonly IEntityWorld _world;
+    private readonly Queue&lt;Entity&gt; _pool = new();
+    private readonly EntityPrefab _prefab;
+
+    public EntityPool(IEntityWorld world, EntityPrefab prefab, int initialSize = 10)
+    {
+        _world = world;
+        _prefab = prefab;
+
+        // Pre-create entities
+        for (int i = 0; i &lt; initialSize; i++)
+        {
+            var entity = prefab.Instantiate(world, Vector2.Zero);
+            entity.IsActive = false;
+            _pool.Enqueue(entity);
+        }
+    }
+
+    public Entity Spawn(Vector2 position)
+    {
+        Entity entity;
+
+        if (_pool.Count &gt; 0)
+        {
+            // Reuse from pool
+            entity = _pool.Dequeue();
+            entity.IsActive = true;
+        }
+        else
+        {
+            // Create new
+            entity = _prefab.Instantiate(_world, position);
+        }
+
+        // Reset position
+        var transform = entity.GetComponent&lt;TransformComponent&gt;();
+        if (transform != null)
+        {
+            transform.Position = position;
+        }
+
+        return entity;
+    }
+
+    public void Despawn(Entity entity)
+    {
+        // Reset state
+        var velocity = entity.GetComponent&lt;VelocityComponent&gt;();
+        if (velocity != null)
+        {
+            velocity.Velocity = Vector2.Zero;
+        }
+
+        // Deactivate and return to pool
+        entity.IsActive = false;
+        _pool.Enqueue(entity);
+    }
+}
+
+// Usage
+var bulletPool = new EntityPool(world, bulletPrefab, 50);
+
+// Spawn bullet
+var bullet = bulletPool.Spawn(playerPosition);
+
+// Later, despawn instead of destroy
+bulletPool.Despawn(bullet);</code></pre>
+<hr />
+<h2 id="entity-groups">Entity Groups<a class="headerlink" href="#entity-groups" title="Permanent link">&para;</a></h2>
+<p>Organize entities into logical groups:</p>
+<pre class="highlight"><code class="language-csharp">public class EntityGroup
+{
+    private readonly HashSet&lt;Entity&gt; _entities = new();
+
+    public string Name { get; }
+    public IReadOnlyCollection&lt;Entity&gt; Entities =&gt; _entities;
+
+    public EntityGroup(string name)
+    {
+        Name = name;
+    }
+
+    public void Add(Entity entity)
+    {
+        _entities.Add(entity);
+        entity.OnDestroyed += OnEntityDestroyed;
+    }
+
+    public void Remove(Entity entity)
+    {
+        _entities.Remove(entity);
+        entity.OnDestroyed -= OnEntityDestroyed;
+    }
+
+    private void OnEntityDestroyed(Entity entity)
+    {
+        _entities.Remove(entity);
+    }
+
+    public void DestroyAll()
+    {
+        foreach (var entity in _entities.ToList())
+        {
+            entity.Destroy();
+        }
+        _entities.Clear();
+    }
+
+    public void SetActiveAll(bool active)
+    {
+        foreach (var entity in _entities)
+        {
+            entity.IsActive = active;
+        }
+    }
+}
+
+// Usage
+var enemyGroup = new EntityGroup("Enemies");
+
+for (int i = 0; i &lt; 10; i++)
+{
+    var enemy = factory.CreateEnemy(randomPosition, EnemyType.Weak);
+    enemyGroup.Add(enemy);
+}
+
+// Later...
+enemyGroup.DestroyAll(); // Destroy all enemies at once</code></pre>
+<hr />
+<h2 id="advanced-querying">Advanced Querying<a class="headerlink" href="#advanced-querying" title="Permanent link">&para;</a></h2>
+<h3 id="filtering-queries">Filtering Queries<a class="headerlink" href="#filtering-queries" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// Get all active enemies with low health
+var weakEnemies = world.GetEntitiesByTag("Enemy")
+    .Where(e =&gt; e.IsActive)
+    .Where(e =&gt;
+    {
+        var health = e.GetComponent&lt;HealthComponent&gt;();
+        return health != null &amp;&amp; health.Percentage &lt; 0.3f;
+    });
+
+// Get all projectiles moving right
+var rightMoving = world.GetEntitiesWithComponents&lt;VelocityComponent&gt;()
+    .Where(e =&gt; e.Tags.Contains("Projectile"))
+    .Where(e =&gt; e.GetComponent&lt;VelocityComponent&gt;()!.Velocity.X &gt; 0);</code></pre>
+<h3 id="spatial-queries">Spatial Queries<a class="headerlink" href="#spatial-queries" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">public static class EntityQueryExtensions
+{
+    public static IEnumerable&lt;Entity&gt; WithinRadius(
+        this IEnumerable&lt;Entity&gt; entities,
+        Vector2 center,
+        float radius)
+    {
+        var radiusSquared = radius * radius;
+
+        return entities.Where(e =&gt;
+        {
+            var transform = e.GetComponent&lt;TransformComponent&gt;();
+            if (transform == null) return false;
+
+            var distanceSquared = Vector2.DistanceSquared(transform.Position, center);
+            return distanceSquared &lt;= radiusSquared;
+        });
+    }
+
+    public static IEnumerable&lt;Entity&gt; InRectangle(
+        this IEnumerable&lt;Entity&gt; entities,
+        RectangleF bounds)
+    {
+        return entities.Where(e =&gt;
+        {
+            var transform = e.GetComponent&lt;TransformComponent&gt;();
+            return transform != null &amp;&amp; bounds.Contains(transform.Position);
+        });
+    }
+}
+
+// Usage
+var nearbyEnemies = world.GetEntitiesByTag("Enemy")
+    .WithinRadius(playerPosition, 200f);
+
+var visibleEntities = world.GetEntitiesWithComponent&lt;SpriteComponent&gt;()
+    .InRectangle(cameraViewport);</code></pre>
+<h3 id="component-based-filtering">Component-Based Filtering<a class="headerlink" href="#component-based-filtering" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// Get entities that have Health AND Transform but NOT Dead tag
+var aliveEntities = world.GetEntitiesWithComponents&lt;HealthComponent, TransformComponent&gt;()
+    .Where(e =&gt; !e.Tags.Contains("Dead"));
+
+// Get entities with optional components
+var entities = world.GetEntitiesWithComponent&lt;TransformComponent&gt;();
+
+foreach (var entity in entities)
+{
+    var transform = entity.GetComponent&lt;TransformComponent&gt;()!;
+    var velocity = entity.GetComponent&lt;VelocityComponent&gt;(); // Optional
+
+    if (velocity != null)
+    {
+        // Has velocity
+    }
+    else
+    {
+        // Stationary
+    }
+}</code></pre>
+<hr />
+<h2 id="performance-tips">Performance Tips<a class="headerlink" href="#performance-tips" title="Permanent link">&para;</a></h2>
+<h3 id="query-caching">Query Caching<a class="headerlink" href="#query-caching" title="Permanent link">&para;</a></h3>
+<p>Cache queries when possible:</p>
+<pre class="highlight"><code class="language-csharp">public class EnemyManager
+{
+    private readonly IEntityWorld _world;
+    private List&lt;Entity&gt;? _cachedEnemies;
+    private bool _isDirty = true;
+
+    public EnemyManager(IEntityWorld world)
+    {
+        _world = world;
+
+        // Invalidate cache on entity changes
+        _world.OnEntityCreated += _ =&gt; _isDirty = true;
+        _world.OnEntityDestroyed += _ =&gt; _isDirty = true;
+    }
+
+    public IEnumerable&lt;Entity&gt; GetEnemies()
+    {
+        if (_isDirty || _cachedEnemies == null)
+        {
+            _cachedEnemies = _world.GetEntitiesByTag("Enemy").ToList();
+            _isDirty = false;
+        }
+
+        return _cachedEnemies;
+    }
+}</code></pre>
+<h3 id="minimize-lookups">Minimize Lookups<a class="headerlink" href="#minimize-lookups" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// ❌ Slow - multiple component lookups
+foreach (var entity in entities)
+{
+    if (entity.HasComponent&lt;HealthComponent&gt;())
+    {
+        var health = entity.GetComponent&lt;HealthComponent&gt;();
+        var transform = entity.GetComponent&lt;TransformComponent&gt;();
+        // Process...
+    }
+}
+
+// ✅ Fast - query for both components upfront
+var entities = world.GetEntitiesWithComponents&lt;HealthComponent, TransformComponent&gt;();
+
+foreach (var entity in entities)
+{
+    var health = entity.GetComponent&lt;HealthComponent&gt;()!;
+    var transform = entity.GetComponent&lt;TransformComponent&gt;()!;
+    // Process...
+}</code></pre>
+<h3 id="use-tags-wisely">Use Tags Wisely<a class="headerlink" href="#use-tags-wisely" title="Permanent link">&para;</a></h3>
+<p>Tags are faster than component checks:</p>
+<pre class="highlight"><code class="language-csharp">// ✅ Fast - tag check
+if (entity.Tags.Contains("Enemy"))
+{
+    // ...
+}
+
+// ⚠️ Slower - component check
+if (entity.HasComponent&lt;EnemyComponent&gt;())
+{
+    // ...
+}</code></pre>
+<hr />
+<h2 id="debugging-entities">Debugging Entities<a class="headerlink" href="#debugging-entities" title="Permanent link">&para;</a></h2>
+<h3 id="entity-inspector">Entity Inspector<a class="headerlink" href="#entity-inspector" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">public static class EntityDebugger
+{
+    public static void PrintEntity(Entity entity)
+    {
+        Console.WriteLine($"=== Entity: {entity.Name} ===");
+        Console.WriteLine($"ID: {entity.Id}");
+        Console.WriteLine($"Active: {entity.IsActive}");
+        Console.WriteLine($"Tags: {string.Join(", ", entity.Tags)}");
+        Console.WriteLine("Components:");
+
+        foreach (var component in entity.GetAllComponents())
+        {
+            var enabled = component.IsEnabled ? "✓" : "✗";
+            Console.WriteLine($"  [{enabled}] {component.GetType().Name}");
+        }
+    }
+
+    public static void PrintWorldStats(IEntityWorld world)
+    {
+        Console.WriteLine($"=== World Statistics ===");
+        Console.WriteLine($"Total Entities: {world.Entities.Count}");
+        Console.WriteLine($"Active Entities: {world.Entities.Count(e =&gt; e.IsActive)}");
+
+        // Count by tag
+        var tagCounts = world.Entities
+            .SelectMany(e =&gt; e.Tags)
+            .GroupBy(t =&gt; t)
+            .Select(g =&gt; new { Tag = g.Key, Count = g.Count() });
+
+        Console.WriteLine("Entities by Tag:");
+        foreach (var tagCount in tagCounts)
+        {
+            Console.WriteLine($"  {tagCount.Tag}: {tagCount.Count}");
+        }
+    }
+}
+
+// Usage
+EntityDebugger.PrintEntity(player);
+EntityDebugger.PrintWorldStats(world);</code></pre>
+<hr />
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<h3 id="entity-creation">Entity Creation<a class="headerlink" href="#entity-creation" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">var entity = world.CreateEntity("Name");
+entity.Tags.Add("Tag");
+entity.AddComponent&lt;MyComponent&gt;();</code></pre>
+<h3 id="entity-queries">Entity Queries<a class="headerlink" href="#entity-queries" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">world.Entities                                    // All entities
+world.GetEntityByName("Player")                   // By name
+world.GetEntityById(guid)                         // By ID
+world.GetEntitiesByTag("Enemy")                   // By tag
+world.GetEntitiesWithComponent&lt;T&gt;()               // By component
+world.GetEntitiesWithComponents&lt;T1, T2&gt;()         // By multiple
+world.FindEntity(e =&gt; /* predicate */)            // By condition</code></pre>
+<h3 id="entity-management">Entity Management<a class="headerlink" href="#entity-management" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">entity.IsActive = false;                          // Deactivate
+entity.Destroy();                                 // Destroy
+world.DestroyEntity(entity);                      // Destroy via world
+entity.OnDestroyed += handler;                    // Subscribe to events</code></pre>
+<hr />
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<p>Now that you understand entities, explore related topics:</p>
+<div class="grid cards">
+<ul>
+<li>
+<p><strong>Components Guide</strong></p>
+<hr />
+<p>Learn how to create and use components</p>
+<p><a href="../components/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Components Guide</a></p>
+</li>
+<li>
+<p><strong>Systems Guide</strong></p>
+<hr />
+<p>Write systems that process entities efficiently</p>
+<p><a href="../systems/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> Systems Guide</a></p>
+</li>
+<li>
+<p><strong>ECS Concepts</strong></p>
+<hr />
+<p>Understand the big picture</p>
+<p><a href="../../../concepts/entity-component-system/"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13.22 19.03a.75.75 0 0 1 0-1.06L18.19 13H3.75a.75.75 0 0 1 0-1.5h14.44l-4.97-4.97a.749.749 0 0 1 .326-1.275.75.75 0 0 1 .734.215l6.25 6.25a.75.75 0 0 1 0 1.06l-6.25 6.25a.75.75 0 0 1-1.06 0"/></svg></span> ECS Concepts</a></p>
+</li>
+</ul>
+</div>
+<hr />
+<p><strong>Remember:</strong> Entities are simple containers. The real power comes from combining components to create complex behaviors through composition!</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["content.code.copy", "content.code.select"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+      
+    
+  </body>
+</html>
