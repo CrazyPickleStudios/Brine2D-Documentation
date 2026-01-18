@@ -76,7 +76,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 ### Solution: Input Layers
 
-```csharp InputLayerExample.cs
+```csharp
 using Brine2D.Core;
 using Brine2D.Input;
 using Brine2D.Rendering;
@@ -145,7 +145,7 @@ public class InputLayerScene : Scene
 
 ### 1. Register Service
 
-```csharp Program.cs
+```csharp
 using Brine2D.Hosting;
 using Brine2D.Input;
 using Brine2D.UI;
@@ -168,7 +168,7 @@ await game.RunAsync<MyScene>();
 
 ### 2. Inject Dependencies
 
-```csharp MyScene.cs
+```csharp
 public class MyScene : Scene
 {
     private readonly IInputService _input;
@@ -487,7 +487,7 @@ protected override void OnInitialize()
 
 ### Create Custom Layer
 
-```csharp CustomLayer.cs
+```csharp
 using Brine2D.Input;
 using System.Numerics;
 

@@ -58,7 +58,7 @@ sequenceDiagram
 
 ## Quick Example
 
-```csharp MouseExample.cs
+```csharp
 using Brine2D.Core;
 using Brine2D.Input;
 using Brine2D.Rendering;

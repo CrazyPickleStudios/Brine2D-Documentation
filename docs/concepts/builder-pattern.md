@@ -37,7 +37,7 @@ style H fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
 
 ### Minimal Setup
 
-```csharp Program.cs
+```csharp
 using Brine2D.Hosting;
 
 // Step 1: Create builder
@@ -412,7 +412,7 @@ await game.RunAsync<GameScene>();
 
 Here's a real-world configuration:
 
-```csharp Program.cs
+```csharp
 using Brine2D.Audio.SDL;
 using Brine2D.Core.Collision;
 using Brine2D.Core.Tilemap;

@@ -23,7 +23,7 @@ Brine2D provides a complete audio system powered by SDL3_mixer with support for:
 
 Add SDL3 audio to your game:
 
-```csharp Program.cs
+```csharp
 using Brine2D.Audio.SDL;
 
 var builder = GameApplication.CreateBuilder(args);

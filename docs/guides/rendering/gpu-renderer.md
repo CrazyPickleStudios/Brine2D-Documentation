@@ -58,7 +58,7 @@ graph TB
 
 ### Basic Setup
 
-```csharp Program.cs
+```csharp
 using Brine2D.Hosting;
 using Brine2D.Rendering.SDL;
 
@@ -97,7 +97,7 @@ await game.RunAsync<GameScene>();
 }
 ```
 
-```csharp Program.cs
+```csharp
 builder.Services.AddSDL3Rendering(options =>
 {
     builder.Configuration.GetSection("Rendering").Bind(options);

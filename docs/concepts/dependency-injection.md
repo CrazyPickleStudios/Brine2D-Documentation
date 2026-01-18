@@ -736,7 +736,7 @@ public class GameSceneTests
 
 Here's a full DI setup:
 
-```csharp Program.cs
+```csharp
 using Brine2D.Audio.SDL;
 using Brine2D.Core;
 using Brine2D.Core.Collision;
@@ -780,7 +780,7 @@ var game = builder.Build();
 await game.RunAsync<MenuScene>();
 ```
 
-```csharp MyGameSystemsExtensions.cs
+```csharp
 using Microsoft.Extensions.DependencyInjection;
 
 public static class MyGameSystemsExtensions

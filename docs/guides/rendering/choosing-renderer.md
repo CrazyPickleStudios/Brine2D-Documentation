@@ -311,7 +311,7 @@ builder.Services.AddSDL3Rendering(options =>
 
 ### GPU Renderer Setup
 
-```csharp Program.cs
+```csharp
 using Brine2D.Hosting;
 using Brine2D.Rendering.SDL;
 
@@ -351,7 +351,7 @@ await game.RunAsync<GameScene>();
 
 ### Legacy Renderer Setup
 
-```csharp Program.cs
+```csharp
 using Brine2D.Hosting;
 using Brine2D.Rendering.SDL;
 
@@ -387,7 +387,7 @@ await game.RunAsync<GameScene>();
 
 ### Runtime Fallback
 
-```csharp Program.cs
+```csharp
 var builder = GameApplication.CreateBuilder(args);
 
 // Try GPU first, fallback to Legacy
@@ -522,7 +522,7 @@ Use this table to help choose:
 
 ### Method 2: Command-Line Override
 
-```csharp Program.cs
+```csharp
 var builder = GameApplication.CreateBuilder(args);
 
 builder.Services.AddSDL3Rendering(options =>

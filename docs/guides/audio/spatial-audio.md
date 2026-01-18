@@ -25,6 +25,7 @@ Spatial audio (also called positional audio) adjusts sound based on the distance
 The listener represents the "ears" in your game world - typically attached to the player or camera.
 
 **Properties:**
+
 - `GlobalSpatialVolume` - Master volume for all spatial audio (0.0 to 10.0)
 - `IsEnabled` - Toggle spatial audio processing
 
@@ -33,6 +34,7 @@ The listener represents the "ears" in your game world - typically attached to th
 A positioned sound emitter in your game world - enemies, pickups, environmental effects, etc.
 
 **Properties:**
+
 - `MinDistance` - Full volume within this radius
 - `MaxDistance` - Silent beyond this radius
 - `RolloffFactor` - How quickly sound fades (1.0 = linear, 2.0 = quadratic)
@@ -72,7 +74,7 @@ Calculated from:
 
 AudioSystem processes spatial audio every frame:
 
-```csharp Program.cs
+```csharp
 builder.Services.ConfigureSystemPipelines(pipelines =>
 {
     pipelines.AddSystem<AudioSystem>();  // Update order: 300

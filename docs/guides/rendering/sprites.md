@@ -43,7 +43,7 @@ graph LR
 
 ### Load and Draw a Sprite
 
-```csharp SpriteExample.cs
+```csharp
 using Brine2D.Core;
 using Brine2D.Rendering;
 using Microsoft.Extensions.Logging;
@@ -309,7 +309,7 @@ character_sheet.png (256x256):
 
 ### Drawing from Sprite Sheet
 
-```csharp SpriteShe etExample.cs
+```csharp
 public class SpriteSheetScene : Scene
 {
     private readonly IRenderer _renderer;
@@ -366,7 +366,7 @@ public class SpriteSheetScene : Scene
 
 Here's a full scene with player movement:
 
-```csharp PlayerSpriteScene.cs
+```csharp
 using Brine2D.Core;
 using Brine2D.Input;
 using Brine2D.Rendering;

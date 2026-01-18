@@ -52,7 +52,7 @@ graph TD
 
 ### Minimal Camera Setup
 
-```csharp CameraExample.cs
+```csharp
 using Brine2D.Core;
 using Brine2D.Rendering;
 using System.Numerics;
@@ -463,7 +463,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 Here's a full scene with all camera features:
 
-```csharp CameraGameScene.cs
+```csharp
 using Brine2D.Core;
 using Brine2D.Input;
 using Brine2D.Rendering;

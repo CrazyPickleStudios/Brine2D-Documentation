@@ -174,7 +174,7 @@ We'll build on the Moving Sprites scene.
 
 Create `AnimatedSpriteScene.cs`:
 
-```csharp AnimatedSpriteScene.cs
+```csharp
 using Brine2D.Core;
 using Brine2D.Core.Animation;
 using Brine2D.Input;
@@ -587,7 +587,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 Here's the full `AnimatedSpriteScene.cs`:
 
-```csharp AnimatedSpriteScene.cs
+```csharp
 using Brine2D.Core;
 using Brine2D.Core.Animation;
 using Brine2D.Input;

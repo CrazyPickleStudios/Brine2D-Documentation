@@ -131,7 +131,7 @@ _eventBus?.Subscribe<WindowResizedEvent>(evt =>
 
 ### Register EventBus
 
-```csharp Program.cs
+```csharp
 using Brine2D.Core;
 using Brine2D.Hosting;
 using Brine2D.Rendering.SDL;
@@ -661,7 +661,7 @@ public class WindowStateService
 }
 ```
 
-```csharp Program.cs
+```csharp
 // Register as singleton
 builder.Services.AddSingleton<WindowStateService>();
 
@@ -820,7 +820,7 @@ protected override void OnInitialize()
 
 Here's a full responsive game scene:
 
-```csharp ResponsiveGameScene.cs
+```csharp
 using Brine2D.Core;
 using Brine2D.Input;
 using Brine2D.Rendering;
