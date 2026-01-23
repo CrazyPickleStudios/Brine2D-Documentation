@@ -1,695 +1,1145 @@
 ---
 title: Project Structure
-description: Understanding Brine2D's modular architecture and how components fit together
+description: Organize your Brine2D project for maintainability and scalability
 ---
 
 # Project Structure
 
-Brine2D follows a **clean, modular architecture** inspired by ASP.NET Core's design principles. Each package has a single responsibility and depends only on what it needs.
+Learn how to organize your Brine2D project for clean, maintainable, and scalable game development.
 
-## Architecture Overview
+## Overview
 
-```mermaid
-graph TB
-    Game["<b>Your Game Project</b><br/><i>FeatureDemos.csproj</i>"]
-    
-    subgraph Direct["Direct References"]
-        Hosting["<b>Brine2D.Hosting</b>"]
-        RenderingSDL["<b>Brine2D.Rendering.SDL</b>"]
-        InputSDL["<b>Brine2D.Input.SDL</b>"]
-        AudioSDL["<b>Brine2D.Audio.SDL</b>"]
-        UI["<b>Brine2D.UI</b>"]
-    end
-    
-    subgraph Transitive["Transitive Dependencies"]
-        Engine["<b>Brine2D.Engine</b>"]
-        Rendering["<b>Brine2D.Rendering</b>"]
-        Input["<b>Brine2D.Input</b>"]
-        Audio["<b>Brine2D.Audio</b>"]
-        Core["<b>Brine2D.Core</b>"]
-    end
-    
-    Game --> Hosting
-    Game --> RenderingSDL
-    Game --> InputSDL
-    Game --> AudioSDL
-    Game --> UI
-    
-    Hosting --> Engine
-    Engine --> Core
-    
-    RenderingSDL --> Rendering
-    InputSDL --> Input
-    AudioSDL --> Audio
-    UI --> Core
-    UI --> Rendering
-    UI --> Input
-    
-    Rendering --> Core
-    Input --> Core
-    Audio -.-> Core
+A well-organized project structure:
 
-    style Game fill:#264f78,stroke:#4fc1ff,stroke-width:3px,color:#fff
-    style Hosting fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
-    style RenderingSDL fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-    style InputSDL fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-    style AudioSDL fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-    style UI fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
-    style Engine fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-    style Rendering fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
-    style Input fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
-    style Audio fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
-    style Core fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
-    style Direct fill:#1a2332,stroke:#c586c0,stroke-width:2px,color:#fff
-    style Transitive fill:#1a2332,stroke:#4ec9b0,stroke-width:2px,color:#fff
-```
+- Makes code easy to find and navigate
+- Separates concerns (scenes, systems, entities)
+- Scales from prototypes to full games
+- Simplifies team collaboration
+- Reduces merge conflicts
 
-This design follows the **Dependency Inversion Principle**: high-level modules (your game) depend on abstractions (interfaces), not concrete implementations.
-
-## Core Packages
-
-### Brine2D.Core
-
-**Purpose:** Core abstractions and data structures used throughout the engine.
-
-**Key Types:**
-
-- `IScene` - Interface for game scenes
-- `Scene` - Base class with lifecycle methods
-- `GameTime` - Holds frame timing information
-- `IGameContext` - Access to game state and exit control
-- `Color`, `Rectangle`, `RectangleF` - Common data types
-
-**Namespaces:**
-
-- `Brine2D.Core` - Core interfaces and base classes
-- `Brine2D.Core.Animation` - Sprite animation system
-- `Brine2D.Core.Collision` - Collision detection
-- `Brine2D.Core.Tilemap` - Tilemap loading and rendering
-
-**No Dependencies** - This package is the foundation and doesn't depend on other Brine2D packages.
-
-```csharp
-// Example: Implementing a custom scene
-public class MyScene : Scene
-{
-    public MyScene(ILogger<MyScene> logger) : base(logger) { }
-    
-    protected override void OnUpdate(GameTime gameTime) { }
-    protected override void OnRender(GameTime gameTime) { }
-}
-```
+**This guide covers:**
+- Recommended folder structures
+- File organization patterns
+- Namespace conventions
+- Asset management
+- Scaling strategies
 
 ---
 
-### Brine2D.Engine
+## Basic Structure
 
-**Purpose:** Game loop, scene management, and engine coordination.
+### Minimal Project
 
-**Key Types:**
+For prototypes and learning:
 
-- `IGameEngine` - Core engine interface
-- `GameEngine` - Coordinates subsystems
-- `IGameLoop` - Game loop abstraction
-- `GameLoop` - Frame timing and update/render cycle
-- `ISceneManager` - Scene loading and transitions
-- `SceneManager` - Manages active scene
+~~~
+MyGame/
+├── MyGame.csproj
+├── Program.cs
+├── GameScene.cs
+└── assets/
+    ├── textures/
+    ├── sounds/
+    └── music/
+~~~
 
-**Dependencies:**
+**When to use:**
+- Quick prototypes
+- Tutorial projects
+- Single-scene games
+- Learning Brine2D
 
-- `Brine2D.Core`
-- `Microsoft.Extensions.*` (DI, Logging, Configuration)
+**Program.cs:**
 
-```csharp
-// The engine coordinates everything
-var engine = serviceProvider.GetRequiredService<IGameEngine>();
-await engine.InitializeAsync();
+~~~csharp
+using Brine2D.Hosting;
+using Brine2D.SDL;
+using Microsoft.Extensions.DependencyInjection;
 
-// Scene manager handles scene transitions
-var sceneManager = serviceProvider.GetRequiredService<ISceneManager>();
-await sceneManager.LoadSceneAsync<MenuScene>();
-```
-
----
-
-### Brine2D.Hosting
-
-**Purpose:** ASP.NET-style application hosting and builder pattern.
-
-**Key Types:**
-
-- `GameApplication` - The main application host
-- `GameApplicationBuilder` - Fluent API for configuration
-- Service registration extensions
-
-**Dependencies:**
-
-- `Brine2D.Core`
-- `Brine2D.Engine`
-- `Microsoft.Extensions.Hosting`
-
-**This is your entry point:**
-
-```csharp
-// Familiar ASP.NET-style builder
 var builder = GameApplication.CreateBuilder(args);
 
-// Configure services
-builder.Services.AddSDL3Rendering();
-builder.Services.AddSDL3Input();
-builder.Services.AddScene<GameScene>();
-
-// Build and run
-var game = builder.Build();
-await game.RunAsync<GameScene>();
-```
-
----
-
-## Rendering System
-
-### Brine2D.Rendering
-
-**Purpose:** Rendering abstractions (interfaces and options).
-
-**Key Types:**
-
-- `IRenderer` - Core rendering interface
-- `ITexture` - Texture abstraction
-- `ITextureLoader` - Async texture loading
-- `IFont`, `IFontLoader` - Font rendering
-- `ICamera` - Camera abstraction
-- `Camera2D` - 2D camera implementation
-- `Color` - Color representation
-- `RenderingOptions` - Configuration
-
-**Dependencies:**
-
-- `Brine2D.Core`
-
-```csharp
-// All rendering goes through IRenderer
-public class GameScene : Scene
-{
-    private readonly IRenderer _renderer;
-    
-    protected override void OnRender(GameTime gameTime)
-    {
-        _renderer.Clear(Color.Black);
-        _renderer.BeginFrame();
-        _renderer.DrawTexture(texture, x, y);
-        _renderer.EndFrame();
-    }
-}
-```
-
----
-
-### Brine2D.Rendering.SDL
-
-**Purpose:** SDL3-based rendering implementation.
-
-**Key Types:**
-
-- `SDL3Renderer` - Implements `IRenderer` using SDL3
-- `SDL3Texture` - SDL3 texture wrapper
-- `SDL3TextureLoader` - Loads textures via SDL3_image
-- `SDL3Font`, `SDL3FontLoader` - Font rendering via SDL3_ttf
-- Service registration extensions
-
-**Dependencies:**
-
-- `Brine2D.Rendering`
-- `SDL3-CS` (NuGet package - C# bindings for SDL3)
-
-**Registration:**
-
-```csharp
 builder.Services.AddSDL3Rendering(options =>
 {
     options.WindowTitle = "My Game";
-    options.WindowWidth = 1280;
-    options.WindowHeight = 720;
-    options.VSync = true;
-    options.Backend = GraphicsBackend.GPU; // or Legacy
+    options.WindowWidth = 800;
+    options.WindowHeight = 600;
 });
-```
 
----
-
-## Input System
-
-### Brine2D.Input
-
-**Purpose:** Input abstractions for keyboard, mouse, and gamepad.
-
-**Key Types:**
-
-- `IInputService` - Unified input interface
-- `Keys` - Keyboard key enumeration
-- `MouseButton` - Mouse button enumeration
-- `GamepadButton`, `GamepadAxis` - Gamepad enums
-- `IInputLayer` - For layered input processing (like middleware)
-- `InputLayerManager` - Manages input layers
-
-**Dependencies:**
-
-- `Brine2D.Core`
-
-```csharp
-// Unified input API
-if (_input.IsKeyPressed(Keys.Space))
-{
-    Jump();
-}
-
-if (_input.IsMouseButtonDown(MouseButton.Left))
-{
-    Shoot();
-}
-
-var stick = _input.GetGamepadLeftStick();
-```
-
----
-
-### Brine2D.Input.SDL
-
-**Purpose:** SDL3-based input implementation.
-
-**Key Types:**
-
-- `SDL3InputService` - Implements `IInputService`
-- Service registration extensions
-
-**Dependencies:**
-
-- `Brine2D.Input`
-- `SDL3-CS`
-
-**Registration:**
-
-```csharp
 builder.Services.AddSDL3Input();
-```
+builder.Services.AddScene<GameScene>();
+
+var game = builder.Build();
+await game.RunAsync<GameScene>();
+~~~
 
 ---
 
-## Audio System
+### Standard Project
 
-### Brine2D.Audio
+For most games:
 
-**Purpose:** Audio abstractions for sound effects and music.
+~~~
+MyGame/
+├── MyGame.csproj
+├── Program.cs
+├── Scenes/
+│   ├── MenuScene.cs
+│   ├── GameScene.cs
+│   └── PauseScene.cs
+├── Entities/
+│   ├── Player.cs
+│   ├── Enemy.cs
+│   └── Projectile.cs
+├── Systems/
+│   ├── MovementSystem.cs
+│   └── CombatSystem.cs
+└── assets/
+    ├── textures/
+    │   ├── player/
+    │   ├── enemies/
+    │   └── ui/
+    ├── sounds/
+    │   ├── effects/
+    │   └── ui/
+    ├── music/
+    └── fonts/
+~~~
 
-**Key Types:**
-
-- `IAudioService` - Audio playback interface
-- `ISoundEffect` - Short sound effect
-- `IMusic` - Background music
-
-**Dependencies:**
-
-- None (pure abstractions)
-
-```csharp
-// Simple audio API
-var jumpSound = await _audio.LoadSoundAsync("jump.wav");
-_audio.PlaySound(jumpSound);
-
-var bgMusic = await _audio.LoadMusicAsync("theme.mp3");
-_audio.PlayMusic(bgMusic, loops: -1); // Loop forever
-```
-
----
-
-### Brine2D.Audio.SDL
-
-**Purpose:** SDL3_mixer-based audio implementation.
-
-**Key Types:**
-
-- `SDL3AudioService` - Implements `IAudioService`
-- `SDL3SoundEffect`, `SDL3Music` - SDL3 wrappers
-- Service registration extensions
-
-**Dependencies:**
-
-- `Brine2D.Audio`
-- `SDL3-CS` (includes SDL3_mixer bindings)
-
-**Registration:**
-
-```csharp
-builder.Services.AddSDL3Audio();
-```
+**When to use:**
+- Most 2D games
+- Multi-scene projects
+- Medium-sized teams
+- Commercial games
 
 ---
 
-## UI System
+### Large Project
 
-### Brine2D.UI
+For complex games with many features:
 
-**Purpose:** Immediate-mode UI framework.
+~~~
+MyGame/
+├── MyGame.csproj
+├── Program.cs
+├── Scenes/
+│   ├── Menu/
+│   │   ├── MainMenuScene.cs
+│   │   ├── OptionsScene.cs
+│   │   └── CreditsScene.cs
+│   ├── Gameplay/
+│   │   ├── Level1Scene.cs
+│   │   ├── Level2Scene.cs
+│   │   └── BossScene.cs
+│   └── UI/
+│       ├── HUDScene.cs
+│       └── InventoryScene.cs
+├── Entities/
+│   ├── Characters/
+│   │   ├── Player.cs
+│   │   ├── Enemy.cs
+│   │   └── NPC.cs
+│   ├── Items/
+│   │   ├── Weapon.cs
+│   │   ├── Consumable.cs
+│   │   └── Collectible.cs
+│   └── Environment/
+│       ├── Platform.cs
+│       └── Hazard.cs
+├── Systems/
+│   ├── Gameplay/
+│   │   ├── MovementSystem.cs
+│   │   ├── CombatSystem.cs
+│   │   └── HealthSystem.cs
+│   ├── AI/
+│   │   ├── PathfindingSystem.cs
+│   │   └── BehaviorSystem.cs
+│   └── Rendering/
+│       ├── ParticleSystem.cs
+│       └── AnimationSystem.cs
+├── Components/
+│   ├── TransformComponent.cs
+│   ├── SpriteComponent.cs
+│   └── HealthComponent.cs
+├── Managers/
+│   ├── GameStateManager.cs
+│   ├── SaveManager.cs
+│   └── AudioManager.cs
+├── Data/
+│   ├── GameConfig.cs
+│   ├── LevelData.cs
+│   └── ItemDatabase.cs
+├── Utilities/
+│   ├── MathHelper.cs
+│   ├── ColorHelper.cs
+│   └── Extensions.cs
+└── assets/
+    ├── textures/
+    │   ├── characters/
+    │   ├── items/
+    │   ├── environment/
+    │   ├── effects/
+    │   └── ui/
+    ├── sounds/
+    │   ├── characters/
+    │   ├── ambient/
+    │   ├── effects/
+    │   └── ui/
+    ├── music/
+    │   ├── menu/
+    │   ├── gameplay/
+    │   └── boss/
+    ├── fonts/
+    ├── levels/
+    │   └── *.tmj
+    └── data/
+        ├── items.json
+        └── enemies.json
+~~~
 
-**Key Types:**
-
-- `UICanvas` - Container for UI components
-- `UIButton`, `UILabel`, `UISlider` - Basic components
-- `UITextInput`, `UICheckbox`, `UIDropdown` - Form controls
-- `UIDialog`, `UITooltip` - Advanced components
-- `UIPanel`, `UIScrollView` - Layout containers
-- `IUIComponent` - Interface for custom UI
-
-**Dependencies:**
-
-- `Brine2D.Core`
-- `Brine2D.Rendering`
-- `Brine2D.Input`
-
-```csharp
-// Add UI canvas to your scene
-private readonly UICanvas _uiCanvas;
-
-var button = new UIButton("Click Me", new Vector2(10, 10), new Vector2(100, 30));
-button.OnClick += () => Logger.LogInformation("Clicked!");
-_uiCanvas.Add(button);
-
-// Update and render
-_uiCanvas.Update(deltaTime);
-_uiCanvas.Render(_renderer);
-```
-
----
-
-## Optional Packages
-
-### Brine2D.Core.Animation
-
-**Included in:** `Brine2D.Core`
-
-**Purpose:** Sprite animation system.
-
-**Key Types:**
-
-- `SpriteAnimator` - Plays animation clips
-- `AnimationClip` - Sequence of frames
-- `SpriteFrame` - Single frame with duration
-
-```csharp
-var animator = new SpriteAnimator();
-var walkAnim = AnimationClip.FromSpriteSheet("walk", 32, 32, 8, columns: 10);
-animator.AddAnimation(walkAnim);
-animator.Play("walk");
-```
-
----
-
-### Brine2D.Core.Collision
-
-**Included in:** `Brine2D.Core`
-
-**Purpose:** Collision detection system.
-
-**Key Types:**
-
-- `CollisionSystem` - Manages collision checks
-- `CollisionShape` - Base for all colliders
-- `BoxCollider`, `CircleCollider` - Shape types
-- `RectangleF` - Floating-point rectangle
-- `CollisionResponse` - Helper methods for collision resolution
-
-```csharp
-var collisionSystem = new CollisionSystem();
-var playerCollider = new BoxCollider(32, 32);
-collisionSystem.AddShape(playerCollider);
-
-var collisions = collisionSystem.GetCollisions(playerCollider);
-```
-
----
-
-### Brine2D.Core.Tilemap
-
-**Included in:** `Brine2D.Core`
-
-**Purpose:** Tilemap loading and rendering (Tiled format).
-
-**Key Types:**
-
-- `Tilemap` - Loaded tilemap data
-- `ITilemapLoader` - Loads `.tmj` files
-- `TilemapRenderer` - Renders tilemaps
-
-**Supports:**
-
-- Tiled Editor `.tmj` format
-- Multiple layers
-- Automatic collision generation
-
-```csharp
-var tilemap = await _tilemapLoader.LoadAsync("level1.tmj");
-await _tilemapRenderer.LoadTilesetAsync(tilemap, _textureLoader);
-_tilemapRenderer.Render(tilemap, _renderer, _camera);
-
-// Generate collision from tilemap
-var colliders = tilemap.GenerateColliders("collision");
-```
+**When to use:**
+- Complex games
+- Large teams
+- Long-term projects
+- Multiple game modes
 
 ---
 
-## Dependency Flow
+## Folder Organization
 
-Understanding how packages depend on each other:
+### Scenes/
 
-```
-Your Game
-    ↓ references
-Brine2D.Hosting
-    ↓ uses
-Brine2D.Engine + Brine2D.Core
-    ↓ abstractions
-Brine2D.Rendering ← Brine2D.Rendering.SDL (implementation)
-Brine2D.Input ← Brine2D.Input.SDL (implementation)
-Brine2D.Audio ← Brine2D.Audio.SDL (implementation)
-```
+Organize scenes by purpose:
 
-**Key insight:** Your game references **abstractions** (interfaces), and the **hosting layer** wires up concrete implementations via dependency injection.
+~~~
+Scenes/
+├── Menu/              # Menu screens
+├── Gameplay/          # Main game levels
+├── UI/                # Overlay scenes
+└── Transitions/       # Loading, fade screens
+~~~
 
----
+**Pattern:**
 
-## Directory Structure
+~~~csharp
+// Scenes/Gameplay/Level1Scene.cs
+namespace MyGame.Scenes.Gameplay;
 
-```
-Brine2D/
-├── src/
-│   ├── Brine2D.Core/
-│   │   ├── Scene.cs, IScene.cs
-│   │   ├── GameTime.cs, IGameContext.cs
-│   │   ├── Animation/
-│   │   │   ├── SpriteAnimator.cs
-│   │   │   └── AnimationClip.cs
-│   │   ├── Collision/
-│   │   │   ├── CollisionSystem.cs
-│   │   │   └── CollisionShape.cs
-│   │   └── Tilemap/
-│   │       ├── Tilemap.cs
-│   │       └── TilemapLoader.cs
-│   │
-│   ├── Brine2D.Engine/
-│   │   ├── GameEngine.cs
-│   │   ├── GameLoop.cs
-│   │   └── SceneManager.cs
-│   │
-│   ├── Brine2D.Hosting/
-│   │   ├── GameApplication.cs
-│   │   └── GameApplicationBuilder.cs
-│   │
-│   ├── Brine2D.Rendering/
-│   │   ├── IRenderer.cs
-│   │   ├── ITexture.cs, ITextureLoader.cs
-│   │   ├── IFont.cs, IFontLoader.cs
-│   │   ├── ICamera.cs, Camera2D.cs
-│   │   ├── Color.cs
-│   │   └── RenderingOptions.cs
-│   │
-│   ├── Brine2D.Rendering.SDL/
-│   │   ├── SDL3Renderer.cs
-│   │   ├── SDL3Texture.cs, SDL3TextureLoader.cs
-│   │   └── SDL3Font.cs, SDL3FontLoader.cs
-│   │
-│   ├── Brine2D.Input/
-│   │   ├── IInputService.cs
-│   │   ├── Keys.cs, MouseButton.cs
-│   │   ├── GamepadButton.cs, GamepadAxis.cs
-│   │   └── IInputLayer.cs, InputLayerManager.cs
-│   │
-│   ├── Brine2D.Input.SDL/
-│   │   └── SDL3InputService.cs
-│   │
-│   ├── Brine2D.Audio/
-│   │   ├── IAudioService.cs
-│   │   ├── ISoundEffect.cs
-│   │   └── IMusic.cs
-│   │
-│   ├── Brine2D.Audio.SDL/
-│   │   ├── SDL3AudioService.cs
-│   │   ├── SDL3SoundEffect.cs
-│   │   └── SDL3Music.cs
-│   │
-│   └── Brine2D.UI/
-│       ├── UICanvas.cs
-│       ├── IUIComponent.cs
-│       ├── UIButton.cs, UILabel.cs
-│       ├── UISlider.cs, UITextInput.cs
-│       └── UIDialog.cs, UITooltip.cs
-│
-├── samples/
-│   ├── FeatureDemos/
-│   ├── PlatformerGame/
-│   └── AdvancedGame/
-│
-└── tests/
-    ├── Brine2D.Core.Tests/
-    ├── Brine2D.Engine.Tests/
-    └── ...
-```
-
----
-
-## Design Principles
-
-Brine2D's architecture follows these key principles:
-
-### 1. **Dependency Inversion**
-
-High-level modules (your game) depend on abstractions (`IRenderer`), not implementations (`SDL3Renderer`).
-
-### 2. **Single Responsibility**
-
-Each package has one job:
-
-- `Core` = abstractions
-- `Engine` = game loop
-- `Rendering` = draw things
-- `Input` = handle input
-- etc.
-
-### 3. **Open/Closed**
-
-Open for extension (implement `IRenderer` with DirectX, Metal, etc.), closed for modification (core interfaces rarely change).
-
-### 4. **Dependency Injection**
-
-Everything is resolved via DI container—testable, mockable, swappable.
-
-### 5. **Configuration Over Code**
-
-Prefer `gamesettings.json` over hardcoded values.
-
----
-
-## Extending Brine2D
-
-### Add a Custom Renderer
-
-```csharp
-// 1. Implement IRenderer
-public class MyCustomRenderer : IRenderer
+public class Level1Scene : Scene
 {
-    public void DrawTexture(ITexture texture, float x, float y) { ... }
-    // ... implement all methods
+    // Scene implementation
 }
+~~~
 
-// 2. Register it
-builder.Services.AddSingleton<IRenderer, MyCustomRenderer>();
-```
+---
 
-### Add a Custom Input Provider
+### Entities/
 
-```csharp
-// 1. Implement IInputService
-public class MyInputService : IInputService
-{
-    public bool IsKeyDown(Keys key) { ... }
-    // ... implement all methods
-}
+Group entities by category:
 
-// 2. Register it
-builder.Services.AddSingleton<IInputService, MyInputService>();
-```
+~~~
+Entities/
+├── Characters/        # Player, enemies, NPCs
+├── Items/             # Weapons, consumables
+├── Projectiles/       # Bullets, missiles
+└── Environment/       # Platforms, obstacles
+~~~
 
-### Create Custom UI Components
+**Pattern:**
 
-```csharp
-public class MyCustomWidget : IUIComponent
+~~~csharp
+// Entities/Characters/Player.cs
+namespace MyGame.Entities.Characters;
+
+public class Player
 {
     public Vector2 Position { get; set; }
-    public Vector2 Size { get; set; }
-    public bool Visible { get; set; } = true;
-    public bool Enabled { get; set; } = true;
-    public UITooltip? Tooltip { get; set; }
-    
-    public void Update(float deltaTime) { }
-    public void Render(IRenderer renderer) { }
-    public bool Contains(Vector2 screenPosition) { return false; }
+    public int Health { get; set; }
+    public float Speed { get; set; } = 200f;
 }
-```
+~~~
+
+---
+
+### Systems/
+
+Organize systems by functionality:
+
+~~~
+Systems/
+├── Gameplay/          # Core game logic
+├── AI/                # Enemy behavior
+├── Physics/           # Movement, collision
+└── Rendering/         # Visual effects
+~~~
+
+**Pattern:**
+
+~~~csharp
+// Systems/Gameplay/HealthSystem.cs
+namespace MyGame.Systems.Gameplay;
+
+public class HealthSystem : IUpdateSystem
+{
+    public string Name => "HealthSystem";
+    public int UpdateOrder => 100;
+    
+    public void Update(GameTime gameTime)
+    {
+        // System logic
+    }
+}
+~~~
+
+---
+
+### Components/
+
+Group components by purpose:
+
+~~~
+Components/
+├── Core/              # Transform, Sprite, Physics
+├── Gameplay/          # Health, Inventory
+└── AI/                # AIState, Pathfinding
+~~~
+
+**Pattern:**
+
+~~~csharp
+// Components/Gameplay/HealthComponent.cs
+namespace MyGame.Components.Gameplay;
+
+public class HealthComponent : Component
+{
+    public int Current { get; set; }
+    public int Max { get; set; }
+    public bool IsDead => Current <= 0;
+}
+~~~
+
+---
+
+### Managers/
+
+Singleton services for game-wide state:
+
+~~~
+Managers/
+├── GameStateManager.cs    # Game state machine
+├── SaveManager.cs          # Save/load
+├── AudioManager.cs         # Audio control
+└── ScoreManager.cs         # Score tracking
+~~~
+
+**Pattern:**
+
+~~~csharp
+// Managers/GameStateManager.cs
+namespace MyGame.Managers;
+
+public class GameStateManager
+{
+    public GameState CurrentState { get; private set; }
+    
+    public void ChangeState(GameState newState)
+    {
+        CurrentState = newState;
+        // State transition logic
+    }
+}
+
+public enum GameState
+{
+    MainMenu,
+    Playing,
+    Paused,
+    GameOver
+}
+~~~
+
+---
+
+### Data/
+
+Configuration and data files:
+
+~~~
+Data/
+├── Configs/           # Game configuration
+├── Definitions/       # Item/enemy data
+└── Localization/      # Language files
+~~~
+
+**Pattern:**
+
+~~~csharp
+// Data/Configs/GameConfig.cs
+namespace MyGame.Data.Configs;
+
+public class GameConfig
+{
+    public int InitialLives { get; set; } = 3;
+    public float PlayerSpeed { get; set; } = 200f;
+    public int MaxEnemies { get; set; } = 20;
+}
+~~~
+
+---
+
+### Utilities/
+
+Helper classes and extensions:
+
+~~~
+Utilities/
+├── Extensions/        # Extension methods
+├── Helpers/           # Static helper methods
+└── Constants.cs       # Game constants
+~~~
+
+**Pattern:**
+
+~~~csharp
+// Utilities/Constants.cs
+namespace MyGame.Utilities;
+
+public static class Constants
+{
+    public const int WindowWidth = 800;
+    public const int WindowHeight = 600;
+    public const float Gravity = 980f;
+}
+
+// Utilities/Extensions/Vector2Extensions.cs
+namespace MyGame.Utilities.Extensions;
+
+public static class Vector2Extensions
+{
+    public static float Angle(this Vector2 vector)
+    {
+        return (float)Math.Atan2(vector.Y, vector.X);
+    }
+}
+~~~
+
+---
+
+## Asset Organization
+
+### Texture Structure
+
+Organize by category and usage:
+
+~~~
+assets/textures/
+├── characters/
+│   ├── player/
+│   │   ├── idle.png
+│   │   ├── walk.png
+│   │   └── jump.png
+│   └── enemies/
+│       ├── goblin/
+│       ├── skeleton/
+│       └── boss/
+├── items/
+│   ├── weapons/
+│   ├── consumables/
+│   └── collectibles/
+├── environment/
+│   ├── tiles/
+│   ├── background/
+│   └── props/
+├── effects/
+│   ├── particles/
+│   ├── explosions/
+│   └── projectiles/
+└── ui/
+    ├── buttons/
+    ├── panels/
+    └── icons/
+~~~
+
+---
+
+### Audio Structure
+
+Organize by type and context:
+
+~~~
+assets/sounds/
+├── characters/
+│   ├── player/
+│   │   ├── jump.wav
+│   │   ├── land.wav
+│   │   └── hurt.wav
+│   └── enemies/
+│       ├── goblin_attack.wav
+│       └── skeleton_death.wav
+├── weapons/
+│   ├── sword_swing.wav
+│   ├── gun_shoot.wav
+│   └── reload.wav
+├── ambient/
+│   ├── wind.wav
+│   ├── water.wav
+│   └── birds.wav
+├── effects/
+│   ├── explosion.wav
+│   ├── pickup.wav
+│   └── powerup.wav
+└── ui/
+    ├── button_click.wav
+    ├── menu_open.wav
+    └── error.wav
+
+assets/music/
+├── menu/
+│   └── main_theme.mp3
+├── gameplay/
+│   ├── level1.mp3
+│   ├── level2.mp3
+│   └── boss.mp3
+└── credits/
+    └── ending.mp3
+~~~
+
+---
+
+### Level Data
+
+Organize maps and level definitions:
+
+~~~
+assets/levels/
+├── world1/
+│   ├── level1.tmj
+│   ├── level2.tmj
+│   └── level3.tmj
+├── world2/
+│   ├── level1.tmj
+│   └── boss.tmj
+└── tilesets/
+    ├── grass.tsx
+    ├── dungeon.tsx
+    └── cave.tsx
+~~~
+
+---
+
+## Namespace Conventions
+
+### Root Namespace
+
+Use your game name as root:
+
+~~~csharp
+// Good
+namespace MyGame;
+namespace MyGame.Scenes;
+namespace MyGame.Entities;
+
+// Bad
+namespace Game;
+namespace Scenes;
+~~~
+
+---
+
+### Namespace Hierarchy
+
+Match folder structure:
+
+~~~
+Folder: Scenes/Gameplay/Level1Scene.cs
+Namespace: MyGame.Scenes.Gameplay
+
+Folder: Entities/Characters/Player.cs
+Namespace: MyGame.Entities.Characters
+
+Folder: Systems/AI/PathfindingSystem.cs
+Namespace: MyGame.Systems.AI
+~~~
+
+**Pattern:**
+
+~~~csharp
+// File: Scenes/Gameplay/Level1Scene.cs
+namespace MyGame.Scenes.Gameplay;
+
+using MyGame.Entities.Characters;
+using MyGame.Systems.Gameplay;
+
+public class Level1Scene : Scene
+{
+    // Implementation
+}
+~~~
+
+---
+
+## Configuration Files
+
+### Project File
+
+Configure project settings in `.csproj`:
+
+~~~xml
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>MyGame</RootNamespace>
+    <AssemblyName>MyGame</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Brine2D" Version="0.9.0-beta" />
+    <PackageReference Include="Brine2D.SDL" Version="0.9.0-beta" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Copy all assets to output -->
+    <None Update="assets\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>
+~~~
+
+---
+
+### Game Settings
+
+Store configuration in `gamesettings.json`:
+
+~~~json
+{
+  "Rendering": {
+    "WindowTitle": "My Game",
+    "WindowWidth": 1280,
+    "WindowHeight": 720,
+    "VSync": true,
+    "Backend": "GPU"
+  },
+  "Audio": {
+    "MasterVolume": 0.8,
+    "MusicVolume": 0.6,
+    "SoundVolume": 0.7
+  },
+  "Gameplay": {
+    "Difficulty": "Normal",
+    "InitialLives": 3,
+    "PlayerSpeed": 200
+  }
+}
+~~~
+
+Load in `Program.cs`:
+
+~~~csharp
+using Brine2D.Hosting;
+using Microsoft.Extensions.Configuration;
+
+var builder = GameApplication.CreateBuilder(args);
+
+// Load configuration
+builder.Configuration.AddJsonFile("gamesettings.json", optional: false);
+
+// Bind to options
+builder.Services.AddSDL3Rendering(options =>
+{
+    builder.Configuration.GetSection("Rendering").Bind(options);
+});
+~~~
+
+---
+
+## Scaling Strategies
+
+### Start Small
+
+Begin with minimal structure:
+
+~~~
+MyGame/
+├── MyGame.csproj
+├── Program.cs
+├── GameScene.cs
+└── assets/
+~~~
+
+---
+
+### Add Folders as Needed
+
+Grow organically:
+
+**Add Scenes folder:**
+
+~~~
+MyGame/
+├── Program.cs
+├── Scenes/
+│   ├── MenuScene.cs
+│   └── GameScene.cs
+└── assets/
+~~~
+
+**Add Entities folder:**
+
+~~~
+MyGame/
+├── Program.cs
+├── Scenes/
+├── Entities/
+│   ├── Player.cs
+│   └── Enemy.cs
+└── assets/
+~~~
+
+**Add Systems folder:**
+
+~~~
+MyGame/
+├── Program.cs
+├── Scenes/
+├── Entities/
+├── Systems/
+│   └── HealthSystem.cs
+└── assets/
+~~~
+
+---
+
+### Refactor When Necessary
+
+Split large files:
+
+**Before:**
+
+~~~
+Scenes/
+└── GameScene.cs (500+ lines)
+~~~
+
+**After:**
+
+~~~
+Scenes/
+└── Gameplay/
+    ├── GameScene.cs
+    ├── Level1Scene.cs
+    └── Level2Scene.cs
+~~~
+
+---
+
+## Architecture Diagram
+
+~~~mermaid
+graph TB
+    A[Program.cs] --> B[Services]
+    A --> C[Scenes]
+    
+    B --> B1[Rendering]
+    B --> B2[Input]
+    B --> B3[Audio]
+    B --> B4[Managers]
+    
+    C --> C1[Menu]
+    C --> C2[Gameplay]
+    C --> C3[UI]
+    
+    C2 --> D[Systems]
+    C2 --> E[Entities]
+    
+    D --> D1[Movement]
+    D --> D2[Combat]
+    D --> D3[AI]
+    
+    E --> E1[Player]
+    E --> E2[Enemies]
+    E --> E3[Items]
+    
+    A --> F[Assets]
+    F --> F1[Textures]
+    F --> F2[Sounds]
+    F --> F3[Music]
+    
+    style A fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
+    style B fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
+    style C fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style D fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
+    style E fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
+    style F fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+~~~
+
+---
+
+## Example: Platformer Structure
+
+Complete example for a platformer game:
+
+~~~
+PlatformerGame/
+├── PlatformerGame.csproj
+├── Program.cs
+├── Scenes/
+│   ├── Menu/
+│   │   ├── MainMenuScene.cs
+│   │   ├── LevelSelectScene.cs
+│   │   └── OptionsScene.cs
+│   ├── Gameplay/
+│   │   ├── Level1Scene.cs
+│   │   ├── Level2Scene.cs
+│   │   ├── Level3Scene.cs
+│   │   └── BossScene.cs
+│   └── UI/
+│       ├── HUDScene.cs
+│       └── PauseScene.cs
+├── Entities/
+│   ├── Player/
+│   │   ├── Player.cs
+│   │   └── PlayerController.cs
+│   ├── Enemies/
+│   │   ├── Slime.cs
+│   │   ├── Bat.cs
+│   │   └── Boss.cs
+│   ├── Items/
+│   │   ├── Coin.cs
+│   │   ├── HealthPickup.cs
+│   │   └── PowerUp.cs
+│   └── Environment/
+│       ├── Platform.cs
+│       ├── Spike.cs
+│       └── MovingPlatform.cs
+├── Components/
+│   ├── TransformComponent.cs
+│   ├── SpriteComponent.cs
+│   ├── RigidbodyComponent.cs
+│   ├── ColliderComponent.cs
+│   └── HealthComponent.cs
+├── Systems/
+│   ├── PlayerMovementSystem.cs
+│   ├── EnemyAISystem.cs
+│   ├── PhysicsSystem.cs
+│   ├── CollisionSystem.cs
+│   └── AnimationSystem.cs
+├── Managers/
+│   ├── LevelManager.cs
+│   ├── ScoreManager.cs
+│   └── SaveManager.cs
+├── Data/
+│   ├── LevelData.cs
+│   ├── EnemyData.cs
+│   └── ItemData.cs
+└── assets/
+    ├── textures/
+    │   ├── player/
+    │   ├── enemies/
+    │   ├── items/
+    │   ├── environment/
+    │   └── ui/
+    ├── sounds/
+    │   ├── player/
+    │   ├── enemies/
+    │   ├── items/
+    │   └── ui/
+    ├── music/
+    │   ├── menu.mp3
+    │   ├── level.mp3
+    │   └── boss.mp3
+    └── levels/
+        ├── level1.tmj
+        ├── level2.tmj
+        └── level3.tmj
+~~~
 
 ---
 
 ## Best Practices
 
-### **DO: Depend on Interfaces**
+### DO
 
-```csharp
-// Good
-private readonly IRenderer _renderer;
+1. **Match namespaces to folders**
+   ~~~csharp
+   // File: Scenes/Gameplay/Level1Scene.cs
+   namespace MyGame.Scenes.Gameplay;
+   ~~~
 
-// Bad
-private readonly SDL3Renderer _renderer;
-```
+2. **Group related files**
+   ~~~
+   Entities/Characters/
+   ├── Player.cs
+   ├── Enemy.cs
+   └── NPC.cs
+   ~~~
 
-### **DO: Use Constructor Injection**
+3. **Use consistent naming**
+   ~~~csharp
+   // Scene files end with Scene
+   MenuScene.cs
+   GameScene.cs
+   
+   // System files end with System
+   HealthSystem.cs
+   CombatSystem.cs
+   ~~~
 
-```csharp
-public MyScene(IRenderer renderer, IInputService input, ILogger<MyScene> logger)
-    : base(logger)
-{
-    _renderer = renderer;
-    _input = input;
-}
-```
+4. **Organize assets by usage**
+   ~~~
+   assets/textures/player/
+   assets/sounds/player/
+   ~~~
 
-### **DO: Keep Scenes Focused**
+5. **Copy assets to output**
+   ~~~xml
+   <None Update="assets\**\*">
+     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+   </None>
+   ~~~
 
-Each scene should represent one game state (Menu, Gameplay, GameOver, etc.).
+### DON'T
 
-### **DO: Use Async for Loading**
+1. **Don't use generic names**
+   ~~~csharp
+   // ❌ Bad
+   namespace Game;
+   public class Manager { }
+   
+   // ✅ Good
+   namespace MyGame;
+   public class SaveManager { }
+   ~~~
 
-```csharp
-protected override async Task OnLoadAsync(CancellationToken cancellationToken)
-{
-    _texture = await _textureLoader.LoadTextureAsync("sprite.png", cancellationToken);
-}
-```
+2. **Don't mix concerns**
+   ~~~
+   // ❌ Bad
+   Stuff/
+   ├── Player.cs
+   ├── MenuScene.cs
+   └── HealthSystem.cs
+   
+   // ✅ Good
+   Entities/Player.cs
+   Scenes/MenuScene.cs
+   Systems/HealthSystem.cs
+   ~~~
 
-### **DON'T: Directly Reference SDL3**
+3. **Don't nest too deeply**
+   ~~~
+   // ❌ Bad (6 levels deep)
+   Entities/Characters/Players/Playable/Main/Player.cs
+   
+   // ✅ Good (3 levels)
+   Entities/Characters/Player.cs
+   ~~~
 
-Let the SDL implementations handle SDL—your game should only use Brine2D abstractions.
+4. **Don't hard-code paths**
+   ~~~csharp
+   // ❌ Bad
+   var texture = await renderer.LoadTextureAsync("C:\\MyGame\\assets\\player.png");
+   
+   // ✅ Good
+   var texture = await renderer.LoadTextureAsync("assets/textures/player.png");
+   ~~~
 
-### **DON'T: Use Static State**
+---
 
-Use DI instead of singletons or static classes.
+## Migration Guide
+
+### Restructuring Existing Project
+
+**Step 1: Create folders**
+
+~~~sh
+mkdir Scenes
+mkdir Entities
+mkdir Systems
+~~~
+
+**Step 2: Move files**
+
+~~~sh
+# Move scenes
+mv GameScene.cs Scenes/
+mv MenuScene.cs Scenes/
+
+# Move entities
+mv Player.cs Entities/
+mv Enemy.cs Entities/
+~~~
+
+**Step 3: Update namespaces**
+
+~~~csharp
+// Before
+namespace MyGame;
+
+public class GameScene : Scene { }
+
+// After
+namespace MyGame.Scenes;
+
+public class GameScene : Scene { }
+~~~
+
+**Step 4: Update usings**
+
+~~~csharp
+// In Program.cs
+using MyGame.Scenes;
+using MyGame.Entities;
+
+builder.Services.AddScene<GameScene>();
+~~~
+
+---
+
+## Troubleshooting
+
+### Problem: Namespace not found
+
+**Symptom:**
+
+~~~
+error CS0246: The type or namespace name 'GameScene' could not be found
+~~~
+
+**Solution:**
+
+1. **Check namespace matches folder:**
+   ~~~csharp
+   // File: Scenes/GameScene.cs
+   namespace MyGame.Scenes; // Must match
+   ~~~
+
+2. **Add using statement:**
+   ~~~csharp
+   using MyGame.Scenes;
+   ~~~
+
+3. **Verify .csproj has correct root namespace:**
+   ~~~xml
+   <RootNamespace>MyGame</RootNamespace>
+   ~~~
+
+---
+
+### Problem: Assets not found
+
+**Symptom:**
+
+~~~
+FileNotFoundException: Could not find file 'assets/player.png'
+~~~
+
+**Solution:**
+
+1. **Copy assets to output:**
+   ~~~xml
+   <ItemGroup>
+     <None Update="assets\**\*">
+       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+     </None>
+   </ItemGroup>
+   ~~~
+
+2. **Use correct path separator:**
+   ~~~csharp
+   // ✅ Works on all platforms
+   "assets/textures/player.png"
+   
+   // ❌ Windows only
+   "assets\\textures\\player.png"
+   ~~~
+
+3. **Check file exists:**
+   ~~~csharp
+   if (!File.Exists("assets/textures/player.png"))
+   {
+       Logger.LogError("Player texture not found!");
+   }
+   ~~~
+
+---
+
+## Summary
+
+**Structure patterns:**
+
+| Project Size | Folders | When to Use |
+|--------------|---------|-------------|
+| **Minimal** | 1-2 files + assets | Prototypes, learning |
+| **Standard** | Scenes, Entities, Systems | Most games |
+| **Large** | Nested folders | Complex games |
+
+**Key principles:**
+
+| Principle | Description |
+|-----------|-------------|
+| **Match folders to namespaces** | `Scenes/GameScene.cs` → `MyGame.Scenes` |
+| **Group by purpose** | Scenes, Entities, Systems, Assets |
+| **Start small, grow** | Add folders as needed |
+| **Consistent naming** | `*Scene.cs`, `*System.cs`, `*Component.cs` |
 
 ---
 
 ## Next Steps
 
-- [Configuration](configuration.md) - Learn about `gamesettings.json` and options
-- [Core Concepts](../concepts/architecture.md) - Deep dive into architecture
-- [Scene Management](../concepts/scenes.md) - Understanding scene lifecycle
-- [Dependency Injection](../concepts/dependency-injection.md) - How DI works in Brine2D
+- **[Configuration](configuration.md)** - Configure your game
+- **[First Game](first-game.md)** - Build a complete game
+- **[Scene Management](../concepts/scenes.md)** - Understand scene architecture
+- **[ECS Guide](../guides/ecs/getting-started.md)** - Entity Component System structure
 
 ---
 
-Understanding Brine2D's structure makes it easy to navigate, extend, and maintain. The modular design means you can swap out any piece—just like ASP.NET!
+## Quick Reference
+
+~~~
+# Standard project structure
+MyGame/
+├── MyGame.csproj           # Project configuration
+├── Program.cs              # Entry point
+├── Scenes/                 # Game scenes
+│   ├── MenuScene.cs
+│   └── GameScene.cs
+├── Entities/               # Game entities
+│   ├── Player.cs
+│   └── Enemy.cs
+├── Systems/                # ECS systems
+│   └── HealthSystem.cs
+└── assets/                 # Game assets
+    ├── textures/
+    ├── sounds/
+    └── music/
+~~~
+
+~~~csharp
+// Namespace pattern
+// File: Scenes/Gameplay/Level1Scene.cs
+namespace MyGame.Scenes.Gameplay;
+
+using MyGame.Entities;
+using MyGame.Systems;
+
+public class Level1Scene : Scene
+{
+    // Implementation
+}
+~~~
+
+~~~xml
+<!-- Copy assets to output -->
+<ItemGroup>
+  <None Update="assets\**\*">
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+  </None>
+</ItemGroup>
+~~~
+
+---
+
+Ready to configure your game? Check out [Configuration](configuration.md)!

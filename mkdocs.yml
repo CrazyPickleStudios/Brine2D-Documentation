@@ -19,6 +19,7 @@ nav:
   - Overview: index.md
   
   - What's New: 
+      - v0.9.0-beta: whats-new/v0.9.0-beta.md
       - v0.8.0-beta: whats-new/v0.8.0-beta.md
       - v0.7.0-beta: whats-new/v0.7.0-beta.md
       - v0.6.0-beta: whats-new/v0.6.0-beta.md
@@ -45,6 +46,7 @@ nav:
           - GPU Renderer: guides/rendering/gpu-renderer.md
           - Sprites & Textures: guides/rendering/sprites.md
           - Texture Atlasing: guides/rendering/texture-atlasing.md
+          - Post-Processing: guides/rendering/post-processing.md
           - Cameras: guides/rendering/cameras.md
           - Particles: guides/rendering/particles.md
           - Drawing Primitives: guides/rendering/primitives.md
@@ -77,6 +79,10 @@ nav:
           - Systems: guides/ecs/systems.md
           - Entities: guides/ecs/entities.md
           - Queries: guides/ecs/queries.md
+          - Multi-Threading: guides/ecs/multi-threading.md
+      - Performance:
+          - Monitoring: guides/performance/monitoring.md
+          - Optimization: guides/performance/optimization.md
       - Events:
           - Window Events: guides/events/window-events.md
   

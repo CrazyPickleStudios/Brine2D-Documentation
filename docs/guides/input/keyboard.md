@@ -1,650 +1,897 @@
 ---
 title: Keyboard Input
-description: Handle keyboard input for player controls, shortcuts, and text entry in Brine2D
+description: Handle keyboard input in Brine2D - key presses, combinations, and text input
 ---
 
 # Keyboard Input
 
-Master keyboard input handling in Brine2D for player movement, menu navigation, shortcuts, and text entry.
+Learn how to handle keyboard input in your Brine2D games.
 
 ## Overview
 
-Brine2D provides a simple, frame-based keyboard input system via `IInputService`:
+Brine2D's keyboard input system provides:
 
-- ✅ **Key down** - Is key currently held?
-- ✅ **Key pressed** - Was key just pressed this frame?
-- ✅ **Key released** - Was key just released this frame?
-- ✅ **100+ keys** supported - Letters, numbers, F-keys, arrows, modifiers, etc.
+- **Key States** - Down, pressed, released
+- **All Keys** - Full keyboard support
+- **Text Input** - Character input for text fields
+- **Modifier Keys** - Shift, Ctrl, Alt detection
+- **Key Combinations** - Multi-key input
+- **Input Layers** - Priority-based input handling
 
-```mermaid
-sequenceDiagram
-    participant Game as Your Scene
-    participant Input as IInputService
-    participant SDL as SDL3
-    
-    Note over SDL: Player Presses Key
-    SDL->>Input: KeyDown Event
-    
-    Note over Game: Each Frame
-    Game->>Input: IsKeyPressed(Keys.Space)?
-    Input->>Game: true (first frame only)
-    
-    Game->>Input: IsKeyDown(Keys.Space)?
-    Input->>Game: true (every frame held)
-    
-    Note over SDL: Player Releases Key
-    SDL->>Input: KeyUp Event
-    
-    Game->>Input: IsKeyReleased(Keys.Space)?
-    Input->>Game: true (frame of release)
-```
+**Powered by:** SDL3 input system
 
 ---
 
-## Prerequisites
+## Setup
 
-- ✅ [Quick Start](../getting-started/quick-start.md) - Basic scene setup
-- ✅ [Scenes](../../concepts/scenes.md) - Understanding OnUpdate
+### Inject Input Service
 
----
+In your scene:
 
-## Quick Example
-
-```csharp
-using Brine2D.Core;
+~~~csharp
+using Brine2D.Engine;
 using Brine2D.Input;
-using Brine2D.Rendering;
 using Microsoft.Extensions.Logging;
-using System.Numerics;
 
-public class KeyboardScene : Scene
+public class GameScene : Scene
 {
     private readonly IInputService _input;
-    private readonly IGameContext _gameContext;
-    private readonly IRenderer _renderer;
     
-    private Vector2 _playerPosition = new Vector2(400, 300);
-    private float _speed = 200f;
-    
-    public KeyboardScene(
+    public GameScene(
         IInputService input,
-        IGameContext gameContext,
-        IRenderer renderer,
-        ILogger<KeyboardScene> logger
-    ) : base(logger)
+        ILogger<GameScene> logger) : base(logger)
     {
         _input = input;
-        _gameContext = gameContext;
-        _renderer = renderer;
-    }
-    
-    protected override void OnUpdate(GameTime gameTime)
-    {
-        var deltaTime = (float)gameTime.DeltaTime;
-        
-        // Exit on ESC
-        if (_input.IsKeyPressed(Keys.Escape))
-        {
-            _gameContext.RequestExit();
-        }
-        
-        // WASD Movement
-        if (_input.IsKeyDown(Keys.W))
-            _playerPosition.Y -= _speed * deltaTime;
-        
-        if (_input.IsKeyDown(Keys.S))
-            _playerPosition.Y += _speed * deltaTime;
-        
-        if (_input.IsKeyDown(Keys.A))
-            _playerPosition.X -= _speed * deltaTime;
-        
-        if (_input.IsKeyDown(Keys.D))
-            _playerPosition.X += _speed * deltaTime;
-        
-        // Jump on Spacebar (once per press)
-        if (_input.IsKeyPressed(Keys.Space))
-        {
-            Logger.LogInformation("Jump!");
-        }
-    }
-    
-    protected override void OnRender(GameTime gameTime)
-    {
-        _renderer.Clear(Color.Black);
-        _renderer.BeginFrame();
-        
-        // Draw player
-        _renderer.DrawRectangle(
-            _playerPosition.X - 25, _playerPosition.Y - 25,
-            50, 50, Color.Red);
-        
-        _renderer.EndFrame();
     }
 }
-```
-
-**Result:** Player moves with WASD, jumps with Space, exits with ESC! ⌨️
+~~~
 
 ---
 
 ## Key States
 
-### IsKeyDown - Continuous Input
+### IsKeyDown
 
-**Use for:** Movement, aiming, holding buttons
+Check if key is currently held down:
 
-```csharp
+~~~csharp
 protected override void OnUpdate(GameTime gameTime)
 {
-    var deltaTime = (float)gameTime.DeltaTime;
-    
-    // Returns TRUE while key is held
+    // Continuous movement while key held
     if (_input.IsKeyDown(Keys.W))
     {
-        _playerY -= _speed * deltaTime; // Move up continuously
+        _playerY -= _speed * (float)gameTime.DeltaTime;
+    }
+    
+    if (_input.IsKeyDown(Keys.S))
+    {
+        _playerY += _speed * (float)gameTime.DeltaTime;
+    }
+    
+    if (_input.IsKeyDown(Keys.A))
+    {
+        _playerX -= _speed * (float)gameTime.DeltaTime;
+    }
+    
+    if (_input.IsKeyDown(Keys.D))
+    {
+        _playerX += _speed * (float)gameTime.DeltaTime;
     }
 }
-```
+~~~
 
-**Behavior:**
-
-- ✅ Returns `true` **every frame** while key is held
-- ✅ Perfect for smooth movement
-- ✅ Frame-rate independent (use delta time!)
+**Use for:**
+- Continuous actions (movement, holding)
+- Repeated actions while held
+- Analog-style input
 
 ---
 
-### IsKeyPressed - Single Event
+### IsKeyPressed
 
-**Use for:** Jumping, shooting, menu actions
+Check if key was just pressed this frame:
 
-```csharp
+~~~csharp
 protected override void OnUpdate(GameTime gameTime)
 {
-    // Returns TRUE only on first frame of press
+    // Jump only once per press
     if (_input.IsKeyPressed(Keys.Space))
     {
-        Jump(); // Only jumps once per press
+        Jump();
     }
     
-    if (_input.IsKeyPressed(Keys.F))
+    // Shoot once per press
+    if (_input.IsKeyPressed(Keys.X))
     {
-        FireWeapon(); // One shot per press
+        Shoot();
+    }
+    
+    // Toggle pause
+    if (_input.IsKeyPressed(Keys.Escape))
+    {
+        TogglePause();
     }
 }
-```
+~~~
 
-**Behavior:**
-
-- ✅ Returns `true` **only on first frame** of press
-- ✅ Ignores key repeats
-- ✅ Perfect for discrete actions
+**Use for:**
+- Single actions (jump, shoot, interact)
+- Menu navigation
+- Toggle actions
+- One-time events
 
 ---
 
-### IsKeyReleased - Release Detection
+### IsKeyReleased
 
-**Use for:** Charge attacks, button releases
+Check if key was just released this frame:
 
-```csharp
-private bool _isCharging = false;
-private float _chargeTime = 0f;
-
+~~~csharp
 protected override void OnUpdate(GameTime gameTime)
 {
-    var deltaTime = (float)gameTime.DeltaTime;
-    
-    // Start charging
-    if (_input.IsKeyPressed(Keys.Space))
+    // Charge attack - release to fire
+    if (_input.IsKeyDown(Keys.Space))
     {
-        _isCharging = true;
-        _chargeTime = 0f;
+        _chargeTime += (float)gameTime.DeltaTime;
     }
     
-    // Accumulate charge
-    if (_isCharging && _input.IsKeyDown(Keys.Space))
-    {
-        _chargeTime += deltaTime;
-    }
-    
-    // Release - fire charged attack
     if (_input.IsKeyReleased(Keys.Space))
     {
-        if (_isCharging)
-        {
-            FireChargedAttack(_chargeTime);
-            _isCharging = false;
-        }
+        FireChargedAttack(_chargeTime);
+        _chargeTime = 0f;
     }
 }
-```
+~~~
 
-**Behavior:**
+**Use for:**
+- Charge mechanics
+- Hold-and-release actions
+- Detecting key up events
 
-- ✅ Returns `true` **on frame of release**
-- ✅ Perfect for charge mechanics
+---
+
+## Key State Diagram
+
+~~~mermaid
+stateDiagram-v2
+    [*] --> KeyUp: Initial state
+    
+    KeyUp --> KeyPressed: Key pressed
+    KeyPressed --> KeyDown: Next frame
+    
+    KeyDown --> KeyDown: Key held
+    KeyDown --> KeyReleased: Key released
+    
+    KeyReleased --> KeyUp: Next frame
+    KeyUp --> KeyUp: Key not pressed
+    
+    note right of KeyPressed
+        IsKeyPressed() = true
+        IsKeyDown() = true
+    end note
+    
+    note right of KeyDown
+        IsKeyPressed() = false
+        IsKeyDown() = true
+    end note
+    
+    note right of KeyReleased
+        IsKeyPressed() = false
+        IsKeyDown() = false
+        IsKeyReleased() = true
+    end note
+    
+    note right of KeyUp
+        IsKeyPressed() = false
+        IsKeyDown() = false
+        IsKeyReleased() = false
+    end note
+~~~
 
 ---
 
 ## Available Keys
 
-### Letters (A-Z)
+### Letter Keys
 
-```csharp
+~~~csharp
 Keys.A, Keys.B, Keys.C, ... Keys.Z
-```
-
-**Example:**
-
-```csharp
-if (_input.IsKeyPressed(Keys.P))
-{
-    TogglePause();
-}
-```
+~~~
 
 ---
 
-### Numbers (0-9)
+### Number Keys
 
-```csharp
-Keys.D0, Keys.D1, Keys.D2, ... Keys.D9
-```
+~~~csharp
+// Top row numbers
+Keys.D1, Keys.D2, Keys.D3, ... Keys.D0
 
-**Why `D` prefix?** C# enums can't start with numbers!
+// Numpad
+Keys.Numpad1, Keys.Numpad2, ... Keys.Numpad0
+~~~
 
-**Example:**
+---
 
-```csharp
-// Weapon selection
-if (_input.IsKeyPressed(Keys.D1)) SelectWeapon(1);
-if (_input.IsKeyPressed(Keys.D2)) SelectWeapon(2);
-if (_input.IsKeyPressed(Keys.D3)) SelectWeapon(3);
-```
+### Function Keys
+
+~~~csharp
+Keys.F1, Keys.F2, Keys.F3, ... Keys.F12
+~~~
 
 ---
 
 ### Arrow Keys
 
-```csharp
+~~~csharp
 Keys.Up, Keys.Down, Keys.Left, Keys.Right
-```
-
-**Example:**
-
-```csharp
-// Menu navigation
-if (_input.IsKeyPressed(Keys.Up)) SelectPreviousMenuItem();
-if (_input.IsKeyPressed(Keys.Down)) SelectNextMenuItem();
-if (_input.IsKeyPressed(Keys.Enter)) ActivateMenuItem();
-```
-
----
-
-### Function Keys (F1-F12)
-
-```csharp
-Keys.F1, Keys.F2, ... Keys.F12
-```
-
-**Example:**
-
-```csharp
-// Debug shortcuts
-if (_input.IsKeyPressed(Keys.F1)) ToggleDebugOverlay();
-if (_input.IsKeyPressed(Keys.F5)) QuickSave();
-if (_input.IsKeyPressed(Keys.F9)) QuickLoad();
-```
-
----
-
-### Special Keys
-
-| Key | Usage |
-|-----|-------|
-| `Keys.Space` | Jump, shoot, confirm |
-| `Keys.Enter` | Confirm, submit |
-| `Keys.Escape` | Cancel, pause, exit |
-| `Keys.Tab` | Inventory, map |
-| `Keys.Backspace` | Delete text |
-| `Keys.Delete` | Delete forward |
+~~~
 
 ---
 
 ### Modifier Keys
 
-```csharp
+~~~csharp
 Keys.LeftShift, Keys.RightShift
-Keys.LeftControl, Keys.RightControl
+Keys.LeftCtrl, Keys.RightCtrl
 Keys.LeftAlt, Keys.RightAlt
-```
-
-**Example:**
-
-```csharp
-// Sprint (hold Shift + W)
-if (_input.IsKeyDown(Keys.W))
-{
-    var speed = _normalSpeed;
-    
-    if (_input.IsKeyDown(Keys.LeftShift))
-    {
-        speed = _sprintSpeed; // 2x speed
-    }
-    
-    _playerY -= speed * deltaTime;
-}
-
-// Shortcut (Ctrl+S = Save)
-if (_input.IsKeyDown(Keys.LeftControl) && _input.IsKeyPressed(Keys.S))
-{
-    SaveGame();
-}
-```
+Keys.LeftSuper, Keys.RightSuper  // Windows/Command key
+~~~
 
 ---
 
-### Numpad Keys
+### Special Keys
 
-```csharp
-Keys.Numpad0, Keys.Numpad1, ... Keys.Numpad9
-Keys.NumpadEnter, Keys.NumpadPlus, Keys.NumpadMinus
-```
+~~~csharp
+// Common
+Keys.Space
+Keys.Enter
+Keys.Escape
+Keys.Backspace
+Keys.Tab
 
----
+// Navigation
+Keys.Home, Keys.End
+Keys.PageUp, Keys.PageDown
+Keys.Insert, Keys.Delete
 
-### **[Full Keys Enum →](../../api/Keys.md)**
+// Punctuation
+Keys.Comma, Keys.Period
+Keys.Slash, Keys.Backslash
+Keys.Semicolon, Keys.Quote
+Keys.LeftBracket, Keys.RightBracket
+Keys.Minus, Keys.Equals
+
+// Lock keys
+Keys.CapsLock
+Keys.NumLock
+Keys.ScrollLock
+~~~
 
 ---
 
 ## Common Patterns
 
-### Pattern 1: WASD Movement
+### Movement (WASD)
 
-```csharp
-protected override void OnUpdate(GameTime gameTime)
+~~~csharp
+public class PlayerMovement
 {
-    var deltaTime = (float)gameTime.DeltaTime;
-    var movement = Vector2.Zero;
-    
-    if (_input.IsKeyDown(Keys.W)) movement.Y -= 1;
-    if (_input.IsKeyDown(Keys.S)) movement.Y += 1;
-    if (_input.IsKeyDown(Keys.A)) movement.X -= 1;
-    if (_input.IsKeyDown(Keys.D)) movement.X += 1;
-    
-    if (movement != Vector2.Zero)
+    private readonly IInputService _input;
+    private Vector2 _position;
+    private readonly float _speed = 200f;
+
+    public void Update(GameTime gameTime)
     {
-        movement = Vector2.Normalize(movement); // Prevent faster diagonal
-        _playerPosition += movement * _speed * deltaTime;
-    }
-}
-```
-
----
-
-### Pattern 2: Arrow Key Menu Navigation
-
-```csharp
-private int _selectedIndex = 0;
-private readonly string[] _menuItems = ["New Game", "Load Game", "Options", "Exit"];
-
-protected override void OnUpdate(GameTime gameTime)
-{
-    // Navigate menu
-    if (_input.IsKeyPressed(Keys.Up))
-    {
-        _selectedIndex = Math.Max(0, _selectedIndex - 1);
-    }
-    
-    if (_input.IsKeyPressed(Keys.Down))
-    {
-        _selectedIndex = Math.Min(_menuItems.Length - 1, _selectedIndex + 1);
-    }
-    
-    // Confirm selection
-    if (_input.IsKeyPressed(Keys.Enter) || _input.IsKeyPressed(Keys.Space))
-    {
-        ActivateMenuItem(_selectedIndex);
-    }
-}
-```
-
----
-
-### Pattern 3: Number Key Hotbar
-
-```csharp
-protected override void OnUpdate(GameTime gameTime)
-{
-    // Check number keys 1-9
-    for (int i = 0; i < 9; i++)
-    {
-        var key = (Keys)((int)Keys.D1 + i); // D1, D2, D3, etc.
+        var deltaTime = (float)gameTime.DeltaTime;
+        var direction = Vector2.Zero;
         
-        if (_input.IsKeyPressed(key))
+        // WASD movement
+        if (_input.IsKeyDown(Keys.W)) direction.Y -= 1;
+        if (_input.IsKeyDown(Keys.S)) direction.Y += 1;
+        if (_input.IsKeyDown(Keys.A)) direction.X -= 1;
+        if (_input.IsKeyDown(Keys.D)) direction.X += 1;
+        
+        // Normalize diagonal movement
+        if (direction != Vector2.Zero)
         {
-            SelectHotbarSlot(i);
+            direction = Vector2.Normalize(direction);
+        }
+        
+        _position += direction * _speed * deltaTime;
+    }
+}
+~~~
+
+---
+
+### Movement (Arrow Keys)
+
+~~~csharp
+public class PlayerMovement
+{
+    private readonly IInputService _input;
+
+    public void Update(GameTime gameTime)
+    {
+        var deltaTime = (float)gameTime.DeltaTime;
+        var direction = Vector2.Zero;
+        
+        // Arrow key movement
+        if (_input.IsKeyDown(Keys.Up)) direction.Y -= 1;
+        if (_input.IsKeyDown(Keys.Down)) direction.Y += 1;
+        if (_input.IsKeyDown(Keys.Left)) direction.X -= 1;
+        if (_input.IsKeyDown(Keys.Right)) direction.X += 1;
+        
+        if (direction != Vector2.Zero)
+        {
+            direction = Vector2.Normalize(direction);
+        }
+        
+        _position += direction * _speed * deltaTime;
+    }
+}
+~~~
+
+---
+
+### Jump
+
+~~~csharp
+public class PlayerJump
+{
+    private readonly IInputService _input;
+    private bool _isGrounded;
+    private Vector2 _velocity;
+    private const float JumpForce = 500f;
+
+    public void Update(GameTime gameTime)
+    {
+        // Jump only when grounded
+        if (_input.IsKeyPressed(Keys.Space) && _isGrounded)
+        {
+            _velocity.Y = -JumpForce;
+            _isGrounded = false;
         }
     }
 }
-```
+~~~
 
 ---
 
-### Pattern 4: Toggle Key
+### Shooting
 
-```csharp
-private bool _debugMode = false;
-
-protected override void OnUpdate(GameTime gameTime)
+~~~csharp
+public class PlayerShooting
 {
-    // Toggle debug mode with F3
-    if (_input.IsKeyPressed(Keys.F3))
+    private readonly IInputService _input;
+    private float _shootCooldown;
+    private const float ShootDelay = 0.2f;
+
+    public void Update(GameTime gameTime)
     {
-        _debugMode = !_debugMode;
-        Logger.LogInformation("Debug mode: {Enabled}", _debugMode);
-    }
-}
-```
-
----
-
-### Pattern 5: Combo Keys (Modifiers)
-
-```csharp
-protected override void OnUpdate(GameTime gameTime)
-{
-    var ctrl = _input.IsKeyDown(Keys.LeftControl) || 
-               _input.IsKeyDown(Keys.RightControl);
-    var shift = _input.IsKeyDown(Keys.LeftShift) || 
-                _input.IsKeyDown(Keys.RightShift);
-    
-    // Ctrl+S = Save
-    if (ctrl && _input.IsKeyPressed(Keys.S))
-    {
-        SaveGame();
-    }
-    
-    // Ctrl+Shift+D = Debug save
-    if (ctrl && shift && _input.IsKeyPressed(Keys.D))
-    {
-        SaveDebugInfo();
-    }
-}
-```
-
----
-
-## Advanced Techniques
-
-### Input Buffering
-
-Store recent inputs for combo systems:
-
-```csharp
-private readonly Queue<Keys> _inputBuffer = new();
-private const int BufferSize = 5;
-
-protected override void OnUpdate(GameTime gameTime)
-{
-    // Add pressed keys to buffer
-    foreach (Keys key in Enum.GetValues<Keys>())
-    {
-        if (_input.IsKeyPressed(key))
+        var deltaTime = (float)gameTime.DeltaTime;
+        
+        // Update cooldown
+        if (_shootCooldown > 0)
         {
-            _inputBuffer.Enqueue(key);
-            
-            if (_inputBuffer.Count > BufferSize)
+            _shootCooldown -= deltaTime;
+        }
+        
+        // Shoot on key press if ready
+        if (_input.IsKeyPressed(Keys.X) && _shootCooldown <= 0)
+        {
+            Shoot();
+            _shootCooldown = ShootDelay;
+        }
+    }
+    
+    private void Shoot()
+    {
+        // Create projectile
+    }
+}
+~~~
+
+---
+
+### Sprint
+
+~~~csharp
+public class PlayerSprint
+{
+    private readonly IInputService _input;
+    private readonly float _walkSpeed = 200f;
+    private readonly float _sprintSpeed = 400f;
+
+    public float GetCurrentSpeed()
+    {
+        // Sprint when Shift held
+        return _input.IsKeyDown(Keys.LeftShift) 
+            ? _sprintSpeed 
+            : _walkSpeed;
+    }
+}
+~~~
+
+---
+
+## Modifier Keys
+
+### Shift Detection
+
+~~~csharp
+public class ShiftModifier
+{
+    private readonly IInputService _input;
+
+    public bool IsShiftHeld()
+    {
+        return _input.IsKeyDown(Keys.LeftShift) || 
+               _input.IsKeyDown(Keys.RightShift);
+    }
+    
+    public void Update()
+    {
+        if (IsShiftHeld())
+        {
+            // Sprint, run, or alternate action
+        }
+    }
+}
+~~~
+
+---
+
+### Ctrl Detection
+
+~~~csharp
+public class CtrlModifier
+{
+    private readonly IInputService _input;
+
+    public bool IsCtrlHeld()
+    {
+        return _input.IsKeyDown(Keys.LeftCtrl) || 
+               _input.IsKeyDown(Keys.RightCtrl);
+    }
+    
+    public void Update()
+    {
+        // Ctrl+S = Save
+        if (IsCtrlHeld() && _input.IsKeyPressed(Keys.S))
+        {
+            SaveGame();
+        }
+        
+        // Ctrl+L = Load
+        if (IsCtrlHeld() && _input.IsKeyPressed(Keys.L))
+        {
+            LoadGame();
+        }
+    }
+}
+~~~
+
+---
+
+### Alt Detection
+
+~~~csharp
+public class AltModifier
+{
+    private readonly IInputService _input;
+
+    public bool IsAltHeld()
+    {
+        return _input.IsKeyDown(Keys.LeftAlt) || 
+               _input.IsKeyDown(Keys.RightAlt);
+    }
+    
+    public void Update()
+    {
+        // Alt+Enter = Toggle fullscreen
+        if (IsAltHeld() && _input.IsKeyPressed(Keys.Enter))
+        {
+            ToggleFullscreen();
+        }
+    }
+}
+~~~
+
+---
+
+## Key Combinations
+
+### Multiple Keys
+
+~~~csharp
+public class KeyCombos
+{
+    private readonly IInputService _input;
+
+    public void Update()
+    {
+        // Ctrl+Shift+D = Debug mode
+        if (IsCtrlHeld() && IsShiftHeld() && _input.IsKeyPressed(Keys.D))
+        {
+            ToggleDebugMode();
+        }
+        
+        // Alt+F4 = Quit
+        if (IsAltHeld() && _input.IsKeyPressed(Keys.F4))
+        {
+            QuitGame();
+        }
+    }
+    
+    private bool IsCtrlHeld()
+    {
+        return _input.IsKeyDown(Keys.LeftCtrl) || 
+               _input.IsKeyDown(Keys.RightCtrl);
+    }
+    
+    private bool IsShiftHeld()
+    {
+        return _input.IsKeyDown(Keys.LeftShift) || 
+               _input.IsKeyDown(Keys.RightShift);
+    }
+    
+    private bool IsAltHeld()
+    {
+        return _input.IsKeyDown(Keys.LeftAlt) || 
+               _input.IsKeyDown(Keys.RightAlt);
+    }
+}
+~~~
+
+---
+
+### Cheat Codes
+
+Sequential key presses:
+
+~~~csharp
+public class CheatCodeDetector
+{
+    private readonly IInputService _input;
+    private readonly Keys[] _konamiCode = 
+    {
+        Keys.Up, Keys.Up,
+        Keys.Down, Keys.Down,
+        Keys.Left, Keys.Right,
+        Keys.Left, Keys.Right,
+        Keys.B, Keys.A
+    };
+    
+    private int _currentIndex = 0;
+    private float _timeout = 0f;
+    private const float ResetTime = 2.0f;
+
+    public void Update(GameTime gameTime)
+    {
+        var deltaTime = (float)gameTime.DeltaTime;
+        
+        // Update timeout
+        if (_timeout > 0)
+        {
+            _timeout -= deltaTime;
+            if (_timeout <= 0)
             {
-                _inputBuffer.Dequeue();
+                _currentIndex = 0; // Reset on timeout
             }
         }
+        
+        // Check next key in sequence
+        var expectedKey = _konamiCode[_currentIndex];
+        if (_input.IsKeyPressed(expectedKey))
+        {
+            _currentIndex++;
+            _timeout = ResetTime;
+            
+            // Check if code complete
+            if (_currentIndex >= _konamiCode.Length)
+            {
+                ActivateCheat();
+                _currentIndex = 0;
+            }
+        }
+        else if (HasAnyKeyPressed())
+        {
+            _currentIndex = 0; // Wrong key, reset
+        }
     }
     
-    // Check for combo: Down, Down, Right, A
-    CheckCombo();
-}
-
-private void CheckCombo()
-{
-    var sequence = _inputBuffer.ToArray();
-    
-    if (sequence.Length >= 4 &&
-        sequence[^4] == Keys.Down &&
-        sequence[^3] == Keys.Down &&
-        sequence[^2] == Keys.Right &&
-        sequence[^1] == Keys.A)
+    private bool HasAnyKeyPressed()
     {
-        ExecuteSpecialMove();
-        _inputBuffer.Clear();
+        // Check if any key was pressed
+        // (Implementation depends on IInputService capabilities)
+        return false;
     }
 }
-```
+~~~
 
 ---
 
-### Key Rebinding
+## Menu Navigation
 
-Allow players to customize controls:
+~~~csharp
+public class MenuController
+{
+    private readonly IInputService _input;
+    private int _selectedIndex = 0;
+    private readonly int _menuItemCount;
 
-```csharp
-public class InputMapper
+    public void Update()
+    {
+        // Navigate up
+        if (_input.IsKeyPressed(Keys.Up) || 
+            _input.IsKeyPressed(Keys.W))
+        {
+            _selectedIndex--;
+            if (_selectedIndex < 0)
+            {
+                _selectedIndex = _menuItemCount - 1; // Wrap
+            }
+        }
+        
+        // Navigate down
+        if (_input.IsKeyPressed(Keys.Down) || 
+            _input.IsKeyPressed(Keys.S))
+        {
+            _selectedIndex++;
+            if (_selectedIndex >= _menuItemCount)
+            {
+                _selectedIndex = 0; // Wrap
+            }
+        }
+        
+        // Select
+        if (_input.IsKeyPressed(Keys.Enter) || 
+            _input.IsKeyPressed(Keys.Space))
+        {
+            SelectMenuItem(_selectedIndex);
+        }
+        
+        // Back
+        if (_input.IsKeyPressed(Keys.Escape))
+        {
+            GoBack();
+        }
+    }
+}
+~~~
+
+---
+
+## Rebindable Controls
+
+~~~csharp
+public class KeyBindings
 {
     private readonly Dictionary<string, Keys> _bindings = new()
     {
+        ["MoveUp"] = Keys.W,
+        ["MoveDown"] = Keys.S,
+        ["MoveLeft"] = Keys.A,
+        ["MoveRight"] = Keys.D,
         ["Jump"] = Keys.Space,
-        ["Shoot"] = Keys.LeftControl,
-        ["Reload"] = Keys.R
+        ["Shoot"] = Keys.X,
+        ["Interact"] = Keys.E
     };
-    
-    public bool IsActionPressed(IInputService input, string action)
+
+    public Keys GetBinding(string action)
     {
-        if (_bindings.TryGetValue(action, out var key))
-        {
-            return input.IsKeyPressed(key);
-        }
-        
-        return false;
+        return _bindings.TryGetValue(action, out var key) ? key : Keys.Unknown;
     }
-    
-    public void RebindAction(string action, Keys newKey)
+
+    public void SetBinding(string action, Keys key)
     {
-        _bindings[action] = newKey;
-        SaveBindings(); // Persist to config file
+        _bindings[action] = key;
+    }
+
+    public void ResetToDefaults()
+    {
+        _bindings["MoveUp"] = Keys.W;
+        _bindings["MoveDown"] = Keys.S;
+        _bindings["MoveLeft"] = Keys.A;
+        _bindings["MoveRight"] = Keys.D;
+        _bindings["Jump"] = Keys.Space;
+        _bindings["Shoot"] = Keys.X;
+        _bindings["Interact"] = Keys.E;
     }
 }
 
 // Usage
-if (_inputMapper.IsActionPressed(_input, "Jump"))
+public class PlayerController
 {
-    Jump();
+    private readonly IInputService _input;
+    private readonly KeyBindings _bindings;
+
+    public void Update(GameTime gameTime)
+    {
+        var deltaTime = (float)gameTime.DeltaTime;
+        var direction = Vector2.Zero;
+        
+        // Use bindings instead of hardcoded keys
+        if (_input.IsKeyDown(_bindings.GetBinding("MoveUp")))
+            direction.Y -= 1;
+        if (_input.IsKeyDown(_bindings.GetBinding("MoveDown")))
+            direction.Y += 1;
+        if (_input.IsKeyDown(_bindings.GetBinding("MoveLeft")))
+            direction.X -= 1;
+        if (_input.IsKeyDown(_bindings.GetBinding("MoveRight")))
+            direction.X += 1;
+        
+        if (_input.IsKeyPressed(_bindings.GetBinding("Jump")))
+        {
+            Jump();
+        }
+    }
 }
-```
+~~~
 
 ---
 
-## Troubleshooting
+## Input Buffering
 
-### Problem: Key Not Detected
+Buffer inputs for more responsive controls:
 
-**Symptom:** `IsKeyPressed()` always returns false
+~~~csharp
+public class InputBuffer
+{
+    private readonly Dictionary<Keys, float> _buffer = new();
+    private const float BufferTime = 0.15f; // 150ms buffer
 
-**Solutions:**
+    public void Update(IInputService input, GameTime gameTime)
+    {
+        var deltaTime = (float)gameTime.DeltaTime;
+        
+        // Add pressed keys to buffer
+        if (input.IsKeyPressed(Keys.Space))
+        {
+            _buffer[Keys.Space] = BufferTime;
+        }
+        
+        // Decay buffer times
+        var keysToRemove = new List<Keys>();
+        foreach (var key in _buffer.Keys.ToList())
+        {
+            _buffer[key] -= deltaTime;
+            if (_buffer[key] <= 0)
+            {
+                keysToRemove.Add(key);
+            }
+        }
+        
+        foreach (var key in keysToRemove)
+        {
+            _buffer.Remove(key);
+        }
+    }
 
-1. **Check key name**
-   ```csharp
-   // ❌ Wrong
-   if (_input.IsKeyPressed(Keys.0)) // Compile error!
-   
-   // ✅ Correct
-   if (_input.IsKeyPressed(Keys.D0)) // Number keys have 'D' prefix
-   ```
+    public bool IsInBuffer(Keys key)
+    {
+        return _buffer.ContainsKey(key);
+    }
 
-2. **Check input service is injected**
-   ```csharp
-   // Constructor must inject IInputService
-   public MyScene(IInputService input, ILogger<MyScene> logger) 
-       : base(logger)
-   {
-       _input = input; // Don't forget to store!
-   }
-   ```
+    public void Consume(Keys key)
+    {
+        _buffer.Remove(key);
+    }
+}
+
+// Usage for jump buffering
+public class PlayerJump
+{
+    private readonly InputBuffer _buffer;
+
+    public void Update(GameTime gameTime)
+    {
+        _buffer.Update(_input, gameTime);
+        
+        // Check buffered jump when landing
+        if (JustLanded() && _buffer.IsInBuffer(Keys.Space))
+        {
+            Jump();
+            _buffer.Consume(Keys.Space);
+        }
+    }
+}
+~~~
 
 ---
 
-### Problem: Movement Too Fast/Slow
+## Complete Example
 
-**Symptom:** Player zooms or crawls
+~~~csharp
+using Brine2D.Core;
+using Brine2D.Engine;
+using Brine2D.Input;
+using Brine2D.Rendering;
+using Microsoft.Extensions.Logging;
+using System.Numerics;
 
-**Solution:** Use delta time for frame-rate independence:
-
-```csharp
-// ❌ Bad - frame-rate dependent
-if (_input.IsKeyDown(Keys.W))
+public class KeyboardDemoScene : Scene
 {
-    _playerY -= 5; // Moves 5 pixels per frame
+    private readonly IInputService _input;
+    private readonly IRenderer _renderer;
+    
+    private Vector2 _playerPosition = new(400, 300);
+    private readonly float _speed = 200f;
+    private bool _isRunning = false;
+
+    public KeyboardDemoScene(
+        IInputService input,
+        IRenderer renderer,
+        ILogger<KeyboardDemoScene> logger) : base(logger)
+    {
+        _input = input;
+        _renderer = renderer;
+    }
+
+    protected override void OnUpdate(GameTime gameTime)
+    {
+        var deltaTime = (float)gameTime.DeltaTime;
+        
+        // Sprint with Shift
+        _isRunning = _input.IsKeyDown(Keys.LeftShift);
+        var currentSpeed = _isRunning ? _speed * 2f : _speed;
+        
+        // WASD movement
+        var direction = Vector2.Zero;
+        if (_input.IsKeyDown(Keys.W)) direction.Y -= 1;
+        if (_input.IsKeyDown(Keys.S)) direction.Y += 1;
+        if (_input.IsKeyDown(Keys.A)) direction.X -= 1;
+        if (_input.IsKeyDown(Keys.D)) direction.X += 1;
+        
+        // Normalize diagonal movement
+        if (direction != Vector2.Zero)
+        {
+            direction = Vector2.Normalize(direction);
+        }
+        
+        _playerPosition += direction * currentSpeed * deltaTime;
+        
+        // Actions on key press
+        if (_input.IsKeyPressed(Keys.Space))
+        {
+            Logger.LogInformation("Jump!");
+        }
+        
+        if (_input.IsKeyPressed(Keys.X))
+        {
+            Logger.LogInformation("Shoot!");
+        }
+        
+        // Debug toggles
+        if (_input.IsKeyDown(Keys.LeftCtrl) && 
+            _input.IsKeyPressed(Keys.D))
+        {
+            Logger.LogInformation("Debug mode toggled");
+        }
+    }
+
+    protected override void OnRender(GameTime gameTime)
+    {
+        _renderer.Clear(new Color(20, 20, 30));
+        
+        // Draw player
+        var color = _isRunning ? Color.Red : Color.Blue;
+        _renderer.DrawRectangleFilled(
+            _playerPosition.X - 16,
+            _playerPosition.Y - 16,
+            32, 32,
+            color);
+        
+        // Draw instructions
+        _renderer.DrawText("WASD: Move", 10, 10, Color.White);
+        _renderer.DrawText("Shift: Sprint", 10, 30, Color.White);
+        _renderer.DrawText("Space: Jump", 10, 50, Color.White);
+        _renderer.DrawText("X: Shoot", 10, 70, Color.White);
+        _renderer.DrawText("Ctrl+D: Debug", 10, 90, Color.White);
+    }
 }
-
-// ✅ Good - frame-rate independent
-if (_input.IsKeyDown(Keys.W))
-{
-    _playerY -= _speed * deltaTime; // Moves at constant real-world speed
-}
-```
-
----
-
-### Problem: Diagonal Movement Too Fast
-
-**Symptom:** Moving diagonally (W+D) is √2 faster
-
-**Solution:** Normalize movement vector:
-
-```csharp
-// ❌ Bad
-if (_input.IsKeyDown(Keys.W)) _playerY -= speed * dt;
-if (_input.IsKeyDown(Keys.D)) _playerX += speed * dt;
-// Diagonal = speed * √2 ≈ 1.41x!
-
-// ✅ Good
-var movement = Vector2.Zero;
-if (_input.IsKeyDown(Keys.W)) movement.Y -= 1;
-if (_input.IsKeyDown(Keys.D)) movement.X += 1;
-
-if (movement != Vector2.Zero)
-{
-    movement = Vector2.Normalize(movement); // Length = 1
-    _playerPosition += movement * speed * dt;
-}
-```
-
----
-
-### Problem: Keys Stuck After Alt+Tab
-
-**Symptom:** Keys remain "pressed" after window loses focus
-
-**Note:** SDL3 handles this automatically! Keys are released when window loses focus.
+~~~
 
 ---
 
@@ -652,85 +899,282 @@ if (movement != Vector2.Zero)
 
 ### DO
 
-1. **Use `IsKeyPressed` for discrete actions**
-   ```csharp
-   if (_input.IsKeyPressed(Keys.Space)) Jump();
-   ```
+1. **Use appropriate key state**
+   ~~~csharp
+   // ✅ Good - continuous movement
+   if (_input.IsKeyDown(Keys.W))
+   {
+       MoveForward(deltaTime);
+   }
+   
+   // ✅ Good - single action
+   if (_input.IsKeyPressed(Keys.Space))
+   {
+       Jump();
+   }
+   ~~~
 
-2. **Use `IsKeyDown` for continuous actions**
-   ```csharp
-   if (_input.IsKeyDown(Keys.W)) MoveForward(deltaTime);
-   ```
+2. **Normalize diagonal movement**
+   ~~~csharp
+   // ✅ Good - consistent speed in all directions
+   if (direction != Vector2.Zero)
+   {
+       direction = Vector2.Normalize(direction);
+   }
+   _position += direction * speed * deltaTime;
+   ~~~
 
-3. **Always use delta time for movement**
-   ```csharp
-   position += velocity * deltaTime;
-   ```
+3. **Use deltaTime for movement**
+   ~~~csharp
+   // ✅ Good - frame-rate independent
+   _position += velocity * (float)gameTime.DeltaTime;
+   ~~~
 
-4. **Normalize movement vectors**
-   ```csharp
-   if (movement != Vector2.Zero)
-       movement = Vector2.Normalize(movement);
-   ```
+4. **Support multiple keys**
+   ~~~csharp
+   // ✅ Good - WASD and arrow keys
+   if (_input.IsKeyDown(Keys.W) || _input.IsKeyDown(Keys.Up))
+   {
+       MoveUp();
+   }
+   ~~~
 
-5. **Provide key rebinding**
-   - Let players customize controls
-   - Store in config file
-
-6. **Support multiple keys for same action**
-   ```csharp
-   bool jump = _input.IsKeyPressed(Keys.Space) || 
-               _input.IsKeyPressed(Keys.W);
-   ```
+5. **Make controls rebindable**
+   ~~~csharp
+   // ✅ Good - use key bindings
+   var jumpKey = _bindings.GetBinding("Jump");
+   if (_input.IsKeyPressed(jumpKey))
+   {
+       Jump();
+   }
+   ~~~
 
 ### DON'T
 
-1. **Don't poll input outside OnUpdate**
-   ```csharp
-   // ❌ Bad - won't update!
-   protected override void OnInitialize()
+1. **Don't use IsKeyPressed for continuous actions**
+   ~~~csharp
+   // ❌ Bad - only moves one frame
+   if (_input.IsKeyPressed(Keys.W))
    {
-       if (_input.IsKeyDown(Keys.W)) // Never true here!
+       _position.Y -= speed * deltaTime;
    }
-   ```
-
-2. **Don't forget delta time**
-   ```csharp
-   // ❌ Bad
-   _playerX += 5; // Frame-rate dependent!
    
-   // ✅ Good
-   _playerX += _speed * deltaTime;
-   ```
-
-3. **Don't check IsKeyPressed in loops**
-   ```csharp
-   // ❌ Bad - only true once per frame!
-   while (gameRunning)
+   // ✅ Good - moves while held
+   if (_input.IsKeyDown(Keys.W))
    {
-       if (_input.IsKeyPressed(Keys.Space)) // Won't work!
+       _position.Y -= speed * deltaTime;
    }
-   ```
+   ~~~
+
+2. **Don't forget deltaTime**
+   ~~~csharp
+   // ❌ Bad - frame-rate dependent
+   if (_input.IsKeyDown(Keys.W))
+   {
+       _position.Y -= speed;
+   }
+   
+   // ✅ Good - frame-rate independent
+   if (_input.IsKeyDown(Keys.W))
+   {
+       _position.Y -= speed * deltaTime;
+   }
+   ~~~
+
+3. **Don't forget diagonal normalization**
+   ~~~csharp
+   // ❌ Bad - moves faster diagonally
+   if (_input.IsKeyDown(Keys.W)) _velocity.Y = -1;
+   if (_input.IsKeyDown(Keys.D)) _velocity.X = 1;
+   // Diagonal: sqrt(1² + 1²) = 1.41 (41% faster!)
+   
+   // ✅ Good - consistent speed
+   if (direction != Vector2.Zero)
+   {
+       direction = Vector2.Normalize(direction);
+   }
+   ~~~
+
+4. **Don't hardcode keys everywhere**
+   ~~~csharp
+   // ❌ Bad - hard to rebind
+   if (_input.IsKeyDown(Keys.W)) { ... }
+   
+   // ✅ Good - use bindings
+   if (_input.IsKeyDown(_bindings.GetBinding("MoveUp"))) { ... }
+   ~~~
+
+---
+
+## Troubleshooting
+
+### Problem: Keys not responding
+
+**Symptom:** Key presses don't register.
+
+**Solutions:**
+
+1. **Check input service is injected:**
+   ~~~csharp
+   public GameScene(IInputService input, ...) : base(...)
+   {
+       _input = input; // Store it!
+   }
+   ~~~
+
+2. **Verify SDL3 input is registered:**
+   ~~~csharp
+   // In Program.cs
+   builder.Services.AddSDL3Input(); // Required!
+   ~~~
+
+3. **Check input is polled in Update:**
+   ~~~csharp
+   protected override void OnUpdate(GameTime gameTime)
+   {
+       // Must be in Update, not Render!
+       if (_input.IsKeyDown(Keys.Space)) { ... }
+   }
+   ~~~
+
+---
+
+### Problem: Movement too fast/slow
+
+**Symptom:** Player moves incorrectly.
+
+**Solution:** Use deltaTime:
+
+~~~csharp
+// ✅ Correct
+_position += velocity * (float)gameTime.DeltaTime;
+
+// ❌ Wrong
+_position += velocity; // Speed depends on FPS!
+~~~
+
+---
+
+### Problem: Diagonal movement faster
+
+**Symptom:** Moving diagonally is 41% faster.
+
+**Solution:** Normalize direction vector:
+
+~~~csharp
+var direction = GetInputDirection();
+if (direction != Vector2.Zero)
+{
+    direction = Vector2.Normalize(direction); // Fix!
+}
+_position += direction * speed * deltaTime;
+~~~
+
+---
+
+### Problem: Action repeats unexpectedly
+
+**Symptom:** Jump/shoot happens multiple times.
+
+**Solution:** Use IsKeyPressed, not IsKeyDown:
+
+~~~csharp
+// ❌ Wrong - repeats every frame
+if (_input.IsKeyDown(Keys.Space))
+{
+    Jump(); // Jumps 60 times per second!
+}
+
+// ✅ Correct - once per press
+if (_input.IsKeyPressed(Keys.Space))
+{
+    Jump(); // Jumps once
+}
+~~~
 
 ---
 
 ## Summary
 
-| Method | When True | Use For |
-|--------|-----------|---------|
-| `IsKeyDown(key)` | Every frame held | Movement, continuous actions |
-| `IsKeyPressed(key)` | First frame only | Jump, shoot, single actions |
-| `IsKeyReleased(key)` | Frame of release | Charge attacks, release detection |
+**Key states:**
+
+| Method | Usage | Example |
+|--------|-------|---------|
+| `IsKeyDown()` | Key currently held | Movement, sprint |
+| `IsKeyPressed()` | Key just pressed | Jump, shoot, toggle |
+| `IsKeyReleased()` | Key just released | Charge attacks |
+
+**Common patterns:**
+
+| Pattern | Keys | Code |
+|---------|------|------|
+| **WASD Movement** | W/A/S/D | `IsKeyDown()` + deltaTime |
+| **Jump** | Space | `IsKeyPressed()` when grounded |
+| **Sprint** | Shift | `IsKeyDown()` modifier |
+| **Menu Navigate** | Arrow/Enter | `IsKeyPressed()` |
+
+**Key groups:**
+
+| Group | Keys |
+|-------|------|
+| **Movement** | WASD, Arrow keys |
+| **Modifiers** | Shift, Ctrl, Alt |
+| **Actions** | Space, Enter, E, X |
+| **Numbers** | D1-D0, Numpad1-0 |
+| **Function** | F1-F12 |
 
 ---
 
 ## Next Steps
 
-- **[Mouse Input](mouse.md)** - Handle clicks and cursor
-- **[Gamepad Support](gamepad.md)** - Add controller support
-- **[Input Layers](input-layers.md)** - Priority-based input routing
-- **[Player Movement](../mechanics/movement.md)** - Complete movement system
+- **[Mouse Input](mouse.md)** - Handle mouse input
+- **[Gamepad Input](gamepad.md)** - Controller support
+- **[Input Layers](layers.md)** - Priority-based input
+- **[First Game](../../getting-started/first-game.md)** - Build a complete game
 
 ---
 
-Ready to add mouse support? Check out [Mouse Input](mouse.md)!
+## Quick Reference
+
+~~~csharp
+// Inject input service
+public GameScene(IInputService input, ...) : base(...)
+{
+    _input = input;
+}
+
+// Check key states
+if (_input.IsKeyDown(Keys.W))        // Held down
+if (_input.IsKeyPressed(Keys.Space)) // Just pressed
+if (_input.IsKeyReleased(Keys.X))    // Just released
+
+// WASD movement
+var direction = Vector2.Zero;
+if (_input.IsKeyDown(Keys.W)) direction.Y -= 1;
+if (_input.IsKeyDown(Keys.S)) direction.Y += 1;
+if (_input.IsKeyDown(Keys.A)) direction.X -= 1;
+if (_input.IsKeyDown(Keys.D)) direction.X += 1;
+
+// Normalize diagonal movement
+if (direction != Vector2.Zero)
+{
+    direction = Vector2.Normalize(direction);
+}
+
+// Apply movement with deltaTime
+_position += direction * speed * (float)gameTime.DeltaTime;
+
+// Modifier keys
+var isShiftHeld = _input.IsKeyDown(Keys.LeftShift) || 
+                  _input.IsKeyDown(Keys.RightShift);
+
+// Key combinations
+if (IsCtrlHeld() && _input.IsKeyPressed(Keys.S))
+{
+    SaveGame();
+}
+~~~
+
+---
+
+Ready to learn about mouse input? Check out [Mouse Input](mouse.md)!

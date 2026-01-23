@@ -59,10 +59,21 @@ Every scene goes through a **5-phase lifecycle** with automatic ECS and frame ma
 
 ```mermaid
 sequenceDiagram
+    box rgba(30, 58, 95, 0.3) SceneManager Layer
     participant SM as SceneManager
+    end
+    
+    box rgba(45, 80, 22, 0.3) Lifecycle Hooks
     participant H as LifecycleHooks
+    end
+    
+    box rgba(74, 45, 74, 0.3) Scene Layer
     participant S as Scene
+    end
+    
+    box rgba(61, 61, 42, 0.3) DI Container
     participant DI as DIContainer
+    end
     
     Note over SM: LoadSceneAsync<GameScene>
     
@@ -115,22 +126,6 @@ sequenceDiagram
     S->>SM: Task completed
     
     Note over DI: Scene instance disposed
-    
-    box rgba(30, 58, 95, 0.3) SceneManager Layer
-    participant SM
-    end
-    
-    box rgba(45, 80, 22, 0.3) Lifecycle Hooks
-    participant H
-    end
-    
-    box rgba(74, 45, 74, 0.3) Scene Layer
-    participant S
-    end
-    
-    box rgba(61, 61, 42, 0.3) DI Container
-    participant DI
-    end
 ```
 
 ### Phase 1: Constructor (Dependency Injection)

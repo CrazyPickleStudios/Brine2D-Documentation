@@ -1,603 +1,809 @@
 ---
 title: Installation
-description: Install Brine2D and set up your development environment
+description: Install Brine2D and set up your development environment for .NET 10 game development
 ---
 
 # Installation
 
-Get Brine2D installed and ready for game development in just a few minutes.
+Get Brine2D up and running in minutes with .NET 10 and your favorite IDE.
+
+## Overview
+
+Brine2D is a **2-package system** for .NET 10:
+
+- **Brine2D** - Core engine (ECS, scenes, abstractions)
+- **Brine2D.SDL** - Platform layer (rendering, input, audio)
+
+Optional packages:
+- **Brine2D.Tilemap** - Tiled map support
+- **Brine2D.UI** - UI framework
+
+~~~mermaid
+graph LR
+    A[Your Game] --> B[Brine2D]
+    A --> C[Brine2D.SDL]
+    A -.-> D[Brine2D.Tilemap]
+    A -.-> E[Brine2D.UI]
+    
+    C --> B
+    D --> B
+    E --> B
+    
+    style B fill:#2d5016,stroke:#4ec9b0,stroke-width:3px,color:#fff
+    style C fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style D fill:#4a3d1f,stroke:#ce9178,stroke-width:1px,color:#fff
+    style E fill:#4a3d1f,stroke:#ce9178,stroke-width:1px,color:#fff
+    style A fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
+~~~
+
+---
 
 ## Prerequisites
 
-Before you begin, make sure you have:
+### Required
 
-- **[.NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0)** or later
-- A code editor:
-  - **[Visual Studio 2022](https://visualstudio.microsoft.com/)** (17.9+) - Full IDE with debugging
-  - **[Visual Studio Code](https://code.visualstudio.com/)** - Lightweight with C# extension
-  - **[JetBrains Rider](https://www.jetbrains.com/rider/)** - Cross-platform IDE
-- **Basic C# knowledge** - Familiarity with C# and .NET
+- ✅ **.NET 10 SDK** - [Download here](https://dotnet.microsoft.com/download/dotnet/10.0)
+- ✅ **IDE** - Visual Studio 2022, VS Code, or Rider
 
-!!! tip "Verify .NET Installation"
-    Open a terminal and run:
-    ```bash
-    dotnet --version
-    ```
-    You should see `10.0.x` or higher.
+### Optional
+
+- 💡 **Git** - For cloning samples
+- 💡 **Tiled** - For creating tilemaps (if using Brine2D.Tilemap)
 
 ---
 
-## Installation Methods
+## Verify .NET 10
 
-Choose the method that works best for you:
+Check your .NET version:
 
-### Method 1: NuGet Package (Recommended)
+~~~sh
+dotnet --version
+~~~
 
-The easiest way to get started. Perfect for most users.
+**Expected output:**
 
-**1. Create a new project:**
+~~~
+10.0.xxx
+~~~
 
-```bash
+If you see `9.x` or earlier, [download .NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0).
+
+---
+
+## Quick Install
+
+### Option 1: New Project (Recommended)
+
+Create a new game from scratch:
+
+~~~sh
+# Create project
 dotnet new console -n MyGame
 cd MyGame
-```
 
-**2. Add Brine2D:**
+# Add Brine2D packages
+dotnet add package Brine2D --version 0.9.0-beta
+dotnet add package Brine2D.SDL --version 0.9.0-beta
 
-```bash
-dotnet add package Brine2D.Desktop
-```
+# Optional: Add tilemap support
+dotnet add package Brine2D.Tilemap --version 0.9.0-beta
 
-**3. Done!** You're ready to start coding.
+# Optional: Add UI framework
+dotnet add package Brine2D.UI --version 0.9.0-beta
+~~~
 
----
+**Project structure:**
 
-### Method 2: Visual Studio (GUI)
-
-If you prefer Visual Studio's interface:
-
-**1. Create a new project:**
-
-- File → New → Project
-- Select **Console App** (.NET 10)
-- Name it `MyGame`
-- Click **Create**
-
-**2. Add NuGet Package:**
-
-- Right-click project → **Manage NuGet Packages**
-- Click **Browse** tab
-- Check **Include prerelease**
-- Search for `Brine2D.Desktop`
-- Click **Install**
-
-**3. Done!** Start coding in `Program.cs`.
+~~~
+MyGame/
+├── MyGame.csproj
+├── Program.cs
+└── assets/          (create this folder)
+    ├── textures/
+    ├── sounds/
+    └── music/
+~~~
 
 ---
 
-### Method 3: Building from Source
+### Option 2: Add to Existing Project
 
-For contributors or users who want the latest development version:
+Add Brine2D to an existing .NET 10 project:
 
-**1. Clone the repository:**
+~~~sh
+# Navigate to your project
+cd YourExistingProject
 
-```bash
-git clone https://github.com/CrazyPickleStudios/Brine2D.git
-cd Brine2D
-```
-
-**2. Build the solution:**
-
-```bash
-dotnet build
-```
-
-**3. Reference in your game project:**
-
-Create your game project in a separate directory:
-
-```bash
-cd ..
-dotnet new console -n MyGame
-cd MyGame
-```
-
-Add project references:
-
-```bash
-dotnet add reference ../Brine2D/src/Brine2D.Core/Brine2D.Core.csproj
-dotnet add reference ../Brine2D/src/Brine2D.Engine/Brine2D.Engine.csproj
-dotnet add reference ../Brine2D/src/Brine2D.Hosting/Brine2D.Hosting.csproj
-dotnet add reference ../Brine2D/src/Brine2D.Rendering.SDL/Brine2D.Rendering.SDL.csproj
-dotnet add reference ../Brine2D/src/Brine2D.Input.SDL/Brine2D.Input.SDL.csproj
-dotnet add reference ../Brine2D/src/Brine2D.Audio.SDL/Brine2D.Audio.SDL.csproj
-dotnet add reference ../Brine2D/src/Brine2D.UI/Brine2D.UI.csproj
-dotnet add reference ../Brine2D/src/Brine2D.ECS/Brine2D.ECS.csproj
-```
+# Add packages
+dotnet add package Brine2D --version 0.9.0-beta
+dotnet add package Brine2D.SDL --version 0.9.0-beta
+~~~
 
 ---
 
-## Package Options
+### Option 3: Manual .csproj Edit
 
-Brine2D offers flexible package options depending on your needs:
+Edit your `.csproj` file directly:
 
-### Brine2D.Desktop (Recommended)
+~~~xml
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
 
-**The all-in-one package.** Includes everything you need for desktop game development.
+  <ItemGroup>
+    <!-- Core packages (required) -->
+    <PackageReference Include="Brine2D" Version="0.9.0-beta" />
+    <PackageReference Include="Brine2D.SDL" Version="0.9.0-beta" />
+    
+    <!-- Optional packages -->
+    <PackageReference Include="Brine2D.Tilemap" Version="0.9.0-beta" />
+    <PackageReference Include="Brine2D.UI" Version="0.9.0-beta" />
+  </ItemGroup>
+</Project>
+~~~
 
-```bash
-dotnet add package Brine2D.Desktop
-```
+Then restore packages:
 
-**Includes:**
-
-- ✅ Core abstractions (`Brine2D.Core`)
-- ✅ Game engine (`Brine2D.Engine`)
-- ✅ Hosting system (`Brine2D.Hosting`)
-- ✅ Entity Component System (`Brine2D.ECS`)
-- ✅ SDL3 rendering (`Brine2D.Rendering.SDL`)
-- ✅ SDL3 input (`Brine2D.Input.SDL`)
-- ✅ SDL3 audio (`Brine2D.Audio.SDL`)
-- ✅ UI framework (`Brine2D.UI`)
-
-**Perfect for:** 99% of users. Just install and start building!
-
----
-
-### Individual Packages (Advanced)
-
-For advanced users who want fine-grained control:
-
-**Core Packages:**
-
-```bash
-# Core abstractions and types
-dotnet add package Brine2D.Core
-
-# Game loop, scene management, and transitions
-dotnet add package Brine2D.Engine
-
-# ASP.NET-style hosting
-dotnet add package Brine2D.Hosting
-
-# Entity Component System
-dotnet add package Brine2D.ECS
-```
-
-**Abstraction Layers:**
-
-```bash
-# Rendering abstractions (IRenderer, ITexture, etc.)
-dotnet add package Brine2D.Rendering
-
-# Input abstractions (IInputService)
-dotnet add package Brine2D.Input
-
-# Audio abstractions (IAudioService)
-dotnet add package Brine2D.Audio
-```
-
-**SDL3 Implementations:**
-
-```bash
-# SDL3 rendering backend
-dotnet add package Brine2D.Rendering.SDL
-
-# SDL3 input backend
-dotnet add package Brine2D.Input.SDL
-
-# SDL3 audio backend
-dotnet add package Brine2D.Audio.SDL
-```
-
-**Extensions:**
-
-```bash
-# UI components (buttons, inputs, dialogs, tabs, etc.)
-dotnet add package Brine2D.UI
-```
-
-**Use case:** Custom setups, plugin development, or minimal dependencies.
+~~~sh
+dotnet restore
+~~~
 
 ---
 
 ## Verify Installation
 
-Let's verify everything is working correctly.
+Create a minimal `Program.cs` to test:
 
-### 1. Create a Test Program
-
-Replace your `Program.cs` with:
-
-```csharp
-using Brine2D.Core;
+~~~csharp
 using Brine2D.Hosting;
-using Brine2D.Input;
-using Brine2D.Input.SDL;
-using Brine2D.Rendering;
-using Brine2D.Rendering.SDL;
-using Microsoft.Extensions.Logging;
+using Brine2D.SDL;
+using Microsoft.Extensions.DependencyInjection;
 
 var builder = GameApplication.CreateBuilder(args);
 
 builder.Services.AddSDL3Rendering(options =>
 {
-    options.WindowTitle = "Brine2D Installation Test";
+    options.WindowTitle = "Brine2D Test";
     options.WindowWidth = 800;
     options.WindowHeight = 600;
 });
 
 builder.Services.AddSDL3Input();
-builder.Services.AddScene<TestScene>();
 
 var game = builder.Build();
-await game.RunAsync<TestScene>();
 
-public class TestScene : Scene
-{
-    private readonly IRenderer _renderer;
-    private readonly IInputService _input;
-    private readonly IGameContext _context;
+Console.WriteLine("✅ Brine2D installed successfully!");
+Console.WriteLine("Press any key to exit...");
+Console.ReadKey();
+~~~
 
-    public TestScene(
-        IRenderer renderer,
-        IInputService input,
-        IGameContext context,
-        ILogger<TestScene> logger
-    ) : base(logger)
-    {
-        _renderer = renderer;
-        _input = input;
-        _context = context;
-    }
+Run it:
 
-    protected override void OnRender(GameTime gameTime)
-    {
-        // Frame management happens automatically!
-        _renderer.DrawRectangleFilled(350, 250, 100, 100, Color.White);
-        _renderer.DrawText("Installation successful!", 250, 280, Color.White);
-        _renderer.DrawText("Press ESC to exit", 280, 320, Color.White);
-    }
-
-    protected override void OnUpdate(GameTime gameTime)
-    {
-        if (_input.IsKeyPressed(Keys.Escape))
-        {
-            _context.RequestExit();
-        }
-    }
-}
-```
-
-!!! tip Automatic Frame Management"
-    Notice we don't call `Clear()`, `BeginFrame()`, or `EndFrame()` - the framework handles this automatically!
-
-### 2. Run the Test
-
-```bash
+~~~sh
 dotnet run
-```
+~~~
 
-**Expected result:**
+**Expected output:**
 
-- A window opens with a blue background
-- White square in the center
-- Text: "Installation successful!"
-- Pressing **ESC** closes the window
-
-✅ **If you see this, Brine2D is installed correctly!**
+~~~
+✅ Brine2D installed successfully!
+Press any key to exit...
+~~~
 
 ---
 
-## Troubleshooting
-
-### "Could not find package Brine2D.Desktop"
-
-**Solution:**
-1. Make sure you're targeting .NET 10:
-   
-   ```xml
-   <TargetFramework>net10.0</TargetFramework>
-   ```
-
-2. Include prerelease packages:
-   
-   ```bash
-   dotnet add package Brine2D.Desktop --prerelease
-   ```
-
-3. Try restoring packages explicitly:
-   
-   ```bash
-   dotnet restore
-   ```
-
-4. Check NuGet.org is accessible:
-   
-   ```bash
-   dotnet nuget list source
-   ```
-
----
-
-### "SDL3 native libraries not found"
-
-**Cause:** SDL3 native binaries aren't being copied to output.
-
-**Solution:**
-
-1. Clean and rebuild:
-   
-   ```bash
-   dotnet clean
-   dotnet build
-   ```
-
-2. Verify SDL3-CS packages are installed:
-   
-   ```bash
-   dotnet list package
-   ```
-   
-   You should see:
-
-   - `SDL3-CS`
-   - `SDL3-CS.Native`
-   - `SDL3-CS.Native.TTF`
-   - `SDL3-CS.Native.Image`
-   - `SDL3-CS.Native.Mixer`
-
-3. If issues persist, manually download SDL3 from [libsdl.org](https://libsdl.org) and place DLLs in your output directory.
-
----
-
-### "Window doesn't appear" or "Black screen"
-
-**Solution:**
-
-1. Check logs for errors:
-   
-   ```bash
-   dotnet run --verbosity normal
-   ```
-
-2. Frame management is automatic. If using manual control, make sure you're calling `BeginFrame()` and `EndFrame()`:
-   
-   ```csharp
-   public override bool EnableAutomaticFrameManagement => false;
-   
-   protected override void OnRender(GameTime gameTime)
-   {
-       _renderer.Clear(Color.Black);
-       _renderer.BeginFrame();
-       
-       // Your drawing code...
-       
-       _renderer.EndFrame();
-   }
-   ```
-
-3. Verify graphics drivers are up to date.
-
----
-
-### "Text renders as rectangles"
-
-**Cause:** Default font isn't loading (rare).
-
-**Solution:**
-
-The embedded Roboto font should work automatically. If not:
-
-1. Download a `.ttf` font (e.g., [Roboto Mono](https://fonts.google.com/specimen/Roboto+Mono))
-2. Load it manually:
-
-```csharp
-protected override async Task OnLoadAsync(CancellationToken ct)
-{
-    var font = await _fontLoader.LoadFontAsync("path/to/font.ttf", 16, ct);
-    _renderer.SetDefaultFont(font);
-}
-```
-
----
-
-### ".NET 10 SDK not found"
-
-**Solution:**
-
-1. Download from [dotnet.microsoft.com](https://dotnet.microsoft.com/download/dotnet/10.0)
-2. Install the SDK (not just the runtime)
-3. Restart your terminal/IDE
-4. Verify:
-   
-   ```bash
-   dotnet --version
-   ```
-
----
-
-### Still Having Issues?
-
-1. **Check GitHub Issues:** [github.com/CrazyPickleStudios/Brine2D/issues](https://github.com/CrazyPickleStudios/Brine2D/issues)
-2. **Ask in Discussions:** [github.com/CrazyPickleStudios/Brine2D/discussions](https://github.com/CrazyPickleStudios/Brine2D/discussions)
-3. **Create an issue:** Include:
-   - OS and version
-   - .NET SDK version
-   - Full error message
-   - Stack trace
-
----
-
-## Platform-Specific Notes
-
-### Windows
-
-✅ **Fully supported** on Windows 10/11
-
-No additional setup required. SDL3 native libraries are included via NuGet.
-
----
-
-### Linux
-
-⚠️ **Should work but untested**
-
-SDL3 supports Linux, but we haven't tested Brine2D there yet.
-
-**If you try it:**
-
-1. Install .NET 10 SDK: [docs.microsoft.com/dotnet/core/install/linux](https://docs.microsoft.com/dotnet/core/install/linux)
-2. Install SDL3 dependencies:
-   
-   ```bash
-   # Ubuntu/Debian
-   sudo apt-get install libsdl3-dev
-   
-   # Fedora
-   sudo dnf install SDL3-devel
-   ```
-
-3. Let us know if it works! Open a discussion with your findings.
-
----
-
-### macOS
-
-⚠️ **Should work but untested**
-
-SDL3 supports macOS, but we haven't tested Brine2D there yet.
-
-**If you try it:**
-
-1. Install .NET 10 SDK: [docs.microsoft.com/dotnet/core/install/macos](https://docs.microsoft.com/dotnet/core/install/macos)
-2. Install SDL3 via Homebrew:
-   
-   ```bash
-   brew install sdl3
-   ```
-
-3. Report your results! We'd love to hear from Mac users.
-
----
-
-## Development Environment Setup
+## IDE Setup
 
 ### Visual Studio 2022
 
-**Recommended extensions:**
+1. **Open/Create Project**
+   - `File` → `New` → `Project`
+   - Choose **Console App** (.NET 10)
+   - Or open existing `.csproj`
 
-- **C# Dev Kit** (built-in)
-- **GitHub Copilot** (optional, but helpful)
-- **Hot Reload** (built-in, works great!)
+2. **Install Packages**
+   - Right-click project → `Manage NuGet Packages`
+   - Search "Brine2D"
+   - Install `Brine2D` and `Brine2D.SDL`
 
-**Settings:**
+3. **Enable Hot Reload** *(Optional but recommended)*
+   - `Tools` → `Options` → `Debugging` → `Hot Reload`
+   - ✅ Enable Hot Reload
 
-- Enable **Just My Code** for cleaner debugging
-- Set **Output Verbosity** to `Normal` to see Brine2D logs
+4. **Run**
+   - Press `F5` to build and run
+   - Or `Ctrl+F5` (run without debugging)
 
 ---
 
 ### Visual Studio Code
 
-**Required extensions:**
+1. **Install Extensions**
+   - [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit)
 
-1. [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit)
-2. [C#](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csharp)
+2. **Open Folder**
+   ~~~sh
+   code MyGame
+   ~~~
 
-**Recommended extensions:**
+3. **Install Packages**
+   - Open integrated terminal (`` Ctrl+` ``)
+   ~~~sh
+   dotnet add package Brine2D --version 0.9.0-beta
+   dotnet add package Brine2D.SDL --version 0.9.0-beta
+   ~~~
 
-- [GitHub Copilot](https://marketplace.visualstudio.com/items?itemName=GitHub.copilot)
-- [C# XML Documentation Comments](https://marketplace.visualstudio.com/items?itemName=k--kato.docomment)
-
-**Launch configuration (`.vscode/launch.json`):**
-
-```json
-{
-    "version": "0.2.0",
-    "configurations": [
-        {
-            "name": ".NET Launch",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build",
-            "program": "${workspaceFolder}/bin/Debug/net10.0/MyGame.dll",
-            "args": [],
-            "cwd": "${workspaceFolder}",
-            "console": "internalConsole",
-            "stopAtEntry": false
-        }
-    ]
-}
-```
+4. **Run**
+   - Press `F5` (creates launch.json automatically)
+   - Or terminal: `dotnet run`
 
 ---
 
 ### JetBrains Rider
 
-**Setup:**
+1. **Open/Create Project**
+   - `File` → `New Solution` → `Console Application` (.NET 10)
+   - Or open existing `.sln`/`.csproj`
 
-- Rider 2024.1+ recommended
-- .NET 10 SDK detected automatically
-- NuGet restore happens on project open
+2. **Install Packages**
+   - Right-click project → `Manage NuGet Packages`
+   - Search "Brine2D"
+   - Install `Brine2D` and `Brine2D.SDL`
 
-**Tips:**
+3. **Run**
+   - Press `Shift+F10` to run
+   - Or click ▶️ in toolbar
 
-- Use **Run/Debug Configurations** for different scenes
-- Enable **Hot Reload** for faster iteration
-- Use **Solution-Wide Analysis** to catch issues early
+---
+
+## Platform-Specific Setup
+
+### Windows
+
+**No additional setup required!** ✅
+
+SDL3 binaries are included in `Brine2D.SDL` package.
+
+---
+
+### Linux
+
+Install SDL3 dependencies:
+
+**Ubuntu/Debian:**
+
+~~~sh
+sudo apt-get update
+sudo apt-get install -y \
+    libsdl3-dev \
+    libsdl3-mixer-dev \
+    libsdl3-ttf-dev
+~~~
+
+**Fedora:**
+
+~~~sh
+sudo dnf install -y \
+    SDL3-devel \
+    SDL3_mixer-devel \
+    SDL3_ttf-devel
+~~~
+
+**Arch:**
+
+~~~sh
+sudo pacman -S sdl3 sdl3_mixer sdl3_ttf
+~~~
+
+**For GPU rendering (Vulkan):**
+
+~~~sh
+# Ubuntu/Debian
+sudo apt-get install vulkan-tools libvulkan-dev
+
+# Fedora
+sudo dnf install vulkan-tools vulkan-loader-devel
+
+# Arch
+sudo pacman -S vulkan-tools vulkan-icd-loader
+~~~
+
+Verify Vulkan:
+
+~~~sh
+vulkaninfo
+~~~
+
+---
+
+### macOS
+
+Install via Homebrew:
+
+~~~sh
+brew install sdl3 sdl3_mixer sdl3_ttf
+~~~
+
+**Note:** macOS uses Metal for GPU rendering (no Vulkan).
+
+---
+
+## Asset Setup
+
+Create folders for your game assets:
+
+~~~sh
+mkdir -p assets/textures
+mkdir -p assets/sounds
+mkdir -p assets/music
+mkdir -p assets/fonts
+mkdir -p assets/levels
+~~~
+
+**Project structure:**
+
+~~~
+MyGame/
+├── MyGame.csproj
+├── Program.cs
+├── Scenes/
+│   └── GameScene.cs
+└── assets/
+    ├── textures/
+    │   └── player.png
+    ├── sounds/
+    │   └── jump.wav
+    ├── music/
+    │   └── background.mp3
+    ├── fonts/
+    │   └── arial.ttf
+    └── levels/
+        └── level1.tmj
+~~~
+
+---
+
+## Package Details
+
+### Brine2D (Core Engine)
+
+**What's included:**
+
+- ✅ ECS framework
+- ✅ Scene management
+- ✅ Game loop
+- ✅ Event system
+- ✅ Built-in components (Transform, Velocity, etc.)
+- ✅ Built-in systems (Physics, AI, etc.)
+- ✅ Abstractions (IRenderer, IInputService, IAudioService)
+
+**Current version:** `0.9.0-beta`
+
+**Install:**
+
+~~~sh
+dotnet add package Brine2D --version 0.9.0-beta
+~~~
+
+---
+
+### Brine2D.SDL (Platform Layer)
+
+**What's included:**
+
+- ✅ SDL3GPURenderer (Vulkan/D3D12/Metal)
+- ✅ SDL3Renderer (legacy compatibility)
+- ✅ Input handling (keyboard, mouse, gamepad)
+- ✅ Audio (SDL3_mixer)
+- ✅ Texture loading
+- ✅ Font rendering (SDL3_ttf)
+- ✅ Texture atlasing
+- ✅ Post-processing
+
+**Current version:** `0.9.0-beta`
+
+**Install:**
+
+~~~sh
+dotnet add package Brine2D.SDL --version 0.9.0-beta
+~~~
+
+---
+
+### Brine2D.Tilemap (Optional)
+
+**What's included:**
+
+- ✅ Tiled (.tmj/.json) map loading
+- ✅ Tilemap rendering
+- ✅ Tileset support
+- ✅ Layer management
+
+**Current version:** `0.9.0-beta`
+
+**Install:**
+
+~~~sh
+dotnet add package Brine2D.Tilemap --version 0.9.0-beta
+~~~
+
+---
+
+### Brine2D.UI (Optional)
+
+**What's included:**
+
+- ✅ UI components (buttons, sliders, text inputs)
+- ✅ Layout system
+- ✅ Event handling
+- ✅ Theming
+
+**Current version:** `0.9.0-beta`
+
+**Install:**
+
+~~~sh
+dotnet add package Brine2D.UI --version 0.9.0-beta
+~~~
+
+---
+
+## Version Management
+
+### Check Installed Version
+
+~~~sh
+dotnet list package | grep Brine2D
+~~~
+
+**Output:**
+
+~~~
+> Brine2D           0.9.0-beta
+> Brine2D.SDL       0.9.0-beta
+~~~
+
+---
+
+### Update to Latest
+
+~~~sh
+# Update all packages
+dotnet add package Brine2D --version 0.9.0-beta
+dotnet add package Brine2D.SDL --version 0.9.0-beta
+~~~
+
+Or use wildcard for auto-updates:
+
+~~~xml
+<PackageReference Include="Brine2D" Version="0.9.*-*" />
+<PackageReference Include="Brine2D.SDL" Version="0.9.*-*" />
+~~~
+
+---
+
+### Pre-release Versions
+
+To use alpha/preview versions:
+
+~~~sh
+dotnet add package Brine2D --version 0.10.0-alpha
+~~~
+
+Or in `.csproj`:
+
+~~~xml
+<PackageReference Include="Brine2D" Version="0.10.0-alpha" />
+~~~
+
+---
+
+## Troubleshooting
+
+### Problem: Package Not Found
+
+**Symptom:**
+
+~~~
+error NU1101: Unable to find package Brine2D
+~~~
+
+**Solutions:**
+
+1. **Check NuGet source**
+   ~~~sh
+   dotnet nuget list source
+   ~~~
+
+   Should include `nuget.org`:
+   ~~~
+   https://api.nuget.org/v3/index.json
+   ~~~
+
+2. **Clear NuGet cache**
+   ~~~sh
+   dotnet nuget locals all --clear
+   dotnet restore
+   ~~~
+
+3. **Verify package name**
+   ~~~csharp
+   // ❌ Wrong
+   dotnet add package Brine2D-Engine
+   
+   // ✅ Correct
+   dotnet add package Brine2D
+   ~~~
+
+---
+
+### Problem: Wrong .NET Version
+
+**Symptom:**
+
+~~~
+error NETSDK1045: The current .NET SDK does not support targeting .NET 10.0
+~~~
+
+**Solution:**
+
+1. **Download .NET 10 SDK**: https://dotnet.microsoft.com/download/dotnet/10.0
+
+2. **Verify installation**:
+   ~~~sh
+   dotnet --version
+   ~~~
+
+3. **Update global.json** (if present):
+   ~~~json
+   {
+     "sdk": {
+       "version": "10.0.100"
+     }
+   }
+   ~~~
+
+---
+
+### Problem: SDL3 Not Found (Linux)
+
+**Symptom:**
+
+~~~
+error: libSDL3.so: cannot open shared object file
+~~~
+
+**Solution:**
+
+Install SDL3 development libraries:
+
+~~~sh
+# Ubuntu/Debian
+sudo apt-get install libsdl3-dev libsdl3-mixer-dev libsdl3-ttf-dev
+
+# Fedora
+sudo dnf install SDL3-devel SDL3_mixer-devel SDL3_ttf-devel
+
+# Arch
+sudo pacman -S sdl3 sdl3_mixer sdl3_ttf
+~~~
+
+---
+
+### Problem: Vulkan Not Available (Linux)
+
+**Symptom:**
+
+~~~
+GPU device creation failed: Vulkan not supported
+~~~
+
+**Solution:**
+
+1. **Install Vulkan drivers**:
+   ~~~sh
+   # Ubuntu/Debian
+   sudo apt-get install vulkan-tools libvulkan-dev
+   
+   # Fedora
+   sudo dnf install vulkan-tools vulkan-loader-devel
+   
+   # Arch
+   sudo pacman -S vulkan-tools vulkan-icd-loader
+   ~~~
+
+2. **Verify Vulkan**:
+   ~~~sh
+   vulkaninfo
+   ~~~
+
+3. **Fallback to legacy renderer**:
+   ~~~csharp
+   builder.Services.AddSDL3Rendering(options =>
+   {
+       options.Backend = GraphicsBackend.LegacyRenderer;
+   });
+   ~~~
+
+---
+
+### Problem: Assets Not Found
+
+**Symptom:**
+
+~~~
+FileNotFoundException: Could not find file 'assets/player.png'
+~~~
+
+**Solution:**
+
+1. **Check file location**:
+   - Assets must be relative to **executable location**
+   - Default: `bin/Debug/net10.0/`
+
+2. **Copy assets to output**:
+
+   **Option 1: Add to .csproj**
+   ~~~xml
+   <ItemGroup>
+     <None Update="assets\**\*">
+       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+     </None>
+   </ItemGroup>
+   ~~~
+
+   **Option 2: Manually copy**
+   ~~~sh
+   cp -r assets bin/Debug/net10.0/
+   ~~~
+
+3. **Use absolute paths** (not recommended):
+   ~~~csharp
+   var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "assets", "player.png");
+   ~~~
+
+---
+
+## Best Practices
+
+### DO
+
+1. **Use specific package versions in production**
+   ~~~xml
+   <PackageReference Include="Brine2D" Version="0.9.0-beta" />
+   ~~~
+
+2. **Copy assets to output directory**
+   ~~~xml
+   <None Update="assets\**\*">
+     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+   </None>
+   ~~~
+
+3. **Use .gitignore for packages**
+   ~~~
+   bin/
+   obj/
+   .vs/
+   *.user
+   ~~~
+
+4. **Keep packages in sync**
+   ~~~sh
+   # Update all at once
+   dotnet add package Brine2D --version 0.9.0-beta
+   dotnet add package Brine2D.SDL --version 0.9.0-beta
+   ~~~
+
+5. **Use centralized asset folders**
+   ~~~
+   assets/
+   ├── textures/
+   ├── sounds/
+   └── music/
+   ~~~
+
+### DON'T
+
+1. **Don't mix package versions**
+   ~~~xml
+   <!-- ❌ Bad - version mismatch -->
+   <PackageReference Include="Brine2D" Version="0.9.0-beta" />
+   <PackageReference Include="Brine2D.SDL" Version="0.8.0-beta" />
+   ~~~
+
+2. **Don't commit packages to Git**
+   ~~~
+   # ✅ Add to .gitignore
+   bin/
+   obj/
+   ~~~
+
+3. **Don't hard-code asset paths**
+   ~~~csharp
+   // ❌ Bad
+   var texture = await renderer.LoadTextureAsync("C:\\MyGame\\assets\\player.png");
+   
+   // ✅ Good
+   var texture = await renderer.LoadTextureAsync("assets/textures/player.png");
+   ~~~
+
+---
+
+## Summary
+
+| Package | Purpose | Required? | Version |
+|---------|---------|-----------|---------|
+| **Brine2D** | Core engine | ✅ Yes | `0.9.0-beta` |
+| **Brine2D.SDL** | Platform layer | ✅ Yes | `0.9.0-beta` |
+| **Brine2D.Tilemap** | Tilemap support | ❌ Optional | `0.9.0-beta` |
+| **Brine2D.UI** | UI framework | ❌ Optional | `0.9.0-beta` |
+
+**Minimum requirements:**
+- .NET 10 SDK
+- Brine2D + Brine2D.SDL packages
+- IDE (VS 2022, VS Code, or Rider)
+
+**Platform notes:**
+- **Windows**: Works out of the box
+- **Linux**: Requires SDL3 dev packages
+- **macOS**: Requires Homebrew SDL3
 
 ---
 
 ## Next Steps
 
-Now that Brine2D is installed:
+Now that Brine2D is installed, let's create your first game! 🎮
 
-1. **[Quick Start →](quickstart.md)** - Build your first game in 5 minutes
-2. **[First Game →](first-game.md)** - Create a complete game with collision and scoring
-3. **[FeatureDemos →](../samples/index.md)** - Explore 6 interactive demos showcasing features
-4. **[Core Concepts →](../concepts/index.md)** - Deep dive into Brine2D's architecture
-
----
-
-## Keeping Brine2D Updated
-
-### Check for Updates
-
-```bash
-dotnet list package --outdated
-```
-
-### Update to Latest Version
-
-```bash
-dotnet add package Brine2D.Desktop
-```
-
-### Pre-release Versions
-
-To use the latest pre-release (alpha/beta):
-
-```bash
-dotnet add package Brine2D.Desktop --prerelease
-```
+- **[Quick Start](quickstart.md)** - Create your first scene in 5 minutes
+- **[Your First Game](first-game.md)** - Build a complete game
+- **[Project Structure](project-structure.md)** - Organize your project
+- **[Configuration](configuration.md)** - Configure your game
 
 ---
 
-## Uninstalling
+## Quick Reference
 
-To remove Brine2D from a project:
+~~~sh
+# Create new project
+dotnet new console -n MyGame
+cd MyGame
 
-```bash
-dotnet remove package Brine2D.Desktop
-```
+# Install packages
+dotnet add package Brine2D --version 0.9.0-beta
+dotnet add package Brine2D.SDL --version 0.9.0-beta
 
-Clean up build artifacts:
+# Verify installation
+dotnet list package | grep Brine2D
 
-```bash
-dotnet clean
-```
+# Run project
+dotnet run
+~~~
+
+~~~xml
+<!-- Minimal .csproj -->
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="Brine2D" Version="0.9.0-beta" />
+    <PackageReference Include="Brine2D.SDL" Version="0.9.0-beta" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Update="assets\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>
+~~~
 
 ---
 
-✅ **Installation complete!** Ready to build your first game? Head to the [Quick Start](quickstart.md) guide!
+Ready to create your first game? Head to [Quick Start](quickstart.md)!

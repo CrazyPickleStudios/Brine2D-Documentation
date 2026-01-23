@@ -1,174 +1,50 @@
 ---
 title: Mouse Input
-description: Handle mouse clicks, movement, and scroll wheel in Brine2D
+description: Handle mouse input in Brine2D - clicks, movement, dragging, and cursor control
 ---
 
 # Mouse Input
 
-Master mouse input handling in Brine2D for point-and-click gameplay, UI interaction, and camera control.
+Learn how to handle mouse input in your Brine2D games.
 
 ## Overview
 
-Brine2D provides comprehensive mouse input via `IInputService`:
-- ✅ **Mouse buttons** - Left, right, middle, X1, X2
-- ✅ **Mouse position** - Screen coordinates
-- ✅ **Mouse delta** - Movement since last frame
-- ✅ **Scroll wheel** - Zoom, scroll, etc.
+Brine2D's mouse input system provides:
 
-```mermaid
-sequenceDiagram
-    participant Game as Your Scene
-    participant Input as IInputService
-    participant SDL as SDL3
-    
-    Note over SDL: Player Clicks Mouse
-    SDL->>Input: MouseButtonDown Event
-    
-    Note over Game: Each Frame
-    Game->>Input: MousePosition?
-    Input->>Game: Vector2(125, 340)
-    
-    Game->>Input: IsMouseButtonPressed(Left)?
-    Input->>Game: true (first frame only)
-    
-    Game->>Input: IsMouseButtonDown(Left)?
-    Input->>Game: true (while held)
-    
-    Note over SDL: Player Moves Mouse
-    SDL->>Input: MouseMotion Event
-    
-    Game->>Input: MouseDelta?
-    Input->>Game: Vector2(5, -2)
-    
-    Note over SDL: Player Scrolls Wheel
-    SDL->>Input: MouseWheel Event
-    
-    Game->>Input: ScrollWheelDelta?
-    Input->>Game: 1.0 (scroll up)
-```
+- **Button States** - Down, pressed, released
+- **Position** - Absolute screen coordinates
+- **Movement** - Delta/relative motion
+- **Scroll Wheel** - Vertical and horizontal scrolling
+- **Cursor Control** - Show, hide, lock cursor
+- **Drag Detection** - Click and drag operations
+
+**Powered by:** SDL3 input system
 
 ---
 
-## Prerequisites
+## Setup
 
-- ✅ [Quick Start](../getting-started/quickstart.md) - Basic scene setup
-- ✅ [Keyboard Input](keyboard.md) - Understanding input basics
+### Inject Input Service
 
----
+In your scene:
 
-## Quick Example
-
-```csharp
-using Brine2D.Core;
+~~~csharp
+using Brine2D.Engine;
 using Brine2D.Input;
-using Brine2D.Rendering;
 using Microsoft.Extensions.Logging;
-using System.Numerics;
 
-public class MouseScene : Scene
+public class GameScene : Scene
 {
     private readonly IInputService _input;
-    private readonly IRenderer _renderer;
     
-    private Vector2 _cursorPosition;
-    
-    public MouseScene(
+    public GameScene(
         IInputService input,
-        IRenderer renderer,
-        ILogger<MouseScene> logger
-    ) : base(logger)
+        ILogger<GameScene> logger) : base(logger)
     {
         _input = input;
-        _renderer = renderer;
-    }
-    
-    protected override void OnUpdate(GameTime gameTime)
-    {
-        // Get mouse position
-        _cursorPosition = _input.MousePosition;
-        
-        // Handle left click
-        if (_input.IsMouseButtonPressed(MouseButton.Left))
-        {
-            Logger.LogInformation("Clicked at: ({X}, {Y})", 
-                _cursorPosition.X, _cursorPosition.Y);
-        }
-    }
-    
-    protected override void OnRender(GameTime gameTime)
-    {
-        _renderer.Clear(Color.Black);
-        _renderer.BeginFrame();
-        
-        // Draw cursor position indicator
-        _renderer.DrawCircle(_cursorPosition.X, _cursorPosition.Y, 10, Color.Red);
-        
-        // Show coordinates
-        _renderer.DrawText($"Mouse: ({(int)_cursorPosition.X}, {(int)_cursorPosition.Y})", 
-            10, 10, Color.White);
-        
-        _renderer.EndFrame();
     }
 }
-```
-
-**Result:** Red circle follows cursor, displays coordinates!
-
----
-
-## Mouse Position
-
-### Get Current Position
-
-```csharp
-protected override void OnUpdate(GameTime gameTime)
-{
-    // Get current mouse position (screen coordinates)
-    var mousePos = _input.MousePosition;
-    
-    Logger.LogInformation("Mouse at: X={X}, Y={Y}", mousePos.X, mousePos.Y);
-}
-```
-
-**Coordinates:**
-- Origin `(0, 0)` = top-left corner
-- X increases → right
-- Y increases → down
-
-```
-Screen Coordinates:
-(0,0) ───────────────► X
-  │
-  │     (400, 300)
-  │         ●
-  │
-  │
-  ▼
-  Y
-```
-
----
-
-### Mouse Delta (Movement)
-
-```csharp
-protected override void OnUpdate(GameTime gameTime)
-{
-    // Get movement since last frame
-    var mouseDelta = _input.MouseDelta;
-    
-    if (mouseDelta.LengthSquared() > 0)
-    {
-        Logger.LogInformation("Mouse moved: ({X}, {Y})", 
-            mouseDelta.X, mouseDelta.Y);
-    }
-}
-```
-
-**Use for:**
-- Camera rotation (first-person)
-- Dragging objects
-- Mouse-look controls
+~~~
 
 ---
 
@@ -176,493 +52,1007 @@ protected override void OnUpdate(GameTime gameTime)
 
 ### Available Buttons
 
-```csharp
-MouseButton.Left     // Primary button (left)
-MouseButton.Right    // Secondary button (right)
-MouseButton.Middle   // Scroll wheel click
-MouseButton.X1       // Extra button 1 (back)
-MouseButton.X2       // Extra button 2 (forward)
-```
+~~~csharp
+MouseButton.Left    // Primary button (left click)
+MouseButton.Right   // Secondary button (right click)
+MouseButton.Middle  // Middle button (wheel click)
+MouseButton.X1      // Extra button 1 (side button)
+MouseButton.X2      // Extra button 2 (side button)
+~~~
 
 ---
 
-### IsMouseButtonPressed - Click Detection
+### IsMouseButtonDown
 
-**Use for:** Clicking UI, shooting, selecting
+Check if button is currently held down:
 
-```csharp
+~~~csharp
 protected override void OnUpdate(GameTime gameTime)
 {
-    // Returns TRUE only on first frame of press
-    if (_input.IsMouseButtonPressed(MouseButton.Left))
-    {
-        var mousePos = _input.MousePosition;
-        SpawnObjectAt(mousePos);
-    }
-    
-    if (_input.IsMouseButtonPressed(MouseButton.Right))
-    {
-        ShowContextMenu();
-    }
-}
-```
-
----
-
-### IsMouseButtonDown - Held Detection
-
-**Use for:** Dragging, continuous shooting
-
-```csharp
-protected override void OnUpdate(GameTime gameTime)
-{
-    // Returns TRUE every frame while held
+    // Continuous action while held
     if (_input.IsMouseButtonDown(MouseButton.Left))
     {
-        var mousePos = _input.MousePosition;
-        ContinuousPaint(mousePos);
+        // Draw while holding left button
+        DrawAtMousePosition();
+    }
+    
+    // Camera rotation while right button held
+    if (_input.IsMouseButtonDown(MouseButton.Right))
+    {
+        RotateCamera(_input.GetMouseDelta());
     }
 }
-```
+~~~
+
+**Use for:**
+- Continuous actions (drawing, camera control)
+- Drag operations
+- Hold-to-charge mechanics
 
 ---
 
-### IsMouseButtonReleased - Release Detection
+### IsMouseButtonPressed
 
-**Use for:** Drag-and-drop, charge attacks
+Check if button was just pressed this frame:
 
-```csharp
-private Vector2? _dragStart = null;
-
+~~~csharp
 protected override void OnUpdate(GameTime gameTime)
 {
-    // Start drag
+    // Click to select
     if (_input.IsMouseButtonPressed(MouseButton.Left))
     {
-        _dragStart = _input.MousePosition;
+        var mousePos = _input.GetMousePosition();
+        SelectObjectAt(mousePos);
     }
     
-    // End drag
+    // Right click for context menu
+    if (_input.IsMouseButtonPressed(MouseButton.Right))
+    {
+        var mousePos = _input.GetMousePosition();
+        ShowContextMenu(mousePos);
+    }
+}
+~~~
+
+**Use for:**
+- Single click actions
+- UI button clicks
+- Object selection
+- Menu interactions
+
+---
+
+### IsMouseButtonReleased
+
+Check if button was just released this frame:
+
+~~~csharp
+protected override void OnUpdate(GameTime gameTime)
+{
+    // Start drag on press
+    if (_input.IsMouseButtonPressed(MouseButton.Left))
+    {
+        _dragStart = _input.GetMousePosition();
+        _isDragging = true;
+    }
+    
+    // End drag on release
     if (_input.IsMouseButtonReleased(MouseButton.Left))
     {
-        if (_dragStart.HasValue)
+        if (_isDragging)
         {
-            var dragEnd = _input.MousePosition;
-            HandleDrag(_dragStart.Value, dragEnd);
-            _dragStart = null;
+            var dragEnd = _input.GetMousePosition();
+            CompleteDragOperation(_dragStart, dragEnd);
+            _isDragging = false;
         }
     }
 }
-```
+~~~
+
+**Use for:**
+- Drag operations
+- Click-and-release mechanics
+- Button up events
 
 ---
 
-## Scroll Wheel
+## Mouse Button State Diagram
 
-### Get Scroll Delta
+~~~mermaid
+stateDiagram-v2
+    [*] --> ButtonUp: Initial state
+    
+    ButtonUp --> ButtonPressed: Button clicked
+    ButtonPressed --> ButtonDown: Next frame
+    
+    ButtonDown --> ButtonDown: Button held
+    ButtonDown --> ButtonReleased: Button released
+    
+    ButtonReleased --> ButtonUp: Next frame
+    ButtonUp --> ButtonUp: Button not pressed
+    
+    note right of ButtonPressed
+        IsMouseButtonPressed() = true
+        IsMouseButtonDown() = true
+    end note
+    
+    note right of ButtonDown
+        IsMouseButtonPressed() = false
+        IsMouseButtonDown() = true
+    end note
+    
+    note right of ButtonReleased
+        IsMouseButtonPressed() = false
+        IsMouseButtonDown() = false
+        IsMouseButtonReleased() = true
+    end note
+    
+    note right of ButtonUp
+        IsMouseButtonPressed() = false
+        IsMouseButtonDown() = false
+        IsMouseButtonReleased() = false
+    end note
+~~~
 
-```csharp
+---
+
+## Mouse Position
+
+### GetMousePosition
+
+Get current mouse position:
+
+~~~csharp
+using System.Numerics;
+
 protected override void OnUpdate(GameTime gameTime)
 {
-    var scroll = _input.ScrollWheelDelta;
+    var mousePos = _input.GetMousePosition();
     
-    if (scroll > 0)
+    Logger.LogDebug("Mouse at: ({X}, {Y})", mousePos.X, mousePos.Y);
+    
+    // Use mouse position
+    if (_input.IsMouseButtonPressed(MouseButton.Left))
+    {
+        SpawnObjectAt(mousePos);
+    }
+}
+~~~
+
+**Returns:** `Vector2` with screen coordinates (0,0 = top-left)
+
+---
+
+### World Position Conversion
+
+Convert screen to world coordinates:
+
+~~~csharp
+public class MouseToWorld
+{
+    private readonly IInputService _input;
+    private readonly Camera _camera;
+
+    public Vector2 GetMouseWorldPosition()
+    {
+        var screenPos = _input.GetMousePosition();
+        return _camera.ScreenToWorld(screenPos);
+    }
+}
+
+// Usage
+protected override void OnUpdate(GameTime gameTime)
+{
+    if (_input.IsMouseButtonPressed(MouseButton.Left))
+    {
+        var worldPos = GetMouseWorldPosition();
+        PlaceObjectAt(worldPos);
+    }
+}
+~~~
+
+---
+
+## Mouse Movement
+
+### GetMouseDelta
+
+Get mouse movement since last frame:
+
+~~~csharp
+protected override void OnUpdate(GameTime gameTime)
+{
+    var delta = _input.GetMouseDelta();
+    
+    if (delta != Vector2.Zero)
+    {
+        Logger.LogDebug("Mouse moved: ({X}, {Y})", delta.X, delta.Y);
+    }
+    
+    // Camera rotation
+    if (_input.IsMouseButtonDown(MouseButton.Right))
+    {
+        _cameraRotation += delta.X * 0.5f;
+    }
+}
+~~~
+
+**Returns:** `Vector2` with relative movement
+
+**Use for:**
+- Camera control (FPS, RTS)
+- Mouse look
+- Gesture detection
+- Relative input
+
+---
+
+### Mouse Look (FPS Style)
+
+~~~csharp
+public class MouseLook
+{
+    private readonly IInputService _input;
+    private float _yaw = 0f;
+    private float _pitch = 0f;
+    private readonly float _sensitivity = 0.1f;
+
+    public void Update()
+    {
+        var delta = _input.GetMouseDelta();
+        
+        _yaw += delta.X * _sensitivity;
+        _pitch -= delta.Y * _sensitivity;
+        
+        // Clamp pitch to prevent flipping
+        _pitch = Math.Clamp(_pitch, -89f, 89f);
+    }
+    
+    public (float yaw, float pitch) GetRotation()
+    {
+        return (_yaw, _pitch);
+    }
+}
+~~~
+
+---
+
+## Mouse Scroll
+
+### Scroll Wheel
+
+Get scroll wheel movement:
+
+~~~csharp
+protected override void OnUpdate(GameTime gameTime)
+{
+    var scrollDelta = _input.GetMouseWheelDelta();
+    
+    if (scrollDelta.Y > 0)
     {
         // Scrolled up
         ZoomIn();
     }
-    else if (scroll < 0)
+    else if (scrollDelta.Y < 0)
     {
         // Scrolled down
         ZoomOut();
     }
+    
+    // Horizontal scroll (some mice support this)
+    if (scrollDelta.X != 0)
+    {
+        ScrollHorizontal(scrollDelta.X);
+    }
 }
-```
+~~~
 
-**Values:**
-- `> 0` = Scroll up
-- `< 0` = Scroll down
-- `0` = No scroll this frame
+**Returns:** `Vector2` with scroll delta
+- `Y` = Vertical scroll (up/down)
+- `X` = Horizontal scroll (left/right)
+
+---
+
+### Camera Zoom
+
+~~~csharp
+public class CameraZoom
+{
+    private readonly IInputService _input;
+    private float _zoom = 1.0f;
+    private const float ZoomSpeed = 0.1f;
+    private const float MinZoom = 0.5f;
+    private const float MaxZoom = 3.0f;
+
+    public void Update()
+    {
+        var scroll = _input.GetMouseWheelDelta();
+        
+        if (scroll.Y != 0)
+        {
+            _zoom += scroll.Y * ZoomSpeed;
+            _zoom = Math.Clamp(_zoom, MinZoom, MaxZoom);
+        }
+    }
+    
+    public float GetZoom() => _zoom;
+}
+~~~
 
 ---
 
 ## Common Patterns
 
-### Pattern 1: Point-and-Click Movement
+### Click Detection
 
-```csharp
-private Vector2 _playerPosition = new Vector2(400, 300);
-private Vector2? _targetPosition = null;
-private float _moveSpeed = 200f;
-
-protected override void OnUpdate(GameTime gameTime)
+~~~csharp
+public class ClickDetector
 {
-    var deltaTime = (float)gameTime.DeltaTime;
-    
-    // Click to set target
-    if (_input.IsMouseButtonPressed(MouseButton.Left))
+    private readonly IInputService _input;
+
+    public bool IsClickAt(Vector2 position, float radius)
     {
-        _targetPosition = _input.MousePosition;
-    }
-    
-    // Move towards target
-    if (_targetPosition.HasValue)
-    {
-        var direction = _targetPosition.Value - _playerPosition;
-        var distance = direction.Length();
-        
-        if (distance > 5f) // Close enough threshold
+        if (_input.IsMouseButtonPressed(MouseButton.Left))
         {
-            direction = Vector2.Normalize(direction);
-            _playerPosition += direction * _moveSpeed * deltaTime;
+            var mousePos = _input.GetMousePosition();
+            var distance = Vector2.Distance(mousePos, position);
+            return distance <= radius;
         }
-        else
-        {
-            _targetPosition = null; // Arrived!
-        }
+        return false;
     }
 }
-```
+
+// Usage
+protected override void OnUpdate(GameTime gameTime)
+{
+    if (IsClickAt(_buttonPosition, _buttonRadius))
+    {
+        OnButtonClicked();
+    }
+}
+~~~
 
 ---
 
-### Pattern 2: Click Detection on Objects
+### Drag Detection
 
-```csharp
-public class ClickableObject
+~~~csharp
+public class DragDetector
 {
-    public Vector2 Position { get; set; }
-    public float Radius { get; set; }
-    
-    public bool Contains(Vector2 point)
+    private readonly IInputService _input;
+    private Vector2 _dragStart;
+    private bool _isDragging = false;
+    private const float DragThreshold = 5f; // pixels
+
+    public void Update()
     {
-        var offset = point - Position;
-        return offset.Length() <= Radius;
+        // Start drag
+        if (_input.IsMouseButtonPressed(MouseButton.Left))
+        {
+            _dragStart = _input.GetMousePosition();
+            _isDragging = false; // Not dragging until threshold
+        }
+        
+        // Check drag threshold
+        if (_input.IsMouseButtonDown(MouseButton.Left) && !_isDragging)
+        {
+            var currentPos = _input.GetMousePosition();
+            var distance = Vector2.Distance(_dragStart, currentPos);
+            
+            if (distance > DragThreshold)
+            {
+                _isDragging = true;
+                OnDragStart(_dragStart);
+            }
+        }
+        
+        // Update drag
+        if (_isDragging)
+        {
+            var currentPos = _input.GetMousePosition();
+            OnDragUpdate(_dragStart, currentPos);
+        }
+        
+        // End drag
+        if (_input.IsMouseButtonReleased(MouseButton.Left))
+        {
+            if (_isDragging)
+            {
+                var dragEnd = _input.GetMousePosition();
+                OnDragEnd(_dragStart, dragEnd);
+                _isDragging = false;
+            }
+        }
+    }
+    
+    public bool IsDragging => _isDragging;
+    public Vector2 DragStart => _dragStart;
+}
+~~~
+
+---
+
+### Selection Box
+
+~~~csharp
+public class SelectionBox
+{
+    private readonly IInputService _input;
+    private Vector2 _startPos;
+    private bool _isSelecting = false;
+
+    public void Update()
+    {
+        if (_input.IsMouseButtonPressed(MouseButton.Left))
+        {
+            _startPos = _input.GetMousePosition();
+            _isSelecting = true;
+        }
+        
+        if (_input.IsMouseButtonReleased(MouseButton.Left))
+        {
+            if (_isSelecting)
+            {
+                var endPos = _input.GetMousePosition();
+                var selectionRect = GetSelectionRectangle(_startPos, endPos);
+                SelectObjectsInRectangle(selectionRect);
+                _isSelecting = false;
+            }
+        }
+    }
+    
+    public void Render(IRenderer renderer)
+    {
+        if (_isSelecting)
+        {
+            var currentPos = _input.GetMousePosition();
+            var rect = GetSelectionRectangle(_startPos, currentPos);
+            
+            // Draw selection box
+            renderer.DrawRectangle(
+                rect.X, rect.Y, rect.Width, rect.Height,
+                new Color(0, 255, 0, 128));
+        }
+    }
+    
+    private Rectangle GetSelectionRectangle(Vector2 start, Vector2 end)
+    {
+        var x = Math.Min(start.X, end.X);
+        var y = Math.Min(start.Y, end.Y);
+        var width = Math.Abs(end.X - start.X);
+        var height = Math.Abs(end.Y - start.Y);
+        
+        return new Rectangle(x, y, width, height);
+    }
+}
+~~~
+
+---
+
+### Hover Detection
+
+~~~csharp
+public class HoverDetector
+{
+    private readonly IInputService _input;
+
+    public bool IsHoveringOver(Vector2 position, Vector2 size)
+    {
+        var mousePos = _input.GetMousePosition();
+        
+        return mousePos.X >= position.X &&
+               mousePos.X <= position.X + size.X &&
+               mousePos.Y >= position.Y &&
+               mousePos.Y <= position.Y + size.Y;
+    }
+    
+    public bool IsHoveringOverCircle(Vector2 position, float radius)
+    {
+        var mousePos = _input.GetMousePosition();
+        var distance = Vector2.Distance(mousePos, position);
+        return distance <= radius;
     }
 }
 
-private readonly List<ClickableObject> _objects = new();
-
+// Usage
 protected override void OnUpdate(GameTime gameTime)
 {
-    if (_input.IsMouseButtonPressed(MouseButton.Left))
+    var isHovering = IsHoveringOver(_buttonPosition, _buttonSize);
+    
+    if (isHovering)
     {
-        var mousePos = _input.MousePosition;
+        // Show tooltip or change cursor
+        ShowTooltip();
+    }
+}
+~~~
+
+---
+
+### RTS Camera Control
+
+~~~csharp
+public class RTSCameraControl
+{
+    private readonly IInputService _input;
+    private Vector2 _cameraPosition;
+    private readonly float _panSpeed = 500f;
+    private readonly float _edgePanDistance = 20f;
+    private readonly int _screenWidth;
+    private readonly int _screenHeight;
+
+    public void Update(GameTime gameTime)
+    {
+        var deltaTime = (float)gameTime.DeltaTime;
+        var mousePos = _input.GetMousePosition();
+        var pan = Vector2.Zero;
         
-        foreach (var obj in _objects)
+        // Edge panning
+        if (mousePos.X < _edgePanDistance)
         {
-            if (obj.Contains(mousePos))
+            pan.X -= 1;
+        }
+        else if (mousePos.X > _screenWidth - _edgePanDistance)
+        {
+            pan.X += 1;
+        }
+        
+        if (mousePos.Y < _edgePanDistance)
+        {
+            pan.Y -= 1;
+        }
+        else if (mousePos.Y > _screenHeight - _edgePanDistance)
+        {
+            pan.Y += 1;
+        }
+        
+        // Middle mouse drag
+        if (_input.IsMouseButtonDown(MouseButton.Middle))
+        {
+            var delta = _input.GetMouseDelta();
+            pan -= delta * 2f; // Inverted drag
+        }
+        
+        // Apply panning
+        if (pan != Vector2.Zero)
+        {
+            _cameraPosition += pan * _panSpeed * deltaTime;
+        }
+    }
+}
+~~~
+
+---
+
+### Point-and-Click Movement
+
+~~~csharp
+public class PointAndClickMovement
+{
+    private readonly IInputService _input;
+    private Vector2 _playerPosition;
+    private Vector2? _targetPosition;
+    private readonly float _moveSpeed = 200f;
+
+    public void Update(GameTime gameTime)
+    {
+        // Set target on click
+        if (_input.IsMouseButtonPressed(MouseButton.Left))
+        {
+            _targetPosition = _input.GetMousePosition();
+        }
+        
+        // Move towards target
+        if (_targetPosition.HasValue)
+        {
+            var deltaTime = (float)gameTime.DeltaTime;
+            var direction = _targetPosition.Value - _playerPosition;
+            var distance = direction.Length();
+            
+            if (distance < 5f)
             {
-                Logger.LogInformation("Clicked object at {Pos}", obj.Position);
-                break; // First object only
+                // Reached target
+                _playerPosition = _targetPosition.Value;
+                _targetPosition = null;
+            }
+            else
+            {
+                // Move towards target
+                direction = Vector2.Normalize(direction);
+                _playerPosition += direction * _moveSpeed * deltaTime;
             }
         }
     }
 }
-```
+~~~
 
 ---
 
-### Pattern 3: Drag and Drop
+## UI Interaction
 
-```csharp
-private object? _draggedObject = null;
-private Vector2 _dragOffset;
+### Button Click
 
-protected override void OnUpdate(GameTime gameTime)
+~~~csharp
+public class Button
 {
-    var mousePos = _input.MousePosition;
+    public Vector2 Position { get; set; }
+    public Vector2 Size { get; set; }
+    public Action? OnClick { get; set; }
     
-    // Start drag
-    if (_input.IsMouseButtonPressed(MouseButton.Left) && _draggedObject == null)
+    private bool _isHovered = false;
+    private bool _isPressed = false;
+
+    public void Update(IInputService input)
     {
-        _draggedObject = GetObjectUnderMouse(mousePos);
+        var mousePos = input.GetMousePosition();
         
-        if (_draggedObject != null)
+        // Check hover
+        _isHovered = IsPointInside(mousePos);
+        
+        // Check press
+        if (_isHovered && input.IsMouseButtonPressed(MouseButton.Left))
         {
-            _dragOffset = mousePos - _draggedObject.Position;
+            _isPressed = true;
+        }
+        
+        // Check release (click)
+        if (_isPressed && input.IsMouseButtonReleased(MouseButton.Left))
+        {
+            if (_isHovered)
+            {
+                OnClick?.Invoke();
+            }
+            _isPressed = false;
+        }
+        
+        // Cancel if mouse moves away
+        if (!input.IsMouseButtonDown(MouseButton.Left))
+        {
+            _isPressed = false;
         }
     }
     
-    // During drag
-    if (_input.IsMouseButtonDown(MouseButton.Left) && _draggedObject != null)
+    public void Render(IRenderer renderer)
     {
-        _draggedObject.Position = mousePos - _dragOffset;
-    }
-    
-    // End drag
-    if (_input.IsMouseButtonReleased(MouseButton.Left))
-    {
-        if (_draggedObject != null)
-        {
-            SnapToGrid(_draggedObject);
-            _draggedObject = null;
-        }
-    }
-}
-```
-
----
-
-### Pattern 4: Camera Zoom with Scroll
-
-```csharp
-private float _cameraZoom = 1.0f;
-
-protected override void OnUpdate(GameTime gameTime)
-{
-    var scroll = _input.ScrollWheelDelta;
-    
-    if (Math.Abs(scroll) > 0.001f)
-    {
-        // Zoom in/out
-        _cameraZoom += scroll * 0.1f;
-        _cameraZoom = Math.Clamp(_cameraZoom, 0.5f, 3.0f);
+        var color = _isPressed ? Color.DarkGray :
+                    _isHovered ? Color.LightGray :
+                    Color.Gray;
         
-        if (_camera != null)
-        {
-            _camera.Zoom = _cameraZoom;
-        }
+        renderer.DrawRectangleFilled(
+            Position.X, Position.Y,
+            Size.X, Size.Y,
+            color);
+    }
+    
+    private bool IsPointInside(Vector2 point)
+    {
+        return point.X >= Position.X &&
+               point.X <= Position.X + Size.X &&
+               point.Y >= Position.Y &&
+               point.Y <= Position.Y + Size.Y;
     }
 }
-```
+~~~
 
 ---
 
-### Pattern 5: Right-Click Context Menu
+### Slider Control
 
-```csharp
-private bool _showContextMenu = false;
-private Vector2 _contextMenuPosition;
-
-protected override void OnUpdate(GameTime gameTime)
+~~~csharp
+public class Slider
 {
-    // Show menu on right-click
-    if (_input.IsMouseButtonPressed(MouseButton.Right))
-    {
-        _contextMenuPosition = _input.MousePosition;
-        _showContextMenu = true;
-    }
+    public Vector2 Position { get; set; }
+    public float Width { get; set; } = 200f;
+    public float Value { get; private set; } = 0.5f; // 0 to 1
     
-    // Hide menu on left-click elsewhere
-    if (_input.IsMouseButtonPressed(MouseButton.Left))
+    private bool _isDragging = false;
+
+    public void Update(IInputService input)
     {
-        _showContextMenu = false;
-    }
-}
-
-protected override void OnRender(GameTime gameTime)
-{
-    // ... render game ...
-    
-    if (_showContextMenu)
-    {
-        DrawContextMenu(_contextMenuPosition);
-    }
-}
-```
-
----
-
-## World Space Conversion
-
-When using a camera, convert mouse position from screen to world:
-
-```csharp
-protected override void OnUpdate(GameTime gameTime)
-{
-    // Mouse position in screen space
-    var mouseScreen = _input.MousePosition;
-    
-    // Convert to world space
-    var mouseWorld = _camera?.ScreenToWorld(mouseScreen) ?? mouseScreen;
-    
-    // Now use world position
-    if (_input.IsMouseButtonPressed(MouseButton.Left))
-    {
-        SpawnObjectInWorld(mouseWorld);
-    }
-}
-```
-
-**[See Camera Guide](../rendering/camera.md) for details**
-
----
-
-## Advanced Techniques
-
-### Double-Click Detection
-
-```csharp
-private float _lastClickTime = 0f;
-private const float DoubleClickThreshold = 0.3f; // seconds
-
-protected override void OnUpdate(GameTime gameTime)
-{
-    var currentTime = (float)gameTime.TotalTime;
-    
-    if (_input.IsMouseButtonPressed(MouseButton.Left))
-    {
-        var timeSinceLastClick = currentTime - _lastClickTime;
+        var mousePos = input.GetMousePosition();
         
-        if (timeSinceLastClick < DoubleClickThreshold)
+        // Start drag
+        if (IsMouseOverHandle(mousePos) && 
+            input.IsMouseButtonPressed(MouseButton.Left))
         {
-            // Double click!
-            OnDoubleClick();
+            _isDragging = true;
         }
         
-        _lastClickTime = currentTime;
-    }
-}
-```
-
----
-
-### Mouse Hover Detection
-
-```csharp
-private IUIComponent? _hoveredComponent = null;
-
-protected override void OnUpdate(GameTime gameTime)
-{
-    var mousePos = _input.MousePosition;
-    
-    // Find hovered component
-    IUIComponent? newHovered = null;
-    
-    foreach (var component in _uiComponents)
-    {
-        if (component.Contains(mousePos))
+        // Update value while dragging
+        if (_isDragging)
         {
-            newHovered = component;
-            break;
+            var relativeX = mousePos.X - Position.X;
+            Value = Math.Clamp(relativeX / Width, 0f, 1f);
+        }
+        
+        // End drag
+        if (input.IsMouseButtonReleased(MouseButton.Left))
+        {
+            _isDragging = false;
         }
     }
     
-    // Handle hover state changes
-    if (newHovered != _hoveredComponent)
+    public void Render(IRenderer renderer)
     {
-        _hoveredComponent?.OnHoverExit();
-        newHovered?.OnHoverEnter();
-        _hoveredComponent = newHovered;
+        // Draw track
+        renderer.DrawRectangleFilled(
+            Position.X, Position.Y + 8,
+            Width, 4,
+            Color.Gray);
+        
+        // Draw handle
+        var handleX = Position.X + (Value * Width);
+        var handleColor = _isDragging ? Color.Blue : Color.White;
+        
+        renderer.DrawRectangleFilled(
+            handleX - 8, Position.Y,
+            16, 20,
+            handleColor);
+    }
+    
+    private bool IsMouseOverHandle(Vector2 mousePos)
+    {
+        var handleX = Position.X + (Value * Width);
+        return mousePos.X >= handleX - 8 &&
+               mousePos.X <= handleX + 8 &&
+               mousePos.Y >= Position.Y &&
+               mousePos.Y <= Position.Y + 20;
     }
 }
-```
+~~~
 
 ---
 
-### Mouse Lock (FPS Camera)
+## Cursor Control
 
-```csharp
-private bool _mouseLocked = false;
-private Vector2 _cameraRotation;
+### Show/Hide Cursor
+
+~~~csharp
+public class CursorController
+{
+    private readonly IInputService _input;
+
+    public void ShowCursor()
+    {
+        // Show system cursor
+        _input.SetCursorVisible(true);
+    }
+    
+    public void HideCursor()
+    {
+        // Hide system cursor (for custom cursor)
+        _input.SetCursorVisible(false);
+    }
+}
+
+// Usage
+protected override void OnInitialize()
+{
+    // Hide cursor for FPS game
+    _input.SetCursorVisible(false);
+}
+~~~
+
+---
+
+### Custom Cursor
+
+~~~csharp
+public class CustomCursor
+{
+    private readonly IInputService _input;
+    private readonly IRenderer _renderer;
+    private ITexture? _cursorTexture;
+
+    protected override async Task OnLoadAsync(CancellationToken ct)
+    {
+        _cursorTexture = await _renderer.LoadTextureAsync(
+            "assets/cursor.png", ct);
+        
+        // Hide system cursor
+        _input.SetCursorVisible(false);
+    }
+
+    protected override void OnRender(GameTime gameTime)
+    {
+        // ... render game
+        
+        // Draw custom cursor on top
+        var mousePos = _input.GetMousePosition();
+        if (_cursorTexture != null)
+        {
+            _renderer.DrawTexture(
+                _cursorTexture,
+                mousePos.X - 16, mousePos.Y - 16,
+                32, 32);
+        }
+    }
+}
+~~~
+
+---
+
+### Lock Cursor (Relative Mode)
+
+~~~csharp
+public class CursorLocker
+{
+    private readonly IInputService _input;
+    private bool _isLocked = false;
+
+    public void LockCursor()
+    {
+        _input.SetRelativeMouseMode(true);
+        _input.SetCursorVisible(false);
+        _isLocked = true;
+    }
+    
+    public void UnlockCursor()
+    {
+        _input.SetRelativeMouseMode(false);
+        _input.SetCursorVisible(true);
+        _isLocked = false;
+    }
+    
+    public void Toggle()
+    {
+        if (_isLocked)
+            UnlockCursor();
+        else
+            LockCursor();
+    }
+}
+
+// Usage for FPS game
+protected override void OnInitialize()
+{
+    _cursorLocker.LockCursor();
+}
 
 protected override void OnUpdate(GameTime gameTime)
 {
-    // Toggle mouse lock with Tab
-    if (_input.IsKeyPressed(Keys.Tab))
+    // Toggle lock with Escape
+    if (_input.IsKeyPressed(Keys.Escape))
     {
-        _mouseLocked = !_mouseLocked;
-        
-        if (_mouseLocked)
-        {
-            // Hide cursor, center it
-            // (SDL3 API needed - not yet exposed)
-        }
+        _cursorLocker.Toggle();
     }
     
-    if (_mouseLocked)
+    // Use mouse delta for camera
+    if (_cursorLocker.IsLocked)
     {
-        var mouseDelta = _input.MouseDelta;
-        var sensitivity = 0.002f;
-        
-        _cameraRotation.X += mouseDelta.X * sensitivity;
-        _cameraRotation.Y -= mouseDelta.Y * sensitivity;
-        
-        // Clamp vertical rotation
-        _cameraRotation.Y = Math.Clamp(_cameraRotation.Y, -1.5f, 1.5f);
-        
-        ApplyCameraRotation(_cameraRotation);
+        var delta = _input.GetMouseDelta();
+        UpdateCamera(delta);
     }
 }
-```
+~~~
 
 ---
 
-## Troubleshooting
+## Complete Example
 
-### Problem: Wrong Mouse Coordinates
+~~~csharp
+using Brine2D.Core;
+using Brine2D.Engine;
+using Brine2D.Input;
+using Brine2D.Rendering;
+using Microsoft.Extensions.Logging;
+using System.Numerics;
 
-**Symptom:** Mouse position doesn't match visual location
+public class MouseDemoScene : Scene
+{
+    private readonly IInputService _input;
+    private readonly IRenderer _renderer;
+    
+    private readonly List<Vector2> _clickPoints = new();
+    private Vector2? _dragStart = null;
+    private bool _isDragging = false;
 
-**Causes & Solutions:**
+    public MouseDemoScene(
+        IInputService input,
+        IRenderer renderer,
+        ILogger<MouseDemoScene> logger) : base(logger)
+    {
+        _input = input;
+        _renderer = renderer;
+    }
 
-1. **Camera active**
-   ```csharp
-   // ❌ Problem: Using screen coords with camera
-   var mousePos = _input.MousePosition;
-   SpawnAt(mousePos); // Wrong when camera moved!
-   
-   // ✅ Solution: Convert to world space
-   var mouseWorld = _camera.ScreenToWorld(_input.MousePosition);
-   SpawnAt(mouseWorld);
-   ```
+    protected override void OnUpdate(GameTime gameTime)
+    {
+        var mousePos = _input.GetMousePosition();
+        
+        // Left click to add point
+        if (_input.IsMouseButtonPressed(MouseButton.Left))
+        {
+            _clickPoints.Add(mousePos);
+            Logger.LogInformation("Point added at ({X}, {Y})", 
+                mousePos.X, mousePos.Y);
+        }
+        
+        // Right click and drag
+        if (_input.IsMouseButtonPressed(MouseButton.Right))
+        {
+            _dragStart = mousePos;
+            _isDragging = true;
+        }
+        
+        if (_input.IsMouseButtonReleased(MouseButton.Right))
+        {
+            if (_isDragging && _dragStart.HasValue)
+            {
+                Logger.LogInformation("Dragged from ({X1}, {Y1}) to ({X2}, {Y2})",
+                    _dragStart.Value.X, _dragStart.Value.Y,
+                    mousePos.X, mousePos.Y);
+                _isDragging = false;
+                _dragStart = null;
+            }
+        }
+        
+        // Mouse wheel to zoom
+        var scroll = _input.GetMouseWheelDelta();
+        if (scroll.Y > 0)
+        {
+            Logger.LogInformation("Scroll up");
+        }
+        else if (scroll.Y < 0)
+        {
+            Logger.LogInformation("Scroll down");
+        }
+        
+        // Middle click to clear
+        if (_input.IsMouseButtonPressed(MouseButton.Middle))
+        {
+            _clickPoints.Clear();
+            Logger.LogInformation("Cleared all points");
+        }
+    }
 
-2. **Window scaling/DPI**
-   - Usually handled automatically by SDL3
-   - Check `RenderingOptions.WindowWidth/Height` matches actual size
-
----
-
-### Problem: Clicks Not Detected
-
-**Symptom:** `IsMouseButtonPressed()` always false
-
-**Solutions:**
-
-1. **Check correct button**
-   ```csharp
-   // ❌ Wrong button
-   if (_input.IsMouseButtonPressed(MouseButton.Middle))
-   
-   // ✅ Left button
-   if (_input.IsMouseButtonPressed(MouseButton.Left))
-   ```
-
-2. **UI consuming clicks**
-   ```csharp
-   // Check if UI consumed the click
-   if (!_inputLayerManager.MouseConsumed)
-   {
-       // Now safe to check game input
-       if (_input.IsMouseButtonPressed(MouseButton.Left))
-       {
-           // Handle game click
-       }
-   }
-   ```
-
----
-
-### Problem: Scroll Wheel Not Working
-
-**Symptom:** `ScrollWheelDelta` always 0
-
-**Solutions:**
-
-1. **Check each frame**
-   ```csharp
-   // ❌ Bad - only true for one frame
-   if (_input.ScrollWheelDelta != 0)
-   
-   // ✅ Good - explicit check
-   var scroll = _input.ScrollWheelDelta;
-   if (scroll > 0) ZoomIn();
-   else if (scroll < 0) ZoomOut();
-   ```
-
-2. **Verify window has focus**
-   - Scroll only works when window is focused
+    protected override void OnRender(GameTime gameTime)
+    {
+        _renderer.Clear(new Color(20, 20, 30));
+        
+        // Draw all click points
+        foreach (var point in _clickPoints)
+        {
+            _renderer.DrawRectangleFilled(
+                point.X - 5, point.Y - 5,
+                10, 10,
+                Color.Green);
+        }
+        
+        // Draw drag line
+        if (_isDragging && _dragStart.HasValue)
+        {
+            var mousePos = _input.GetMousePosition();
+            _renderer.DrawLine(
+                _dragStart.Value.X, _dragStart.Value.Y,
+                mousePos.X, mousePos.Y,
+                Color.Yellow);
+        }
+        
+        // Draw crosshair at mouse position
+        var currentPos = _input.GetMousePosition();
+        _renderer.DrawLine(
+            currentPos.X - 10, currentPos.Y,
+            currentPos.X + 10, currentPos.Y,
+            Color.White);
+        _renderer.DrawLine(
+            currentPos.X, currentPos.Y - 10,
+            currentPos.X, currentPos.Y + 10,
+            Color.White);
+        
+        // Draw instructions
+        _renderer.DrawText("Left Click: Add Point", 10, 10, Color.White);
+        _renderer.DrawText("Right Drag: Draw Line", 10, 30, Color.White);
+        _renderer.DrawText("Middle Click: Clear", 10, 50, Color.White);
+        _renderer.DrawText("Scroll: Zoom", 10, 70, Color.White);
+        _renderer.DrawText($"Points: {_clickPoints.Count}", 10, 90, Color.White);
+        
+        var mouseDelta = _input.GetMouseDelta();
+        _renderer.DrawText($"Delta: ({mouseDelta.X:F1}, {mouseDelta.Y:F1})", 
+            10, 110, Color.White);
+    }
+}
+~~~
 
 ---
 
@@ -670,92 +1060,354 @@ protected override void OnUpdate(GameTime gameTime)
 
 ### DO
 
-1. **Use `IsMouseButtonPressed` for clicks**
-   ```csharp
-   if (_input.IsMouseButtonPressed(MouseButton.Left))
-       HandleClick();
-   ```
-
-2. **Convert to world space when using camera**
-   ```csharp
-   var worldPos = _camera.ScreenToWorld(_input.MousePosition);
-   ```
-
-3. **Respect UI input consumption**
-   ```csharp
-   if (!_inputLayerManager.MouseConsumed)
+1. **Use appropriate button state**
+   ~~~csharp
+   // ✅ Good - continuous action
+   if (_input.IsMouseButtonDown(MouseButton.Left))
    {
-       // Game input here
+       DrawAtMousePosition();
    }
-   ```
+   
+   // ✅ Good - single click
+   if (_input.IsMouseButtonPressed(MouseButton.Left))
+   {
+       SelectObject();
+   }
+   ~~~
 
-4. **Use smooth scrolling**
-   ```csharp
-   _targetZoom += _input.ScrollWheelDelta * 0.1f;
-   _currentZoom = Lerp(_currentZoom, _targetZoom, 10f * deltaTime);
-   ```
+2. **Check hover before click**
+   ~~~csharp
+   // ✅ Good - ensure hovering
+   if (IsMouseOverButton() && 
+       _input.IsMouseButtonPressed(MouseButton.Left))
+   {
+       OnButtonClicked();
+   }
+   ~~~
 
-5. **Provide visual feedback**
-   ```csharp
-   // Change cursor appearance on hover
-   if (IsHoveringButton())
-       DrawHighlightedCursor();
-   ```
+3. **Implement drag threshold**
+   ~~~csharp
+   // ✅ Good - prevent accidental drags
+   const float DragThreshold = 5f;
+   var distance = Vector2.Distance(_dragStart, currentPos);
+   if (distance > DragThreshold)
+   {
+       StartDragging();
+   }
+   ~~~
+
+4. **Use GetMouseDelta for relative input**
+   ~~~csharp
+   // ✅ Good - camera rotation
+   var delta = _input.GetMouseDelta();
+   _cameraYaw += delta.X * sensitivity;
+   ~~~
+
+5. **Convert to world coordinates when needed**
+   ~~~csharp
+   // ✅ Good - world space interaction
+   var screenPos = _input.GetMousePosition();
+   var worldPos = _camera.ScreenToWorld(screenPos);
+   PlaceObjectAt(worldPos);
+   ~~~
 
 ### DON'T
 
-1. **Don't ignore UI layers**
-   ```csharp
-   // ❌ Bad - clicks UI AND game
-   if (_input.IsMouseButtonPressed(MouseButton.Left))
-       SpawnUnit(); // Spawns even when clicking UI!
+1. **Don't use IsMouseButtonDown for single clicks**
+   ~~~csharp
+   // ❌ Bad - clicks 60 times per second!
+   if (_input.IsMouseButtonDown(MouseButton.Left))
+   {
+       FireWeapon();
+   }
    
-   // ✅ Good
-   if (!_inputLayerManager.MouseConsumed && 
+   // ✅ Good - fires once
+   if (_input.IsMouseButtonPressed(MouseButton.Left))
+   {
+       FireWeapon();
+   }
+   ~~~
+
+2. **Don't forget to check hover**
+   ~~~csharp
+   // ❌ Bad - clicks anywhere
+   if (_input.IsMouseButtonPressed(MouseButton.Left))
+   {
+       OnButtonClicked(); // Wrong!
+   }
+   
+   // ✅ Good - checks hover first
+   if (IsMouseOverButton() && 
        _input.IsMouseButtonPressed(MouseButton.Left))
-       SpawnUnit();
-   ```
+   {
+       OnButtonClicked();
+   }
+   ~~~
 
-2. **Don't forget camera transform**
-   ```csharp
-   // ❌ Bad with camera
-   var mousePos = _input.MousePosition;
+3. **Don't poll mouse position unnecessarily**
+   ~~~csharp
+   // ❌ Bad - gets position 5 times
+   if (IsInBounds(_input.GetMousePosition()) &&
+       IsOverButton(_input.GetMousePosition()) &&
+       IsClickable(_input.GetMousePosition()))
    
-   // ✅ Good
-   var mousePos = _camera.ScreenToWorld(_input.MousePosition);
-   ```
+   // ✅ Good - cache position
+   var mousePos = _input.GetMousePosition();
+   if (IsInBounds(mousePos) &&
+       IsOverButton(mousePos) &&
+       IsClickable(mousePos))
+   ~~~
 
-3. **Don't hardcode button checks**
-   ```csharp
-   // ❌ Hard to rebind
+4. **Don't mix screen and world coordinates**
+   ~~~csharp
+   // ❌ Bad - comparing different spaces!
+   var mousePos = _input.GetMousePosition(); // Screen
+   if (Vector2.Distance(mousePos, _enemyWorldPos) < 10) // World
+   
+   // ✅ Good - same coordinate space
+   var mouseWorld = _camera.ScreenToWorld(_input.GetMousePosition());
+   if (Vector2.Distance(mouseWorld, _enemyWorldPos) < 10)
+   ~~~
+
+---
+
+## Troubleshooting
+
+### Problem: Mouse clicks not registering
+
+**Symptom:** Clicks don't work.
+
+**Solutions:**
+
+1. **Check input service is injected:**
+   ~~~csharp
+   public GameScene(IInputService input, ...) : base(...)
+   {
+       _input = input;
+   }
+   ~~~
+
+2. **Use correct button state:**
+   ~~~csharp
+   // For single clicks:
    if (_input.IsMouseButtonPressed(MouseButton.Left))
-   
-   // ✅ Use action mapping
-   if (_inputMapper.IsActionPressed("PrimaryAction"))
-   ```
+   ~~~
+
+3. **Check input is in Update:**
+   ~~~csharp
+   protected override void OnUpdate(GameTime gameTime)
+   {
+       // Check input here, not in Render!
+   }
+   ~~~
+
+---
+
+### Problem: Drag not working
+
+**Symptom:** Drag operations don't behave correctly.
+
+**Solution:** Implement proper drag state:
+
+~~~csharp
+// Start drag
+if (_input.IsMouseButtonPressed(MouseButton.Left))
+{
+    _dragStart = _input.GetMousePosition();
+    _isDragging = true;
+}
+
+// Update drag
+if (_isDragging && _input.IsMouseButtonDown(MouseButton.Left))
+{
+    var currentPos = _input.GetMousePosition();
+    UpdateDrag(_dragStart, currentPos);
+}
+
+// End drag
+if (_input.IsMouseButtonReleased(MouseButton.Left))
+{
+    if (_isDragging)
+    {
+        CompleteDrag();
+        _isDragging = false;
+    }
+}
+~~~
+
+---
+
+### Problem: Mouse position incorrect
+
+**Symptom:** Mouse position doesn't match visual location.
+
+**Solutions:**
+
+1. **Check coordinate system:**
+   ~~~csharp
+   // Mouse position is in screen space (pixels)
+   var mousePos = _input.GetMousePosition();
+   // (0,0) = top-left corner
+   ~~~
+
+2. **Convert to world space if needed:**
+   ~~~csharp
+   var screenPos = _input.GetMousePosition();
+   var worldPos = _camera.ScreenToWorld(screenPos);
+   ~~~
+
+3. **Account for window scaling:**
+   ~~~csharp
+   // If window is scaled, convert coordinates
+   var mousePos = _input.GetMousePosition();
+   var scaledPos = mousePos * _windowScale;
+   ~~~
+
+---
+
+### Problem: Mouse delta always zero
+
+**Symptom:** GetMouseDelta() returns (0, 0).
+
+**Solutions:**
+
+1. **Enable relative mouse mode:**
+   ~~~csharp
+   _input.SetRelativeMouseMode(true);
+   ~~~
+
+2. **Check mouse is actually moving:**
+   ~~~csharp
+   var delta = _input.GetMouseDelta();
+   if (delta != Vector2.Zero)
+   {
+       Logger.LogDebug("Mouse moved: {Delta}", delta);
+   }
+   ~~~
+
+---
+
+### Problem: Scroll wheel not working
+
+**Symptom:** GetMouseWheelDelta() always returns zero.
+
+**Solution:** Check scroll in Update:
+
+~~~csharp
+protected override void OnUpdate(GameTime gameTime)
+{
+    var scroll = _input.GetMouseWheelDelta();
+    if (scroll.Y != 0)
+    {
+        Logger.LogDebug("Scrolled: {Y}", scroll.Y);
+        Zoom(scroll.Y);
+    }
+}
+~~~
 
 ---
 
 ## Summary
 
-| Method | Returns | Use For |
-|--------|---------|---------|
-| `MousePosition` | `Vector2` | Current cursor position |
-| `MouseDelta` | `Vector2` | Movement since last frame |
-| `ScrollWheelDelta` | `float` | Scroll amount (+ = up) |
-| `IsMouseButtonPressed(btn)` | `bool` | Clicking (first frame) |
-| `IsMouseButtonDown(btn)` | `bool` | Held (continuous) |
-| `IsMouseButtonReleased(btn)` | `bool` | Release detection |
+**Mouse buttons:**
+
+| Button | Description | Common Use |
+|--------|-------------|------------|
+| `Left` | Primary button | Selection, primary action |
+| `Right` | Secondary button | Context menu, camera |
+| `Middle` | Wheel click | Camera pan, special action |
+| `X1` / `X2` | Side buttons | Extra actions |
+
+**Button states:**
+
+| Method | Usage | Example |
+|--------|-------|---------|
+| `IsMouseButtonDown()` | Button held | Drawing, dragging |
+| `IsMouseButtonPressed()` | Button just clicked | Selection, UI |
+| `IsMouseButtonReleased()` | Button just released | End drag |
+
+**Position methods:**
+
+| Method | Returns | Usage |
+|--------|---------|-------|
+| `GetMousePosition()` | `Vector2` (screen) | Absolute position |
+| `GetMouseDelta()` | `Vector2` (relative) | Camera control, mouse look |
+| `GetMouseWheelDelta()` | `Vector2` | Zoom, scroll |
+
+**Common patterns:**
+
+| Pattern | Implementation |
+|---------|----------------|
+| **Click** | `IsMouseButtonPressed()` + hover check |
+| **Drag** | Press → Move → Release tracking |
+| **Hover** | Position within bounds check |
+| **Camera Control** | `GetMouseDelta()` + sensitivity |
+| **Selection Box** | Press position + current position |
 
 ---
 
 ## Next Steps
 
-- **[Input Layers](input-layers.md)** - Priority-based input routing
-- **[Gamepad Support](gamepad.md)** - Add controller support
-- **[UI Components](../ui/buttons.md)** - Build interactive UI
-- **[Camera System](../rendering/camera.md)** - Handle world/screen conversion
+- **[Keyboard Input](keyboard.md)** - Keyboard input handling
+- **[Gamepad Input](gamepad.md)** - Controller support
+- **[Input Layers](layers.md)** - Priority-based input
+- **[First Game](../../getting-started/first-game.md)** - Build a complete game
 
 ---
 
-Ready to support controllers? Check out [Gamepad Support](gamepad.md)!
+## Quick Reference
+
+~~~csharp
+// Inject input service
+public GameScene(IInputService input, ...) : base(...)
+{
+    _input = input;
+}
+
+// Mouse buttons
+if (_input.IsMouseButtonDown(MouseButton.Left))     // Held
+if (_input.IsMouseButtonPressed(MouseButton.Left))  // Just clicked
+if (_input.IsMouseButtonReleased(MouseButton.Left)) // Just released
+
+// Mouse position
+var mousePos = _input.GetMousePosition(); // Screen coordinates
+var mouseDelta = _input.GetMouseDelta();  // Relative movement
+
+// Mouse scroll
+var scroll = _input.GetMouseWheelDelta();
+if (scroll.Y > 0) // Scrolled up
+if (scroll.Y < 0) // Scrolled down
+
+// Cursor control
+_input.SetCursorVisible(false);      // Hide cursor
+_input.SetRelativeMouseMode(true);   // Lock cursor
+
+// Drag detection
+if (_input.IsMouseButtonPressed(MouseButton.Left))
+{
+    _dragStart = _input.GetMousePosition();
+    _isDragging = true;
+}
+
+if (_isDragging)
+{
+    var currentPos = _input.GetMousePosition();
+    // Update drag
+}
+
+if (_input.IsMouseButtonReleased(MouseButton.Left))
+{
+    _isDragging = false;
+}
+
+// Hover detection
+var mousePos = _input.GetMousePosition();
+bool isHovering = mousePos.X >= bounds.X &&
+                  mousePos.X <= bounds.X + bounds.Width &&
+                  mousePos.Y >= bounds.Y &&
+                  mousePos.Y <= bounds.Y + bounds.Height;
+~~~
+
+---
+
+Ready to learn about gamepad input? Check out [Gamepad Input](gamepad.md)!
