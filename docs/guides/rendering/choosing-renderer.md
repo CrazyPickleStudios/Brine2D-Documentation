@@ -44,7 +44,7 @@ Brine2D provides two rendering backends:
 
 ## Decision Tree
 
-~~~mermaid
+```mermaid
 graph TB
     A[Choose Renderer]
     A --> B{Building new game?}
@@ -70,7 +70,7 @@ graph TB
     
     style E fill:#2d5016,stroke:#4ec9b0,stroke-width:3px,color:#fff
     style G fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-~~~
+```
 
 ---
 
@@ -129,7 +129,7 @@ The **GPU Renderer** is Brine2D's default, modern rendering backend.
 
 ### Example Configuration
 
-~~~csharp
+```csharp
 using Brine2D.Hosting;
 using Brine2D.Rendering;
 using Brine2D.SDL;
@@ -149,7 +149,7 @@ builder.Services.AddSDL3Rendering(options =>
 
 var game = builder.Build();
 await game.RunAsync<GameScene>();
-~~~
+```
 
 ---
 
@@ -197,7 +197,7 @@ The **Legacy Renderer** provides SDL2-style rendering for broader compatibility.
 
 ### Example Configuration
 
-~~~csharp
+```csharp
 using Brine2D.Hosting;
 using Brine2D.Rendering;
 using Brine2D.SDL;
@@ -217,7 +217,7 @@ builder.Services.AddSDL3Rendering(options =>
 
 var game = builder.Build();
 await game.RunAsync<GameScene>();
-~~~
+```
 
 ---
 
@@ -324,7 +324,7 @@ Use the **GPU renderer** when:
 ### Example Use Cases
 
 **Particle-Heavy Games:**
-~~~csharp
+```csharp
 // GPU renderer handles 10,000 particles easily
 public class ParticleSystem
 {
@@ -343,10 +343,10 @@ public class ParticleSystem
         }
     }
 }
-~~~
+```
 
 **Large Tilemaps:**
-~~~csharp
+```csharp
 // GPU renderer efficiently renders large maps
 public class TileMap
 {
@@ -366,7 +366,7 @@ public class TileMap
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -401,17 +401,17 @@ Use the **Legacy renderer** when:
 ### Example Use Cases
 
 **Older Hardware:**
-~~~csharp
+```csharp
 // Legacy renderer for broad compatibility
 builder.Services.AddSDL3Rendering(options =>
 {
     options.Backend = GraphicsBackend.LegacyRenderer;
     // Works on GPUs from 2005+
 });
-~~~
+```
 
 **Fallback Configuration:**
-~~~csharp
+```csharp
 public static class RendererConfig
 {
     public static void ConfigureRenderer(this IServiceCollection services)
@@ -435,7 +435,7 @@ public static class RendererConfig
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -445,7 +445,7 @@ public static class RendererConfig
 
 Switch between renderers by changing the `Backend` option:
 
-~~~csharp
+```csharp
 using Brine2D.Rendering;
 
 var builder = GameApplication.CreateBuilder(args);
@@ -459,7 +459,7 @@ builder.Services.AddSDL3Rendering(options =>
     // OR Legacy renderer
     // options.Backend = GraphicsBackend.LegacyRenderer;
 });
-~~~
+```
 
 ---
 
@@ -467,7 +467,7 @@ builder.Services.AddSDL3Rendering(options =>
 
 Detect and choose renderer at runtime:
 
-~~~csharp
+```csharp
 public static class RendererSelector
 {
     public static GraphicsBackend SelectBestRenderer()
@@ -502,7 +502,7 @@ builder.Services.AddSDL3Rendering(options =>
 {
     options.Backend = RendererSelector.SelectBestRenderer();
 });
-~~~
+```
 
 ---
 
@@ -510,21 +510,21 @@ builder.Services.AddSDL3Rendering(options =>
 
 Choose renderer via configuration:
 
-~~~json
+```json
 {
   "Rendering": {
     "Backend": "GPU",
     "VSync": true
   }
 }
-~~~
+```
 
-~~~csharp
+```csharp
 builder.Services.AddSDL3Rendering(options =>
 {
     builder.Configuration.GetSection("Rendering").Bind(options);
 });
-~~~
+```
 
 ---
 
@@ -534,7 +534,7 @@ builder.Services.AddSDL3Rendering(options =>
 
 **Step 1: Change configuration**
 
-~~~csharp
+```csharp
 // Before
 builder.Services.AddSDL3Rendering(options =>
 {
@@ -546,7 +546,7 @@ builder.Services.AddSDL3Rendering(options =>
 {
     options.Backend = GraphicsBackend.GPU; // or omit (default)
 });
-~~~
+```
 
 **Step 2: Test thoroughly**
 - Verify rendering correctness
@@ -568,12 +568,12 @@ builder.Services.AddSDL3Rendering(options =>
 - Compatibility requirements
 
 **Change:**
-~~~csharp
+```csharp
 builder.Services.AddSDL3Rendering(options =>
 {
     options.Backend = GraphicsBackend.LegacyRenderer;
 });
-~~~
+```
 
 ---
 
@@ -583,7 +583,7 @@ builder.Services.AddSDL3Rendering(options =>
 
 Both renderers use the same `IRenderer` interface:
 
-~~~csharp
+```csharp
 public interface IRenderer
 {
     // Both support these methods
@@ -595,7 +595,7 @@ public interface IRenderer
     Task<ITexture> CreateRenderTargetAsync(int w, int h, CancellationToken ct);
     void SetRenderTarget(ITexture? target);
 }
-~~~
+```
 
 **Result:** No code changes when switching renderers!
 
@@ -605,7 +605,7 @@ public interface IRenderer
 
 This code works with **both** renderers:
 
-~~~csharp
+```csharp
 public class GameScene : Scene
 {
     private readonly IRenderer _renderer;
@@ -624,7 +624,7 @@ public class GameScene : Scene
         _renderer.DrawTexture(_sprite, 100, 100, 64, 64);
     }
 }
-~~~
+```
 
 ---
 
@@ -633,7 +633,7 @@ public class GameScene : Scene
 ### DO
 
 1. **Use GPU renderer by default**
-   ~~~csharp
+   ```csharp
    // ✅ Good - GPU renderer (default)
    builder.Services.AddSDL3Rendering(options =>
    {
@@ -641,54 +641,54 @@ public class GameScene : Scene
        options.VSync = true;
        // Backend defaults to GPU
    });
-   ~~~
+   ```
 
 2. **Test on target hardware**
-   ~~~csharp
+   ```csharp
    // ✅ Good - verify on minimum spec
    // Test both renderers if supporting old hardware
-   ~~~
+   ```
 
 3. **Provide fallback option**
-   ~~~csharp
+   ```csharp
    // ✅ Good - graceful degradation
    if (gpuFailed)
    {
        options.Backend = GraphicsBackend.LegacyRenderer;
    }
-   ~~~
+   ```
 
 4. **Profile performance**
-   ~~~csharp
+   ```csharp
    // ✅ Good - measure actual performance
    var sw = Stopwatch.StartNew();
    OnRender(gameTime);
    Logger.LogDebug("Render: {Ms}ms", sw.ElapsedMilliseconds);
-   ~~~
+   ```
 
 ### DON'T
 
 1. **Don't use legacy without reason**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - unnecessary legacy use
    options.Backend = GraphicsBackend.LegacyRenderer;
    // Use GPU unless you have a specific reason
-   ~~~
+   ```
 
 2. **Don't assume GPU always faster**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - not always true
    // Profile your specific game!
-   ~~~
+   ```
 
 3. **Don't hardcode renderer**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - inflexible
    options.Backend = GraphicsBackend.GPU; // Fixed
    
    // ✅ Good - configurable
    options.Backend = config.GetValue<GraphicsBackend>("Backend");
-   ~~~
+   ```
 
 ---
 
@@ -701,13 +701,13 @@ public class GameScene : Scene
 **Solutions:**
 
 1. **Check GPU support:**
-   ~~~csharp
+   ```csharp
    // Fall back to legacy
    builder.Services.AddSDL3Rendering(options =>
    {
        options.Backend = GraphicsBackend.LegacyRenderer;
    });
-   ~~~
+   ```
 
 2. **Update graphics drivers:**
    - Windows: Update via Device Manager
@@ -728,9 +728,9 @@ public class GameScene : Scene
 **Solutions:**
 
 1. **Enable VSync:**
-   ~~~csharp
+   ```csharp
    options.VSync = true;
-   ~~~
+   ```
 
 2. **Check driver overhead:**
    - Some drivers have high overhead
@@ -808,7 +808,7 @@ public class GameScene : Scene
 
 ## Quick Reference
 
-~~~csharp
+```csharp
 // GPU Renderer (default, recommended)
 builder.Services.AddSDL3Rendering(options =>
 {
@@ -838,7 +838,7 @@ builder.Services.AddSDL3Rendering(options =>
 {
     builder.Configuration.GetSection("Rendering").Bind(options);
 });
-~~~
+```
 
 ---
 

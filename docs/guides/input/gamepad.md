@@ -31,7 +31,7 @@ Brine2D's gamepad input system provides:
 
 In your scene:
 
-~~~csharp
+```csharp
 using Brine2D.Engine;
 using Brine2D.Input;
 using Microsoft.Extensions.Logging;
@@ -47,7 +47,7 @@ public class GameScene : Scene
         _input = input;
     }
 }
-~~~
+```
 
 ---
 
@@ -55,7 +55,7 @@ public class GameScene : Scene
 
 ### Check Gamepad Connection
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     // Check if any gamepad is connected
@@ -73,13 +73,13 @@ protected override void OnUpdate(GameTime gameTime)
         }
     }
 }
-~~~
+```
 
 ---
 
 ### Get Gamepad Name
 
-~~~csharp
+```csharp
 protected override void OnInitialize()
 {
     for (int i = 0; i < 4; i++)
@@ -91,7 +91,7 @@ protected override void OnInitialize()
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -99,7 +99,7 @@ protected override void OnInitialize()
 
 ### Available Buttons
 
-~~~csharp
+```csharp
 GamepadButton.A             // Face button (Xbox A, PS Cross)
 GamepadButton.B             // Face button (Xbox B, PS Circle)
 GamepadButton.X             // Face button (Xbox X, PS Square)
@@ -119,7 +119,7 @@ GamepadButton.RightStick    // Right stick click (R3)
 GamepadButton.Start         // Start button (Options/+)
 GamepadButton.Back          // Back button (Share/-)
 GamepadButton.Guide         // Guide button (Xbox/PS/Home)
-~~~
+```
 
 ---
 
@@ -127,7 +127,7 @@ GamepadButton.Guide         // Guide button (Xbox/PS/Home)
 
 Check if button is currently held down:
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     int gamepadIndex = 0;
@@ -144,7 +144,7 @@ protected override void OnUpdate(GameTime gameTime)
         Accelerate();
     }
 }
-~~~
+```
 
 **Use for:**
 - Continuous actions
@@ -157,7 +157,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 Check if button was just pressed this frame:
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     int gamepadIndex = 0;
@@ -180,7 +180,7 @@ protected override void OnUpdate(GameTime gameTime)
         OpenMenu();
     }
 }
-~~~
+```
 
 **Use for:**
 - Single actions (jump, shoot, interact)
@@ -193,7 +193,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 Check if button was just released this frame:
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     int gamepadIndex = 0;
@@ -210,7 +210,7 @@ protected override void OnUpdate(GameTime gameTime)
         _chargeTime = 0f;
     }
 }
-~~~
+```
 
 **Use for:**
 - Charge mechanics
@@ -221,7 +221,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 ## Button State Diagram
 
-~~~mermaid
+```mermaid
 stateDiagram-v2
     [*] --> ButtonUp: Initial state
     
@@ -255,7 +255,7 @@ stateDiagram-v2
         IsGamepadButtonDown() = false
         IsGamepadButtonReleased() = false
     end note
-~~~
+```
 
 ---
 
@@ -263,7 +263,7 @@ stateDiagram-v2
 
 ### Get Stick Position
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     int gamepadIndex = 0;
@@ -278,7 +278,7 @@ protected override void OnUpdate(GameTime gameTime)
         leftStick.X, leftStick.Y,
         rightStick.X, rightStick.Y);
 }
-~~~
+```
 
 **Returns:** `Vector2` with values from -1.0 to 1.0
 - `X` = Horizontal axis (left = -1, right = 1)
@@ -288,7 +288,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 ### Movement with Left Stick
 
-~~~csharp
+```csharp
 public class GamepadMovement
 {
     private readonly IInputService _input;
@@ -309,13 +309,13 @@ public class GamepadMovement
         }
     }
 }
-~~~
+```
 
 ---
 
 ### Camera with Right Stick
 
-~~~csharp
+```csharp
 public class GamepadCamera
 {
     private readonly IInputService _input;
@@ -340,7 +340,7 @@ public class GamepadCamera
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -348,7 +348,7 @@ public class GamepadCamera
 
 Prevent stick drift with dead zones:
 
-~~~csharp
+```csharp
 public class DeadZone
 {
     public static Vector2 ApplyDeadZone(Vector2 stick, float threshold = 0.15f)
@@ -372,7 +372,7 @@ public class DeadZone
 var leftStick = _input.GetGamepadLeftStick(0);
 var adjusted = DeadZone.ApplyDeadZone(leftStick, 0.15f);
 _position += adjusted * _speed * deltaTime;
-~~~
+```
 
 ---
 
@@ -380,7 +380,7 @@ _position += adjusted * _speed * deltaTime;
 
 ### Get Trigger Values
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     int gamepadIndex = 0;
@@ -392,7 +392,7 @@ protected override void OnUpdate(GameTime gameTime)
     Logger.LogDebug("LT: {LT:F2}, RT: {RT:F2}", 
         leftTrigger, rightTrigger);
 }
-~~~
+```
 
 **Returns:** `float` from 0.0 (not pressed) to 1.0 (fully pressed)
 
@@ -400,7 +400,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 ### Trigger as Acceleration
 
-~~~csharp
+```csharp
 public class VehicleControl
 {
     private readonly IInputService _input;
@@ -434,13 +434,13 @@ public class VehicleControl
         _speed = Math.Clamp(_speed, -MaxSpeed * 0.5f, MaxSpeed);
     }
 }
-~~~
+```
 
 ---
 
 ### Trigger as Aim Down Sights
 
-~~~csharp
+```csharp
 public class AimControl
 {
     private readonly IInputService _input;
@@ -465,7 +465,7 @@ public class AimControl
     
     public float GetAimAmount() => _aimAmount;
 }
-~~~
+```
 
 ---
 
@@ -473,7 +473,7 @@ public class AimControl
 
 ### D-Pad Buttons
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     int gamepadIndex = 0;
@@ -499,7 +499,7 @@ protected override void OnUpdate(GameTime gameTime)
         NavigateRight();
     }
 }
-~~~
+```
 
 ---
 
@@ -507,7 +507,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 Convert D-pad to direction vector:
 
-~~~csharp
+```csharp
 public class DPadInput
 {
     private readonly IInputService _input;
@@ -538,7 +538,7 @@ public class DPadInput
         return direction;
     }
 }
-~~~
+```
 
 ---
 
@@ -546,7 +546,7 @@ public class DPadInput
 
 ### Basic Rumble
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     int gamepadIndex = 0;
@@ -564,7 +564,7 @@ protected override void OnUpdate(GameTime gameTime)
             durationMs: 200);
     }
 }
-~~~
+```
 
 **Parameters:**
 - `lowFrequency` - Low-frequency motor (0.0 to 1.0)
@@ -575,7 +575,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 ### Rumble Patterns
 
-~~~csharp
+```csharp
 public class RumbleController
 {
     private readonly IInputService _input;
@@ -612,13 +612,13 @@ public class RumbleController
         // Schedule second beat (would need timer)
     }
 }
-~~~
+```
 
 ---
 
 ### Stop Rumble
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     int gamepadIndex = 0;
@@ -629,7 +629,7 @@ protected override void OnUpdate(GameTime gameTime)
         _input.StopGamepadRumble(gamepadIndex);
     }
 }
-~~~
+```
 
 ---
 
@@ -637,7 +637,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 ### Player Assignments
 
-~~~csharp
+```csharp
 public class PlayerManager
 {
     private readonly IInputService _input;
@@ -689,13 +689,13 @@ public class PlayerManager
         }
     }
 }
-~~~
+```
 
 ---
 
 ### Split-Screen Input
 
-~~~csharp
+```csharp
 public class SplitScreenGame
 {
     private readonly IInputService _input;
@@ -737,7 +737,7 @@ public class SplitScreenGame
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -745,7 +745,7 @@ public class SplitScreenGame
 
 ### Complete Movement System
 
-~~~csharp
+```csharp
 public class GamepadPlayerController
 {
     private readonly IInputService _input;
@@ -794,13 +794,13 @@ public class GamepadPlayerController
         }
     }
 }
-~~~
+```
 
 ---
 
 ### Menu Navigation
 
-~~~csharp
+```csharp
 public class GamepadMenu
 {
     private readonly IInputService _input;
@@ -880,13 +880,13 @@ public class GamepadMenu
         }
     }
 }
-~~~
+```
 
 ---
 
 ### Dual-Stick Shooter
 
-~~~csharp
+```csharp
 public class DualStickShooter
 {
     private readonly IInputService _input;
@@ -934,13 +934,13 @@ public class DualStickShooter
         // Create projectile with direction
     }
 }
-~~~
+```
 
 ---
 
 ## Complete Example
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.Engine;
 using Brine2D.Input;
@@ -1057,7 +1057,7 @@ public class GamepadDemoScene : Scene
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -1066,36 +1066,36 @@ public class GamepadDemoScene : Scene
 ### DO
 
 1. **Check gamepad connection**
-   ~~~csharp
+   ```csharp
    // ✅ Good - check before use
    if (_input.IsGamepadConnected(0))
    {
        var input = _input.GetGamepadLeftStick(0);
    }
-   ~~~
+   ```
 
 2. **Apply dead zones**
-   ~~~csharp
+   ```csharp
    // ✅ Good - prevent stick drift
    var stick = _input.GetGamepadLeftStick(0);
    if (stick.Length() > 0.15f)
    {
        // Use input
    }
-   ~~~
+   ```
 
 3. **Normalize diagonal stick input**
-   ~~~csharp
+   ```csharp
    // ✅ Good - consistent speed
    var stick = _input.GetGamepadLeftStick(0);
    if (stick.Length() > 0.15f)
    {
        stick = Vector2.Normalize(stick);
    }
-   ~~~
+   ```
 
 4. **Use appropriate button states**
-   ~~~csharp
+   ```csharp
    // ✅ Good - continuous action
    if (_input.IsGamepadButtonDown(0, GamepadButton.A))
    {
@@ -1107,10 +1107,10 @@ public class GamepadDemoScene : Scene
    {
        Jump();
    }
-   ~~~
+   ```
 
 5. **Support multiple control schemes**
-   ~~~csharp
+   ```csharp
    // ✅ Good - keyboard OR gamepad
    var moveInput = Vector2.Zero;
    
@@ -1125,12 +1125,12 @@ public class GamepadDemoScene : Scene
        if (_input.IsKeyDown(Keys.A)) moveInput.X -= 1;
        if (_input.IsKeyDown(Keys.D)) moveInput.X += 1;
    }
-   ~~~
+   ```
 
 ### DON'T
 
 1. **Don't forget connection checks**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - crashes if not connected!
    var input = _input.GetGamepadLeftStick(0);
    
@@ -1139,10 +1139,10 @@ public class GamepadDemoScene : Scene
    {
        var input = _input.GetGamepadLeftStick(0);
    }
-   ~~~
+   ```
 
 2. **Don't use pressed for continuous actions**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - only moves one frame
    if (_input.IsGamepadButtonPressed(0, GamepadButton.A))
    {
@@ -1154,10 +1154,10 @@ public class GamepadDemoScene : Scene
    {
        MoveForward();
    }
-   ~~~
+   ```
 
 3. **Don't ignore dead zones**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - stick drift causes movement
    var stick = _input.GetGamepadLeftStick(0);
    _position += stick * speed * deltaTime;
@@ -1168,10 +1168,10 @@ public class GamepadDemoScene : Scene
    {
        _position += stick * speed * deltaTime;
    }
-   ~~~
+   ```
 
 4. **Don't overuse rumble**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - rumbles 60 times per second!
    protected override void OnUpdate(GameTime gameTime)
    {
@@ -1183,7 +1183,7 @@ public class GamepadDemoScene : Scene
    {
        _input.RumbleGamepad(0, 0.3f, 0.5f, 150);
    }
-   ~~~
+   ```
 
 ---
 
@@ -1196,10 +1196,10 @@ public class GamepadDemoScene : Scene
 **Solutions:**
 
 1. **Check SDL3 input is registered:**
-   ~~~csharp
+   ```csharp
    // In Program.cs
    builder.Services.AddSDL3Input(); // Required!
-   ~~~
+   ```
 
 2. **Verify gamepad is actually connected:**
    - Check USB connection
@@ -1207,7 +1207,7 @@ public class GamepadDemoScene : Scene
    - Test gamepad in other applications
 
 3. **Check gamepad index:**
-   ~~~csharp
+   ```csharp
    // Try all indices
    for (int i = 0; i < 4; i++)
    {
@@ -1216,7 +1216,7 @@ public class GamepadDemoScene : Scene
            Logger.LogInformation("Gamepad {Index} found", i);
        }
    }
-   ~~~
+   ```
 
 ---
 
@@ -1226,7 +1226,7 @@ public class GamepadDemoScene : Scene
 
 **Solution:** Apply dead zone:
 
-~~~csharp
+```csharp
 const float DeadZone = 0.15f; // 15%
 
 var stick = _input.GetGamepadLeftStick(0);
@@ -1234,7 +1234,7 @@ if (stick.Length() < DeadZone)
 {
     stick = Vector2.Zero; // Ignore small movements
 }
-~~~
+```
 
 ---
 
@@ -1244,7 +1244,7 @@ if (stick.Length() < DeadZone)
 
 **Solution:** Normalize stick input:
 
-~~~csharp
+```csharp
 var stick = _input.GetGamepadLeftStick(0);
 
 if (stick.Length() > 0.15f)
@@ -1257,7 +1257,7 @@ if (stick.Length() > 0.15f)
 }
 
 _position += stick * speed * deltaTime;
-~~~
+```
 
 ---
 
@@ -1268,24 +1268,24 @@ _position += stick * speed * deltaTime;
 **Solutions:**
 
 1. **Check gamepad supports rumble:**
-   ~~~csharp
+   ```csharp
    // Not all gamepads support rumble
    // Xbox and PlayStation controllers do
-   ~~~
+   ```
 
 2. **Verify gamepad is connected:**
-   ~~~csharp
+   ```csharp
    if (_input.IsGamepadConnected(0))
    {
        _input.RumbleGamepad(0, 0.5f, 0.5f, 500);
    }
-   ~~~
+   ```
 
 3. **Check duration:**
-   ~~~csharp
+   ```csharp
    // Duration too short might not be noticeable
    _input.RumbleGamepad(0, 0.5f, 0.5f, 100); // Minimum ~100ms
-   ~~~
+   ```
 
 ---
 
@@ -1295,7 +1295,7 @@ _position += stick * speed * deltaTime;
 
 **Solution:** SDL3 uses standard mapping (Xbox layout):
 
-~~~csharp
+```csharp
 // Xbox Layout:
 // A = Bottom button
 // B = Right button  
@@ -1313,7 +1313,7 @@ _position += stick * speed * deltaTime;
 // B = Bottom button (A)
 // X = Top button (Y)
 // Y = Left button (X)
-~~~
+```
 
 ---
 
@@ -1335,7 +1335,7 @@ _position += stick * speed * deltaTime;
 
 Show correct prompts based on controller:
 
-~~~csharp
+```csharp
 public class ButtonPrompts
 {
     private readonly IInputService _input;
@@ -1365,7 +1365,7 @@ public class ButtonPrompts
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -1419,7 +1419,7 @@ public class ButtonPrompts
 
 ## Quick Reference
 
-~~~csharp
+```csharp
 // Inject input service
 public GameScene(IInputService input, ...) : base(...)
 {
@@ -1468,7 +1468,7 @@ for (int i = 0; i < 4; i++)
         UpdatePlayer(i, gameTime);
     }
 }
-~~~
+```
 
 ---
 

@@ -11,7 +11,7 @@ Learn how to use Brine2D's built-in performance overlay and profiling tools to i
 
 Brine2D includes a comprehensive performance monitoring system that provides real-time metrics without impacting game performance. The overlay displays FPS, frame time, memory usage, rendering statistics, and more.
 
-~~~mermaid
+```mermaid
 graph LR
     A[Game Loop] --> B[PerformanceMonitor]
     B --> C[FPS Tracking]
@@ -23,7 +23,7 @@ graph LR
     E --> G
     F --> G
     G --> H[On-Screen Display]
-~~~
+```
 
 ---
 
@@ -33,7 +33,7 @@ graph LR
 
 Add performance monitoring to your game builder:
 
-~~~csharp
+```csharp
 using Brine2D.Hosting;
 using Brine2D.Rendering.Performance;
 
@@ -50,7 +50,7 @@ builder.Services.AddPerformanceMonitoring(options =>
 
 var game = builder.Build();
 await game.RunAsync<GameScene>();
-~~~
+```
 
 That's it! The performance overlay will now appear in your game.
 
@@ -67,11 +67,11 @@ Control the performance overlay with these hotkeys:
 
 **Tip:** Try the **Performance Benchmark** demo to see the overlay in action with 10,000+ sprites!
 
-~~~bash
+```bash
 cd samples/FeatureDemos
 dotnet run
 # Select "Performance Benchmark" from menu
-~~~
+```
 
 ---
 
@@ -92,7 +92,7 @@ The FPS counter tracks frames per second with historical data:
 - 🟡 **Yellow** - 30-59 FPS (acceptable)
 - 🔴 **Red** - Below 30 FPS (poor)
 
-~~~csharp
+```csharp
 // Access FPS metrics programmatically
 var monitor = serviceProvider.GetRequiredService<PerformanceMonitor>();
 
@@ -103,7 +103,7 @@ var avgFPS = monitor.AverageFPS;
 
 Logger.LogInformation("FPS: {Current:F1} (Min: {Min:F0}, Max: {Max:F0}, Avg: {Avg:F1})",
     currentFPS, minFPS, maxFPS, avgFPS);
-~~~
+```
 
 ---
 
@@ -121,14 +121,14 @@ Frame time measures how long each frame takes to render (in milliseconds):
 - **16.67-33.33ms** - Running at 30-60 FPS ⚠️
 - **> 33.33ms** - Below 30 FPS ❌
 
-~~~csharp
+```csharp
 // Access frame time metrics
 var frameTime = monitor.CurrentFrameTime;
 var minFrameTime = monitor.MinFrameTime;
 var maxFrameTime = monitor.MaxFrameTime;
 
 Logger.LogDebug("Frame Time: {FrameTime:F2}ms", frameTime);
-~~~
+```
 
 **Frame Time Graph:**
 
@@ -149,7 +149,7 @@ Track managed memory usage and garbage collection:
 - **Gen 1** - Medium-lived objects (less frequent)
 - **Gen 2** - Long-lived objects (rare, expensive!)
 
-~~~csharp
+```csharp
 // Access memory metrics
 var memoryMB = monitor.TotalMemoryMB;
 var gen0 = monitor.Gen0Collections;
@@ -158,7 +158,7 @@ var gen2 = monitor.Gen2Collections;
 
 Logger.LogInformation("Memory: {Memory:F2} MB | GC: {Gen0}/{Gen1}/{Gen2}",
     memoryMB, gen0, gen1, gen2);
-~~~
+```
 
 **Warning:** Frequent Gen 2 collections indicate memory pressure. Consider using object pooling (see [Optimization Guide](optimization.md)).
 
@@ -175,7 +175,7 @@ Monitor sprite rendering performance:
 - **Draw Calls** - Number of render batches
 - **Batch Efficiency** - Average sprites per batch
 
-~~~csharp
+```csharp
 // Update rendering stats each frame
 monitor.UpdateRenderStats(
     drawCalls: 5,
@@ -192,7 +192,7 @@ var batchEfficiency = monitor.BatchEfficiency; // sprites per batch
 
 Logger.LogDebug("Rendered {Sprites} sprites in {Calls} batches ({Efficiency:F1}x efficiency)",
     spriteCount, drawCalls, batchEfficiency);
-~~~
+```
 
 **Batch Efficiency:**
 - **1x** - No batching (poor) 🔴
@@ -205,7 +205,7 @@ Logger.LogDebug("Rendered {Sprites} sprites in {Calls} batches ({Efficiency:F1}x
 
 ### Basic Configuration
 
-~~~csharp
+```csharp
 builder.Services.AddPerformanceMonitoring(options =>
 {
     // Toggle overlay visibility
@@ -216,13 +216,13 @@ builder.Services.AddPerformanceMonitoring(options =>
     options.ShowFrameTime = true;
     options.ShowMemory = true;
 });
-~~~
+```
 
 ---
 
 ### Advanced Configuration
 
-~~~csharp
+```csharp
 // Access overlay at runtime for customization
 public class GameScene : Scene
 {
@@ -244,7 +244,7 @@ public class GameScene : Scene
         _perfOverlay.ShowDetailedStats = true;
     }
 }
-~~~
+```
 
 **Overlay Positions:**
 - `OverlayPosition.TopRight` (default)
@@ -260,7 +260,7 @@ public class GameScene : Scene
 
 Track custom operations:
 
-~~~csharp
+```csharp
 public class GameScene : Scene
 {
     private readonly PerformanceMonitor _monitor;
@@ -282,7 +282,7 @@ public class GameScene : Scene
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -290,7 +290,7 @@ public class GameScene : Scene
 
 Profile specific code sections:
 
-~~~csharp
+```csharp
 using System.Diagnostics;
 
 public class AISystem : IUpdateSystem
@@ -316,7 +316,7 @@ public class AISystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -339,7 +339,7 @@ Target specifications for smooth gameplay:
 
 Adjust expectations based on platform:
 
-~~~csharp
+```csharp
 using System.Runtime.InteropServices;
 
 // Desktop: Target 60 FPS
@@ -348,7 +348,7 @@ using System.Runtime.InteropServices;
 
 var targetFPS = RuntimeInformation.IsOSPlatform(OSPlatform.Windows) ? 60 : 30;
 Logger.LogInformation("Target FPS: {Target}", targetFPS);
-~~~
+```
 
 ---
 
@@ -366,7 +366,7 @@ Logger.LogInformation("Target FPS: {Target}", targetFPS);
 
 **Solutions:**
 
-~~~csharp
+```csharp
 // 1. Enable frustum culling (automatic with SpriteRenderingSystem)
 var spriteSystem = world.GetSystem<SpriteRenderingSystem>();
 var (rendered, culled) = spriteSystem.GetCullingStats();
@@ -382,7 +382,7 @@ if (efficiency < 5f)
 {
     Logger.LogWarning("Low batch efficiency: {Efficiency:F1}x", efficiency);
 }
-~~~
+```
 
 ---
 
@@ -397,7 +397,7 @@ if (efficiency < 5f)
 
 **Solutions:**
 
-~~~csharp
+```csharp
 // ❌ Bad - creates garbage
 var results = world.Query()
     .With<EnemyComponent>()
@@ -416,7 +416,7 @@ foreach (var enemy in enemies.Execute())
 {
     Logger.LogDebug("Enemy: {Name}", enemy.Name); // Interpolation is optimized
 }
-~~~
+```
 
 See [Performance Optimization](optimization.md) for detailed guidance.
 
@@ -432,14 +432,14 @@ See [Performance Optimization](optimization.md) for detailed guidance.
 
 **Solutions:**
 
-~~~csharp
+```csharp
 // Group sprites by texture and layer
 var sprites = world.Query()
     .With<SpriteComponent>()
     .OrderBy(e => e.GetComponent<SpriteComponent>().Layer)
     .ThenBy(e => e.GetComponent<SpriteComponent>().TexturePath)
     .Execute();
-~~~
+```
 
 ---
 
@@ -448,7 +448,7 @@ var sprites = world.Query()
 ### DO
 
 1. **Enable monitoring during development**
-   ~~~csharp
+   ```csharp
    #if DEBUG
    builder.Services.AddPerformanceMonitoring(options =>
    {
@@ -456,16 +456,16 @@ var sprites = world.Query()
        options.ShowDetailedStats = true;
    });
    #endif
-   ~~~
+   ```
 
 2. **Profile before optimizing**
-   ~~~csharp
+   ```csharp
    // ✅ Good - measure first, optimize second
    // Don't guess where bottlenecks are!
-   ~~~
+   ```
 
 3. **Set performance budgets**
-   ~~~csharp
+   ```csharp
    // ✅ Good - define acceptable performance
    const float MAX_FRAME_TIME = 16.67f; // 60 FPS
    
@@ -474,10 +474,10 @@ var sprites = world.Query()
        Logger.LogWarning("Frame time exceeded budget: {Time:F2}ms",
            monitor.CurrentFrameTime);
    }
-   ~~~
+   ```
 
 4. **Monitor Gen 2 collections**
-   ~~~csharp
+   ```csharp
    // ✅ Good - track expensive GC events
    var gen2Count = monitor.Gen2Collections;
    if (gen2Count > _lastGen2Count + 1)
@@ -485,24 +485,24 @@ var sprites = world.Query()
        Logger.LogWarning("Gen 2 GC occurred! ({Count} total)", gen2Count);
    }
    _lastGen2Count = gen2Count;
-   ~~~
+   ```
 
 5. **Use profiling in context**
-   ~~~csharp
+   ```csharp
    // ✅ Good - profile specific scenarios
    // Profile during heavy action scenes, not just menus!
-   ~~~
+   ```
 
 ### DON'T
 
 1. **Don't optimize prematurely**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - optimizing without measuring
    // Profile first to identify actual bottlenecks
-   ~~~
+   ```
 
 2. **Don't leave overlay enabled in production**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - always on
    options.EnableOverlay = true;
    
@@ -510,28 +510,28 @@ var sprites = world.Query()
    #if !RELEASE
    options.EnableOverlay = true;
    #endif
-   ~~~
+   ```
 
 3. **Don't ignore Gen 2 collections**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - ignoring memory pressure
    // Frequent Gen 2 GCs indicate serious memory problems
-   ~~~
+   ```
 
 4. **Don't profile with overlay rendering**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - overlay adds overhead
    // Disable overlay when benchmarking actual performance
-   ~~~
+   ```
 
 5. **Don't trust single-frame measurements**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - one frame isn't representative
    var fps = monitor.CurrentFPS;
    
    // ✅ Good - use averages
    var avgFPS = monitor.AverageFPS;
-   ~~~
+   ```
 
 ---
 
@@ -602,7 +602,7 @@ Use this checklist when profiling your game:
 
 ## Quick Reference
 
-~~~csharp
+```csharp
 // Enable performance monitoring
 builder.Services.AddPerformanceMonitoring(options =>
 {
@@ -669,7 +669,7 @@ if (sw.ElapsedMilliseconds > 5)
 {
     Logger.LogWarning("Operation took {Ms}ms", sw.ElapsedMilliseconds);
 }
-~~~
+```
 
 ---
 

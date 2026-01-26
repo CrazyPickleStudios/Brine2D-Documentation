@@ -18,7 +18,7 @@ Optional packages:
 - **Brine2D.Tilemap** - Tiled map support
 - **Brine2D.UI** - UI framework
 
-~~~mermaid
+```mermaid
 graph LR
     A[Your Game] --> B[Brine2D]
     A --> C[Brine2D.SDL]
@@ -34,7 +34,7 @@ graph LR
     style D fill:#4a3d1f,stroke:#ce9178,stroke-width:1px,color:#fff
     style E fill:#4a3d1f,stroke:#ce9178,stroke-width:1px,color:#fff
     style A fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
-~~~
+```
 
 ---
 
@@ -56,15 +56,15 @@ graph LR
 
 Check your .NET version:
 
-~~~sh
+```sh
 dotnet --version
-~~~
+```
 
 **Expected output:**
 
-~~~
+```
 10.0.xxx
-~~~
+```
 
 If you see `9.x` or earlier, [download .NET 10 SDK](https://dotnet.microsoft.com/download/dotnet/10.0).
 
@@ -76,7 +76,7 @@ If you see `9.x` or earlier, [download .NET 10 SDK](https://dotnet.microsoft.com
 
 Create a new game from scratch:
 
-~~~sh
+```sh
 # Create project
 dotnet new console -n MyGame
 cd MyGame
@@ -90,11 +90,11 @@ dotnet add package Brine2D.Tilemap --version 0.9.0-beta
 
 # Optional: Add UI framework
 dotnet add package Brine2D.UI --version 0.9.0-beta
-~~~
+```
 
 **Project structure:**
 
-~~~
+```
 MyGame/
 ├── MyGame.csproj
 ├── Program.cs
@@ -102,7 +102,7 @@ MyGame/
     ├── textures/
     ├── sounds/
     └── music/
-~~~
+```
 
 ---
 
@@ -110,14 +110,14 @@ MyGame/
 
 Add Brine2D to an existing .NET 10 project:
 
-~~~sh
+```sh
 # Navigate to your project
 cd YourExistingProject
 
 # Add packages
 dotnet add package Brine2D --version 0.9.0-beta
 dotnet add package Brine2D.SDL --version 0.9.0-beta
-~~~
+```
 
 ---
 
@@ -125,7 +125,7 @@ dotnet add package Brine2D.SDL --version 0.9.0-beta
 
 Edit your `.csproj` file directly:
 
-~~~xml
+```xml
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -143,13 +143,13 @@ Edit your `.csproj` file directly:
     <PackageReference Include="Brine2D.UI" Version="0.9.0-beta" />
   </ItemGroup>
 </Project>
-~~~
+```
 
 Then restore packages:
 
-~~~sh
+```sh
 dotnet restore
-~~~
+```
 
 ---
 
@@ -157,7 +157,7 @@ dotnet restore
 
 Create a minimal `Program.cs` to test:
 
-~~~csharp
+```csharp
 using Brine2D.Hosting;
 using Brine2D.SDL;
 using Microsoft.Extensions.DependencyInjection;
@@ -178,20 +178,20 @@ var game = builder.Build();
 Console.WriteLine("✅ Brine2D installed successfully!");
 Console.WriteLine("Press any key to exit...");
 Console.ReadKey();
-~~~
+```
 
 Run it:
 
-~~~sh
+```sh
 dotnet run
-~~~
+```
 
 **Expected output:**
 
-~~~
+```
 ✅ Brine2D installed successfully!
 Press any key to exit...
-~~~
+```
 
 ---
 
@@ -225,16 +225,16 @@ Press any key to exit...
    - [C# Dev Kit](https://marketplace.visualstudio.com/items?itemName=ms-dotnettools.csdevkit)
 
 2. **Open Folder**
-   ~~~sh
+   ```sh
    code MyGame
-   ~~~
+   ```
 
 3. **Install Packages**
    - Open integrated terminal (`` Ctrl+` ``)
-   ~~~sh
+   ```sh
    dotnet add package Brine2D --version 0.9.0-beta
    dotnet add package Brine2D.SDL --version 0.9.0-beta
-   ~~~
+   ```
 
 4. **Run**
    - Press `F5` (creates launch.json automatically)
@@ -275,32 +275,32 @@ Install SDL3 dependencies:
 
 **Ubuntu/Debian:**
 
-~~~sh
+```sh
 sudo apt-get update
 sudo apt-get install -y \
     libsdl3-dev \
     libsdl3-mixer-dev \
     libsdl3-ttf-dev
-~~~
+```
 
 **Fedora:**
 
-~~~sh
+```sh
 sudo dnf install -y \
     SDL3-devel \
     SDL3_mixer-devel \
     SDL3_ttf-devel
-~~~
+```
 
 **Arch:**
 
-~~~sh
+```sh
 sudo pacman -S sdl3 sdl3_mixer sdl3_ttf
-~~~
+```
 
 **For GPU rendering (Vulkan):**
 
-~~~sh
+```sh
 # Ubuntu/Debian
 sudo apt-get install vulkan-tools libvulkan-dev
 
@@ -309,13 +309,13 @@ sudo dnf install vulkan-tools vulkan-loader-devel
 
 # Arch
 sudo pacman -S vulkan-tools vulkan-icd-loader
-~~~
+```
 
 Verify Vulkan:
 
-~~~sh
+```sh
 vulkaninfo
-~~~
+```
 
 ---
 
@@ -323,9 +323,9 @@ vulkaninfo
 
 Install via Homebrew:
 
-~~~sh
+```sh
 brew install sdl3 sdl3_mixer sdl3_ttf
-~~~
+```
 
 **Note:** macOS uses Metal for GPU rendering (no Vulkan).
 
@@ -335,17 +335,17 @@ brew install sdl3 sdl3_mixer sdl3_ttf
 
 Create folders for your game assets:
 
-~~~sh
+```sh
 mkdir -p assets/textures
 mkdir -p assets/sounds
 mkdir -p assets/music
 mkdir -p assets/fonts
 mkdir -p assets/levels
-~~~
+```
 
 **Project structure:**
 
-~~~
+```
 MyGame/
 ├── MyGame.csproj
 ├── Program.cs
@@ -362,7 +362,7 @@ MyGame/
     │   └── arial.ttf
     └── levels/
         └── level1.tmj
-~~~
+```
 
 ---
 
@@ -384,9 +384,9 @@ MyGame/
 
 **Install:**
 
-~~~sh
+```sh
 dotnet add package Brine2D --version 0.9.0-beta
-~~~
+```
 
 ---
 
@@ -407,9 +407,9 @@ dotnet add package Brine2D --version 0.9.0-beta
 
 **Install:**
 
-~~~sh
+```sh
 dotnet add package Brine2D.SDL --version 0.9.0-beta
-~~~
+```
 
 ---
 
@@ -426,9 +426,9 @@ dotnet add package Brine2D.SDL --version 0.9.0-beta
 
 **Install:**
 
-~~~sh
+```sh
 dotnet add package Brine2D.Tilemap --version 0.9.0-beta
-~~~
+```
 
 ---
 
@@ -445,9 +445,9 @@ dotnet add package Brine2D.Tilemap --version 0.9.0-beta
 
 **Install:**
 
-~~~sh
+```sh
 dotnet add package Brine2D.UI --version 0.9.0-beta
-~~~
+```
 
 ---
 
@@ -455,33 +455,33 @@ dotnet add package Brine2D.UI --version 0.9.0-beta
 
 ### Check Installed Version
 
-~~~sh
+```sh
 dotnet list package | grep Brine2D
-~~~
+```
 
 **Output:**
 
-~~~
+```
 > Brine2D           0.9.0-beta
 > Brine2D.SDL       0.9.0-beta
-~~~
+```
 
 ---
 
 ### Update to Latest
 
-~~~sh
+```sh
 # Update all packages
 dotnet add package Brine2D --version 0.9.0-beta
 dotnet add package Brine2D.SDL --version 0.9.0-beta
-~~~
+```
 
 Or use wildcard for auto-updates:
 
-~~~xml
+```xml
 <PackageReference Include="Brine2D" Version="0.9.*-*" />
 <PackageReference Include="Brine2D.SDL" Version="0.9.*-*" />
-~~~
+```
 
 ---
 
@@ -489,15 +489,15 @@ Or use wildcard for auto-updates:
 
 To use alpha/preview versions:
 
-~~~sh
+```sh
 dotnet add package Brine2D --version 0.10.0-alpha
-~~~
+```
 
 Or in `.csproj`:
 
-~~~xml
+```xml
 <PackageReference Include="Brine2D" Version="0.10.0-alpha" />
-~~~
+```
 
 ---
 
@@ -507,36 +507,36 @@ Or in `.csproj`:
 
 **Symptom:**
 
-~~~
+```
 error NU1101: Unable to find package Brine2D
-~~~
+```
 
 **Solutions:**
 
 1. **Check NuGet source**
-   ~~~sh
+   ```sh
    dotnet nuget list source
-   ~~~
+   ```
 
    Should include `nuget.org`:
-   ~~~
+   ```
    https://api.nuget.org/v3/index.json
-   ~~~
+   ```
 
 2. **Clear NuGet cache**
-   ~~~sh
+   ```sh
    dotnet nuget locals all --clear
    dotnet restore
-   ~~~
+   ```
 
 3. **Verify package name**
-   ~~~csharp
+   ```csharp
    // ❌ Wrong
    dotnet add package Brine2D-Engine
    
    // ✅ Correct
    dotnet add package Brine2D
-   ~~~
+   ```
 
 ---
 
@@ -544,27 +544,27 @@ error NU1101: Unable to find package Brine2D
 
 **Symptom:**
 
-~~~
+```
 error NETSDK1045: The current .NET SDK does not support targeting .NET 10.0
-~~~
+```
 
 **Solution:**
 
 1. **Download .NET 10 SDK**: https://dotnet.microsoft.com/download/dotnet/10.0
 
 2. **Verify installation**:
-   ~~~sh
+   ```sh
    dotnet --version
-   ~~~
+   ```
 
 3. **Update global.json** (if present):
-   ~~~json
+   ```json
    {
      "sdk": {
        "version": "10.0.100"
      }
    }
-   ~~~
+   ```
 
 ---
 
@@ -572,15 +572,15 @@ error NETSDK1045: The current .NET SDK does not support targeting .NET 10.0
 
 **Symptom:**
 
-~~~
+```
 error: libSDL3.so: cannot open shared object file
-~~~
+```
 
 **Solution:**
 
 Install SDL3 development libraries:
 
-~~~sh
+```sh
 # Ubuntu/Debian
 sudo apt-get install libsdl3-dev libsdl3-mixer-dev libsdl3-ttf-dev
 
@@ -589,7 +589,7 @@ sudo dnf install SDL3-devel SDL3_mixer-devel SDL3_ttf-devel
 
 # Arch
 sudo pacman -S sdl3 sdl3_mixer sdl3_ttf
-~~~
+```
 
 ---
 
@@ -597,14 +597,14 @@ sudo pacman -S sdl3 sdl3_mixer sdl3_ttf
 
 **Symptom:**
 
-~~~
+```
 GPU device creation failed: Vulkan not supported
-~~~
+```
 
 **Solution:**
 
 1. **Install Vulkan drivers**:
-   ~~~sh
+   ```sh
    # Ubuntu/Debian
    sudo apt-get install vulkan-tools libvulkan-dev
    
@@ -613,20 +613,20 @@ GPU device creation failed: Vulkan not supported
    
    # Arch
    sudo pacman -S vulkan-tools vulkan-icd-loader
-   ~~~
+   ```
 
 2. **Verify Vulkan**:
-   ~~~sh
+   ```sh
    vulkaninfo
-   ~~~
+   ```
 
 3. **Fallback to legacy renderer**:
-   ~~~csharp
+   ```csharp
    builder.Services.AddSDL3Rendering(options =>
    {
        options.Backend = GraphicsBackend.LegacyRenderer;
    });
-   ~~~
+   ```
 
 ---
 
@@ -634,9 +634,9 @@ GPU device creation failed: Vulkan not supported
 
 **Symptom:**
 
-~~~
+```
 FileNotFoundException: Could not find file 'assets/player.png'
-~~~
+```
 
 **Solution:**
 
@@ -647,23 +647,23 @@ FileNotFoundException: Could not find file 'assets/player.png'
 2. **Copy assets to output**:
 
    **Option 1: Add to .csproj**
-   ~~~xml
+   ```xml
    <ItemGroup>
      <None Update="assets\**\*">
        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
      </None>
    </ItemGroup>
-   ~~~
+   ```
 
    **Option 2: Manually copy**
-   ~~~sh
+   ```sh
    cp -r assets bin/Debug/net10.0/
-   ~~~
+   ```
 
 3. **Use absolute paths** (not recommended):
-   ~~~csharp
+   ```csharp
    var path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "assets", "player.png");
-   ~~~
+   ```
 
 ---
 
@@ -672,64 +672,64 @@ FileNotFoundException: Could not find file 'assets/player.png'
 ### DO
 
 1. **Use specific package versions in production**
-   ~~~xml
+   ```xml
    <PackageReference Include="Brine2D" Version="0.9.0-beta" />
-   ~~~
+   ```
 
 2. **Copy assets to output directory**
-   ~~~xml
+   ```xml
    <None Update="assets\**\*">
      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
    </None>
-   ~~~
+   ```
 
 3. **Use .gitignore for packages**
-   ~~~
+   ```
    bin/
    obj/
    .vs/
    *.user
-   ~~~
+   ```
 
 4. **Keep packages in sync**
-   ~~~sh
+   ```sh
    # Update all at once
    dotnet add package Brine2D --version 0.9.0-beta
    dotnet add package Brine2D.SDL --version 0.9.0-beta
-   ~~~
+   ```
 
 5. **Use centralized asset folders**
-   ~~~
+   ```
    assets/
    ├── textures/
    ├── sounds/
    └── music/
-   ~~~
+   ```
 
 ### DON'T
 
 1. **Don't mix package versions**
-   ~~~xml
+   ```xml
    <!-- ❌ Bad - version mismatch -->
    <PackageReference Include="Brine2D" Version="0.9.0-beta" />
    <PackageReference Include="Brine2D.SDL" Version="0.8.0-beta" />
-   ~~~
+   ```
 
 2. **Don't commit packages to Git**
-   ~~~
+   ```
    # ✅ Add to .gitignore
    bin/
    obj/
-   ~~~
+   ```
 
 3. **Don't hard-code asset paths**
-   ~~~csharp
+   ```csharp
    // ❌ Bad
    var texture = await renderer.LoadTextureAsync("C:\\MyGame\\assets\\player.png");
    
    // ✅ Good
    var texture = await renderer.LoadTextureAsync("assets/textures/player.png");
-   ~~~
+   ```
 
 ---
 
@@ -767,7 +767,7 @@ Now that Brine2D is installed, let's create your first game! 🎮
 
 ## Quick Reference
 
-~~~sh
+```sh
 # Create new project
 dotnet new console -n MyGame
 cd MyGame
@@ -781,9 +781,9 @@ dotnet list package | grep Brine2D
 
 # Run project
 dotnet run
-~~~
+```
 
-~~~xml
+```xml
 <!-- Minimal .csproj -->
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
@@ -802,7 +802,7 @@ dotnet run
     </None>
   </ItemGroup>
 </Project>
-~~~
+```
 
 ---
 

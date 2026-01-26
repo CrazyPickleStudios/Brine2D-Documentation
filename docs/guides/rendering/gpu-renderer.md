@@ -63,7 +63,7 @@ Use the legacy renderer only when:
 
 ## Architecture
 
-~~~mermaid
+```mermaid
 graph TB
     A[Your Game] --> B[IRenderer]
     B --> C[SDL3GPURenderer]
@@ -88,7 +88,7 @@ graph TB
     style C fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
     style E fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
     style F fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
-~~~
+```
 
 **Rendering flow:**
 
@@ -106,7 +106,7 @@ graph TB
 
 The GPU renderer is enabled by default:
 
-~~~csharp
+```csharp
 using Brine2D.Hosting;
 using Brine2D.SDL;
 using Microsoft.Extensions.DependencyInjection;
@@ -125,7 +125,7 @@ builder.Services.AddSDL3Rendering(options =>
 
 var game = builder.Build();
 await game.RunAsync<GameScene>();
-~~~
+```
 
 ---
 
@@ -133,7 +133,7 @@ await game.RunAsync<GameScene>();
 
 Explicitly specify GPU backend:
 
-~~~csharp
+```csharp
 using Brine2D.Rendering;
 
 builder.Services.AddSDL3Rendering(options =>
@@ -144,13 +144,13 @@ builder.Services.AddSDL3Rendering(options =>
     options.Backend = GraphicsBackend.GPU; // Explicit GPU
     options.VSync = true;
 });
-~~~
+```
 
 ---
 
 ### GPU Options
 
-~~~csharp
+```csharp
 builder.Services.AddSDL3Rendering(options =>
 {
     // Window settings
@@ -169,7 +169,7 @@ builder.Services.AddSDL3Rendering(options =>
     options.Borderless = false;
     options.Resizable = true;
 });
-~~~
+```
 
 ---
 
@@ -232,7 +232,7 @@ SDL3 automatically selects the best backend for your platform:
 
 Textures stored in GPU VRAM:
 
-~~~csharp
+```csharp
 public class TextureManager
 {
     private readonly IRenderer _renderer;
@@ -252,7 +252,7 @@ public class TextureManager
         return texture;
     }
 }
-~~~
+```
 
 **Benefits:**
 - Fast access from GPU
@@ -265,7 +265,7 @@ public class TextureManager
 
 GPU renderer batches draw calls:
 
-~~~csharp
+```csharp
 protected override void OnRender(GameTime gameTime)
 {
     _renderer.Clear(Color.Black);
@@ -281,7 +281,7 @@ protected override void OnRender(GameTime gameTime)
     
     // Single GPU draw call for all sprites!
 }
-~~~
+```
 
 **Performance:**
 - Automatic batching
@@ -294,7 +294,7 @@ protected override void OnRender(GameTime gameTime)
 
 Control frame pacing:
 
-~~~csharp
+```csharp
 builder.Services.AddSDL3Rendering(options =>
 {
     // VSync on (recommended)
@@ -303,7 +303,7 @@ builder.Services.AddSDL3Rendering(options =>
     // VSync off (for benchmarking)
     // options.VSync = false; // Uncapped FPS
 });
-~~~
+```
 
 **With VSync:**
 - Frame rate locked to display (60 Hz = 60 FPS)
@@ -325,7 +325,7 @@ builder.Services.AddSDL3Rendering(options =>
 
 Render to textures:
 
-~~~csharp
+```csharp
 public class RenderTargetExample : Scene
 {
     private readonly IRenderer _renderer;
@@ -354,7 +354,7 @@ public class RenderTargetExample : Scene
         _renderer.DrawTexture(_renderTarget, 0, 0, 800, 600);
     }
 }
-~~~
+```
 
 **Use cases:**
 - Post-processing effects
@@ -368,7 +368,7 @@ public class RenderTargetExample : Scene
 
 Load large textures efficiently:
 
-~~~csharp
+```csharp
 public class LargeTextureLoader
 {
     private readonly IRenderer _renderer;
@@ -384,7 +384,7 @@ public class LargeTextureLoader
         return texture;
     }
 }
-~~~
+```
 
 **Benefits:**
 - Automatic texture streaming
@@ -397,7 +397,7 @@ public class LargeTextureLoader
 
 Control how sprites blend:
 
-~~~csharp
+```csharp
 // Note: Blend modes typically controlled via draw parameters
 // or through shader/material systems
 
@@ -412,7 +412,7 @@ protected override void OnRender(GameTime gameTime)
     // (API-specific - check IRenderer interface)
     _renderer.DrawTexture(_glowEffect, 300, 200, 200, 200);
 }
-~~~
+```
 
 ---
 
@@ -421,58 +421,58 @@ protected override void OnRender(GameTime gameTime)
 ### DO
 
 1. **Use GPU renderer by default**
-   ~~~csharp
+   ```csharp
    // ✅ Good - GPU renderer (default)
    builder.Services.AddSDL3Rendering(options => { ... });
-   ~~~
+   ```
 
 2. **Enable VSync**
-   ~~~csharp
+   ```csharp
    // ✅ Good - smooth rendering
    options.VSync = true;
-   ~~~
+   ```
 
 3. **Batch draw calls**
-   ~~~csharp
+   ```csharp
    // ✅ Good - draw multiple sprites in sequence
    foreach (var sprite in sprites)
    {
        _renderer.DrawTexture(sprite.Texture, sprite.X, sprite.Y, 64, 64);
    }
    // Automatically batched!
-   ~~~
+   ```
 
 4. **Preload textures**
-   ~~~csharp
+   ```csharp
    // ✅ Good - load during loading screen
    protected override async Task OnLoadAsync(CancellationToken ct)
    {
        _texture = await _renderer.LoadTextureAsync("sprite.png", ct);
    }
-   ~~~
+   ```
 
 5. **Unload unused textures**
-   ~~~csharp
+   ```csharp
    // ✅ Good - free GPU memory
    protected override void OnDispose()
    {
        _renderer.UnloadTexture(_texture);
    }
-   ~~~
+   ```
 
 ### DON'T
 
 1. **Don't load textures in render loop**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - loads every frame!
    protected override void OnRender(GameTime gameTime)
    {
        var texture = await _renderer.LoadTextureAsync(...); // NO!
    }
-   ~~~
+   ```
 
 2. **Don't create textures unnecessarily**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - creates 1000 textures!
    for (int i = 0; i < 1000; i++)
    {
@@ -485,10 +485,10 @@ protected override void OnRender(GameTime gameTime)
    {
        _renderer.DrawTexture(texture, i * 64, 100, 64, 64);
    }
-   ~~~
+   ```
 
 3. **Don't forget to clear**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - no clear, garbage on screen
    protected override void OnRender(GameTime gameTime)
    {
@@ -501,16 +501,16 @@ protected override void OnRender(GameTime gameTime)
        _renderer.Clear(Color.Black);
        _renderer.DrawTexture(...);
    }
-   ~~~
+   ```
 
 4. **Don't disable VSync without reason**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - causes screen tearing
    options.VSync = false;
    
    // ✅ Good - smooth rendering
    options.VSync = true;
-   ~~~
+   ```
 
 ---
 
@@ -520,7 +520,7 @@ protected override void OnRender(GameTime gameTime)
 
 Combine multiple textures:
 
-~~~csharp
+```csharp
 public class TextureAtlas
 {
     private readonly ITexture _atlas;
@@ -535,7 +535,7 @@ public class TextureAtlas
         }
     }
 }
-~~~
+```
 
 **Benefits:**
 - Fewer texture switches
@@ -548,7 +548,7 @@ public class TextureAtlas
 
 Don't draw off-screen objects:
 
-~~~csharp
+```csharp
 public class Viewport
 {
     public Rectangle Bounds { get; set; }
@@ -576,7 +576,7 @@ protected override void OnRender(GameTime gameTime)
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -584,7 +584,7 @@ protected override void OnRender(GameTime gameTime)
 
 Draw in optimal order:
 
-~~~csharp
+```csharp
 protected override void OnRender(GameTime gameTime)
 {
     _renderer.Clear(Color.Black);
@@ -599,7 +599,7 @@ protected override void OnRender(GameTime gameTime)
             sprite.Width, sprite.Height);
     }
 }
-~~~
+```
 
 **Benefits:**
 - Better batching
@@ -617,16 +617,16 @@ protected override void OnRender(GameTime gameTime)
 **Solutions:**
 
 1. **Check Clear is called:**
-   ~~~csharp
+   ```csharp
    protected override void OnRender(GameTime gameTime)
    {
        _renderer.Clear(Color.Black); // Must clear!
        // ... draw calls
    }
-   ~~~
+   ```
 
 2. **Verify textures loaded:**
-   ~~~csharp
+   ```csharp
    if (_texture != null)
    {
        _renderer.DrawTexture(_texture, 0, 0, 64, 64);
@@ -635,13 +635,13 @@ protected override void OnRender(GameTime gameTime)
    {
        Logger.LogError("Texture not loaded!");
    }
-   ~~~
+   ```
 
 3. **Check coordinate system:**
-   ~~~csharp
+   ```csharp
    // Draw at 0,0 to test
    _renderer.DrawTexture(_texture, 0, 0, 100, 100);
-   ~~~
+   ```
 
 ---
 
@@ -652,23 +652,23 @@ protected override void OnRender(GameTime gameTime)
 **Solutions:**
 
 1. **Enable VSync:**
-   ~~~csharp
+   ```csharp
    options.VSync = true;
-   ~~~
+   ```
 
 2. **Check texture count:**
-   ~~~csharp
+   ```csharp
    // Too many textures?
    Logger.LogDebug("Texture count: {Count}", _textureManager.Count);
-   ~~~
+   ```
 
 3. **Profile rendering:**
-   ~~~csharp
+   ```csharp
    var sw = Stopwatch.StartNew();
    OnRender(gameTime);
    sw.Stop();
    Logger.LogDebug("Render time: {Ms}ms", sw.ElapsedMilliseconds);
-   ~~~
+   ```
 
 4. **Reduce draw calls:**
    - Use texture atlasing
@@ -683,12 +683,12 @@ protected override void OnRender(GameTime gameTime)
 
 **Solution:** Enable VSync:
 
-~~~csharp
+```csharp
 builder.Services.AddSDL3Rendering(options =>
 {
     options.VSync = true; // Fixes tearing
 });
-~~~
+```
 
 ---
 
@@ -698,13 +698,13 @@ builder.Services.AddSDL3Rendering(options =>
 
 **Solution:** Fall back to legacy renderer:
 
-~~~csharp
+```csharp
 builder.Services.AddSDL3Rendering(options =>
 {
     options.Backend = GraphicsBackend.LegacyRenderer;
     // ... other options
 });
-~~~
+```
 
 ---
 
@@ -715,9 +715,9 @@ builder.Services.AddSDL3Rendering(options =>
 **Solutions:**
 
 1. **Unload unused textures:**
-   ~~~csharp
+   ```csharp
    _renderer.UnloadTexture(_oldTexture);
-   ~~~
+   ```
 
 2. **Use texture atlases:**
    - Combine small textures
@@ -735,7 +735,7 @@ builder.Services.AddSDL3Rendering(options =>
 
 Check GPU capabilities:
 
-~~~csharp
+```csharp
 public class GPUInfo
 {
     private readonly IRenderer _renderer;
@@ -750,7 +750,7 @@ public class GPUInfo
         Logger.LogInformation("VSync: Enabled");
     }
 }
-~~~
+```
 
 ---
 
@@ -758,7 +758,7 @@ public class GPUInfo
 
 Check for feature support:
 
-~~~csharp
+```csharp
 public class FeatureDetection
 {
     public bool SupportsRenderTargets { get; private set; }
@@ -774,7 +774,7 @@ public class FeatureDetection
             SupportsRenderTargets);
     }
 }
-~~~
+```
 
 ---
 
@@ -784,11 +784,11 @@ public class FeatureDetection
 
 **GPU Backend:** Direct3D 12 or Vulkan
 
-~~~csharp
+```csharp
 // Automatically selected by SDL3
 // Prefers D3D12 on Windows 10+
 // Falls back to Vulkan if available
-~~~
+```
 
 **Requirements:**
 - Windows 10 or later (for D3D12)
@@ -801,9 +801,9 @@ public class FeatureDetection
 
 **GPU Backend:** Vulkan
 
-~~~csharp
+```csharp
 // Automatically uses Vulkan on Linux
-~~~
+```
 
 **Requirements:**
 - Vulkan-capable GPU
@@ -816,9 +816,9 @@ public class FeatureDetection
 
 **GPU Backend:** Metal
 
-~~~csharp
+```csharp
 // Automatically uses Metal on macOS
-~~~
+```
 
 **Requirements:**
 - macOS 10.14 (Mojave) or later
@@ -833,7 +833,7 @@ public class FeatureDetection
 
 Change from legacy to GPU:
 
-~~~csharp
+```csharp
 // Before (legacy)
 builder.Services.AddSDL3Rendering(options =>
 {
@@ -845,7 +845,7 @@ builder.Services.AddSDL3Rendering(options =>
 {
     options.Backend = GraphicsBackend.GPU; // or omit (default)
 });
-~~~
+```
 
 **API Compatibility:**
 - Same `IRenderer` interface
@@ -917,7 +917,7 @@ Typical improvements:
 
 ## Quick Reference
 
-~~~csharp
+```csharp
 // Enable GPU renderer (default)
 builder.Services.AddSDL3Rendering(options =>
 {
@@ -943,7 +943,7 @@ _renderer.SetRenderTarget(null); // Back to screen
 
 // Cleanup
 _renderer.UnloadTexture(texture);
-~~~
+```
 
 ---
 

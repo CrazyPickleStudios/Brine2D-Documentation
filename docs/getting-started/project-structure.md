@@ -32,7 +32,7 @@ A well-organized project structure:
 
 For prototypes and learning:
 
-~~~
+```
 MyGame/
 ├── MyGame.csproj
 ├── Program.cs
@@ -41,7 +41,7 @@ MyGame/
     ├── textures/
     ├── sounds/
     └── music/
-~~~
+```
 
 **When to use:**
 - Quick prototypes
@@ -51,7 +51,7 @@ MyGame/
 
 **Program.cs:**
 
-~~~csharp
+```csharp
 using Brine2D.Hosting;
 using Brine2D.SDL;
 using Microsoft.Extensions.DependencyInjection;
@@ -70,7 +70,7 @@ builder.Services.AddScene<GameScene>();
 
 var game = builder.Build();
 await game.RunAsync<GameScene>();
-~~~
+```
 
 ---
 
@@ -78,7 +78,7 @@ await game.RunAsync<GameScene>();
 
 For most games:
 
-~~~
+```
 MyGame/
 ├── MyGame.csproj
 ├── Program.cs
@@ -103,7 +103,7 @@ MyGame/
     │   └── ui/
     ├── music/
     └── fonts/
-~~~
+```
 
 **When to use:**
 - Most 2D games
@@ -117,7 +117,7 @@ MyGame/
 
 For complex games with many features:
 
-~~~
+```
 MyGame/
 ├── MyGame.csproj
 ├── Program.cs
@@ -194,7 +194,7 @@ MyGame/
     └── data/
         ├── items.json
         └── enemies.json
-~~~
+```
 
 **When to use:**
 - Complex games
@@ -210,17 +210,17 @@ MyGame/
 
 Organize scenes by purpose:
 
-~~~
+```
 Scenes/
 ├── Menu/              # Menu screens
 ├── Gameplay/          # Main game levels
 ├── UI/                # Overlay scenes
 └── Transitions/       # Loading, fade screens
-~~~
+```
 
 **Pattern:**
 
-~~~csharp
+```csharp
 // Scenes/Gameplay/Level1Scene.cs
 namespace MyGame.Scenes.Gameplay;
 
@@ -228,7 +228,7 @@ public class Level1Scene : Scene
 {
     // Scene implementation
 }
-~~~
+```
 
 ---
 
@@ -236,17 +236,17 @@ public class Level1Scene : Scene
 
 Group entities by category:
 
-~~~
+```
 Entities/
 ├── Characters/        # Player, enemies, NPCs
 ├── Items/             # Weapons, consumables
 ├── Projectiles/       # Bullets, missiles
 └── Environment/       # Platforms, obstacles
-~~~
+```
 
 **Pattern:**
 
-~~~csharp
+```csharp
 // Entities/Characters/Player.cs
 namespace MyGame.Entities.Characters;
 
@@ -256,7 +256,7 @@ public class Player
     public int Health { get; set; }
     public float Speed { get; set; } = 200f;
 }
-~~~
+```
 
 ---
 
@@ -264,17 +264,17 @@ public class Player
 
 Organize systems by functionality:
 
-~~~
+```
 Systems/
 ├── Gameplay/          # Core game logic
 ├── AI/                # Enemy behavior
 ├── Physics/           # Movement, collision
 └── Rendering/         # Visual effects
-~~~
+```
 
 **Pattern:**
 
-~~~csharp
+```csharp
 // Systems/Gameplay/HealthSystem.cs
 namespace MyGame.Systems.Gameplay;
 
@@ -288,7 +288,7 @@ public class HealthSystem : IUpdateSystem
         // System logic
     }
 }
-~~~
+```
 
 ---
 
@@ -296,16 +296,16 @@ public class HealthSystem : IUpdateSystem
 
 Group components by purpose:
 
-~~~
+```
 Components/
 ├── Core/              # Transform, Sprite, Physics
 ├── Gameplay/          # Health, Inventory
 └── AI/                # AIState, Pathfinding
-~~~
+```
 
 **Pattern:**
 
-~~~csharp
+```csharp
 // Components/Gameplay/HealthComponent.cs
 namespace MyGame.Components.Gameplay;
 
@@ -315,7 +315,7 @@ public class HealthComponent : Component
     public int Max { get; set; }
     public bool IsDead => Current <= 0;
 }
-~~~
+```
 
 ---
 
@@ -323,17 +323,17 @@ public class HealthComponent : Component
 
 Singleton services for game-wide state:
 
-~~~
+```
 Managers/
 ├── GameStateManager.cs    # Game state machine
 ├── SaveManager.cs          # Save/load
 ├── AudioManager.cs         # Audio control
 └── ScoreManager.cs         # Score tracking
-~~~
+```
 
 **Pattern:**
 
-~~~csharp
+```csharp
 // Managers/GameStateManager.cs
 namespace MyGame.Managers;
 
@@ -355,7 +355,7 @@ public enum GameState
     Paused,
     GameOver
 }
-~~~
+```
 
 ---
 
@@ -363,16 +363,16 @@ public enum GameState
 
 Configuration and data files:
 
-~~~
+```
 Data/
 ├── Configs/           # Game configuration
 ├── Definitions/       # Item/enemy data
 └── Localization/      # Language files
-~~~
+```
 
 **Pattern:**
 
-~~~csharp
+```csharp
 // Data/Configs/GameConfig.cs
 namespace MyGame.Data.Configs;
 
@@ -382,7 +382,7 @@ public class GameConfig
     public float PlayerSpeed { get; set; } = 200f;
     public int MaxEnemies { get; set; } = 20;
 }
-~~~
+```
 
 ---
 
@@ -390,16 +390,16 @@ public class GameConfig
 
 Helper classes and extensions:
 
-~~~
+```
 Utilities/
 ├── Extensions/        # Extension methods
 ├── Helpers/           # Static helper methods
 └── Constants.cs       # Game constants
-~~~
+```
 
 **Pattern:**
 
-~~~csharp
+```csharp
 // Utilities/Constants.cs
 namespace MyGame.Utilities;
 
@@ -420,7 +420,7 @@ public static class Vector2Extensions
         return (float)Math.Atan2(vector.Y, vector.X);
     }
 }
-~~~
+```
 
 ---
 
@@ -430,7 +430,7 @@ public static class Vector2Extensions
 
 Organize by category and usage:
 
-~~~
+```
 assets/textures/
 ├── characters/
 │   ├── player/
@@ -457,7 +457,7 @@ assets/textures/
     ├── buttons/
     ├── panels/
     └── icons/
-~~~
+```
 
 ---
 
@@ -465,7 +465,7 @@ assets/textures/
 
 Organize by type and context:
 
-~~~
+```
 assets/sounds/
 ├── characters/
 │   ├── player/
@@ -501,7 +501,7 @@ assets/music/
 │   └── boss.mp3
 └── credits/
     └── ending.mp3
-~~~
+```
 
 ---
 
@@ -509,7 +509,7 @@ assets/music/
 
 Organize maps and level definitions:
 
-~~~
+```
 assets/levels/
 ├── world1/
 │   ├── level1.tmj
@@ -522,7 +522,7 @@ assets/levels/
     ├── grass.tsx
     ├── dungeon.tsx
     └── cave.tsx
-~~~
+```
 
 ---
 
@@ -532,7 +532,7 @@ assets/levels/
 
 Use your game name as root:
 
-~~~csharp
+```csharp
 // Good
 namespace MyGame;
 namespace MyGame.Scenes;
@@ -541,7 +541,7 @@ namespace MyGame.Entities;
 // Bad
 namespace Game;
 namespace Scenes;
-~~~
+```
 
 ---
 
@@ -549,7 +549,7 @@ namespace Scenes;
 
 Match folder structure:
 
-~~~
+```
 Folder: Scenes/Gameplay/Level1Scene.cs
 Namespace: MyGame.Scenes.Gameplay
 
@@ -558,11 +558,11 @@ Namespace: MyGame.Entities.Characters
 
 Folder: Systems/AI/PathfindingSystem.cs
 Namespace: MyGame.Systems.AI
-~~~
+```
 
 **Pattern:**
 
-~~~csharp
+```csharp
 // File: Scenes/Gameplay/Level1Scene.cs
 namespace MyGame.Scenes.Gameplay;
 
@@ -573,7 +573,7 @@ public class Level1Scene : Scene
 {
     // Implementation
 }
-~~~
+```
 
 ---
 
@@ -583,7 +583,7 @@ public class Level1Scene : Scene
 
 Configure project settings in `.csproj`:
 
-~~~xml
+```xml
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -606,7 +606,7 @@ Configure project settings in `.csproj`:
     </None>
   </ItemGroup>
 </Project>
-~~~
+```
 
 ---
 
@@ -614,7 +614,7 @@ Configure project settings in `.csproj`:
 
 Store configuration in `gamesettings.json`:
 
-~~~json
+```json
 {
   "Rendering": {
     "WindowTitle": "My Game",
@@ -634,12 +634,13 @@ Store configuration in `gamesettings.json`:
     "PlayerSpeed": 200
   }
 }
-~~~
+```
 
 Load in `Program.cs`:
 
-~~~csharp
+```csharp
 using Brine2D.Hosting;
+using Brine2D.SDL;
 using Microsoft.Extensions.Configuration;
 
 var builder = GameApplication.CreateBuilder(args);
@@ -647,12 +648,20 @@ var builder = GameApplication.CreateBuilder(args);
 // Load configuration
 builder.Configuration.AddJsonFile("gamesettings.json", optional: false);
 
-// Bind to options
-builder.Services.AddSDL3Rendering(options =>
+// Bind to options (typical approach)
+builder.Services.AddBrine2D(options =>
 {
     builder.Configuration.GetSection("Rendering").Bind(options);
 });
-~~~
+
+// Or configure directly
+builder.Services.AddBrine2D(options =>
+{
+    options.WindowTitle = builder.Configuration["Rendering:WindowTitle"] ?? "My Game";
+    options.WindowWidth = builder.Configuration.GetValue<int>("Rendering:WindowWidth", 1280);
+    options.WindowHeight = builder.Configuration.GetValue<int>("Rendering:WindowHeight", 720);
+});
+```
 
 ---
 
@@ -662,13 +671,13 @@ builder.Services.AddSDL3Rendering(options =>
 
 Begin with minimal structure:
 
-~~~
+```
 MyGame/
 ├── MyGame.csproj
 ├── Program.cs
 ├── GameScene.cs
 └── assets/
-~~~
+```
 
 ---
 
@@ -678,18 +687,18 @@ Grow organically:
 
 **Add Scenes folder:**
 
-~~~
+```
 MyGame/
 ├── Program.cs
 ├── Scenes/
 │   ├── MenuScene.cs
 │   └── GameScene.cs
 └── assets/
-~~~
+```
 
 **Add Entities folder:**
 
-~~~
+```
 MyGame/
 ├── Program.cs
 ├── Scenes/
@@ -697,11 +706,11 @@ MyGame/
 │   ├── Player.cs
 │   └── Enemy.cs
 └── assets/
-~~~
+```
 
 **Add Systems folder:**
 
-~~~
+```
 MyGame/
 ├── Program.cs
 ├── Scenes/
@@ -709,7 +718,7 @@ MyGame/
 ├── Systems/
 │   └── HealthSystem.cs
 └── assets/
-~~~
+```
 
 ---
 
@@ -719,26 +728,26 @@ Split large files:
 
 **Before:**
 
-~~~
+```
 Scenes/
 └── GameScene.cs (500+ lines)
-~~~
+```
 
 **After:**
 
-~~~
+```
 Scenes/
 └── Gameplay/
     ├── GameScene.cs
     ├── Level1Scene.cs
     └── Level2Scene.cs
-~~~
+```
 
 ---
 
 ## Architecture Diagram
 
-~~~mermaid
+```mermaid
 graph TB
     A[Program.cs] --> B[Services]
     A --> C[Scenes]
@@ -774,7 +783,7 @@ graph TB
     style D fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
     style E fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
     style F fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
-~~~
+```
 
 ---
 
@@ -782,7 +791,7 @@ graph TB
 
 Complete example for a platformer game:
 
-~~~
+```
 PlatformerGame/
 ├── PlatformerGame.csproj
 ├── Program.cs
@@ -855,7 +864,7 @@ PlatformerGame/
         ├── level1.tmj
         ├── level2.tmj
         └── level3.tmj
-~~~
+```
 
 ---
 
@@ -864,21 +873,21 @@ PlatformerGame/
 ### DO
 
 1. **Match namespaces to folders**
-   ~~~csharp
+   ```csharp
    // File: Scenes/Gameplay/Level1Scene.cs
    namespace MyGame.Scenes.Gameplay;
-   ~~~
+   ```
 
 2. **Group related files**
-   ~~~
+   ```
    Entities/Characters/
    ├── Player.cs
    ├── Enemy.cs
    └── NPC.cs
-   ~~~
+   ```
 
 3. **Use consistent naming**
-   ~~~csharp
+   ```csharp
    // Scene files end with Scene
    MenuScene.cs
    GameScene.cs
@@ -886,25 +895,25 @@ PlatformerGame/
    // System files end with System
    HealthSystem.cs
    CombatSystem.cs
-   ~~~
+   ```
 
 4. **Organize assets by usage**
-   ~~~
+   ```
    assets/textures/player/
    assets/sounds/player/
-   ~~~
+   ```
 
 5. **Copy assets to output**
-   ~~~xml
+   ```xml
    <None Update="assets\**\*">
      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
    </None>
-   ~~~
+   ```
 
 ### DON'T
 
 1. **Don't use generic names**
-   ~~~csharp
+   ```csharp
    // ❌ Bad
    namespace Game;
    public class Manager { }
@@ -912,10 +921,10 @@ PlatformerGame/
    // ✅ Good
    namespace MyGame;
    public class SaveManager { }
-   ~~~
+   ```
 
 2. **Don't mix concerns**
-   ~~~
+   ```
    // ❌ Bad
    Stuff/
    ├── Player.cs
@@ -926,25 +935,25 @@ PlatformerGame/
    Entities/Player.cs
    Scenes/MenuScene.cs
    Systems/HealthSystem.cs
-   ~~~
+   ```
 
 3. **Don't nest too deeply**
-   ~~~
+   ```
    // ❌ Bad (6 levels deep)
    Entities/Characters/Players/Playable/Main/Player.cs
    
    // ✅ Good (3 levels)
    Entities/Characters/Player.cs
-   ~~~
+   ```
 
 4. **Don't hard-code paths**
-   ~~~csharp
+   ```csharp
    // ❌ Bad
    var texture = await renderer.LoadTextureAsync("C:\\MyGame\\assets\\player.png");
    
    // ✅ Good
    var texture = await renderer.LoadTextureAsync("assets/textures/player.png");
-   ~~~
+   ```
 
 ---
 
@@ -954,15 +963,15 @@ PlatformerGame/
 
 **Step 1: Create folders**
 
-~~~sh
+```sh
 mkdir Scenes
 mkdir Entities
 mkdir Systems
-~~~
+```
 
 **Step 2: Move files**
 
-~~~sh
+```sh
 # Move scenes
 mv GameScene.cs Scenes/
 mv MenuScene.cs Scenes/
@@ -970,11 +979,11 @@ mv MenuScene.cs Scenes/
 # Move entities
 mv Player.cs Entities/
 mv Enemy.cs Entities/
-~~~
+```
 
 **Step 3: Update namespaces**
 
-~~~csharp
+```csharp
 // Before
 namespace MyGame;
 
@@ -984,17 +993,17 @@ public class GameScene : Scene { }
 namespace MyGame.Scenes;
 
 public class GameScene : Scene { }
-~~~
+```
 
 **Step 4: Update usings**
 
-~~~csharp
+```csharp
 // In Program.cs
 using MyGame.Scenes;
 using MyGame.Entities;
 
 builder.Services.AddScene<GameScene>();
-~~~
+```
 
 ---
 
@@ -1004,27 +1013,27 @@ builder.Services.AddScene<GameScene>();
 
 **Symptom:**
 
-~~~
+```
 error CS0246: The type or namespace name 'GameScene' could not be found
-~~~
+```
 
 **Solution:**
 
 1. **Check namespace matches folder:**
-   ~~~csharp
+   ```csharp
    // File: Scenes/GameScene.cs
    namespace MyGame.Scenes; // Must match
-   ~~~
+   ```
 
 2. **Add using statement:**
-   ~~~csharp
+   ```csharp
    using MyGame.Scenes;
-   ~~~
+   ```
 
 3. **Verify .csproj has correct root namespace:**
-   ~~~xml
+   ```xml
    <RootNamespace>MyGame</RootNamespace>
-   ~~~
+   ```
 
 ---
 
@@ -1032,37 +1041,37 @@ error CS0246: The type or namespace name 'GameScene' could not be found
 
 **Symptom:**
 
-~~~
+```
 FileNotFoundException: Could not find file 'assets/player.png'
-~~~
+```
 
 **Solution:**
 
 1. **Copy assets to output:**
-   ~~~xml
+   ```xml
    <ItemGroup>
      <None Update="assets\**\*">
        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
      </None>
    </ItemGroup>
-   ~~~
+   ```
 
 2. **Use correct path separator:**
-   ~~~csharp
+   ```csharp
    // ✅ Works on all platforms
    "assets/textures/player.png"
    
    // ❌ Windows only
    "assets\\textures\\player.png"
-   ~~~
+   ```
 
 3. **Check file exists:**
-   ~~~csharp
+   ```csharp
    if (!File.Exists("assets/textures/player.png"))
    {
        Logger.LogError("Player texture not found!");
    }
-   ~~~
+   ```
 
 ---
 
@@ -1098,7 +1107,7 @@ FileNotFoundException: Could not find file 'assets/player.png'
 
 ## Quick Reference
 
-~~~
+```
 # Standard project structure
 MyGame/
 ├── MyGame.csproj           # Project configuration
@@ -1115,9 +1124,9 @@ MyGame/
     ├── textures/
     ├── sounds/
     └── music/
-~~~
+```
 
-~~~csharp
+```csharp
 // Namespace pattern
 // File: Scenes/Gameplay/Level1Scene.cs
 namespace MyGame.Scenes.Gameplay;
@@ -1129,16 +1138,16 @@ public class Level1Scene : Scene
 {
     // Implementation
 }
-~~~
+```
 
-~~~xml
+```xml
 <!-- Copy assets to output -->
 <ItemGroup>
   <None Update="assets\**\*">
     <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
   </None>
 </ItemGroup>
-~~~
+```
 
 ---
 

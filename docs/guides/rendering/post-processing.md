@@ -25,7 +25,7 @@ Post-processing effects are applied to the entire screen after the main scene is
 
 ## Post-Processing Pipeline
 
-~~~mermaid
+```mermaid
 graph LR
     A[Scene] --> B[Render to Texture]
     B --> C[Post-Process Pass 1]
@@ -43,7 +43,7 @@ graph LR
     style D fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
     style E fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
     style F fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
-~~~
+```
 
 **Process:**
 
@@ -59,7 +59,7 @@ graph LR
 
 Create a render target for post-processing:
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.Engine;
 using Brine2D.Rendering;
@@ -111,7 +111,7 @@ public class PostProcessScene : Scene
         _renderer.UnloadTexture(_renderTarget);
     }
 }
-~~~
+```
 
 ---
 
@@ -121,7 +121,7 @@ public class PostProcessScene : Scene
 
 Convert the scene to black and white:
 
-~~~csharp
+```csharp
 public class GrayscaleEffect
 {
     public static void Apply(IRenderer renderer, ITexture source, 
@@ -136,7 +136,7 @@ public class GrayscaleEffect
         renderer.DrawTexture(source, x, y, width, height);
     }
 }
-~~~
+```
 
 ---
 
@@ -144,7 +144,7 @@ public class GrayscaleEffect
 
 Apply Gaussian blur for depth of field or motion blur:
 
-~~~csharp
+```csharp
 public class BlurEffect
 {
     private readonly IRenderer _renderer;
@@ -185,7 +185,7 @@ public class BlurEffect
         _renderer.DrawTexture(source, 0, 0, source.Width, source.Height);
     }
 }
-~~~
+```
 
 ---
 
@@ -193,7 +193,7 @@ public class BlurEffect
 
 Darken screen edges:
 
-~~~csharp
+```csharp
 public class VignetteEffect
 {
     private readonly IRenderer _renderer;
@@ -227,7 +227,7 @@ public class VignetteEffect
         _renderer.DrawRectangleFilled(0, 0, width, height, new Color(0, 0, 0, alpha));
     }
 }
-~~~
+```
 
 ---
 
@@ -235,7 +235,7 @@ public class VignetteEffect
 
 Add glowing highlights:
 
-~~~csharp
+```csharp
 public class BloomEffect
 {
     private readonly IRenderer _renderer;
@@ -286,7 +286,7 @@ public class BloomEffect
         _renderer.DrawTexture(source, 0, 0, source.Width, source.Height);
     }
 }
-~~~
+```
 
 ---
 
@@ -294,7 +294,7 @@ public class BloomEffect
 
 Adjust color temperature and tint:
 
-~~~csharp
+```csharp
 public class ColorGradingEffect
 {
     private readonly IRenderer _renderer;
@@ -333,7 +333,7 @@ public class ColorGradingEffect
             tint: new Color(255, 240, 200, 20));
     }
 }
-~~~
+```
 
 ---
 
@@ -341,7 +341,7 @@ public class ColorGradingEffect
 
 Add color fringing for retro or damaged lens effect:
 
-~~~csharp
+```csharp
 public class ChromaticAberrationEffect
 {
     private readonly IRenderer _renderer;
@@ -369,7 +369,7 @@ public class ChromaticAberrationEffect
         _renderer.DrawTexture(source, offset, 0, width, height);
     }
 }
-~~~
+```
 
 ---
 
@@ -377,7 +377,7 @@ public class ChromaticAberrationEffect
 
 Camera shake effect without shaders:
 
-~~~csharp
+```csharp
 public class ScreenShake
 {
     private float _trauma = 0f;
@@ -456,7 +456,7 @@ public class GameScene : Scene
             _screenWidth, _screenHeight);
     }
 }
-~~~
+```
 
 ---
 
@@ -464,7 +464,7 @@ public class GameScene : Scene
 
 Combine multiple effects:
 
-~~~csharp
+```csharp
 public class PostProcessPipeline
 {
     private readonly IRenderer _renderer;
@@ -573,7 +573,7 @@ public class GameScene : Scene
         _renderer.DrawTexture(_finalTarget, 0, 0, 1280, 720);
     }
 }
-~~~
+```
 
 ---
 
@@ -583,7 +583,7 @@ public class GameScene : Scene
 
 Render effects at lower resolution:
 
-~~~csharp
+```csharp
 public class PerformancePostProcess
 {
     private readonly IRenderer _renderer;
@@ -619,7 +619,7 @@ public class PerformancePostProcess
             destination.Width, destination.Height);
     }
 }
-~~~
+```
 
 ---
 
@@ -627,7 +627,7 @@ public class PerformancePostProcess
 
 Enable/disable effects dynamically:
 
-~~~csharp
+```csharp
 public class ConfigurablePostProcess
 {
     public bool EnableBloom { get; set; } = true;
@@ -695,7 +695,7 @@ public class PostProcessQuality
     public bool EnableColorGrading { get; init; }
     public float ResolutionScale { get; init; }
 }
-~~~
+```
 
 ---
 
@@ -703,7 +703,7 @@ public class PostProcessQuality
 
 Full post-processing scene:
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.Engine;
 using Brine2D.Input;
@@ -911,7 +911,7 @@ public class Particle
     public Color Color { get; set; }
     public int Size { get; set; }
 }
-~~~
+```
 
 ---
 
@@ -920,48 +920,48 @@ public class Particle
 ### DO
 
 1. **Use render targets efficiently**
-   ~~~csharp
+   ```csharp
    // ✅ Good - reuse render targets
    protected override async Task OnLoadAsync(CancellationToken ct)
    {
        _renderTarget = await _renderer.CreateRenderTargetAsync(1280, 720, ct);
    }
-   ~~~
+   ```
 
 2. **Chain effects carefully**
-   ~~~csharp
+   ```csharp
    // ✅ Good - minimize passes
    // Scene → Bloom → Vignette → Screen
-   ~~~
+   ```
 
 3. **Optimize heavy effects**
-   ~~~csharp
+   ```csharp
    // ✅ Good - lower resolution for blur
    var blurRes = screenRes * 0.5f;
-   ~~~
+   ```
 
 4. **Make effects toggleable**
-   ~~~csharp
+   ```csharp
    // ✅ Good - quality settings
    if (EnableBloom && qualitySetting >= Quality.Medium)
    {
        ApplyBloom();
    }
-   ~~~
+   ```
 
 5. **Clean up render targets**
-   ~~~csharp
+   ```csharp
    // ✅ Good - dispose properly
    protected override void OnDispose()
    {
        _renderer.UnloadTexture(_renderTarget);
    }
-   ~~~
+   ```
 
 ### DON'T
 
 1. **Don't create render targets every frame**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - creates texture every frame!
    protected override void OnRender(GameTime gameTime)
    {
@@ -969,18 +969,18 @@ public class Particle
    }
    
    // ✅ Good - create once in OnLoadAsync
-   ~~~
+   ```
 
 2. **Don't apply too many passes**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - 10 post-processing passes!
    // Each pass has overhead
    
    // ✅ Good - 2-3 well-chosen effects
-   ~~~
+   ```
 
 3. **Don't forget to reset render target**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - renders to wrong target
    _renderer.SetRenderTarget(_offscreen);
    DrawStuff();
@@ -988,16 +988,16 @@ public class Particle
    
    // ✅ Good - always reset
    _renderer.SetRenderTarget(null);
-   ~~~
+   ```
 
 4. **Don't use full resolution for all effects**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - blur at full 4K resolution
    
    // ✅ Good - blur at quarter resolution
    var blurWidth = screenWidth / 2;
    var blurHeight = screenHeight / 2;
-   ~~~
+   ```
 
 ---
 
@@ -1010,25 +1010,25 @@ public class Particle
 **Solutions:**
 
 1. **Check render target is set back to null:**
-   ~~~csharp
+   ```csharp
    _renderer.SetRenderTarget(_offscreen);
    DrawScene();
    _renderer.SetRenderTarget(null); // Must reset!
    DrawFinalImage();
-   ~~~
+   ```
 
 2. **Verify render target is valid:**
-   ~~~csharp
+   ```csharp
    if (_renderTarget == null)
    {
        Logger.LogError("Render target not created!");
    }
-   ~~~
+   ```
 
 3. **Check texture is drawn to screen:**
-   ~~~csharp
+   ```csharp
    _renderer.DrawTexture(_renderTarget, 0, 0, width, height);
-   ~~~
+   ```
 
 ---
 
@@ -1039,24 +1039,24 @@ public class Particle
 **Solutions:**
 
 1. **Use lower resolution:**
-   ~~~csharp
+   ```csharp
    // 50% resolution = 4x faster
    var width = screenWidth / 2;
    var height = screenHeight / 2;
-   ~~~
+   ```
 
 2. **Reduce effect passes:**
-   ~~~csharp
+   ```csharp
    // Limit to 2-3 effects maximum
-   ~~~
+   ```
 
 3. **Toggle effects based on hardware:**
-   ~~~csharp
+   ```csharp
    if (fps < 30)
    {
        DisableExpensiveEffects();
    }
-   ~~~
+   ```
 
 ---
 
@@ -1122,7 +1122,7 @@ public class Particle
 
 ## Quick Reference
 
-~~~csharp
+```csharp
 // Basic post-processing setup
 public class PostProcessScene : Scene
 {
@@ -1172,7 +1172,7 @@ DrawFinal();
 var quality = PostProcessQuality.Medium;
 if (quality.EnableBloom) ApplyBloom();
 if (quality.EnableVignette) ApplyVignette();
-~~~
+```
 
 ---
 

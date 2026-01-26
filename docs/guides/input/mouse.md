@@ -28,7 +28,7 @@ Brine2D's mouse input system provides:
 
 In your scene:
 
-~~~csharp
+```csharp
 using Brine2D.Engine;
 using Brine2D.Input;
 using Microsoft.Extensions.Logging;
@@ -44,7 +44,7 @@ public class GameScene : Scene
         _input = input;
     }
 }
-~~~
+```
 
 ---
 
@@ -52,13 +52,13 @@ public class GameScene : Scene
 
 ### Available Buttons
 
-~~~csharp
+```csharp
 MouseButton.Left    // Primary button (left click)
 MouseButton.Right   // Secondary button (right click)
 MouseButton.Middle  // Middle button (wheel click)
 MouseButton.X1      // Extra button 1 (side button)
 MouseButton.X2      // Extra button 2 (side button)
-~~~
+```
 
 ---
 
@@ -66,7 +66,7 @@ MouseButton.X2      // Extra button 2 (side button)
 
 Check if button is currently held down:
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     // Continuous action while held
@@ -82,7 +82,7 @@ protected override void OnUpdate(GameTime gameTime)
         RotateCamera(_input.GetMouseDelta());
     }
 }
-~~~
+```
 
 **Use for:**
 - Continuous actions (drawing, camera control)
@@ -95,7 +95,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 Check if button was just pressed this frame:
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     // Click to select
@@ -112,7 +112,7 @@ protected override void OnUpdate(GameTime gameTime)
         ShowContextMenu(mousePos);
     }
 }
-~~~
+```
 
 **Use for:**
 - Single click actions
@@ -126,7 +126,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 Check if button was just released this frame:
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     // Start drag on press
@@ -147,7 +147,7 @@ protected override void OnUpdate(GameTime gameTime)
         }
     }
 }
-~~~
+```
 
 **Use for:**
 - Drag operations
@@ -158,7 +158,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 ## Mouse Button State Diagram
 
-~~~mermaid
+```mermaid
 stateDiagram-v2
     [*] --> ButtonUp: Initial state
     
@@ -192,7 +192,7 @@ stateDiagram-v2
         IsMouseButtonDown() = false
         IsMouseButtonReleased() = false
     end note
-~~~
+```
 
 ---
 
@@ -202,7 +202,7 @@ stateDiagram-v2
 
 Get current mouse position:
 
-~~~csharp
+```csharp
 using System.Numerics;
 
 protected override void OnUpdate(GameTime gameTime)
@@ -217,7 +217,7 @@ protected override void OnUpdate(GameTime gameTime)
         SpawnObjectAt(mousePos);
     }
 }
-~~~
+```
 
 **Returns:** `Vector2` with screen coordinates (0,0 = top-left)
 
@@ -227,7 +227,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 Convert screen to world coordinates:
 
-~~~csharp
+```csharp
 public class MouseToWorld
 {
     private readonly IInputService _input;
@@ -249,7 +249,7 @@ protected override void OnUpdate(GameTime gameTime)
         PlaceObjectAt(worldPos);
     }
 }
-~~~
+```
 
 ---
 
@@ -259,7 +259,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 Get mouse movement since last frame:
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     var delta = _input.GetMouseDelta();
@@ -275,7 +275,7 @@ protected override void OnUpdate(GameTime gameTime)
         _cameraRotation += delta.X * 0.5f;
     }
 }
-~~~
+```
 
 **Returns:** `Vector2` with relative movement
 
@@ -289,7 +289,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 ### Mouse Look (FPS Style)
 
-~~~csharp
+```csharp
 public class MouseLook
 {
     private readonly IInputService _input;
@@ -313,7 +313,7 @@ public class MouseLook
         return (_yaw, _pitch);
     }
 }
-~~~
+```
 
 ---
 
@@ -323,7 +323,7 @@ public class MouseLook
 
 Get scroll wheel movement:
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     var scrollDelta = _input.GetMouseWheelDelta();
@@ -345,7 +345,7 @@ protected override void OnUpdate(GameTime gameTime)
         ScrollHorizontal(scrollDelta.X);
     }
 }
-~~~
+```
 
 **Returns:** `Vector2` with scroll delta
 - `Y` = Vertical scroll (up/down)
@@ -355,7 +355,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 ### Camera Zoom
 
-~~~csharp
+```csharp
 public class CameraZoom
 {
     private readonly IInputService _input;
@@ -377,7 +377,7 @@ public class CameraZoom
     
     public float GetZoom() => _zoom;
 }
-~~~
+```
 
 ---
 
@@ -385,7 +385,7 @@ public class CameraZoom
 
 ### Click Detection
 
-~~~csharp
+```csharp
 public class ClickDetector
 {
     private readonly IInputService _input;
@@ -410,13 +410,13 @@ protected override void OnUpdate(GameTime gameTime)
         OnButtonClicked();
     }
 }
-~~~
+```
 
 ---
 
 ### Drag Detection
 
-~~~csharp
+```csharp
 public class DragDetector
 {
     private readonly IInputService _input;
@@ -468,13 +468,13 @@ public class DragDetector
     public bool IsDragging => _isDragging;
     public Vector2 DragStart => _dragStart;
 }
-~~~
+```
 
 ---
 
 ### Selection Box
 
-~~~csharp
+```csharp
 public class SelectionBox
 {
     private readonly IInputService _input;
@@ -525,13 +525,13 @@ public class SelectionBox
         return new Rectangle(x, y, width, height);
     }
 }
-~~~
+```
 
 ---
 
 ### Hover Detection
 
-~~~csharp
+```csharp
 public class HoverDetector
 {
     private readonly IInputService _input;
@@ -565,13 +565,13 @@ protected override void OnUpdate(GameTime gameTime)
         ShowTooltip();
     }
 }
-~~~
+```
 
 ---
 
 ### RTS Camera Control
 
-~~~csharp
+```csharp
 public class RTSCameraControl
 {
     private readonly IInputService _input;
@@ -620,13 +620,13 @@ public class RTSCameraControl
         }
     }
 }
-~~~
+```
 
 ---
 
 ### Point-and-Click Movement
 
-~~~csharp
+```csharp
 public class PointAndClickMovement
 {
     private readonly IInputService _input;
@@ -664,7 +664,7 @@ public class PointAndClickMovement
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -672,7 +672,7 @@ public class PointAndClickMovement
 
 ### Button Click
 
-~~~csharp
+```csharp
 public class Button
 {
     public Vector2 Position { get; set; }
@@ -732,13 +732,13 @@ public class Button
                point.Y <= Position.Y + Size.Y;
     }
 }
-~~~
+```
 
 ---
 
 ### Slider Control
 
-~~~csharp
+```csharp
 public class Slider
 {
     public Vector2 Position { get; set; }
@@ -799,7 +799,7 @@ public class Slider
                mousePos.Y <= Position.Y + 20;
     }
 }
-~~~
+```
 
 ---
 
@@ -807,7 +807,7 @@ public class Slider
 
 ### Show/Hide Cursor
 
-~~~csharp
+```csharp
 public class CursorController
 {
     private readonly IInputService _input;
@@ -831,13 +831,13 @@ protected override void OnInitialize()
     // Hide cursor for FPS game
     _input.SetCursorVisible(false);
 }
-~~~
+```
 
 ---
 
 ### Custom Cursor
 
-~~~csharp
+```csharp
 public class CustomCursor
 {
     private readonly IInputService _input;
@@ -868,13 +868,13 @@ public class CustomCursor
         }
     }
 }
-~~~
+```
 
 ---
 
 ### Lock Cursor (Relative Mode)
 
-~~~csharp
+```csharp
 public class CursorLocker
 {
     private readonly IInputService _input;
@@ -924,13 +924,13 @@ protected override void OnUpdate(GameTime gameTime)
         UpdateCamera(delta);
     }
 }
-~~~
+```
 
 ---
 
 ## Complete Example
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.Engine;
 using Brine2D.Input;
@@ -1052,7 +1052,7 @@ public class MouseDemoScene : Scene
             10, 110, Color.White);
     }
 }
-~~~
+```
 
 ---
 
@@ -1061,7 +1061,7 @@ public class MouseDemoScene : Scene
 ### DO
 
 1. **Use appropriate button state**
-   ~~~csharp
+   ```csharp
    // ✅ Good - continuous action
    if (_input.IsMouseButtonDown(MouseButton.Left))
    {
@@ -1073,20 +1073,20 @@ public class MouseDemoScene : Scene
    {
        SelectObject();
    }
-   ~~~
+   ```
 
 2. **Check hover before click**
-   ~~~csharp
+   ```csharp
    // ✅ Good - ensure hovering
    if (IsMouseOverButton() && 
        _input.IsMouseButtonPressed(MouseButton.Left))
    {
        OnButtonClicked();
    }
-   ~~~
+   ```
 
 3. **Implement drag threshold**
-   ~~~csharp
+   ```csharp
    // ✅ Good - prevent accidental drags
    const float DragThreshold = 5f;
    var distance = Vector2.Distance(_dragStart, currentPos);
@@ -1094,27 +1094,27 @@ public class MouseDemoScene : Scene
    {
        StartDragging();
    }
-   ~~~
+   ```
 
 4. **Use GetMouseDelta for relative input**
-   ~~~csharp
+   ```csharp
    // ✅ Good - camera rotation
    var delta = _input.GetMouseDelta();
    _cameraYaw += delta.X * sensitivity;
-   ~~~
+   ```
 
 5. **Convert to world coordinates when needed**
-   ~~~csharp
+   ```csharp
    // ✅ Good - world space interaction
    var screenPos = _input.GetMousePosition();
    var worldPos = _camera.ScreenToWorld(screenPos);
    PlaceObjectAt(worldPos);
-   ~~~
+   ```
 
 ### DON'T
 
 1. **Don't use IsMouseButtonDown for single clicks**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - clicks 60 times per second!
    if (_input.IsMouseButtonDown(MouseButton.Left))
    {
@@ -1126,10 +1126,10 @@ public class MouseDemoScene : Scene
    {
        FireWeapon();
    }
-   ~~~
+   ```
 
 2. **Don't forget to check hover**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - clicks anywhere
    if (_input.IsMouseButtonPressed(MouseButton.Left))
    {
@@ -1142,10 +1142,10 @@ public class MouseDemoScene : Scene
    {
        OnButtonClicked();
    }
-   ~~~
+   ```
 
 3. **Don't poll mouse position unnecessarily**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - gets position 5 times
    if (IsInBounds(_input.GetMousePosition()) &&
        IsOverButton(_input.GetMousePosition()) &&
@@ -1156,10 +1156,10 @@ public class MouseDemoScene : Scene
    if (IsInBounds(mousePos) &&
        IsOverButton(mousePos) &&
        IsClickable(mousePos))
-   ~~~
+   ```
 
 4. **Don't mix screen and world coordinates**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - comparing different spaces!
    var mousePos = _input.GetMousePosition(); // Screen
    if (Vector2.Distance(mousePos, _enemyWorldPos) < 10) // World
@@ -1167,7 +1167,7 @@ public class MouseDemoScene : Scene
    // ✅ Good - same coordinate space
    var mouseWorld = _camera.ScreenToWorld(_input.GetMousePosition());
    if (Vector2.Distance(mouseWorld, _enemyWorldPos) < 10)
-   ~~~
+   ```
 
 ---
 
@@ -1180,26 +1180,26 @@ public class MouseDemoScene : Scene
 **Solutions:**
 
 1. **Check input service is injected:**
-   ~~~csharp
+   ```csharp
    public GameScene(IInputService input, ...) : base(...)
    {
        _input = input;
    }
-   ~~~
+   ```
 
 2. **Use correct button state:**
-   ~~~csharp
+   ```csharp
    // For single clicks:
    if (_input.IsMouseButtonPressed(MouseButton.Left))
-   ~~~
+   ```
 
 3. **Check input is in Update:**
-   ~~~csharp
+   ```csharp
    protected override void OnUpdate(GameTime gameTime)
    {
        // Check input here, not in Render!
    }
-   ~~~
+   ```
 
 ---
 
@@ -1209,7 +1209,7 @@ public class MouseDemoScene : Scene
 
 **Solution:** Implement proper drag state:
 
-~~~csharp
+```csharp
 // Start drag
 if (_input.IsMouseButtonPressed(MouseButton.Left))
 {
@@ -1233,7 +1233,7 @@ if (_input.IsMouseButtonReleased(MouseButton.Left))
         _isDragging = false;
     }
 }
-~~~
+```
 
 ---
 
@@ -1244,24 +1244,24 @@ if (_input.IsMouseButtonReleased(MouseButton.Left))
 **Solutions:**
 
 1. **Check coordinate system:**
-   ~~~csharp
+   ```csharp
    // Mouse position is in screen space (pixels)
    var mousePos = _input.GetMousePosition();
    // (0,0) = top-left corner
-   ~~~
+   ```
 
 2. **Convert to world space if needed:**
-   ~~~csharp
+   ```csharp
    var screenPos = _input.GetMousePosition();
    var worldPos = _camera.ScreenToWorld(screenPos);
-   ~~~
+   ```
 
 3. **Account for window scaling:**
-   ~~~csharp
+   ```csharp
    // If window is scaled, convert coordinates
    var mousePos = _input.GetMousePosition();
    var scaledPos = mousePos * _windowScale;
-   ~~~
+   ```
 
 ---
 
@@ -1272,18 +1272,18 @@ if (_input.IsMouseButtonReleased(MouseButton.Left))
 **Solutions:**
 
 1. **Enable relative mouse mode:**
-   ~~~csharp
+   ```csharp
    _input.SetRelativeMouseMode(true);
-   ~~~
+   ```
 
 2. **Check mouse is actually moving:**
-   ~~~csharp
+   ```csharp
    var delta = _input.GetMouseDelta();
    if (delta != Vector2.Zero)
    {
        Logger.LogDebug("Mouse moved: {Delta}", delta);
    }
-   ~~~
+   ```
 
 ---
 
@@ -1293,7 +1293,7 @@ if (_input.IsMouseButtonReleased(MouseButton.Left))
 
 **Solution:** Check scroll in Update:
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     var scroll = _input.GetMouseWheelDelta();
@@ -1303,7 +1303,7 @@ protected override void OnUpdate(GameTime gameTime)
         Zoom(scroll.Y);
     }
 }
-~~~
+```
 
 ---
 
@@ -1357,7 +1357,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 ## Quick Reference
 
-~~~csharp
+```csharp
 // Inject input service
 public GameScene(IInputService input, ...) : base(...)
 {
@@ -1406,7 +1406,7 @@ bool isHovering = mousePos.X >= bounds.X &&
                   mousePos.X <= bounds.X + bounds.Width &&
                   mousePos.Y >= bounds.Y &&
                   mousePos.Y <= bounds.Y + bounds.Height;
-~~~
+```
 
 ---
 

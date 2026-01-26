@@ -34,33 +34,33 @@ A space shooter game featuring:
 
 Create a new game project:
 
-~~~sh
+```sh
 dotnet new console -n AsteroidShooter
 cd AsteroidShooter
-~~~
+```
 
 ### Step 2: Install Packages
 
 Add Brine2D packages:
 
-~~~sh
+```sh
 dotnet add package Brine2D --version 0.9.0-beta
 dotnet add package Brine2D.SDL --version 0.9.0-beta
-~~~
+```
 
 ### Step 3: Create Asset Folders
 
 Organize your assets:
 
-~~~sh
+```sh
 mkdir -p assets/textures
 mkdir -p assets/sounds
 mkdir -p assets/music
-~~~
+```
 
 **Project structure:**
 
-~~~
+```
 AsteroidShooter/
 ├── AsteroidShooter.csproj
 ├── Program.cs
@@ -77,7 +77,7 @@ AsteroidShooter/
     │   └── hit.wav
     └── music/
         └── background.mp3
-~~~
+```
 
 **Note:** For this tutorial, you can use simple colored rectangles instead of images, or download free assets from [itch.io](https://itch.io/game-assets/free) or [OpenGameArt](https://opengameart.org/).
 
@@ -89,7 +89,7 @@ AsteroidShooter/
 
 Create `GameEntities.cs` to define our game objects:
 
-~~~csharp
+```csharp
 using System.Numerics;
 
 namespace AsteroidShooter;
@@ -116,7 +116,7 @@ public class Laser
     public Vector2 Velocity { get; set; } = new(0, -500f);
     public bool IsActive { get; set; } = true;
 }
-~~~
+```
 
 **What this does:**
 - Defines data structures for game objects
@@ -129,7 +129,7 @@ public class Laser
 
 Create `GameScene.cs`:
 
-~~~csharp
+```csharp
 using Brine2D.Audio;
 using Brine2D.Core;
 using Brine2D.Engine;
@@ -421,7 +421,7 @@ public class GameScene : Scene
         _audio.StopMusic();
     }
 }
-~~~
+```
 
 **What this does:**
 - Manages game state (player, asteroids, lasers)
@@ -437,7 +437,7 @@ public class GameScene : Scene
 
 Create `MenuScene.cs`:
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.Engine;
 using Brine2D.Input;
@@ -481,7 +481,7 @@ public class MenuScene : Scene
         _renderer.DrawText("SPACE to Shoot", 310, 380, Color.Gray);
     }
 }
-~~~
+```
 
 ---
 
@@ -489,7 +489,7 @@ public class MenuScene : Scene
 
 Create `Program.cs`:
 
-~~~csharp
+```csharp
 using AsteroidShooter;
 using Brine2D.Hosting;
 using Brine2D.SDL;
@@ -497,8 +497,8 @@ using Microsoft.Extensions.DependencyInjection;
 
 var builder = GameApplication.CreateBuilder(args);
 
-// Configure rendering
-builder.Services.AddSDL3Rendering(options =>
+// Add Brine2D with sensible defaults (SDL3 backend, GPU rendering, input)
+builder.Services.AddBrine2D(options =>
 {
     options.WindowTitle = "Asteroid Shooter";
     options.WindowWidth = 800;
@@ -506,10 +506,7 @@ builder.Services.AddSDL3Rendering(options =>
     options.VSync = true;
 });
 
-// Configure input
-builder.Services.AddSDL3Input();
-
-// Configure audio
+// Configure audio separately if needed
 builder.Services.AddSDL3Audio();
 
 // Register scenes
@@ -519,7 +516,7 @@ builder.Services.AddScene<GameScene>();
 // Build and run
 var game = builder.Build();
 await game.RunAsync<MenuScene>();
-~~~
+```
 
 ---
 
@@ -527,7 +524,7 @@ await game.RunAsync<MenuScene>();
 
 Update `.csproj` to copy assets:
 
-~~~xml
+```xml
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -546,7 +543,7 @@ Update `.csproj` to copy assets:
     </None>
   </ItemGroup>
 </Project>
-~~~
+```
 
 ---
 
@@ -554,9 +551,9 @@ Update `.csproj` to copy assets:
 
 Build and run:
 
-~~~sh
+```sh
 dotnet run
-~~~
+```
 
 **You should see:**
 1. Menu screen with title and instructions
@@ -575,7 +572,7 @@ dotnet run
 
 ## Game Architecture Diagram
 
-~~~mermaid
+```mermaid
 graph TB
     A[Program.cs] --> B[MenuScene]
     B -->|Enter Key| C[GameScene]
@@ -602,7 +599,7 @@ graph TB
     style C fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
     style D fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
     style E fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
-~~~
+```
 
 ---
 
@@ -612,7 +609,7 @@ graph TB
 
 Replace shapes with sprites:
 
-~~~csharp
+```csharp
 using Brine2D.Rendering;
 
 public class GameScene : Scene
@@ -679,7 +676,7 @@ public class GameScene : Scene
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -687,7 +684,7 @@ public class GameScene : Scene
 
 Create power-up entities:
 
-~~~csharp
+```csharp
 public class PowerUp
 {
     public Vector2 Position { get; set; }
@@ -702,11 +699,11 @@ public enum PowerUpType
     SpeedBoost,
     RapidFire
 }
-~~~
+```
 
 Spawn and handle power-ups:
 
-~~~csharp
+```csharp
 private readonly List<PowerUp> _powerUps = new();
 private float _powerUpSpawnTimer = 0f;
 
@@ -770,7 +767,7 @@ private void ApplyPowerUp(PowerUpType type)
             break;
     }
 }
-~~~
+```
 
 ---
 
@@ -778,7 +775,7 @@ private void ApplyPowerUp(PowerUpType type)
 
 Create explosion particles:
 
-~~~csharp
+```csharp
 public class Particle
 {
     public Vector2 Position { get; set; }
@@ -834,11 +831,11 @@ private void RenderParticles()
             3, color);
     }
 }
-~~~
+```
 
 Call in collision:
 
-~~~csharp
+```csharp
 if (CircleCollision(laser.Position, 4, asteroid.Position, asteroid.Size))
 {
     CreateExplosion(asteroid.Position);
@@ -846,7 +843,7 @@ if (CircleCollision(laser.Position, 4, asteroid.Position, asteroid.Size))
     asteroid.IsActive = false;
     _score += 10;
 }
-~~~
+```
 
 ---
 
@@ -854,7 +851,7 @@ if (CircleCollision(laser.Position, 4, asteroid.Position, asteroid.Size))
 
 Track high scores:
 
-~~~csharp
+```csharp
 using System.IO;
 using System.Text.Json;
 
@@ -884,7 +881,7 @@ public class HighScoreManager
 
     public List<int> GetTopScores() => _highScores;
 }
-~~~
+```
 
 ---
 
@@ -897,34 +894,34 @@ public class HighScoreManager
 **Solutions:**
 
 1. **Check audio registration:**
-   ~~~csharp
+   ```csharp
    // Must have in Program.cs
    builder.Services.AddSDL3Audio();
-   ~~~
+   ```
 
 2. **Verify files exist:**
-   ~~~sh
+   ```sh
    ls assets/sounds/
    # Should show: shoot.wav, explosion.wav, hit.wav
-   ~~~
+   ```
 
 3. **Check file paths:**
-   ~~~csharp
+   ```csharp
    // ✅ Correct - relative path
    _shootSound = await _audio.LoadSoundAsync("assets/sounds/shoot.wav", ct);
    
    // ❌ Wrong - absolute path
    _shootSound = await _audio.LoadSoundAsync("C:\\...\\shoot.wav", ct);
-   ~~~
+   ```
 
 4. **Test with placeholder:**
-   ~~~csharp
+   ```csharp
    // If files missing, skip for now
    if (_shootSound != null)
    {
        _audio.PlaySound(_shootSound);
    }
-   ~~~
+   ```
 
 ---
 
@@ -935,13 +932,13 @@ public class HighScoreManager
 **Solutions:**
 
 1. **Check collision radius:**
-   ~~~csharp
+   ```csharp
    // Make sure radius matches visual size
    if (CircleCollision(laser.Position, 4, asteroid.Position, 32))
-   ~~~
+   ```
 
 2. **Add debug visualization:**
-   ~~~csharp
+   ```csharp
    // Draw collision circles (add to render)
    foreach (var asteroid in _asteroids)
    {
@@ -949,16 +946,16 @@ public class HighScoreManager
            asteroid.Position.X, asteroid.Position.Y,
            asteroid.Size, Color.Green); // Debug circle
    }
-   ~~~
+   ```
 
 3. **Log collisions:**
-   ~~~csharp
+   ```csharp
    if (CircleCollision(...))
    {
        Logger.LogInformation("Collision detected!");
        // ... handle collision
    }
-   ~~~
+   ```
 
 ---
 
@@ -968,7 +965,7 @@ public class HighScoreManager
 
 **Solution:** Adjust spawn rate:
 
-~~~csharp
+```csharp
 // Spawn every 1 second
 if (_asteroidSpawnTimer >= 1.0f)
 
@@ -981,7 +978,7 @@ if (_asteroidSpawnTimer >= 0.5f)
 // Progressive difficulty
 var spawnRate = Math.Max(0.5f, 2.0f - (_score / 100f));
 if (_asteroidSpawnTimer >= spawnRate)
-~~~
+```
 
 ---
 
@@ -991,11 +988,11 @@ if (_asteroidSpawnTimer >= spawnRate)
 
 **Solution:** Already implemented with bounds checking:
 
-~~~csharp
+```csharp
 // Keep player in bounds
 _player.Position.X = Math.Clamp(_player.Position.X, 32, 768);
 _player.Position.Y = Math.Clamp(_player.Position.Y, 32, 568);
-~~~
+```
 
 Adjust values to match your window size and sprite size.
 
@@ -1006,44 +1003,44 @@ Adjust values to match your window size and sprite size.
 ### DO
 
 1. **Separate data from logic**
-   ~~~csharp
+   ```csharp
    // ✅ Good - separate entity classes
    public class Player { ... }
    public class GameScene : Scene { ... }
-   ~~~
+   ```
 
 2. **Use object pools for frequent spawns**
-   ~~~csharp
+   ```csharp
    // Reuse inactive lasers instead of creating new ones
    private readonly Queue<Laser> _laserPool = new();
-   ~~~
+   ```
 
 3. **Clean up resources**
-   ~~~csharp
+   ```csharp
    protected override void OnDispose()
    {
        _audio.StopMusic();
        // Unload textures, sounds, etc.
    }
-   ~~~
+   ```
 
 4. **Use deltaTime for all movement**
-   ~~~csharp
+   ```csharp
    position += velocity * deltaTime; // Always!
-   ~~~
+   ```
 
 5. **Handle null resources gracefully**
-   ~~~csharp
+   ```csharp
    if (_playerTexture != null)
    {
        _renderer.DrawTexture(_playerTexture, ...);
    }
-   ~~~
+   ```
 
 ### DON'T
 
 1. **Don't create objects every frame**
-   ~~~csharp
+   ```csharp
    // ❌ Bad
    protected override void OnUpdate(GameTime gameTime)
    {
@@ -1052,24 +1049,24 @@ Adjust values to match your window size and sprite size.
    
    // ✅ Good
    private readonly Random _random = new();
-   ~~~
+   ```
 
 2. **Don't forget to remove inactive objects**
-   ~~~csharp
+   ```csharp
    // ✅ Must do this to prevent memory leak
    _lasers.RemoveAll(l => !l.IsActive);
    _asteroids.RemoveAll(a => !a.IsActive);
-   ~~~
+   ```
 
 3. **Don't hard-code values**
-   ~~~csharp
+   ```csharp
    // ❌ Bad
    if (x > 800) ...
    
    // ✅ Good
    private const float WindowWidth = 800f;
    if (x > WindowWidth) ...
-   ~~~
+   ```
 
 ---
 
@@ -1121,7 +1118,7 @@ Enhance your game further:
 
 ## Quick Reference
 
-~~~csharp
+```csharp
 // Basic entity class
 public class GameObject
 {
@@ -1156,7 +1153,7 @@ private void UpdateObjects(float deltaTime)
     
     _objects.RemoveAll(o => !o.IsActive);
 }
-~~~
+```
 
 ---
 

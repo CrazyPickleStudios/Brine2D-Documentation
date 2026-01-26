@@ -4,10 +4,10 @@ title: Home
 
 # Brine2D Game Engine
 
-!!! tip "What's New in v0.8.0-beta"
-    Texture atlasing, 2D spatial audio, advanced particles with textures, rotation, trails, and blend modes!
+!!! tip "What's New in v0.9.0-beta"
+    Package separation, track-based audio, performance monitoring, GPU renderer improvements, and .NET 10 support!
     
-    [:octicons-arrow-right-24: See What's New](whats-new/v0.8.0-beta.md)
+    [:octicons-arrow-right-24: See What's New](whats-new/v0.9.0-beta.md)
 
 ## Modern 2D game development with .NET elegance
 
@@ -102,28 +102,25 @@ using Brine2D.Core;
 using Brine2D.Engine;
 using Brine2D.Hosting;
 using Brine2D.Input;
-using Brine2D.Input.SDL;
 using Brine2D.Rendering;
-using Brine2D.Rendering.SDL;
+using Brine2D.SDL;
 using Microsoft.Extensions.Logging;
 
 // Create builder (like ASP.NET's WebApplication.CreateBuilder)
 var builder = GameApplication.CreateBuilder(args);
 
-// Configure services
-builder.Services.AddSDL3Rendering(options =>
+// Add Brine2D with sensible defaults (SDL3 backend, GPU rendering, input, audio)
+builder.Services.AddBrine2D(options =>
 {
     options.WindowTitle = "My Game";
     options.WindowWidth = 1280;
     options.WindowHeight = 720;
 });
 
-builder.Services.AddSDL3Input();
 builder.Services.AddScene<GameScene>();
 
 // Build and run
 var game = builder.Build();
-
 await game.RunAsync<GameScene>();
 
 // Define your scene (like an ASP.NET controller)
@@ -248,18 +245,20 @@ Brine2D/
 
 Each package is focused, testable, and can be swapped with custom implementations.
 
-## What's New in 0.8.0-beta
+## What's New in 0.9.0-beta
 
-Brine2D 0.8.0-beta delivers production-ready audio and visual effects:
+Brine2D 0.9.0-beta is a major architectural release with significant improvements:
 
-- **Texture Atlasing** - Runtime sprite packing reduces draw calls by 90-99%
-- **2D Spatial Audio** - Distance attenuation and stereo panning bring your world to life
-- **Advanced Particles** - Textures, rotation, trails, blend modes, and 7 emitter shapes
-- **Audio Callbacks** - Proper track lifecycle management via SDL3_mixer
-- **Rotation Support** - SpriteBatcher now respects sprite rotation
-- **8+ Interactive Demos** - New demos for atlasing, spatial audio, and enhanced particles
+- **Package Separation** - Cleaner architecture with Brine2D + Brine2D.SDL packages
+- **Track-Based Audio** - New track-based API replaces channel-based system for precise control
+- **Performance Monitoring** - Built-in overlay with FPS, frame time, memory stats, and batch efficiency
+- **GPU Renderer** - Now the default with automatic batching and improved performance
+- **Post-Processing** - Render-to-texture pipeline with screen shake, vignette, and custom shaders
+- **ECS Multi-Threading** - Parallel entity processing with thread-safe collections
+- **.NET 10 Support** - Built on the latest .NET with modern language features
+- **8+ Performance Improvements** - 30% faster queries, 50% fewer allocations, 10x+ sprite batching
 
-[Read the full changelog](whats-new/v0.8.0-beta.md)
+[Read the full changelog](whats-new/v0.9.0-beta.md)
 
 ## Who Is This For?
 

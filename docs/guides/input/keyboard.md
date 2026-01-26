@@ -28,7 +28,7 @@ Brine2D's keyboard input system provides:
 
 In your scene:
 
-~~~csharp
+```csharp
 using Brine2D.Engine;
 using Brine2D.Input;
 using Microsoft.Extensions.Logging;
@@ -44,7 +44,7 @@ public class GameScene : Scene
         _input = input;
     }
 }
-~~~
+```
 
 ---
 
@@ -54,7 +54,7 @@ public class GameScene : Scene
 
 Check if key is currently held down:
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     // Continuous movement while key held
@@ -78,7 +78,7 @@ protected override void OnUpdate(GameTime gameTime)
         _playerX += _speed * (float)gameTime.DeltaTime;
     }
 }
-~~~
+```
 
 **Use for:**
 - Continuous actions (movement, holding)
@@ -91,7 +91,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 Check if key was just pressed this frame:
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     // Jump only once per press
@@ -112,7 +112,7 @@ protected override void OnUpdate(GameTime gameTime)
         TogglePause();
     }
 }
-~~~
+```
 
 **Use for:**
 - Single actions (jump, shoot, interact)
@@ -126,7 +126,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 Check if key was just released this frame:
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     // Charge attack - release to fire
@@ -141,7 +141,7 @@ protected override void OnUpdate(GameTime gameTime)
         _chargeTime = 0f;
     }
 }
-~~~
+```
 
 **Use for:**
 - Charge mechanics
@@ -152,7 +152,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 ## Key State Diagram
 
-~~~mermaid
+```mermaid
 stateDiagram-v2
     [*] --> KeyUp: Initial state
     
@@ -186,7 +186,7 @@ stateDiagram-v2
         IsKeyDown() = false
         IsKeyReleased() = false
     end note
-~~~
+```
 
 ---
 
@@ -194,54 +194,54 @@ stateDiagram-v2
 
 ### Letter Keys
 
-~~~csharp
+```csharp
 Keys.A, Keys.B, Keys.C, ... Keys.Z
-~~~
+```
 
 ---
 
 ### Number Keys
 
-~~~csharp
+```csharp
 // Top row numbers
 Keys.D1, Keys.D2, Keys.D3, ... Keys.D0
 
 // Numpad
 Keys.Numpad1, Keys.Numpad2, ... Keys.Numpad0
-~~~
+```
 
 ---
 
 ### Function Keys
 
-~~~csharp
+```csharp
 Keys.F1, Keys.F2, Keys.F3, ... Keys.F12
-~~~
+```
 
 ---
 
 ### Arrow Keys
 
-~~~csharp
+```csharp
 Keys.Up, Keys.Down, Keys.Left, Keys.Right
-~~~
+```
 
 ---
 
 ### Modifier Keys
 
-~~~csharp
+```csharp
 Keys.LeftShift, Keys.RightShift
 Keys.LeftCtrl, Keys.RightCtrl
 Keys.LeftAlt, Keys.RightAlt
 Keys.LeftSuper, Keys.RightSuper  // Windows/Command key
-~~~
+```
 
 ---
 
 ### Special Keys
 
-~~~csharp
+```csharp
 // Common
 Keys.Space
 Keys.Enter
@@ -265,7 +265,7 @@ Keys.Minus, Keys.Equals
 Keys.CapsLock
 Keys.NumLock
 Keys.ScrollLock
-~~~
+```
 
 ---
 
@@ -273,7 +273,7 @@ Keys.ScrollLock
 
 ### Movement (WASD)
 
-~~~csharp
+```csharp
 public class PlayerMovement
 {
     private readonly IInputService _input;
@@ -300,13 +300,13 @@ public class PlayerMovement
         _position += direction * _speed * deltaTime;
     }
 }
-~~~
+```
 
 ---
 
 ### Movement (Arrow Keys)
 
-~~~csharp
+```csharp
 public class PlayerMovement
 {
     private readonly IInputService _input;
@@ -330,13 +330,13 @@ public class PlayerMovement
         _position += direction * _speed * deltaTime;
     }
 }
-~~~
+```
 
 ---
 
 ### Jump
 
-~~~csharp
+```csharp
 public class PlayerJump
 {
     private readonly IInputService _input;
@@ -354,13 +354,13 @@ public class PlayerJump
         }
     }
 }
-~~~
+```
 
 ---
 
 ### Shooting
 
-~~~csharp
+```csharp
 public class PlayerShooting
 {
     private readonly IInputService _input;
@@ -390,13 +390,13 @@ public class PlayerShooting
         // Create projectile
     }
 }
-~~~
+```
 
 ---
 
 ### Sprint
 
-~~~csharp
+```csharp
 public class PlayerSprint
 {
     private readonly IInputService _input;
@@ -411,7 +411,7 @@ public class PlayerSprint
             : _walkSpeed;
     }
 }
-~~~
+```
 
 ---
 
@@ -419,7 +419,7 @@ public class PlayerSprint
 
 ### Shift Detection
 
-~~~csharp
+```csharp
 public class ShiftModifier
 {
     private readonly IInputService _input;
@@ -438,13 +438,13 @@ public class ShiftModifier
         }
     }
 }
-~~~
+```
 
 ---
 
 ### Ctrl Detection
 
-~~~csharp
+```csharp
 public class CtrlModifier
 {
     private readonly IInputService _input;
@@ -470,13 +470,13 @@ public class CtrlModifier
         }
     }
 }
-~~~
+```
 
 ---
 
 ### Alt Detection
 
-~~~csharp
+```csharp
 public class AltModifier
 {
     private readonly IInputService _input;
@@ -496,7 +496,7 @@ public class AltModifier
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -504,7 +504,7 @@ public class AltModifier
 
 ### Multiple Keys
 
-~~~csharp
+```csharp
 public class KeyCombos
 {
     private readonly IInputService _input;
@@ -542,7 +542,7 @@ public class KeyCombos
                _input.IsKeyDown(Keys.RightAlt);
     }
 }
-~~~
+```
 
 ---
 
@@ -550,7 +550,7 @@ public class KeyCombos
 
 Sequential key presses:
 
-~~~csharp
+```csharp
 public class CheatCodeDetector
 {
     private readonly IInputService _input;
@@ -608,13 +608,13 @@ public class CheatCodeDetector
         return false;
     }
 }
-~~~
+```
 
 ---
 
 ## Menu Navigation
 
-~~~csharp
+```csharp
 public class MenuController
 {
     private readonly IInputService _input;
@@ -659,13 +659,13 @@ public class MenuController
         }
     }
 }
-~~~
+```
 
 ---
 
 ## Rebindable Controls
 
-~~~csharp
+```csharp
 public class KeyBindings
 {
     private readonly Dictionary<string, Keys> _bindings = new()
@@ -728,7 +728,7 @@ public class PlayerController
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -736,7 +736,7 @@ public class PlayerController
 
 Buffer inputs for more responsive controls:
 
-~~~csharp
+```csharp
 public class InputBuffer
 {
     private readonly Dictionary<Keys, float> _buffer = new();
@@ -797,13 +797,13 @@ public class PlayerJump
         }
     }
 }
-~~~
+```
 
 ---
 
 ## Complete Example
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.Engine;
 using Brine2D.Input;
@@ -891,7 +891,7 @@ public class KeyboardDemoScene : Scene
         _renderer.DrawText("Ctrl+D: Debug", 10, 90, Color.White);
     }
 }
-~~~
+```
 
 ---
 
@@ -900,7 +900,7 @@ public class KeyboardDemoScene : Scene
 ### DO
 
 1. **Use appropriate key state**
-   ~~~csharp
+   ```csharp
    // ✅ Good - continuous movement
    if (_input.IsKeyDown(Keys.W))
    {
@@ -912,47 +912,47 @@ public class KeyboardDemoScene : Scene
    {
        Jump();
    }
-   ~~~
+   ```
 
 2. **Normalize diagonal movement**
-   ~~~csharp
+   ```csharp
    // ✅ Good - consistent speed in all directions
    if (direction != Vector2.Zero)
    {
        direction = Vector2.Normalize(direction);
    }
    _position += direction * speed * deltaTime;
-   ~~~
+   ```
 
 3. **Use deltaTime for movement**
-   ~~~csharp
+   ```csharp
    // ✅ Good - frame-rate independent
    _position += velocity * (float)gameTime.DeltaTime;
-   ~~~
+   ```
 
 4. **Support multiple keys**
-   ~~~csharp
+   ```csharp
    // ✅ Good - WASD and arrow keys
    if (_input.IsKeyDown(Keys.W) || _input.IsKeyDown(Keys.Up))
    {
        MoveUp();
    }
-   ~~~
+   ```
 
 5. **Make controls rebindable**
-   ~~~csharp
+   ```csharp
    // ✅ Good - use key bindings
    var jumpKey = _bindings.GetBinding("Jump");
    if (_input.IsKeyPressed(jumpKey))
    {
        Jump();
    }
-   ~~~
+   ```
 
 ### DON'T
 
 1. **Don't use IsKeyPressed for continuous actions**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - only moves one frame
    if (_input.IsKeyPressed(Keys.W))
    {
@@ -964,10 +964,10 @@ public class KeyboardDemoScene : Scene
    {
        _position.Y -= speed * deltaTime;
    }
-   ~~~
+   ```
 
 2. **Don't forget deltaTime**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - frame-rate dependent
    if (_input.IsKeyDown(Keys.W))
    {
@@ -979,10 +979,10 @@ public class KeyboardDemoScene : Scene
    {
        _position.Y -= speed * deltaTime;
    }
-   ~~~
+   ```
 
 3. **Don't forget diagonal normalization**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - moves faster diagonally
    if (_input.IsKeyDown(Keys.W)) _velocity.Y = -1;
    if (_input.IsKeyDown(Keys.D)) _velocity.X = 1;
@@ -993,16 +993,16 @@ public class KeyboardDemoScene : Scene
    {
        direction = Vector2.Normalize(direction);
    }
-   ~~~
+   ```
 
 4. **Don't hardcode keys everywhere**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - hard to rebind
    if (_input.IsKeyDown(Keys.W)) { ... }
    
    // ✅ Good - use bindings
    if (_input.IsKeyDown(_bindings.GetBinding("MoveUp"))) { ... }
-   ~~~
+   ```
 
 ---
 
@@ -1015,27 +1015,27 @@ public class KeyboardDemoScene : Scene
 **Solutions:**
 
 1. **Check input service is injected:**
-   ~~~csharp
+   ```csharp
    public GameScene(IInputService input, ...) : base(...)
    {
        _input = input; // Store it!
    }
-   ~~~
+   ```
 
 2. **Verify SDL3 input is registered:**
-   ~~~csharp
+   ```csharp
    // In Program.cs
    builder.Services.AddSDL3Input(); // Required!
-   ~~~
+   ```
 
 3. **Check input is polled in Update:**
-   ~~~csharp
+   ```csharp
    protected override void OnUpdate(GameTime gameTime)
    {
        // Must be in Update, not Render!
        if (_input.IsKeyDown(Keys.Space)) { ... }
    }
-   ~~~
+   ```
 
 ---
 
@@ -1045,13 +1045,13 @@ public class KeyboardDemoScene : Scene
 
 **Solution:** Use deltaTime:
 
-~~~csharp
+```csharp
 // ✅ Correct
 _position += velocity * (float)gameTime.DeltaTime;
 
 // ❌ Wrong
 _position += velocity; // Speed depends on FPS!
-~~~
+```
 
 ---
 
@@ -1061,14 +1061,14 @@ _position += velocity; // Speed depends on FPS!
 
 **Solution:** Normalize direction vector:
 
-~~~csharp
+```csharp
 var direction = GetInputDirection();
 if (direction != Vector2.Zero)
 {
     direction = Vector2.Normalize(direction); // Fix!
 }
 _position += direction * speed * deltaTime;
-~~~
+```
 
 ---
 
@@ -1078,7 +1078,7 @@ _position += direction * speed * deltaTime;
 
 **Solution:** Use IsKeyPressed, not IsKeyDown:
 
-~~~csharp
+```csharp
 // ❌ Wrong - repeats every frame
 if (_input.IsKeyDown(Keys.Space))
 {
@@ -1090,7 +1090,7 @@ if (_input.IsKeyPressed(Keys.Space))
 {
     Jump(); // Jumps once
 }
-~~~
+```
 
 ---
 
@@ -1136,7 +1136,7 @@ if (_input.IsKeyPressed(Keys.Space))
 
 ## Quick Reference
 
-~~~csharp
+```csharp
 // Inject input service
 public GameScene(IInputService input, ...) : base(...)
 {
@@ -1173,7 +1173,7 @@ if (IsCtrlHeld() && _input.IsKeyPressed(Keys.S))
 {
     SaveGame();
 }
-~~~
+```
 
 ---
 

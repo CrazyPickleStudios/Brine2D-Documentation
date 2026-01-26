@@ -27,7 +27,7 @@ Brine2D follows modern .NET architecture principles:
 
 ## High-Level Architecture
 
-~~~mermaid
+```mermaid
 graph TB
     A[Your Game] --> B[Brine2D Core]
     A --> C[Brine2D.SDL]
@@ -57,7 +57,7 @@ graph TB
     style D fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
     style E fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
     style A fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
-~~~
+```
 
 **Three layers:**
 
@@ -75,7 +75,7 @@ The core package provides engine framework:
 
 **What's included:**
 
-~~~
+```
 Brine2D/
 ├── Core/               # Core types (GameTime, Color, etc.)
 ├── Engine/             # Scene, GameLoop, GameContext
@@ -89,11 +89,11 @@ Brine2D/
 ├── Input/              # IInputService abstraction
 ├── Audio/              # IAudioService abstraction
 └── Events/             # Event system
-~~~
+```
 
 **Key abstractions:**
 
-~~~csharp
+```csharp
 // Rendering abstraction
 public interface IRenderer
 {
@@ -116,7 +116,7 @@ public interface IAudioService
     Task<ISoundEffect> LoadSoundAsync(string path, CancellationToken ct);
     void PlaySound(ISoundEffect sound, float volume = 1.0f);
 }
-~~~
+```
 
 **Why?** Abstractions allow platform independence. Your game doesn't depend on SDL3 directly.
 
@@ -128,7 +128,7 @@ The SDL package implements abstractions:
 
 **What's included:**
 
-~~~
+```
 Brine2D.SDL/
 ├── Rendering/
 │   ├── SDL3GPURenderer.cs      # Modern GPU renderer
@@ -145,11 +145,11 @@ Brine2D.SDL/
 ├── Extensions/
 │   └── ServiceCollectionExtensions.cs
 └── SDL3/                       # Native SDL3 bindings
-~~~
+```
 
 **Service registration:**
 
-~~~csharp
+```csharp
 // In Brine2D.SDL
 public static class ServiceCollectionExtensions
 {
@@ -187,7 +187,7 @@ public static class ServiceCollectionExtensions
         return services;
     }
 }
-~~~
+```
 
 **Why?** Extension methods provide clean, discoverable API (ASP.NET Core style).
 
@@ -207,7 +207,7 @@ Brine2D uses three service lifetimes:
 
 **Lifecycle diagram:**
 
-~~~mermaid
+```mermaid
 sequenceDiagram
     participant App as Application
     participant Builder as GameApplicationBuilder
@@ -246,7 +246,7 @@ sequenceDiagram
     participant Scene1
     participant Scene2
     end
-~~~
+```
 
 ---
 
@@ -254,7 +254,7 @@ sequenceDiagram
 
 **In Program.cs:**
 
-~~~csharp
+```csharp
 using Brine2D.Hosting;
 using Brine2D.SDL;
 using Microsoft.Extensions.DependencyInjection;
@@ -276,11 +276,11 @@ builder.Services.AddScene<GameScene>();
 
 var game = builder.Build();
 await game.RunAsync<MenuScene>();
-~~~
+```
 
 **In your scene:**
 
-~~~csharp
+```csharp
 public class GameScene : Scene
 {
     private readonly IRenderer _renderer;        // Singleton
@@ -298,7 +298,7 @@ public class GameScene : Scene
         _collision = collision;
     }
 }
-~~~
+```
 
 **Pattern:** Constructor injection - services provided automatically.
 
@@ -308,7 +308,7 @@ public class GameScene : Scene
 
 ### Scene Lifecycle
 
-~~~mermaid
+```mermaid
 stateDiagram-v2
     [*] --> Created: new Scene()
     Created --> Initializing: OnInitialize()
@@ -327,11 +327,11 @@ stateDiagram-v2
     Unloading --> Disposing: OnUnloadAsync()
     Disposing --> Disposed: OnDispose()
     Disposed --> [*]
-~~~
+```
 
 **Scene methods:**
 
-~~~csharp
+```csharp
 public abstract class Scene : IScene
 {
     // Lifecycle hooks
@@ -349,7 +349,7 @@ public abstract class Scene : IScene
     
     protected virtual void OnDispose() { }
 }
-~~~
+```
 
 ---
 
@@ -357,7 +357,7 @@ public abstract class Scene : IScene
 
 The scene manager handles transitions:
 
-~~~csharp
+```csharp
 public interface ISceneManager
 {
     IScene? CurrentScene { get; }
@@ -368,11 +368,11 @@ public interface ISceneManager
     void PauseScene();
     void ResumeScene();
 }
-~~~
+```
 
 **Implementation:**
 
-~~~csharp
+```csharp
 public class SceneManager : ISceneManager
 {
     private readonly IServiceProvider _serviceProvider;
@@ -398,7 +398,7 @@ public class SceneManager : ISceneManager
         await _currentScene.LoadAsync(ct);
     }
 }
-~~~
+```
 
 **Pattern:** Each scene gets its own scope, scoped services are recreated.
 
@@ -408,7 +408,7 @@ public class SceneManager : ISceneManager
 
 ### ECS Architecture
 
-~~~mermaid
+```mermaid
 graph LR
     A[World] --> B[Entity 1]
     A --> C[Entity 2]
@@ -435,11 +435,11 @@ graph LR
     style E fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
     style F fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
     style G fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-~~~
+```
 
 **Components:**
 
-~~~csharp
+```csharp
 // Pure data, no logic
 public class TransformComponent : Component
 {
@@ -458,11 +458,11 @@ public class SpriteComponent : Component
     public ITexture? Texture { get; set; }
     public Color Tint { get; set; } = Color.White;
 }
-~~~
+```
 
 **Systems:**
 
-~~~csharp
+```csharp
 // Logic, no data
 public class MovementSystem : IUpdateSystem
 {
@@ -484,7 +484,7 @@ public class MovementSystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 **Pattern:** Systems iterate entities with specific components.
 
@@ -494,7 +494,7 @@ public class MovementSystem : IUpdateSystem
 
 ### Main Game Loop
 
-~~~mermaid
+```mermaid
 flowchart TD
     Start([Game Start]) --> Init[Initialize Scene]
     Init --> Load[Load Assets]
@@ -517,11 +517,11 @@ flowchart TD
     style Update fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
     style Render fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
     style End fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-~~~
+```
 
 **Implementation:**
 
-~~~csharp
+```csharp
 public class GameLoop : IGameLoop
 {
     private readonly ISceneManager _sceneManager;
@@ -560,7 +560,7 @@ public class GameLoop : IGameLoop
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -568,7 +568,7 @@ public class GameLoop : IGameLoop
 
 ### Rendering Service
 
-~~~csharp
+```csharp
 // Abstraction (in Brine2D)
 public interface IRenderer : IDisposable
 {
@@ -608,13 +608,13 @@ public class SDL3GPURenderer : IRenderer
         // Platform-specific drawing
     }
 }
-~~~
+```
 
 ---
 
 ### Input Service
 
-~~~csharp
+```csharp
 // Abstraction (in Brine2D)
 public interface IInputService
 {
@@ -663,13 +663,13 @@ public class SDL3InputService : IInputService
         }
     }
 }
-~~~
+```
 
 ---
 
 ### Audio Service
 
-~~~csharp
+```csharp
 // Abstraction (in Brine2D)
 public interface IAudioService
 {
@@ -707,7 +707,7 @@ public class SDL3AudioService : IAudioService
         SDL3_mixer.PlayChannel(-1, sdlSound.Chunk, loops);
     }
 }
-~~~
+```
 
 ---
 
@@ -715,7 +715,7 @@ public class SDL3AudioService : IAudioService
 
 ### Builder Pattern
 
-~~~csharp
+```csharp
 // GameApplication uses builder pattern (like ASP.NET Core)
 public class GameApplication
 {
@@ -734,18 +734,35 @@ public class GameApplication
     }
 }
 
-// Usage
+// Typical usage (recommended)
 var builder = GameApplication.CreateBuilder(args);
-builder.Services.AddSDL3Rendering(options => { ... });
+builder.Services.AddBrine2D(options => 
+{
+    options.WindowTitle = "My Game";
+    options.WindowWidth = 1280;
+    options.WindowHeight = 720;
+});
+builder.Services.AddScene<MenuScene>();
 var game = builder.Build();
 await game.RunAsync<MenuScene>();
-~~~
+
+// Power user usage (granular control)
+var builder = GameApplication.CreateBuilder(args);
+builder.Services.AddBrineCore();
+builder.Services.AddBrineEngine();
+builder.Services.AddSDL3ApplicationLifetime();
+builder.Services.AddSDL3Rendering(options => { ... });
+builder.Services.AddSDL3Input();
+builder.Services.AddScene<MenuScene>();
+var game = builder.Build();
+await game.RunAsync<MenuScene>();
+```
 
 ---
 
 ### Factory Pattern
 
-~~~csharp
+```csharp
 // Texture factory in renderer
 public class TextureFactory
 {
@@ -764,13 +781,13 @@ public class TextureFactory
         return new SDL3Texture(texture);
     }
 }
-~~~
+```
 
 ---
 
 ### Observer Pattern
 
-~~~csharp
+```csharp
 // Event system
 public class EventBus
 {
@@ -807,13 +824,13 @@ eventBus.Subscribe<PlayerDiedEvent>(evt =>
 });
 
 eventBus.Publish(new PlayerDiedEvent { Score = 1000 });
-~~~
+```
 
 ---
 
 ## Complete Architecture Diagram
 
-~~~mermaid
+```mermaid
 graph TB
     subgraph "Your Game"
         A1[Program.cs]
@@ -875,7 +892,7 @@ graph TB
     style C2 fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
     style C3 fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
     style C4 fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-~~~
+```
 
 ---
 
@@ -884,25 +901,25 @@ graph TB
 ### DO
 
 1. **Depend on abstractions, not implementations**
-   ~~~csharp
+   ```csharp
    // ✅ Good
    public GameScene(IRenderer renderer) { }
    
    // ❌ Bad
    public GameScene(SDL3GPURenderer renderer) { }
-   ~~~
+   ```
 
 2. **Use dependency injection**
-   ~~~csharp
+   ```csharp
    // ✅ Good - injected
    public GameScene(IInputService input) { }
    
    // ❌ Bad - manual creation
    var input = new SDL3InputService();
-   ~~~
+   ```
 
 3. **Keep components data-only**
-   ~~~csharp
+   ```csharp
    // ✅ Good - pure data
    public class HealthComponent : Component
    {
@@ -915,10 +932,10 @@ graph TB
    {
        public void TakeDamage(int amount) { ... }
    }
-   ~~~
+   ```
 
 4. **Put logic in systems**
-   ~~~csharp
+   ```csharp
    // ✅ Good - system has logic
    public class HealthSystem : IUpdateSystem
    {
@@ -930,18 +947,18 @@ graph TB
            }
        }
    }
-   ~~~
+   ```
 
 5. **Use scenes for game states**
-   ~~~csharp
+   ```csharp
    // ✅ Good - clear separation
    MenuScene, GameScene, PauseScene, GameOverScene
-   ~~~
+   ```
 
 ### DON'T
 
 1. **Don't couple to platform**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - SDL3 dependency
    using SDL3;
    SDL3.Init();
@@ -949,10 +966,10 @@ graph TB
    // ✅ Good - use abstraction
    using Brine2D.Rendering;
    IRenderer renderer = ...;
-   ~~~
+   ```
 
 2. **Don't create singletons manually**
-   ~~~csharp
+   ```csharp
    // ❌ Bad
    public class GameManager
    {
@@ -961,10 +978,10 @@ graph TB
    
    // ✅ Good - register as singleton
    builder.Services.AddSingleton<GameManager>();
-   ~~~
+   ```
 
 3. **Don't store state in systems**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - system has state
    public class MovementSystem : IUpdateSystem
    {
@@ -976,7 +993,7 @@ graph TB
    {
        public float Speed { get; set; } = 200f;
    }
-   ~~~
+   ```
 
 ---
 
@@ -1024,7 +1041,7 @@ graph TB
 
 ## Quick Reference
 
-~~~csharp
+```csharp
 // Package structure
 Brine2D              // Core engine (abstractions)
 Brine2D.SDL          // Platform implementation
@@ -1052,7 +1069,7 @@ public class GameScene : Scene
 // ECS structure
 public class HealthComponent : Component { /* Data */ }
 public class HealthSystem : IUpdateSystem { /* Logic */ }
-~~~
+```
 
 ---
 

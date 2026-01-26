@@ -29,7 +29,7 @@ ECS is an architectural pattern that separates data from logic:
 
 ### The Three Pillars
 
-~~~mermaid
+```mermaid
 graph TB
     subgraph Entities
         E1[Entity 1<br/>ID: 1]
@@ -77,7 +77,7 @@ graph TB
     style S1 fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
     style S2 fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
     style S3 fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-~~~
+```
 
 **Key concept:** Entities are composed of components, systems operate on entities with specific component combinations.
 
@@ -89,7 +89,7 @@ graph TB
 
 An entity is just a unique identifier - nothing more:
 
-~~~csharp
+```csharp
 public class Entity
 {
     public int Id { get; }
@@ -123,7 +123,7 @@ public class Entity
         _components.Remove(typeof(T));
     }
 }
-~~~
+```
 
 **Pattern:** Entity is a container for components.
 
@@ -131,7 +131,7 @@ public class Entity
 
 ### Creating Entities
 
-~~~csharp
+```csharp
 using Brine2D.ECS;
 
 public class GameScene : Scene
@@ -164,7 +164,7 @@ public class GameScene : Scene
         player.AddComponent(new PlayerComponent()); // Tag component
     }
 }
-~~~
+```
 
 **Pattern:** Entities are composed by adding components.
 
@@ -172,7 +172,7 @@ public class GameScene : Scene
 
 ### Entity Builder Pattern
 
-~~~csharp
+```csharp
 public static class EntityFactory
 {
     public static Entity CreatePlayer(World world, Vector2 position)
@@ -221,7 +221,7 @@ public static class EntityFactory
 // Usage
 var player = EntityFactory.CreatePlayer(_world, new Vector2(400, 300));
 var enemy = EntityFactory.CreateEnemy(_world, new Vector2(600, 200));
-~~~
+```
 
 **Pattern:** Factory methods encapsulate entity creation.
 
@@ -233,7 +233,7 @@ var enemy = EntityFactory.CreateEnemy(_world, new Vector2(600, 200));
 
 A component is pure data - no logic:
 
-~~~csharp
+```csharp
 public abstract class Component
 {
     public Entity? Owner { get; internal set; }
@@ -272,7 +272,7 @@ public class HealthComponent : Component
     public int Max { get; set; }
     public bool IsDead => Current <= 0;
 }
-~~~
+```
 
 **Rule:** Components only have data (properties), no methods.
 
@@ -282,7 +282,7 @@ public class HealthComponent : Component
 
 **1. Data Components** - Hold gameplay data:
 
-~~~csharp
+```csharp
 public class HealthComponent : Component
 {
     public int Current { get; set; }
@@ -295,19 +295,19 @@ public class WeaponComponent : Component
     public float FireRate { get; set; }
     public int Ammo { get; set; }
 }
-~~~
+```
 
 **2. Tag Components** - Mark entities (no data):
 
-~~~csharp
+```csharp
 public class PlayerComponent : Component { }
 public class EnemyComponent : Component { }
 public class ProjectileComponent : Component { }
-~~~
+```
 
 **3. Relationship Components** - Link entities:
 
-~~~csharp
+```csharp
 public class ParentComponent : Component
 {
     public Entity? Parent { get; set; }
@@ -317,7 +317,7 @@ public class ChildrenComponent : Component
 {
     public List<Entity> Children { get; } = new();
 }
-~~~
+```
 
 ---
 
@@ -325,7 +325,7 @@ public class ChildrenComponent : Component
 
 Brine2D provides common components:
 
-~~~csharp
+```csharp
 // Transform (position, rotation, scale)
 public class TransformComponent : Component
 {
@@ -360,7 +360,7 @@ public class ColliderComponent : Component
     public Vector2 Size { get; set; }
     public bool IsTrigger { get; set; }
 }
-~~~
+```
 
 ---
 
@@ -370,7 +370,7 @@ public class ColliderComponent : Component
 
 A system is pure logic - processes entities with specific components:
 
-~~~csharp
+```csharp
 public interface IUpdateSystem
 {
     string Name { get; }
@@ -384,7 +384,7 @@ public interface IRenderSystem
     int RenderOrder { get; }
     void Render(GameTime gameTime);
 }
-~~~
+```
 
 **Rule:** Systems have logic (methods), query for components they need.
 
@@ -394,7 +394,7 @@ public interface IRenderSystem
 
 Process game logic:
 
-~~~csharp
+```csharp
 public class MovementSystem : IUpdateSystem
 {
     private readonly World _world;
@@ -429,7 +429,7 @@ public class MovementSystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -437,7 +437,7 @@ public class MovementSystem : IUpdateSystem
 
 Draw entities:
 
-~~~csharp
+```csharp
 public class SpriteRenderSystem : IRenderSystem
 {
     private readonly World _world;
@@ -476,7 +476,7 @@ public class SpriteRenderSystem : IRenderSystem
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -484,7 +484,7 @@ public class SpriteRenderSystem : IRenderSystem
 
 **Physics System:**
 
-~~~csharp
+```csharp
 public class PhysicsSystem : IUpdateSystem
 {
     private readonly World _world;
@@ -519,11 +519,11 @@ public class PhysicsSystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 **Health System:**
 
-~~~csharp
+```csharp
 public class HealthSystem : IUpdateSystem
 {
     private readonly World _world;
@@ -564,11 +564,11 @@ public class HealthSystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 **Collision System:**
 
-~~~csharp
+```csharp
 public class CollisionSystem : IUpdateSystem
 {
     private readonly World _world;
@@ -611,7 +611,7 @@ public class CollisionSystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -621,7 +621,7 @@ public class CollisionSystem : IUpdateSystem
 
 The World manages entities and systems:
 
-~~~csharp
+```csharp
 public class World
 {
     private readonly List<Entity> _entities = new();
@@ -684,13 +684,13 @@ public class World
         }
     }
 }
-~~~
+```
 
 ---
 
 ### Using World in Scenes
 
-~~~csharp
+```csharp
 public class GameScene : Scene
 {
     private readonly World _world;
@@ -739,7 +739,7 @@ public class GameScene : Scene
         player.AddComponent(new PlayerComponent());
     }
 }
-~~~
+```
 
 ---
 
@@ -749,7 +749,7 @@ public class GameScene : Scene
 
 Query entities by components:
 
-~~~csharp
+```csharp
 public class EntityQuery
 {
     private IEnumerable<Entity> _entities;
@@ -791,13 +791,13 @@ foreach (var entity in movingEntities)
 {
     // Process entity
 }
-~~~
+```
 
 ---
 
 ### Advanced Queries
 
-~~~csharp
+```csharp
 // Entities with health but not dead
 var livingEntities = _world.QueryEntities()
     .With<HealthComponent>()
@@ -816,7 +816,7 @@ var staticSprites = _world.QueryEntities()
 var enemyCount = _world.QueryEntities()
     .With<EnemyComponent>()
     .Count();
-~~~
+```
 
 ---
 
@@ -824,7 +824,7 @@ var enemyCount = _world.QueryEntities()
 
 ### Platformer with ECS
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.ECS;
 using Brine2D.Engine;
@@ -1044,7 +1044,7 @@ public class PlayerInputSystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -1052,7 +1052,7 @@ public class PlayerInputSystem : IUpdateSystem
 
 ### Traditional Inheritance
 
-~~~csharp
+```csharp
 // ❌ Traditional OOP - rigid hierarchy
 public abstract class GameObject
 {
@@ -1083,13 +1083,13 @@ public class Enemy : GameObject
 // Problem: Player and Enemy duplicate Health and Speed
 // Problem: Hard to add new behaviors
 // Problem: Multiple inheritance not possible
-~~~
+```
 
 ---
 
 ### ECS Composition
 
-~~~csharp
+```csharp
 // ✅ ECS - flexible composition
 public class TransformComponent : Component
 {
@@ -1130,7 +1130,7 @@ enemy.AddComponent(new AIComponent());
 // - No duplication (components are reused)
 // - Easy to add new behaviors (add component)
 // - Flexible composition (mix and match)
-~~~
+```
 
 ---
 
@@ -1140,7 +1140,7 @@ enemy.AddComponent(new AIComponent());
 
 ECS enables cache-friendly, data-oriented processing:
 
-~~~csharp
+```csharp
 // ✅ Good - processes components sequentially
 public class MovementSystem : IUpdateSystem
 {
@@ -1161,7 +1161,7 @@ public class MovementSystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 **Performance benefits:**
 - Components stored contiguously in memory
@@ -1176,7 +1176,7 @@ public class MovementSystem : IUpdateSystem
 ### DO
 
 1. **Keep components data-only**
-   ~~~csharp
+   ```csharp
    // ✅ Good - pure data
    public class HealthComponent : Component
    {
@@ -1193,10 +1193,10 @@ public class MovementSystem : IUpdateSystem
            Current -= amount;
        }
    }
-   ~~~
+   ```
 
 2. **Put all logic in systems**
-   ~~~csharp
+   ```csharp
    // ✅ Good - logic in system
    public class HealthSystem : IUpdateSystem
    {
@@ -1211,10 +1211,10 @@ public class MovementSystem : IUpdateSystem
            }
        }
    }
-   ~~~
+   ```
 
 3. **Use entity factories**
-   ~~~csharp
+   ```csharp
    // ✅ Good - encapsulated creation
    public static Entity CreatePlayer(World world, Vector2 position)
    {
@@ -1223,19 +1223,19 @@ public class MovementSystem : IUpdateSystem
        // ... add more components
        return entity;
    }
-   ~~~
+   ```
 
 4. **Order systems correctly**
-   ~~~csharp
+   ```csharp
    // ✅ Good - explicit ordering
    _world.AddUpdateSystem(new InputSystem(_world) { UpdateOrder = 10 });
    _world.AddUpdateSystem(new PhysicsSystem(_world) { UpdateOrder = 50 });
    _world.AddUpdateSystem(new MovementSystem(_world) { UpdateOrder = 100 });
    _world.AddUpdateSystem(new CollisionSystem(_world) { UpdateOrder = 150 });
-   ~~~
+   ```
 
 5. **Use tag components for categories**
-   ~~~csharp
+   ```csharp
    // ✅ Good - tag components
    public class PlayerComponent : Component { }
    public class EnemyComponent : Component { }
@@ -1243,22 +1243,22 @@ public class MovementSystem : IUpdateSystem
    
    // Easy to query
    var enemies = _world.QueryEntities().With<EnemyComponent>();
-   ~~~
+   ```
 
 ### DON'T
 
 1. **Don't put logic in components**
-   ~~~csharp
+   ```csharp
    // ❌ Bad
    public class HealthComponent : Component
    {
        public void Heal(int amount) { ... }
        public void TakeDamage(int amount) { ... }
    }
-   ~~~
+   ```
 
 2. **Don't store references between entities in components**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - tight coupling
    public class FollowComponent : Component
    {
@@ -1270,10 +1270,10 @@ public class MovementSystem : IUpdateSystem
    {
        public int TargetId { get; set; }
    }
-   ~~~
+   ```
 
 3. **Don't make systems stateful**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - system has state
    public class MovementSystem : IUpdateSystem
    {
@@ -1285,10 +1285,10 @@ public class MovementSystem : IUpdateSystem
    {
        public float TotalTime { get; set; }
    }
-   ~~~
+   ```
 
 4. **Don't query in tight loops**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - queries every iteration
    for (int i = 0; i < 1000; i++)
    {
@@ -1301,7 +1301,7 @@ public class MovementSystem : IUpdateSystem
    {
        // Use cached list
    }
-   ~~~
+   ```
 
 ---
 
@@ -1311,22 +1311,22 @@ public class MovementSystem : IUpdateSystem
 
 **Symptom:**
 
-~~~csharp
+```csharp
 var health = entity.GetComponent<HealthComponent>(); // Returns null
-~~~
+```
 
 **Solutions:**
 
 1. **Check component was added:**
-   ~~~csharp
+   ```csharp
    if (entity.HasComponent<HealthComponent>())
    {
        var health = entity.GetComponent<HealthComponent>();
    }
-   ~~~
+   ```
 
 2. **Verify component type matches:**
-   ~~~csharp
+   ```csharp
    // ✅ Correct
    entity.AddComponent(new HealthComponent());
    var health = entity.GetComponent<HealthComponent>();
@@ -1334,7 +1334,7 @@ var health = entity.GetComponent<HealthComponent>(); // Returns null
    // ❌ Wrong - different type
    entity.AddComponent(new HealthComponent());
    var player = entity.GetComponent<PlayerComponent>(); // null
-   ~~~
+   ```
 
 ---
 
@@ -1345,23 +1345,23 @@ var health = entity.GetComponent<HealthComponent>(); // Returns null
 **Solutions:**
 
 1. **Check system is registered:**
-   ~~~csharp
+   ```csharp
    _world.AddUpdateSystem(new MovementSystem(_world));
-   ~~~
+   ```
 
 2. **Verify World.Update is called:**
-   ~~~csharp
+   ```csharp
    protected override void OnUpdate(GameTime gameTime)
    {
        _world.Update(gameTime); // Must call this!
    }
-   ~~~
+   ```
 
 3. **Check system order:**
-   ~~~csharp
+   ```csharp
    // Systems run in order of UpdateOrder
    public int UpdateOrder => 100; // Lower runs first
-   ~~~
+   ```
 
 ---
 
@@ -1372,7 +1372,7 @@ var health = entity.GetComponent<HealthComponent>(); // Returns null
 **Solutions:**
 
 1. **Verify components exist:**
-   ~~~csharp
+   ```csharp
    var entities = _world.QueryEntities()
        .With<TransformComponent>()
        .With<VelocityComponent>();
@@ -1382,14 +1382,14 @@ var health = entity.GetComponent<HealthComponent>(); // Returns null
    {
        Logger.LogDebug($"{entity.Name}: Has Transform={entity.HasComponent<TransformComponent>()}, Has Velocity={entity.HasComponent<VelocityComponent>()}");
    }
-   ~~~
+   ```
 
 2. **Check query order:**
-   ~~~csharp
+   ```csharp
    // Both are equivalent
    var query1 = _world.QueryEntities().With<TransformComponent>().With<VelocityComponent>();
    var query2 = _world.QueryEntities().With<VelocityComponent>().With<TransformComponent>();
-   ~~~
+   ```
 
 ---
 
@@ -1437,7 +1437,7 @@ var health = entity.GetComponent<HealthComponent>(); // Returns null
 
 ## Quick Reference
 
-~~~csharp
+```csharp
 // Create entity
 var entity = world.CreateEntity("Player");
 
@@ -1484,7 +1484,7 @@ var movingEntities = world.QueryEntities()
     .With<TransformComponent>()
     .With<VelocityComponent>()
     .Without<StaticComponent>();
-~~~
+```
 
 ---
 

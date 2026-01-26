@@ -27,7 +27,7 @@ Brine2D's audio system provides:
 
 ## Audio Architecture
 
-~~~mermaid
+```mermaid
 graph TB
     A[Your Game] --> B[IAudioService]
     B --> C[SDL3AudioService]
@@ -52,7 +52,7 @@ graph TB
     style C fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
     style G fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
     style H fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
-~~~
+```
 
 ---
 
@@ -62,30 +62,29 @@ graph TB
 
 In `Program.cs`:
 
-~~~csharp
+```csharp
 using Brine2D.Hosting;
 using Brine2D.SDL;
 using Microsoft.Extensions.DependencyInjection;
 
 var builder = GameApplication.CreateBuilder(args);
 
-builder.Services.AddSDL3Rendering(options =>
+// Typical approach - AddBrine2D includes audio automatically!
+builder.Services.AddBrine2D(options =>
 {
     options.WindowTitle = "Audio Demo";
     options.WindowWidth = 800;
     options.WindowHeight = 600;
 });
-
-builder.Services.AddSDL3Input();
-
-// Add audio service
-builder.Services.AddSDL3Audio();
+// Audio is already registered - no need for AddSDL3Audio()!
 
 builder.Services.AddScene<GameScene>();
 
 var game = builder.Build();
 await game.RunAsync<GameScene>();
-~~~
+```
+
+**Note:** `AddBrine2D()` includes audio by default. Only register audio separately (`AddSDL3Audio()`) when using the power user approach with granular service registration.
 
 ---
 
@@ -93,7 +92,7 @@ await game.RunAsync<GameScene>();
 
 In your scene:
 
-~~~csharp
+```csharp
 using Brine2D.Audio;
 using Brine2D.Core;
 using Brine2D.Engine;
@@ -110,7 +109,7 @@ public class GameScene : Scene
         _audio = audio;
     }
 }
-~~~
+```
 
 ---
 
@@ -120,7 +119,7 @@ public class GameScene : Scene
 
 Sound effects are short audio clips:
 
-~~~csharp
+```csharp
 using Brine2D.Audio;
 
 public class GameScene : Scene
@@ -149,7 +148,7 @@ public class GameScene : Scene
         Logger.LogInformation("Sound effects loaded");
     }
 }
-~~~
+```
 
 **When to use:**
 - Short duration (< 5 seconds)
@@ -163,7 +162,7 @@ public class GameScene : Scene
 
 Music is for long-form audio:
 
-~~~csharp
+```csharp
 public class GameScene : Scene
 {
     private readonly IAudioService _audio;
@@ -185,7 +184,7 @@ public class GameScene : Scene
         Logger.LogInformation("Music loaded");
     }
 }
-~~~
+```
 
 **When to use:**
 - Long duration (> 30 seconds)
@@ -201,7 +200,7 @@ public class GameScene : Scene
 
 Simple playback (fire-and-forget):
 
-~~~csharp
+```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
     // Play sound on jump
@@ -216,11 +215,11 @@ protected override void OnUpdate(GameTime gameTime)
         _audio.PlaySound(_shootSound);
     }
 }
-~~~
+```
 
 **With options:**
 
-~~~csharp
+```csharp
 // Play with custom volume
 _audio.PlaySound(_explosionSound, volume: 0.5f);
 
@@ -229,13 +228,13 @@ _audio.PlaySound(_engineSound, volume: 1.0f, loops: 1);
 
 // Play with panning (-1.0 = left, 0 = center, 1.0 = right)
 _audio.PlaySound(_voiceSound, volume: 0.8f, loops: 0, pan: -0.5f);
-~~~
+```
 
 ---
 
 ### Play Music
 
-~~~csharp
+```csharp
 protected override async Task OnLoadAsync(CancellationToken cancellationToken)
 {
     _backgroundMusic = await _audio.LoadMusicAsync(
@@ -245,11 +244,11 @@ protected override async Task OnLoadAsync(CancellationToken cancellationToken)
     // Start playing music (loop infinitely)
     _audio.PlayMusic(_backgroundMusic, loops: -1);
 }
-~~~
+```
 
 **Music control:**
 
-~~~csharp
+```csharp
 // Play music once
 _audio.PlayMusic(_backgroundMusic, loops: 0);
 
@@ -264,7 +263,7 @@ _audio.ResumeMusic();
 
 // Stop music
 _audio.StopMusic();
-~~~
+```
 
 ---
 
@@ -276,27 +275,27 @@ Brine2D's audio system uses **track handles** to manage playing sounds.
 
 Fire-and-forget (no tracking):
 
-~~~csharp
+```csharp
 // Simple playback - no handle returned
 _audio.PlaySound(_jumpSound);
 _audio.PlaySound(_explosionSound, volume: 0.5f);
-~~~
+```
 
 With track handle (for control):
 
-~~~csharp
+```csharp
 // Get track handle for control
 nint track = _audio.PlaySoundWithTrack(_shootSound, volume: 0.8f);
 
 // Stop specific track later
 _audio.StopTrack(track);
-~~~
+```
 
 ---
 
 ### Managing Multiple Sounds
 
-~~~csharp
+```csharp
 public class AudioController
 {
     private readonly IAudioService _audio;
@@ -326,7 +325,7 @@ public class AudioController
         _activeTracks.Clear();
     }
 }
-~~~
+```
 
 ---
 
@@ -334,7 +333,7 @@ public class AudioController
 
 Monitor when tracks finish playing:
 
-~~~csharp
+```csharp
 public class GameScene : Scene
 {
     private readonly IAudioService _audio;
@@ -359,13 +358,13 @@ public class GameScene : Scene
         _audio.OnTrackStopped -= HandleTrackStopped;
     }
 }
-~~~
+```
 
 ---
 
 ### Looping Sounds
 
-~~~csharp
+```csharp
 public class EngineSound
 {
     private readonly IAudioService _audio;
@@ -399,7 +398,7 @@ public class EngineSound
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -407,7 +406,7 @@ public class EngineSound
 
 Update panning for positional audio:
 
-~~~csharp
+```csharp
 public class SpatialSoundPlayer
 {
     private readonly IAudioService _audio;
@@ -454,7 +453,7 @@ public class SpatialSoundPlayer
         return Math.Max(0f, 1f - (distance / MaxDistance));
     }
 }
-~~~
+```
 
 ---
 
@@ -462,7 +461,7 @@ public class SpatialSoundPlayer
 
 Organize tracks by purpose:
 
-~~~csharp
+```csharp
 public class AudioManager
 {
     private readonly IAudioService _audio;
@@ -513,7 +512,7 @@ public class AudioManager
         // (tracks are removed from list when they finish)
     }
 }
-~~~
+```
 
 ---
 
@@ -523,7 +522,7 @@ public class AudioManager
 
 Controls all audio:
 
-~~~csharp
+```csharp
 // Set master volume (0.0 to 1.0)
 _audio.MasterVolume = 0.8f;
 
@@ -532,7 +531,7 @@ _audio.MasterVolume = 0.0f;
 
 // Get current volume
 var volume = _audio.MasterVolume;
-~~~
+```
 
 ---
 
@@ -540,13 +539,13 @@ var volume = _audio.MasterVolume;
 
 Controls only music:
 
-~~~csharp
+```csharp
 // Set music volume
 _audio.MusicVolume = 0.6f;
 
 // Mute music only
 _audio.MusicVolume = 0.0f;
-~~~
+```
 
 ---
 
@@ -554,19 +553,19 @@ _audio.MusicVolume = 0.0f;
 
 Controls only sound effects:
 
-~~~csharp
+```csharp
 // Set sound effects volume
 _audio.SoundVolume = 0.7f;
 
 // Mute sound effects only
 _audio.SoundVolume = 0.0f;
-~~~
+```
 
 ---
 
 ### Volume Hierarchy
 
-~~~mermaid
+```mermaid
 graph TB
     A[MasterVolume<br/>0.8]
     A --> B[MusicVolume<br/>0.6]
@@ -578,7 +577,7 @@ graph TB
     style A fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
     style B fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
     style C fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-~~~
+```
 
 **Formula:** `Actual Volume = MasterVolume × (MusicVolume or SoundVolume)`
 
@@ -588,7 +587,7 @@ graph TB
 
 ### Simple Audio Scene
 
-~~~csharp
+```csharp
 using Brine2D.Audio;
 using Brine2D.Core;
 using Brine2D.Engine;
@@ -753,7 +752,7 @@ public class AudioDemoScene : Scene
         _audio.StopMusic();
     }
 }
-~~~
+```
 
 ---
 
@@ -761,7 +760,7 @@ public class AudioDemoScene : Scene
 
 For complex games, create an audio manager:
 
-~~~csharp
+```csharp
 public class AudioManager
 {
     private readonly IAudioService _audio;
@@ -884,7 +883,7 @@ public class GameScene : Scene
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -892,7 +891,7 @@ public class GameScene : Scene
 
 ### Collision Sound Example
 
-~~~csharp
+```csharp
 public class GameScene : Scene
 {
     private readonly IAudioService _audio;
@@ -913,7 +912,7 @@ public class GameScene : Scene
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -921,7 +920,7 @@ public class GameScene : Scene
 
 Switch music based on game state:
 
-~~~csharp
+```csharp
 public class GameScene : Scene
 {
     private IMusic? _normalMusic;
@@ -961,7 +960,7 @@ public enum GameState
     Boss,
     Victory
 }
-~~~
+```
 
 ---
 
@@ -969,7 +968,7 @@ public enum GameState
 
 Fade music in/out:
 
-~~~csharp
+```csharp
 public class AudioFader
 {
     private readonly IAudioService _audio;
@@ -1017,7 +1016,8 @@ public class AudioFader
         {
             // Fade out
             _audio.MusicVolume = Math.Max(_audio.MusicVolume - change, _targetVolume);
-            if (_audio.MusicVolume <= _targetVolume)
+            
+            if (_audio.MusicVolume <= $targetVolume)
             {
                 _fading = false;
                 if (_targetVolume == 0.0f)
@@ -1037,7 +1037,7 @@ fader.FadeOut(duration: 2.0f);
 
 // Fade in to 80% over 1 second
 fader.FadeIn(targetVolume: 0.8f, duration: 1.0f);
-~~~
+```
 
 ---
 
@@ -1045,7 +1045,7 @@ fader.FadeIn(targetVolume: 0.8f, duration: 1.0f);
 
 Organize audio files:
 
-~~~
+```
 assets/
 ├── sounds/
 │   ├── player/
@@ -1074,7 +1074,7 @@ assets/
     ├── level2.mp3
     ├── boss.mp3
     └── victory.mp3
-~~~
+```
 
 ---
 
@@ -1082,7 +1082,7 @@ assets/
 
 ### Preload Common Sounds
 
-~~~csharp
+```csharp
 protected override async Task OnLoadAsync(CancellationToken ct)
 {
     // Load frequently used sounds during loading screen
@@ -1098,13 +1098,13 @@ protected override async Task OnLoadAsync(CancellationToken ct)
         await _audioManager.LoadSoundAsync(name, path, ct);
     }
 }
-~~~
+```
 
 ---
 
 ### Lazy Load Music
 
-~~~csharp
+```csharp
 public class MusicManager
 {
     private readonly IAudioService _audio;
@@ -1126,13 +1126,13 @@ public class MusicManager
         }
     }
 }
-~~~
+```
 
 ---
 
 ### Limit Simultaneous Sounds
 
-~~~csharp
+```csharp
 public class SoundLimiter
 {
     private readonly Dictionary<string, float> _lastPlayTime = new();
@@ -1159,7 +1159,7 @@ if (_soundLimiter.CanPlaySound("explosion", gameTime))
 {
     _audio.PlaySound(_explosionSound);
 }
-~~~
+```
 
 ---
 
@@ -1168,79 +1168,79 @@ if (_soundLimiter.CanPlaySound("explosion", gameTime))
 ### DO
 
 1. **Load audio in OnLoadAsync**
-   ~~~csharp
+   ```csharp
    // ✅ Good - async loading
    protected override async Task OnLoadAsync(CancellationToken ct)
    {
        _jumpSound = await _audio.LoadSoundAsync("assets/sounds/jump.wav", ct);
    }
-   ~~~
+   ```
 
 2. **Use appropriate format**
-   ~~~csharp
+   ```csharp
    // ✅ Sound effects - WAV (uncompressed, fast)
    "assets/sounds/jump.wav"
    
    // ✅ Music - MP3/OGG (compressed, streaming)
    "assets/music/background.mp3"
-   ~~~
+   ```
 
 3. **Check for null**
-   ~~~csharp
+   ```csharp
    // ✅ Good - null check
    if (_jumpSound != null)
    {
        _audio.PlaySound(_jumpSound);
    }
-   ~~~
+   ```
 
 4. **Set reasonable volumes**
-   ~~~csharp
+   ```csharp
    // ✅ Good - 0.7 is a good default
    _audio.PlaySound(_explosionSound, volume: 0.7f);
-   ~~~
+   ```
 
 5. **Stop music on scene exit**
-   ~~~csharp
+   ```csharp
    // ✅ Good - cleanup
    protected override void OnDispose()
    {
        _audio.StopMusic();
        _audio.OnTrackStopped -= HandleTrackStopped;
    }
-   ~~~
+   ```
 
 6. **Use track handles for control**
-   ~~~csharp
+   ```csharp
    // ✅ Good - get handle for looping sounds
    nint track = _audio.PlaySoundWithTrack(_engineSound, loops: -1);
    
    // Can stop later
    _audio.StopTrack(track);
-   ~~~
+   ```
 
 ### DON'T
 
 1. **Don't load in Update**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - loads every frame!
    protected override void OnUpdate(GameTime gameTime)
    {
        var sound = await _audio.LoadSoundAsync(...); // NO!
    }
-   ~~~
+   ```
 
 2. **Don't use music for short sounds**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - music is for long audio
    var jumpMusic = await _audio.LoadMusicAsync("assets/sounds/jump.wav", ct);
    
    // ✅ Good - use sound for short clips
    var jumpSound = await _audio.LoadSoundAsync("assets/sounds/jump.wav", ct);
-   ~~~
+   ```
 
 3. **Don't play too many sounds simultaneously**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - plays 1000 sounds!
    for (int i = 0; i < 1000; i++)
    {
@@ -1253,20 +1253,20 @@ if (_soundLimiter.CanPlaySound("explosion", gameTime))
        _audio.PlaySound(_explosionSound);
        _soundCounter++;
    }
-   ~~~
+   ```
 
 4. **Don't forget to copy assets**
-   ~~~xml
+   ```xml
    <!-- ✅ Add to .csproj -->
    <ItemGroup>
      <None Update="assets\**\*">
        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
      </None>
    </ItemGroup>
-   ~~~
+   ```
 
 5. **Don't forget to unsubscribe from events**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - memory leak!
    protected override void OnInitialize()
    {
@@ -1278,7 +1278,7 @@ if (_soundLimiter.CanPlaySound("explosion", gameTime))
    {
        _audio.OnTrackStopped -= HandleTrackStopped;
    }
-   ~~~
+   ```
 
 ---
 
@@ -1291,29 +1291,29 @@ if (_soundLimiter.CanPlaySound("explosion", gameTime))
 **Solutions:**
 
 1. **Check audio service is registered:**
-   ~~~csharp
+   ```csharp
    // Must have in Program.cs
    builder.Services.AddSDL3Audio();
-   ~~~
+   ```
 
 2. **Verify files exist:**
-   ~~~sh
+   ```sh
    ls assets/sounds/
    # Should show: jump.wav, shoot.wav, etc.
-   ~~~
+   ```
 
 3. **Check volume levels:**
-   ~~~csharp
+   ```csharp
    Logger.LogDebug("Master: {Master}, Music: {Music}, Sound: {Sound}",
        _audio.MasterVolume, _audio.MusicVolume, _audio.SoundVolume);
-   ~~~
+   ```
 
 4. **Test with known-good file:**
-   ~~~csharp
+   ```csharp
    // Try a simple WAV file
    var testSound = await _audio.LoadSoundAsync("assets/sounds/test.wav", ct);
    _audio.PlaySound(testSound);
-   ~~~
+   ```
 
 ---
 
@@ -1323,13 +1323,13 @@ if (_soundLimiter.CanPlaySound("explosion", gameTime))
 
 **Solution:** Use loops parameter:
 
-~~~csharp
+```csharp
 // ❌ Wrong - plays once
 _audio.PlayMusic(_backgroundMusic);
 
 // ✅ Correct - loops infinitely
 _audio.PlayMusic(_backgroundMusic, loops: -1);
-~~~
+```
 
 ---
 
@@ -1344,17 +1344,17 @@ _audio.PlayMusic(_backgroundMusic, loops: -1);
    - Use music for longer audio
 
 2. **Don't immediately stop track:**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - stops immediately!
    nint track = _audio.PlaySoundWithTrack(_sound);
    _audio.StopTrack(track);
    
    // ✅ Good - let it play
    _audio.PlaySound(_sound);
-   ~~~
+   ```
 
 3. **Check if track handle is valid:**
-   ~~~csharp
+   ```csharp
    // Store track handle
    nint track = _audio.PlaySoundWithTrack(_sound);
    
@@ -1363,7 +1363,7 @@ _audio.PlayMusic(_backgroundMusic, loops: -1);
    {
        _audio.StopTrack(track);
    }
-   ~~~
+   ```
 
 ---
 
@@ -1396,24 +1396,24 @@ _audio.PlayMusic(_backgroundMusic, loops: -1);
 **Solutions:**
 
 1. **Preload sounds:**
-   ~~~csharp
+   ```csharp
    // Load during loading screen, not gameplay
    protected override async Task OnLoadAsync(CancellationToken ct)
    {
        await LoadAllSoundsAsync(ct);
    }
-   ~~~
+   ```
 
 2. **Use appropriate formats:**
-   ~~~csharp
+   ```csharp
    // ✅ WAV for sounds (fast, no decompression)
    // ✅ MP3/OGG for music (streamed)
-   ~~~
+   ```
 
 3. **Limit simultaneous sounds:**
-   ~~~csharp
+   ```csharp
    // Limit to 8-16 simultaneous sound effects
-   ~~~
+   ```
 
 ---
 
@@ -1462,7 +1462,7 @@ _audio.PlayMusic(_backgroundMusic, loops: -1);
 
 ## Quick Reference
 
-~~~csharp
+```csharp
 // Setup (Program.cs)
 builder.Services.AddSDL3Audio();
 
@@ -1516,7 +1516,7 @@ protected override void OnDispose()
     _audio.StopMusic();
     _audio.OnTrackStopped -= HandleTrackStopped;
 }
-~~~
+```
 
 ---
 

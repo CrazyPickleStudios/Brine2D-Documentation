@@ -35,27 +35,69 @@ style H fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
 
 ## Basic Usage
 
-### Minimal Setup
+### Minimal Setup (Recommended)
 
 ```csharp
 using Brine2D.Hosting;
+using Brine2D.SDL;
 
 // Step 1: Create builder
 var builder = GameApplication.CreateBuilder(args);
 
-// Step 2: Configure services
-builder.Services.AddSDL3Rendering();
-builder.Services.AddSDL3Input();
+// Step 2: Add Brine2D with sensible defaults
+// This includes: SDL3 backend, GPU rendering, input, application lifetime
+builder.Services.AddBrine2D(options =>
+{
+    options.WindowTitle = "My Game";
+    options.WindowWidth = 1280;
+    options.WindowHeight = 720;
+    // Defaults: GraphicsBackend.GPU with VSync enabled
+});
+
+// Step 3: Register your game scene
 builder.Services.AddScene<GameScene>();
 
-// Step 3: Build application
+// Step 4: Build application
 var game = builder.Build();
 
-// Step 4: Run
+// Step 5: Run
 await game.RunAsync<GameScene>();
 ```
 
-**That's it!** Four simple steps to a working game.
+**That's it!** Five simple steps to a working game.
+
+### Power User Setup (Advanced)
+
+For scenarios where you need fine-grained control (custom backends, testing, dependency injection):
+
+```csharp
+// Granular service registration - opt out of defaults
+var builder = GameApplication.CreateBuilder(args);
+
+// Register services individually
+builder.Services.AddBrineCore();           // Core engine services
+builder.Services.AddBrineEngine();         // Game loop, scene manager
+builder.Services.AddSDL3ApplicationLifetime(); // SDL3 window management
+builder.Services.AddSDL3Input();           // Input handling
+builder.Services.AddSDL3Rendering(options => 
+{
+    options.WindowTitle = "My Game";
+    options.Backend = GraphicsBackend.LegacyRenderer; // Custom backend
+});
+
+// Inject custom services
+builder.Services.AddSingleton<IMyCustomService, MyCustomService>();
+
+builder.Services.AddScene<GameScene>();
+var game = builder.Build();
+await game.RunAsync<GameScene>();
+```
+
+**When to use granular setup:**
+- Testing scenarios (mock rendering/input)
+- Custom platform implementations
+- Selective feature inclusion
+- Advanced dependency injection scenarios
 
 ---
 
@@ -377,17 +419,40 @@ public static class MyGameExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        // Register all game-specific services
+        // Use AddBrine2D for typical setup
+        services.AddBrine2D(options =>
+        {
+            configuration.GetSection("Rendering").Bind(options);
+        });
+        
+        // Add optional audio
+        services.AddSDL3Audio();
+        
+        // Add additional game systems
+        services.AddCollisionSystem();
+        services.AddUICanvas();
+        
+        // Custom systems
+        services.AddSingleton<IEnemyFactory, EnemyFactory>();
+        services.AddScoped<ILevelManager, LevelManager>();
+        
+        return services;
+    }
+    
+    // Or power user approach with granular control
+    public static IServiceCollection AddMyGameAdvanced(
+        this IServiceCollection services,
+        IConfiguration configuration)
+    {
+        // Register services individually for fine-grained control
         services.AddInputLayerManager().AddSDL3Input();
         services.AddSDL3Audio();
         
         services.AddSDL3Rendering(options =>
         {
             configuration.GetSection("Rendering").Bind(options);
+            options.Backend = GraphicsBackend.LegacyRenderer; // Custom backend
         });
-        
-        services.AddCollisionSystem();
-        services.AddUICanvas();
         
         // Custom systems
         services.AddSingleton<IEnemyFactory, EnemyFactory>();
@@ -420,6 +485,7 @@ using Brine2D.Hosting;
 using Brine2D.Input;
 using Brine2D.Input.SDL;
 using Brine2D.Rendering.SDL;
+using Brine2D.SDL;
 using Brine2D.UI;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -450,43 +516,21 @@ else
 // STEP 3: Configure Services
 // ========================================
 
-// Input
-builder.Services
-    .AddInputLayerManager()
-    .AddSDL3Input();
-
-// Audio
-builder.Services.AddSDL3Audio();
-
-// Rendering
-builder.Services.AddSDL3Rendering(options =>
+// Typical approach - use AddBrine2D for rendering and input
+builder.Services.AddBrine2D(options =>
 {
-    // Bind from gamesettings.json
-    builder.Configuration.GetSection("Rendering").Bind(options);
-    
-    // Override if needed
-    if (builder.Environment.IsDevelopment())
-    {
-        options.WindowTitle += " [DEV]";
-    }
+    options.WindowTitle = "My Game";
+    options.WindowWidth = 1920;
+    options.WindowHeight = 1080;
+    options.VSync = true;
 });
 
-// Game Systems (Scoped)
-builder.Services.AddCollisionSystem();
-builder.Services.AddUICanvas();
-builder.Services.AddTilemapServices();
-builder.Services.AddTilemapRenderer();
+// Audio (optional, not included in AddBrine2D)
+builder.Services.AddSDL3Audio();
 
-// Custom Systems
-builder.Services.AddSingleton<IEnemyFactory, EnemyFactory>();
-builder.Services.AddScoped<ILevelManager, LevelManager>();
-builder.Services.AddTransient<IParticleSystem, ParticleSystem>();
-
-// Scenes
-builder.Services.AddScene<MenuScene>();
+// Input and scenes
+builder.Services.AddSDL3Input();
 builder.Services.AddScene<GameScene>();
-builder.Services.AddScene<PauseScene>();
-builder.Services.AddScene<GameOverScene>();
 
 // ========================================
 // STEP 4: Build Application
@@ -496,7 +540,7 @@ var game = builder.Build();
 // ========================================
 // STEP 5: Run
 // ========================================
-await game.RunAsync<MenuScene>();
+await game.RunAsync<GameScene>();
 ```
 
 ```json gamesettings.json

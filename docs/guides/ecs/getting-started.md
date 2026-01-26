@@ -32,12 +32,12 @@ A simple game with player, enemies, and projectiles using pure ECS.
 
 Create a new Brine2D project:
 
-~~~sh
+```sh
 dotnet new console -n ECSDemo
 cd ECSDemo
 dotnet add package Brine2D --version 0.9.0-beta
 dotnet add package Brine2D.SDL --version 0.9.0-beta
-~~~
+```
 
 ---
 
@@ -45,7 +45,7 @@ dotnet add package Brine2D.SDL --version 0.9.0-beta
 
 Create `Program.cs`:
 
-~~~csharp
+```csharp
 using Brine2D.Hosting;
 using Brine2D.SDL;
 using ECSDemo;
@@ -65,7 +65,7 @@ builder.Services.AddScene<GameScene>();
 
 var game = builder.Build();
 await game.RunAsync<GameScene>();
-~~~
+```
 
 ---
 
@@ -77,7 +77,7 @@ Components are pure data - no logic:
 
 Create `Components/TransformComponent.cs`:
 
-~~~csharp
+```csharp
 using Brine2D.ECS;
 using System.Numerics;
 
@@ -89,11 +89,11 @@ public class TransformComponent : Component
     public float Rotation { get; set; }
     public Vector2 Scale { get; set; } = Vector2.One;
 }
-~~~
+```
 
 Create `Components/VelocityComponent.cs`:
 
-~~~csharp
+```csharp
 using Brine2D.ECS;
 using System.Numerics;
 
@@ -104,11 +104,11 @@ public class VelocityComponent : Component
     public Vector2 Velocity { get; set; }
     public float Speed { get; set; }
 }
-~~~
+```
 
 Create `Components/SpriteComponent.cs`:
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.ECS;
 
@@ -120,11 +120,11 @@ public class SpriteComponent : Component
     public int Height { get; set; }
     public Color Color { get; set; } = Color.White;
 }
-~~~
+```
 
 Create `Components/HealthComponent.cs`:
 
-~~~csharp
+```csharp
 using Brine2D.ECS;
 
 namespace ECSDemo.Components;
@@ -135,11 +135,11 @@ public class HealthComponent : Component
     public int Max { get; set; }
     public bool IsDead => Current <= 0;
 }
-~~~
+```
 
 Create `Components/TagComponents.cs`:
 
-~~~csharp
+```csharp
 using Brine2D.ECS;
 
 namespace ECSDemo.Components;
@@ -148,7 +148,7 @@ namespace ECSDemo.Components;
 public class PlayerComponent : Component { }
 public class EnemyComponent : Component { }
 public class ProjectileComponent : Component { }
-~~~
+```
 
 ---
 
@@ -160,7 +160,7 @@ Systems contain logic - no data:
 
 Create `Systems/MovementSystem.cs`:
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.ECS;
 using ECSDemo.Components;
@@ -201,7 +201,7 @@ public class MovementSystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 **What this does:**
 1. Queries all entities with Transform and Velocity
@@ -214,7 +214,7 @@ public class MovementSystem : IUpdateSystem
 
 Create `Systems/SpriteRenderSystem.cs`:
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.ECS;
 using Brine2D.Rendering;
@@ -260,7 +260,7 @@ public class SpriteRenderSystem : IRenderSystem
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -268,7 +268,7 @@ public class SpriteRenderSystem : IRenderSystem
 
 Create `Systems/PlayerInputSystem.cs`:
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.ECS;
 using Brine2D.Input;
@@ -327,7 +327,7 @@ public class PlayerInputSystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -335,7 +335,7 @@ public class PlayerInputSystem : IUpdateSystem
 
 Create `Systems/EnemyAISystem.cs`:
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.ECS;
 using ECSDemo.Components;
@@ -404,7 +404,7 @@ public class EnemyAISystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -412,7 +412,7 @@ public class EnemyAISystem : IUpdateSystem
 
 Create `Systems/CollisionSystem.cs`:
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.ECS;
 using ECSDemo.Components;
@@ -488,7 +488,7 @@ public class CollisionSystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -496,7 +496,7 @@ public class CollisionSystem : IUpdateSystem
 
 Create `Systems/CleanupSystem.cs`:
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.ECS;
 using ECSDemo.Components;
@@ -561,7 +561,7 @@ public class CleanupSystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -571,7 +571,7 @@ public class CleanupSystem : IUpdateSystem
 
 Create `EntityFactory.cs`:
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.ECS;
 using ECSDemo.Components;
@@ -672,7 +672,7 @@ public static class EntityFactory
         return entity;
     }
 }
-~~~
+```
 
 **Pattern:** Factory methods encapsulate entity creation logic.
 
@@ -684,7 +684,7 @@ public static class EntityFactory
 
 Create `GameScene.cs`:
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.ECS;
 using Brine2D.Engine;
@@ -826,7 +826,7 @@ public class GameScene : Scene
         _renderer.DrawText("WASD: Move | ESC: Quit", 10, 570, Color.Gray);
     }
 }
-~~~
+```
 
 ---
 
@@ -836,9 +836,9 @@ public class GameScene : Scene
 
 Run your ECS game:
 
-~~~sh
+```sh
 dotnet run
-~~~
+```
 
 **You should see:**
 1. Blue player square in center
@@ -855,7 +855,7 @@ dotnet run
 
 ## Architecture Diagram
 
-~~~mermaid
+```mermaid
 graph TB
     subgraph "Game Scene"
         A[GameScene]
@@ -936,7 +936,7 @@ graph TB
     style C4 fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
     style C5 fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
     style D1 fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
-~~~
+```
 
 **Execution order:**
 1. PlayerInputSystem (10) - Process player input
@@ -954,7 +954,7 @@ graph TB
 
 Add shooting to `PlayerInputSystem`:
 
-~~~csharp
+```csharp
 public void Update(GameTime gameTime)
 {
     var players = _world.QueryEntities()
@@ -977,11 +977,11 @@ public void Update(GameTime gameTime)
         // ... existing movement code
     }
 }
-~~~
+```
 
 Add projectile vs enemy collision to `CollisionSystem`:
 
-~~~csharp
+```csharp
 // Check projectiles vs enemies
 var projectiles = _world.QueryEntities()
     .With<ProjectileComponent>()
@@ -1017,7 +1017,7 @@ foreach (var projectile in projectiles)
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -1025,22 +1025,22 @@ foreach (var projectile in projectiles)
 
 Create `Components/ScoreComponent.cs`:
 
-~~~csharp
+```csharp
 public class ScoreComponent : Component
 {
     public int Score { get; set; }
 }
-~~~
+```
 
 Add to player:
 
-~~~csharp
+```csharp
 entity.AddComponent(new ScoreComponent());
-~~~
+```
 
 Update score in collision system:
 
-~~~csharp
+```csharp
 if (enemyHealth != null && enemyHealth.IsDead)
 {
     var playerScore = player.GetComponent<ScoreComponent>();
@@ -1049,17 +1049,17 @@ if (enemyHealth != null && enemyHealth.IsDead)
         playerScore.Score += 10;
     }
 }
-~~~
+```
 
 Display in HUD:
 
-~~~csharp
+```csharp
 var score = player.GetComponent<ScoreComponent>();
 if (score != null)
 {
     _renderer.DrawText($"Score: {score.Score}", 10, 50, Color.White);
 }
-~~~
+```
 
 ---
 
@@ -1067,17 +1067,17 @@ if (score != null)
 
 Create `Components/ParticleComponent.cs`:
 
-~~~csharp
+```csharp
 public class ParticleComponent : Component
 {
     public float Lifetime { get; set; }
     public float MaxLifetime { get; set; }
 }
-~~~
+```
 
 Create particle system:
 
-~~~csharp
+```csharp
 public class ParticleSystem : IUpdateSystem
 {
     public string Name => "ParticleSystem";
@@ -1112,7 +1112,7 @@ public class ParticleSystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -1121,31 +1121,31 @@ public class ParticleSystem : IUpdateSystem
 ### DO
 
 1. **Keep components simple**
-   ~~~csharp
+   ```csharp
    // ✅ Good - just data
    public class HealthComponent : Component
    {
        public int Current { get; set; }
        public int Max { get; set; }
    }
-   ~~~
+   ```
 
 2. **Use factories for creation**
-   ~~~csharp
+   ```csharp
    // ✅ Good - encapsulated
    var player = EntityFactory.CreatePlayer(_world, position);
-   ~~~
+   ```
 
 3. **Order systems explicitly**
-   ~~~csharp
+   ```csharp
    // ✅ Good - clear order
    _world.AddUpdateSystem(new InputSystem(_world) { UpdateOrder = 10 });
    _world.AddUpdateSystem(new PhysicsSystem(_world) { UpdateOrder = 50 });
    _world.AddUpdateSystem(new MovementSystem(_world) { UpdateOrder = 100 });
-   ~~~
+   ```
 
 4. **Query once per frame**
-   ~~~csharp
+   ```csharp
    // ✅ Good - query once
    var entities = _world.QueryEntities()
        .With<TransformComponent>()
@@ -1156,47 +1156,47 @@ public class ParticleSystem : IUpdateSystem
    {
        // Process
    }
-   ~~~
+   ```
 
 5. **Use tag components**
-   ~~~csharp
+   ```csharp
    // ✅ Good - easy to query
    public class PlayerComponent : Component { }
    
    var players = _world.QueryEntities().With<PlayerComponent>();
-   ~~~
+   ```
 
 ### DON'T
 
 1. **Don't put logic in components**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - logic in component
    public class HealthComponent : Component
    {
        public void TakeDamage(int amount) { ... }
    }
-   ~~~
+   ```
 
 2. **Don't query inside loops**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - queries every iteration
    for (int i = 0; i < 100; i++)
    {
        var enemies = _world.QueryEntities().With<EnemyComponent>();
    }
-   ~~~
+   ```
 
 3. **Don't forget deltaTime**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - frame-rate dependent
    transform.Position += velocity.Velocity;
    
    // ✅ Good - frame-rate independent
    transform.Position += velocity.Velocity * deltaTime;
-   ~~~
+   ```
 
 4. **Don't create entities in tight loops**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - creates 1000 entities per frame!
    protected override void OnUpdate(GameTime gameTime)
    {
@@ -1205,7 +1205,7 @@ public class ParticleSystem : IUpdateSystem
            EntityFactory.CreateEnemy(_world, position);
        }
    }
-   ~~~
+   ```
 
 ---
 
@@ -1218,25 +1218,25 @@ public class ParticleSystem : IUpdateSystem
 **Solutions:**
 
 1. **Check World.Update is called:**
-   ~~~csharp
+   ```csharp
    protected override void OnUpdate(GameTime gameTime)
    {
        _world.Update(gameTime); // Must call this!
    }
-   ~~~
+   ```
 
 2. **Verify systems are registered:**
-   ~~~csharp
+   ```csharp
    _world.AddUpdateSystem(new MovementSystem(_world));
-   ~~~
+   ```
 
 3. **Check component exists:**
-   ~~~csharp
+   ```csharp
    if (entity.HasComponent<VelocityComponent>())
    {
        Logger.LogDebug("Entity has velocity");
    }
-   ~~~
+   ```
 
 ---
 
@@ -1247,24 +1247,24 @@ public class ParticleSystem : IUpdateSystem
 **Solutions:**
 
 1. **Check World.Render is called:**
-   ~~~csharp
+   ```csharp
    protected override void OnRender(GameTime gameTime)
    {
        _renderer.Clear(Color.Black);
        _world.Render(gameTime); // Must call this!
    }
-   ~~~
+   ```
 
 2. **Verify render system registered:**
-   ~~~csharp
+   ```csharp
    _world.AddRenderSystem(new SpriteRenderSystem(_world, _renderer));
-   ~~~
+   ```
 
 3. **Check entity has required components:**
-   ~~~csharp
+   ```csharp
    entity.AddComponent(new TransformComponent());
    entity.AddComponent(new SpriteComponent()); // Both needed!
-   ~~~
+   ```
 
 ---
 
@@ -1274,7 +1274,7 @@ public class ParticleSystem : IUpdateSystem
 
 **Solution:** Set UpdateOrder correctly:
 
-~~~csharp
+```csharp
 // ✅ Correct ordering
 public class InputSystem : IUpdateSystem
 {
@@ -1290,7 +1290,7 @@ public class CollisionSystem : IUpdateSystem
 {
     public int UpdateOrder => 150; // After movement
 }
-~~~
+```
 
 **Rule:** Lower order runs first.
 
@@ -1303,21 +1303,21 @@ public class CollisionSystem : IUpdateSystem
 **Solutions:**
 
 1. **Cache query results:**
-   ~~~csharp
+   ```csharp
    // ✅ Good - query once
    var entities = _world.QueryEntities()
        .With<TransformComponent>()
        .ToList();
-   ~~~
+   ```
 
 2. **Remove unused entities:**
-   ~~~csharp
+   ```csharp
    // Clean up off-screen entities
    if (transform.Position.Y > 1000)
    {
        _world.DestroyEntity(entity);
    }
-   ~~~
+   ```
 
 3. **Use spatial partitioning:**
    - Divide world into grid
@@ -1381,7 +1381,7 @@ Now that you understand ECS basics, explore advanced topics:
 
 ## Quick Reference
 
-~~~csharp
+```csharp
 // Create World
 var world = new World();
 
@@ -1412,7 +1412,7 @@ protected override void OnRender(GameTime gameTime)
 {
     world.Render(gameTime);
 }
-~~~
+```
 
 ---
 

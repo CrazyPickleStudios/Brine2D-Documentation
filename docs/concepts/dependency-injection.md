@@ -102,6 +102,9 @@ services.TryAddSingleton<ISceneManager, SceneManager>();
 
 ### 2. Rendering Services (Singleton)
 
+> **Note:** For typical usage, prefer `AddBrine2D()` which handles rendering setup automatically.  
+> The granular approach below is for advanced scenarios requiring custom backends or testing.
+
 Rendering is expensive to initialize and provides both GPU and legacy renderer options:
 
 ```csharp
@@ -189,12 +192,17 @@ public static IServiceCollection AddSDL3Rendering(
 
 ---
 
+---
+
 ### 3. Input Services (Singleton)
+
+> **Note:** For typical usage, prefer `AddBrine2D()` which handles input setup automatically.  
+> The granular approach below is for advanced scenarios.
 
 Input state is global:
 
 ```csharp
-// In your Program.cs
+// Power user approach - manual input registration
 builder.Services.AddInputLayerManager().AddSDL3Input();
 
 // What it registers:
@@ -214,14 +222,31 @@ builder.Services
 
 ### 4. Audio Services (Singleton)
 
+> **Note:** `AddBrine2D()` includes audio by default (batteries included!).  
+> Only register audio separately when using the granular power user approach.
+
 Audio mixer is shared:
 
 ```csharp
+// Typical approach - audio included with AddBrine2D()
+builder.Services.AddBrine2D(options => { ... });
+// Audio is already registered!
+
+// Power user approach - manual audio registration
 builder.Services.AddSDL3Audio();
 
-// Registers:
+// What it registers:
 services.TryAddSingleton<IAudioService, SDL3AudioService>();
 ```
+
+**What AddBrine2D() includes:**
+- Core engine services (EventBus, GameTime)
+- Engine services (SceneManager, GameLoop, GameContext)
+- SDL3 application lifetime and event handling
+- SDL3 input system (keyboard, mouse, gamepad)
+- SDL3 rendering with GPU backend
+- **SDL3_mixer audio system (sound effects, music, spatial audio)** ← Included!
+
 
 ---
 

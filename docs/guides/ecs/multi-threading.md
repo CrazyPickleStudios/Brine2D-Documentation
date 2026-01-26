@@ -23,7 +23,7 @@ Multi-threading can significantly improve performance when processing large numb
 
 ## Threading Model
 
-~~~mermaid
+```mermaid
 graph TB
     A[Main Thread] --> B[Update Systems]
     B --> C{Parallel Safe?}
@@ -47,7 +47,7 @@ graph TB
     style A fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
     style D fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
     style J fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
-~~~
+```
 
 **Key concepts:**
 
@@ -62,7 +62,7 @@ graph TB
 
 ### Read vs Write Access
 
-~~~csharp
+```csharp
 public class ThreadSafetyExample
 {
     // ✅ SAFE: Multiple threads reading same data
@@ -106,7 +106,7 @@ public class ThreadSafetyExample
         });
     }
 }
-~~~
+```
 
 **Rules:**
 
@@ -125,7 +125,7 @@ public class ThreadSafetyExample
 
 Process entities in parallel:
 
-~~~csharp
+```csharp
 using System.Threading.Tasks;
 
 public class ParallelMovementSystem : IUpdateSystem
@@ -164,7 +164,7 @@ public class ParallelMovementSystem : IUpdateSystem
         });
     }
 }
-~~~
+```
 
 **Important:** Always materialize the query (`.ToList()`) before parallel processing!
 
@@ -174,7 +174,7 @@ public class ParallelMovementSystem : IUpdateSystem
 
 Control parallelism degree:
 
-~~~csharp
+```csharp
 public class ConfigurableParallelSystem : IUpdateSystem
 {
     private readonly World _world;
@@ -205,7 +205,7 @@ public class ConfigurableParallelSystem : IUpdateSystem
         });
     }
 }
-~~~
+```
 
 ---
 
@@ -215,7 +215,7 @@ public class ConfigurableParallelSystem : IUpdateSystem
 
 Use concurrent collections for shared data:
 
-~~~csharp
+```csharp
 using System.Collections.Concurrent;
 
 public class CollisionDetectionSystem : IUpdateSystem
@@ -263,7 +263,7 @@ public class CollisionDetectionSystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 **Concurrent collections:**
 
@@ -280,7 +280,7 @@ public class CollisionDetectionSystem : IUpdateSystem
 
 Use locks for complex shared state:
 
-~~~csharp
+```csharp
 public class ScoreSystem : IUpdateSystem
 {
     private readonly World _world;
@@ -321,7 +321,7 @@ public class ScoreSystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 **Warning:** Locks can reduce parallelism. Use sparingly!
 
@@ -331,7 +331,7 @@ public class ScoreSystem : IUpdateSystem
 
 Atomic operations without locks:
 
-~~~csharp
+```csharp
 using System.Threading;
 
 public class CounterSystem : IUpdateSystem
@@ -360,7 +360,7 @@ public class CounterSystem : IUpdateSystem
         Logger.LogDebug("Active entities: {Count}", _entityCount);
     }
 }
-~~~
+```
 
 **Interlocked operations:**
 
@@ -378,7 +378,7 @@ public class CounterSystem : IUpdateSystem
 
 ### Parallel Physics Simulation
 
-~~~csharp
+```csharp
 public class ParallelPhysicsSystem : IUpdateSystem
 {
     private readonly World _world;
@@ -414,13 +414,13 @@ public class ParallelPhysicsSystem : IUpdateSystem
         });
     }
 }
-~~~
+```
 
 ---
 
 ### Parallel Pathfinding
 
-~~~csharp
+```csharp
 public class ParallelPathfindingSystem : IUpdateSystem
 {
     private readonly World _world;
@@ -461,13 +461,13 @@ public class ParallelPathfindingSystem : IUpdateSystem
         return new List<Vector2>();
     }
 }
-~~~
+```
 
 ---
 
 ### Parallel Particle Updates
 
-~~~csharp
+```csharp
 public class ParallelParticleSystem : IUpdateSystem
 {
     private readonly World _world;
@@ -511,7 +511,7 @@ public class ParallelParticleSystem : IUpdateSystem
         });
     }
 }
-~~~
+```
 
 ---
 
@@ -519,7 +519,7 @@ public class ParallelParticleSystem : IUpdateSystem
 
 ### When to Use Parallelism
 
-~~~csharp
+```csharp
 public class SmartParallelSystem : IUpdateSystem
 {
     private readonly World _world;
@@ -550,7 +550,7 @@ public class SmartParallelSystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 **Guidelines:**
 
@@ -564,7 +564,7 @@ public class SmartParallelSystem : IUpdateSystem
 
 ### Measuring Parallelism Benefit
 
-~~~csharp
+```csharp
 using System.Diagnostics;
 
 public class ParallelismBenchmark
@@ -608,7 +608,7 @@ public class ParallelismBenchmark
             speedup);
     }
 }
-~~~
+```
 
 ---
 
@@ -616,7 +616,7 @@ public class ParallelismBenchmark
 
 ### Race Conditions
 
-~~~csharp
+```csharp
 public class RaceConditionExample
 {
     private int _counter = 0;
@@ -666,13 +666,13 @@ public class RaceConditionExample
         });
     }
 }
-~~~
+```
 
 ---
 
 ### Shared Component Access
 
-~~~csharp
+```csharp
 public class SharedComponentExample
 {
     // ❌ BAD: Multiple threads modifying same component
@@ -717,7 +717,7 @@ public class SharedComponentExample
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -726,17 +726,17 @@ public class SharedComponentExample
 ### DO
 
 1. **Materialize queries before parallel processing**
-   ~~~csharp
+   ```csharp
    // ✅ Good - materialize first
    var entities = world.QueryEntities()
        .With<TransformComponent>()
        .ToList(); // Important!
    
    Parallel.ForEach(entities, entity => { ... });
-   ~~~
+   ```
 
 2. **Use concurrent collections for shared data**
-   ~~~csharp
+   ```csharp
    // ✅ Good - thread-safe collection
    var results = new ConcurrentBag<Result>();
    
@@ -744,19 +744,19 @@ public class SharedComponentExample
    {
        results.Add(ProcessEntity(entity));
    });
-   ~~~
+   ```
 
 3. **Benchmark before and after parallelization**
-   ~~~csharp
+   ```csharp
    // ✅ Good - measure actual improvement
    var stopwatch = Stopwatch.StartNew();
    // ... parallel code
    stopwatch.Stop();
    Logger.LogDebug("Parallel time: {Ms}ms", stopwatch.ElapsedMilliseconds);
-   ~~~
+   ```
 
 4. **Use threshold checks**
-   ~~~csharp
+   ```csharp
    // ✅ Good - only parallelize when beneficial
    if (entities.Count > 1000)
    {
@@ -767,21 +767,21 @@ public class SharedComponentExample
        foreach (var entity in entities)
            ProcessEntity(entity);
    }
-   ~~~
+   ```
 
 5. **Keep work per entity substantial**
-   ~~~csharp
+   ```csharp
    // ✅ Good - expensive operation per entity
    Parallel.ForEach(entities, entity =>
    {
        var path = CalculateExpensivePath(entity); // Worth parallelizing
    });
-   ~~~
+   ```
 
 ### DON'T
 
 1. **Don't query during parallel processing**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - query during parallel processing
    Parallel.ForEach(entities, entity =>
    {
@@ -795,10 +795,10 @@ public class SharedComponentExample
    var nearby = world.QueryEntities().With<EnemyComponent>().ToList();
    
    Parallel.ForEach(entities, entity => { ... });
-   ~~~
+   ```
 
 2. **Don't modify shared state without synchronization**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - race condition
    int counter = 0;
    Parallel.ForEach(entities, entity =>
@@ -812,10 +812,10 @@ public class SharedComponentExample
    {
        Interlocked.Increment(ref counter);
    });
-   ~~~
+   ```
 
 3. **Don't parallelize small workloads**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - too few entities
    var entities = world.QueryEntities().Take(10).ToList();
    Parallel.ForEach(entities, ProcessEntity); // Overhead > benefit
@@ -825,10 +825,10 @@ public class SharedComponentExample
    {
        ProcessEntity(entity);
    }
-   ~~~
+   ```
 
 4. **Don't create/destroy entities in parallel**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - modifying world structure
    Parallel.ForEach(entities, entity =>
    {
@@ -852,10 +852,10 @@ public class SharedComponentExample
    {
        world.DestroyEntity(entity);
    }
-   ~~~
+   ```
 
 5. **Don't use excessive locking**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - lock every iteration
    var lockObj = new object();
    Parallel.ForEach(entities, entity =>
@@ -876,7 +876,7 @@ public class SharedComponentExample
            AddResult(result);
        }
    });
-   ~~~
+   ```
 
 ---
 
@@ -889,26 +889,26 @@ public class SharedComponentExample
 **Solutions:**
 
 1. **Check entity count:**
-   ~~~csharp
+   ```csharp
    Logger.LogDebug("Entity count: {Count}", entities.Count);
    // Need at least 100-1000 entities for benefit
-   ~~~
+   ```
 
 2. **Increase work per entity:**
-   ~~~csharp
+   ```csharp
    // Too little work
    entity.GetComponent<TransformComponent>().Position += Vector2.One;
    
    // More substantial work
    CalculateComplexPathfinding(entity);
-   ~~~
+   ```
 
 3. **Check CPU cores:**
-   ~~~csharp
+   ```csharp
    Logger.LogInformation("CPU cores: {Count}", 
        Environment.ProcessorCount);
    // Need multiple cores for parallelism
-   ~~~
+   ```
 
 ---
 
@@ -919,23 +919,23 @@ public class SharedComponentExample
 **Solutions:**
 
 1. **Use thread-safe collections:**
-   ~~~csharp
+   ```csharp
    // Replace List<T> with ConcurrentBag<T>
    var results = new ConcurrentBag<Result>();
-   ~~~
+   ```
 
 2. **Add synchronization:**
-   ~~~csharp
+   ```csharp
    lock (_syncObject)
    {
        // Protect shared state
    }
-   ~~~
+   ```
 
 3. **Remove shared state:**
-   ~~~csharp
+   ```csharp
    // Best: Ensure each thread works on independent data
-   ~~~
+   ```
 
 ---
 
@@ -946,7 +946,7 @@ public class SharedComponentExample
 **Solutions:**
 
 1. **Avoid nested locks:**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - potential deadlock
    lock (lockA)
    {
@@ -955,10 +955,10 @@ public class SharedComponentExample
    
    // ✅ Good - consistent lock ordering
    // Always acquire locks in same order
-   ~~~
+   ```
 
 2. **Use timeouts:**
-   ~~~csharp
+   ```csharp
    if (Monitor.TryEnter(lockObj, TimeSpan.FromSeconds(5)))
    {
        try
@@ -970,7 +970,7 @@ public class SharedComponentExample
            Monitor.Exit(lockObj);
        }
    }
-   ~~~
+   ```
 
 ---
 
@@ -981,20 +981,20 @@ public class SharedComponentExample
 **Solutions:**
 
 1. **Increase MaxDegreeOfParallelism:**
-   ~~~csharp
+   ```csharp
    var options = new ParallelOptions
    {
        MaxDegreeOfParallelism = Environment.ProcessorCount
    };
    
    Parallel.ForEach(entities, options, entity => { ... });
-   ~~~
+   ```
 
 2. **Check work distribution:**
-   ~~~csharp
+   ```csharp
    // Ensure entities have similar processing time
    // Avoid some entities taking much longer than others
-   ~~~
+   ```
 
 ---
 
@@ -1052,7 +1052,7 @@ public class SharedComponentExample
 
 ## Quick Reference
 
-~~~csharp
+```csharp
 // Basic parallel processing
 var entities = world.QueryEntities()
     .With<TransformComponent>()
@@ -1119,7 +1119,7 @@ var options = new ParallelOptions
 };
 
 Parallel.ForEach(entities, options, ProcessEntity);
-~~~
+```
 
 ---
 

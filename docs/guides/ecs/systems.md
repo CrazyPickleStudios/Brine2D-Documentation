@@ -31,14 +31,14 @@ Systems contain game logic and operate on entities with specific components:
 
 Process game logic each frame:
 
-~~~csharp
+```csharp
 public interface IUpdateSystem
 {
     string Name { get; }
     int UpdateOrder { get; }
     void Update(GameTime gameTime);
 }
-~~~
+```
 
 **Usage:**
 - Physics simulation
@@ -54,14 +54,14 @@ public interface IUpdateSystem
 
 Draw entities to screen:
 
-~~~csharp
+```csharp
 public interface IRenderSystem
 {
     string Name { get; }
     int RenderOrder { get; }
     void Render(GameTime gameTime);
 }
-~~~
+```
 
 **Usage:**
 - Sprite rendering
@@ -74,7 +74,7 @@ public interface IRenderSystem
 
 ## System Lifecycle
 
-~~~mermaid
+```mermaid
 stateDiagram-v2
     [*] --> Registered: AddUpdateSystem()
     Registered --> Sorted: Sort by UpdateOrder
@@ -91,7 +91,7 @@ stateDiagram-v2
     Updating --> Disposed: Game ends
     Rendering --> Disposed: Game ends
     Disposed --> [*]
-~~~
+```
 
 **Lifecycle stages:**
 
@@ -108,7 +108,7 @@ stateDiagram-v2
 
 ### Basic Update System
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.ECS;
 
@@ -146,7 +146,7 @@ public class MovementSystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 **Pattern:**
 1. Query entities with required components
@@ -158,7 +158,7 @@ public class MovementSystem : IUpdateSystem
 
 ### Basic Render System
 
-~~~csharp
+```csharp
 using Brine2D.Core;
 using Brine2D.ECS;
 using Brine2D.Rendering;
@@ -202,7 +202,7 @@ public class SpriteRenderSystem : IRenderSystem
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -212,7 +212,7 @@ public class SpriteRenderSystem : IRenderSystem
 
 Systems run in order of `UpdateOrder` (lower runs first):
 
-~~~mermaid
+```mermaid
 graph LR
     A[InputSystem<br/>Order: 10] --> B[AISystem<br/>Order: 20]
     B --> C[PhysicsSystem<br/>Order: 50]
@@ -226,7 +226,7 @@ graph LR
     style D fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
     style E fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
     style F fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-~~~
+```
 
 **Recommended ordering:**
 
@@ -241,7 +241,7 @@ graph LR
 
 **Example:**
 
-~~~csharp
+```csharp
 public class InputSystem : IUpdateSystem
 {
     public int UpdateOrder => 10; // First
@@ -266,7 +266,7 @@ public class CollisionSystem : IUpdateSystem
 {
     public int UpdateOrder => 150; // After movement
 }
-~~~
+```
 
 ---
 
@@ -274,7 +274,7 @@ public class CollisionSystem : IUpdateSystem
 
 Render systems also use ordering for layer control:
 
-~~~csharp
+```csharp
 public class BackgroundRenderSystem : IRenderSystem
 {
     public int RenderOrder => 10; // Draw first (back)
@@ -294,7 +294,7 @@ public class DebugRenderSystem : IRenderSystem
 {
     public int RenderOrder => 1000; // Draw on top of everything
 }
-~~~
+```
 
 ---
 
@@ -304,7 +304,7 @@ public class DebugRenderSystem : IRenderSystem
 
 Applies forces and gravity:
 
-~~~csharp
+```csharp
 public class PhysicsSystem : IUpdateSystem
 {
     private readonly World _world;
@@ -350,7 +350,7 @@ public class PhysicsSystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -358,7 +358,7 @@ public class PhysicsSystem : IUpdateSystem
 
 Simple chase AI:
 
-~~~csharp
+```csharp
 public class ChaseAISystem : IUpdateSystem
 {
     private readonly World _world;
@@ -422,7 +422,7 @@ public class ChaseAISystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -430,7 +430,7 @@ public class ChaseAISystem : IUpdateSystem
 
 AABB collision detection:
 
-~~~csharp
+```csharp
 public class CollisionSystem : IUpdateSystem
 {
     private readonly World _world;
@@ -499,7 +499,7 @@ public class CollisionSystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -507,7 +507,7 @@ public class CollisionSystem : IUpdateSystem
 
 Sprite sheet animation:
 
-~~~csharp
+```csharp
 public class AnimationSystem : IUpdateSystem
 {
     private readonly World _world;
@@ -560,7 +560,7 @@ public class AnimationSystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -568,7 +568,7 @@ public class AnimationSystem : IUpdateSystem
 
 Manages entity health and death:
 
-~~~csharp
+```csharp
 public class HealthSystem : IUpdateSystem
 {
     private readonly World _world;
@@ -622,7 +622,7 @@ public class HealthSystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -630,7 +630,7 @@ public class HealthSystem : IUpdateSystem
 
 Updates particle lifetime:
 
-~~~csharp
+```csharp
 public class ParticleSystem : IUpdateSystem
 {
     private readonly World _world;
@@ -688,7 +688,7 @@ public class ParticleSystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -698,7 +698,7 @@ public class ParticleSystem : IUpdateSystem
 
 Systems communicate via events:
 
-~~~csharp
+```csharp
 // Event definition
 public class CollisionEvent
 {
@@ -770,7 +770,7 @@ public class ScoreSystem : IUpdateSystem
         // Score system logic
     }
 }
-~~~
+```
 
 ---
 
@@ -778,7 +778,7 @@ public class ScoreSystem : IUpdateSystem
 
 Systems can share data via components:
 
-~~~csharp
+```csharp
 // Global game state component
 public class GameStateComponent : Component
 {
@@ -812,7 +812,7 @@ public class UISystem : IRenderSystem
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -822,7 +822,7 @@ public class UISystem : IRenderSystem
 
 Group related systems:
 
-~~~csharp
+```csharp
 public interface ISystemGroup
 {
     void Initialize(World world);
@@ -853,7 +853,7 @@ public class PhysicsSystemGroup : ISystemGroup
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -861,7 +861,7 @@ public class PhysicsSystemGroup : ISystemGroup
 
 Systems that can be enabled/disabled:
 
-~~~csharp
+```csharp
 public class ConditionalSystem : IUpdateSystem
 {
     private readonly World _world;
@@ -893,7 +893,7 @@ system.Enabled = false; // System stops processing
 
 // Enable system
 system.Enabled = true; // System resumes
-~~~
+```
 
 ---
 
@@ -901,7 +901,7 @@ system.Enabled = true; // System resumes
 
 Systems that can run in parallel:
 
-~~~csharp
+```csharp
 public class ParallelMovementSystem : IUpdateSystem
 {
     private readonly World _world;
@@ -940,7 +940,7 @@ public class ParallelMovementSystem : IUpdateSystem
         });
     }
 }
-~~~
+```
 
 **Warning:** Use parallel processing carefully - ensure thread-safety!
 
@@ -950,7 +950,7 @@ public class ParallelMovementSystem : IUpdateSystem
 
 ### Cache Queries
 
-~~~csharp
+```csharp
 // ❌ Bad - queries every frame
 public void Update(GameTime gameTime)
 {
@@ -973,13 +973,13 @@ public void Update(GameTime gameTime)
         // Process cached list
     }
 }
-~~~
+```
 
 ---
 
 ### Early Exit
 
-~~~csharp
+```csharp
 public void Update(GameTime gameTime)
 {
     var entities = _world.QueryEntities()
@@ -993,7 +993,7 @@ public void Update(GameTime gameTime)
         // Process...
     }
 }
-~~~
+```
 
 ---
 
@@ -1001,7 +1001,7 @@ public void Update(GameTime gameTime)
 
 For collision systems:
 
-~~~csharp
+```csharp
 public class SpatialGrid
 {
     private readonly Dictionary<(int, int), List<Entity>> _cells = new();
@@ -1098,7 +1098,7 @@ public class OptimizedCollisionSystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 ---
 
@@ -1106,7 +1106,7 @@ public class OptimizedCollisionSystem : IUpdateSystem
 
 ### System Profiling
 
-~~~csharp
+```csharp
 public class ProfiledSystem : IUpdateSystem
 {
     private readonly IUpdateSystem _innerSystem;
@@ -1138,13 +1138,13 @@ public class ProfiledSystem : IUpdateSystem
         }
     }
 }
-~~~
+```
 
 ---
 
 ### Debug Visualization System
 
-~~~csharp
+```csharp
 public class DebugRenderSystem : IRenderSystem
 {
     private readonly World _world;
@@ -1191,7 +1191,7 @@ public class DebugRenderSystem : IRenderSystem
         _renderer.DrawText($"Entities: {count}", 10, 50, Color.Yellow);
     }
 }
-~~~
+```
 
 ---
 
@@ -1200,7 +1200,7 @@ public class DebugRenderSystem : IRenderSystem
 ### DO
 
 1. **Keep systems focused**
-   ~~~csharp
+   ```csharp
    // ✅ Good - single responsibility
    public class MovementSystem : IUpdateSystem
    {
@@ -1211,10 +1211,10 @@ public class DebugRenderSystem : IRenderSystem
    {
        // Only handles collision
    }
-   ~~~
+   ```
 
 2. **Use explicit ordering**
-   ~~~csharp
+   ```csharp
    // ✅ Good - clear order
    public class InputSystem : IUpdateSystem
    {
@@ -1225,10 +1225,10 @@ public class DebugRenderSystem : IRenderSystem
    {
        public int UpdateOrder => 100;
    }
-   ~~~
+   ```
 
 3. **Cache query results**
-   ~~~csharp
+   ```csharp
    // ✅ Good - query once
    var entities = _world.QueryEntities()
        .With<TransformComponent>()
@@ -1238,16 +1238,16 @@ public class DebugRenderSystem : IRenderSystem
    {
        // Process
    }
-   ~~~
+   ```
 
 4. **Use events for system communication**
-   ~~~csharp
+   ```csharp
    // ✅ Good - loose coupling
    _eventBus.Publish(new EntityDiedEvent { Entity = entity });
-   ~~~
+   ```
 
 5. **Make systems stateless when possible**
-   ~~~csharp
+   ```csharp
    // ✅ Good - no state
    public class MovementSystem : IUpdateSystem
    {
@@ -1258,12 +1258,12 @@ public class DebugRenderSystem : IRenderSystem
            // Process entities
        }
    }
-   ~~~
+   ```
 
 ### DON'T
 
 1. **Don't store entity-specific state in systems**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - state in system
    public class MovementSystem : IUpdateSystem
    {
@@ -1275,10 +1275,10 @@ public class DebugRenderSystem : IRenderSystem
    {
        public Vector2 Position { get; set; }
    }
-   ~~~
+   ```
 
 2. **Don't query inside loops**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - queries every iteration
    for (int i = 0; i < 100; i++)
    {
@@ -1294,10 +1294,10 @@ public class DebugRenderSystem : IRenderSystem
    {
        // Use cached list
    }
-   ~~~
+   ```
 
 3. **Don't create tight dependencies**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - tight coupling
    public class SystemA : IUpdateSystem
    {
@@ -1309,16 +1309,16 @@ public class DebugRenderSystem : IRenderSystem
    {
        private readonly EventBus _eventBus; // Loose coupling
    }
-   ~~~
+   ```
 
 4. **Don't forget deltaTime**
-   ~~~csharp
+   ```csharp
    // ❌ Bad - frame-rate dependent
    transform.Position += velocity.Velocity;
    
    // ✅ Good - frame-rate independent
    transform.Position += velocity.Velocity * deltaTime;
-   ~~~
+   ```
 
 ---
 
@@ -1331,23 +1331,23 @@ public class DebugRenderSystem : IRenderSystem
 **Solutions:**
 
 1. **Check system is registered:**
-   ~~~csharp
+   ```csharp
    _world.AddUpdateSystem(new MovementSystem(_world));
-   ~~~
+   ```
 
 2. **Verify World.Update is called:**
-   ~~~csharp
+   ```csharp
    protected override void OnUpdate(GameTime gameTime)
    {
        _world.Update(gameTime); // Must call!
    }
-   ~~~
+   ```
 
 3. **Check system order isn't causing early exit:**
-   ~~~csharp
+   ```csharp
    // Make sure system order makes sense
    public int UpdateOrder => 100; // Not too high/low
-   ~~~
+   ```
 
 ---
 
@@ -1357,12 +1357,12 @@ public class DebugRenderSystem : IRenderSystem
 
 **Solution:** Set UpdateOrder correctly:
 
-~~~csharp
+```csharp
 // ✅ Correct ordering
 public class InputSystem : IUpdateSystem { public int UpdateOrder => 10; }
 public class MovementSystem : IUpdateSystem { public int UpdateOrder => 100; }
 public class CollisionSystem : IUpdateSystem { public int UpdateOrder => 150; }
-~~~
+```
 
 ---
 
@@ -1373,20 +1373,20 @@ public class CollisionSystem : IUpdateSystem { public int UpdateOrder => 150; }
 **Solutions:**
 
 1. **Profile systems:**
-   ~~~csharp
+   ```csharp
    var sw = Stopwatch.StartNew();
    system.Update(gameTime);
    sw.Stop();
    
    Logger.LogDebug("{System} took {Ms}ms", system.Name, sw.ElapsedMilliseconds);
-   ~~~
+   ```
 
 2. **Cache queries:**
-   ~~~csharp
+   ```csharp
    var entities = _world.QueryEntities()
        .With<TransformComponent>()
        .ToList(); // Cache
-   ~~~
+   ```
 
 3. **Use spatial partitioning:**
    - Only check nearby entities
@@ -1400,7 +1400,7 @@ public class CollisionSystem : IUpdateSystem { public int UpdateOrder => 150; }
 
 **Solution:** Check system ordering:
 
-~~~csharp
+```csharp
 // ✅ Correct - CollisionSystem runs after MovementSystem
 public class MovementSystem : IUpdateSystem { public int UpdateOrder => 100; }
 public class CollisionSystem : IUpdateSystem { public int UpdateOrder => 150; }
@@ -1408,7 +1408,7 @@ public class CollisionSystem : IUpdateSystem { public int UpdateOrder => 150; }
 // ❌ Wrong - CollisionSystem runs before MovementSystem
 public class CollisionSystem : IUpdateSystem { public int UpdateOrder => 50; }
 public class MovementSystem : IUpdateSystem { public int UpdateOrder => 100; }
-~~~
+```
 
 ---
 
@@ -1457,7 +1457,7 @@ public class MovementSystem : IUpdateSystem { public int UpdateOrder => 100; }
 
 ## Quick Reference
 
-~~~csharp
+```csharp
 // Create update system
 public class MovementSystem : IUpdateSystem
 {
@@ -1503,7 +1503,7 @@ world.AddRenderSystem(new SpriteRenderSystem(world, renderer));
 // Run systems
 world.Update(gameTime);  // Runs all update systems
 world.Render(gameTime);  // Runs all render systems
-~~~
+```
 
 ---
 
