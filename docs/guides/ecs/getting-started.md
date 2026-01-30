@@ -1,28 +1,103 @@
 ---
 title: ECS Getting Started
-description: Get started with Entity Component System in Brine2D - build your first ECS game
+description: Get started with Entity Component System in Brine2D - build your first hybrid ECS game
 ---
 
 # ECS Getting Started
 
-Build your first game using Brine2D's Entity Component System - from setup to a complete working example.
+Build your first game using Brine2D's **hybrid ECS** - components with methods, entities with optional logic, and systems for performance optimization.
 
 ## Overview
 
 This guide takes you from zero to a working ECS game in 15 minutes. You'll learn:
 
-- Setting up ECS in a scene
-- Creating entities and components
-- Building your first systems
-- Running an ECS-powered game
+- How to access **World** in scenes
+- Creating entities with **World.CreateEntity()**
+- Adding components with **methods and logic**
+- Using **entity queries** to find entities
+- Building optional systems for performance
 
 **Prerequisites:**
 - Completed [Quick Start](../../getting-started/quickstart.md)
 - Basic C# knowledge
-- Understanding of [ECS Concepts](../../concepts/entity-component-system.md)
+- Understanding of [Hybrid ECS Concepts](../../concepts/entity-component-system.md)
 
 **What you'll build:**
-A simple game with player, enemies, and projectiles using pure ECS.
+A simple game with player, enemies, and pickups using Brine2D's flexible hybrid ECS.
+
+---
+
+## World Access Patterns
+
+### The World Property
+
+**Every scene has a `World` property** - set automatically by SceneManager:
+
+~~~csharp
+public class GameScene : Scene
+{
+    // ✅ World is available automatically - no injection needed!
+    
+    protected override Task OnLoadAsync(CancellationToken ct)
+    {
+        // Access World directly
+        var player = World.CreateEntity("Player");
+        var enemy = World.CreateEntity("Enemy");
+        
+        Logger.LogInformation("Created {Count} entities", World.Entities.Count);
+        
+        return Task.CompletedTask;
+    }
+}
+~~~
+
+**Pattern:** `World` is a framework property (like `Logger` and `Renderer`) - set by SceneManager, not injected.
+
+---
+
+### World Scope
+
+**Each scene gets its own isolated World** - automatic cleanup!
+
+~~~csharp
+// MenuScene
+public class MenuScene : Scene
+{
+    protected override Task OnLoadAsync(CancellationToken ct)
+    {
+        // Create 10 UI button entities
+        for (int i = 0; i < 10; i++)
+        {
+            CreateButton(i);
+        }
+        
+        Logger.LogInformation("Menu has {Count} entities", World.Entities.Count); // 10
+        
+        return Task.CompletedTask;
+    }
+}
+
+// Later: Load GameScene
+await sceneManager.LoadSceneAsync<GameScene>();
+
+// GameScene
+public class GameScene : Scene
+{
+    protected override Task OnLoadAsync(CancellationToken ct)
+    {
+        // ✅ World is fresh - no leftover menu buttons!
+        Logger.LogInformation("Game has {Count} entities", World.Entities.Count); // 0
+        
+        // Create game entities
+        CreatePlayer();
+        CreateEnemies();
+        
+        return Task.CompletedTask;
+    }
+}
+~~~
+
+**Pattern:** Each scene gets a fresh, isolated World. No manual cleanup needed!
 
 ---
 
@@ -30,14 +105,12 @@ A simple game with player, enemies, and projectiles using pure ECS.
 
 ### Step 1: Create Project
 
-Create a new Brine2D project:
-
-```sh
+~~~sh
 dotnet new console -n ECSDemo
 cd ECSDemo
 dotnet add package Brine2D --version 0.9.0-beta
 dotnet add package Brine2D.SDL --version 0.9.0-beta
-```
+~~~
 
 ---
 
@@ -45,7 +118,7 @@ dotnet add package Brine2D.SDL --version 0.9.0-beta
 
 Create `Program.cs`:
 
-```csharp
+~~~csharp
 using Brine2D.Hosting;
 using Brine2D.SDL;
 using ECSDemo;
@@ -53,31 +126,74 @@ using Microsoft.Extensions.DependencyInjection;
 
 var builder = GameApplication.CreateBuilder(args);
 
-builder.Services.AddSDL3Rendering(options =>
+builder.Services.AddBrine2D(options =>
 {
     options.WindowTitle = "ECS Demo";
     options.WindowWidth = 800;
     options.WindowHeight = 600;
 });
 
-builder.Services.AddSDL3Input();
+// Register scene
 builder.Services.AddScene<GameScene>();
 
 var game = builder.Build();
 await game.RunAsync<GameScene>();
-```
+~~~
 
 ---
 
-## Creating Components
+## Creating Components (With Methods!)
 
-### Step 3: Define Your Components
+### Step 3: Define Components with Logic
 
-Components are pure data - no logic:
+**Brine2D's hybrid ECS allows methods in components** - beginner-friendly!
+
+Create `Components/HealthComponent.cs`:
+
+~~~csharp
+using Brine2D.ECS;
+
+namespace ECSDemo.Components;
+
+public class HealthComponent : Component
+{
+    public int Current { get; set; }
+    public int Max { get; set; }
+    
+    public bool IsDead => Current <= 0;
+    
+    // ✅ Methods allowed in Brine2D!
+    public void TakeDamage(int amount)
+    {
+        Current = Math.Max(0, Current - amount);
+        
+        if (IsDead)
+        {
+            // Notify death
+            Entity?.World?.DestroyEntity(Entity);
+        }
+    }
+    
+    public void Heal(int amount)
+    {
+        Current = Math.Min(Max, Current + amount);
+    }
+    
+    // ✅ Lifecycle methods available
+    protected internal override void OnUpdate(GameTime gameTime)
+    {
+        // Optional: Health regeneration over time
+        if (Current < Max)
+        {
+            Current = Math.Min(Max, Current + 1);
+        }
+    }
+}
+~~~
 
 Create `Components/TransformComponent.cs`:
 
-```csharp
+~~~csharp
 using Brine2D.ECS;
 using System.Numerics;
 
@@ -88,12 +204,24 @@ public class TransformComponent : Component
     public Vector2 Position { get; set; }
     public float Rotation { get; set; }
     public Vector2 Scale { get; set; } = Vector2.One;
+    
+    // ✅ Helper methods
+    public void Move(Vector2 delta)
+    {
+        Position += delta;
+    }
+    
+    public void RotateTowards(Vector2 target)
+    {
+        var direction = Vector2.Normalize(target - Position);
+        Rotation = MathF.Atan2(direction.Y, direction.X);
+    }
 }
-```
+~~~
 
 Create `Components/VelocityComponent.cs`:
 
-```csharp
+~~~csharp
 using Brine2D.ECS;
 using System.Numerics;
 
@@ -101,14 +229,24 @@ namespace ECSDemo.Components;
 
 public class VelocityComponent : Component
 {
-    public Vector2 Velocity { get; set; }
-    public float Speed { get; set; }
+    public Vector2 Value { get; set; }
+    public float Speed { get; set; } = 100f;
+    
+    // ✅ Lifecycle method - auto-movement
+    protected internal override void OnUpdate(GameTime gameTime)
+    {
+        if (Value != Vector2.Zero)
+        {
+            var transform = GetRequiredComponent<TransformComponent>();
+            transform.Position += Value * (float)gameTime.DeltaTime;
+        }
+    }
 }
-```
+~~~
 
 Create `Components/SpriteComponent.cs`:
 
-```csharp
+~~~csharp
 using Brine2D.Core;
 using Brine2D.ECS;
 
@@ -119,62 +257,343 @@ public class SpriteComponent : Component
     public int Width { get; set; }
     public int Height { get; set; }
     public Color Color { get; set; } = Color.White;
+    
+    // ✅ Render itself
+    protected internal override void OnRender(IRenderer renderer)
+    {
+        var transform = GetComponent<TransformComponent>();
+        if (transform != null)
+        {
+            renderer.DrawRectangleFilled(
+                transform.Position.X - Width / 2,
+                transform.Position.Y - Height / 2,
+                Width, Height,
+                Color);
+        }
+    }
 }
-```
+~~~
 
-Create `Components/HealthComponent.cs`:
-
-```csharp
-using Brine2D.ECS;
-
-namespace ECSDemo.Components;
-
-public class HealthComponent : Component
-{
-    public int Current { get; set; }
-    public int Max { get; set; }
-    public bool IsDead => Current <= 0;
-}
-```
-
-Create `Components/TagComponents.cs`:
-
-```csharp
-using Brine2D.ECS;
-
-namespace ECSDemo.Components;
-
-// Tag components - no data, just markers
-public class PlayerComponent : Component { }
-public class EnemyComponent : Component { }
-public class ProjectileComponent : Component { }
-```
+**Pattern:** Components can have methods and lifecycle hooks - simple and intuitive!
 
 ---
 
-## Creating Systems
+## Creating Entities
 
-### Step 4: Movement System
+### Step 4: Create Player Entity
 
-Systems contain logic - no data:
+Create `GameScene.cs`:
+
+~~~csharp
+using Brine2D.Core;
+using Brine2D.Engine;
+using Brine2D.Input;
+using ECSDemo.Components;
+using System.Numerics;
+
+namespace ECSDemo;
+
+public class GameScene : Scene
+{
+    private readonly IInputContext _input;
+    private Entity? _player;
+    
+    public GameScene(IInputContext input)
+    {
+        _input = input;
+    }
+    
+    protected override Task OnLoadAsync(CancellationToken ct)
+    {
+        // ✅ World available automatically!
+        CreatePlayer();
+        CreateEnemies();
+        CreatePickups();
+        
+        Logger.LogInformation("Created {Count} entities", World.Entities.Count);
+        
+        return Task.CompletedTask;
+    }
+    
+    private void CreatePlayer()
+    {
+        // ✅ Create entity via World
+        _player = World.CreateEntity("Player");
+        
+        // Add components
+        var transform = _player.AddComponent<TransformComponent>();
+        transform.Position = new Vector2(400, 300);
+        
+        var sprite = _player.AddComponent<SpriteComponent>();
+        sprite.Width = 32;
+        sprite.Height = 32;
+        sprite.Color = Color.Blue;
+        
+        var health = _player.AddComponent<HealthComponent>();
+        health.Max = 100;
+        health.Current = 100;
+        
+        // Tag for easy lookup
+        _player.Tags.Add("Player");
+    }
+    
+    private void CreateEnemies()
+    {
+        var random = new Random();
+        
+        for (int i = 0; i < 5; i++)
+        {
+            var enemy = World.CreateEntity($"Enemy{i}");
+            
+            var transform = enemy.AddComponent<TransformComponent>();
+            transform.Position = new Vector2(
+                random.Next(100, 700),
+                random.Next(100, 500));
+            
+            var sprite = enemy.AddComponent<SpriteComponent>();
+            sprite.Width = 24;
+            sprite.Height = 24;
+            sprite.Color = Color.Red;
+            
+            var velocity = enemy.AddComponent<VelocityComponent>();
+            velocity.Value = new Vector2(
+                random.NextSingle() * 2 - 1,
+                random.NextSingle() * 2 - 1);
+            velocity.Speed = 50f;
+            
+            enemy.Tags.Add("Enemy");
+        }
+    }
+    
+    private void CreatePickups()
+    {
+        var random = new Random();
+        
+        for (int i = 0; i < 10; i++)
+        {
+            var pickup = World.CreateEntity($"Pickup{i}");
+            
+            var transform = pickup.AddComponent<TransformComponent>();
+            transform.Position = new Vector2(
+                random.Next(100, 700),
+                random.Next(100, 500));
+            
+            var sprite = pickup.AddComponent<SpriteComponent>();
+            sprite.Width = 16;
+            sprite.Height = 16;
+            sprite.Color = Color.Yellow;
+            
+            pickup.Tags.Add("Pickup");
+        }
+    }
+}
+~~~
+
+---
+
+## Entity Queries (Finding Entities)
+
+### Step 5: Query and Update Entities
+
+Add to `GameScene.cs`:
+
+~~~csharp
+protected override void OnUpdate(GameTime gameTime)
+{
+    HandlePlayerInput();
+    CheckCollisions();
+}
+
+private void HandlePlayerInput()
+{
+    // ✅ Find player by tag
+    var players = World.GetEntitiesByTag("Player");
+    if (players.Count == 0) return;
+    
+    var player = players[0];
+    var transform = player.GetComponent<TransformComponent>();
+    
+    if (transform == null) return;
+    
+    // Move player
+    var movement = Vector2.Zero;
+    if (_input.IsKeyDown(Key.W)) movement.Y -= 1;
+    if (_input.IsKeyDown(Key.S)) movement.Y += 1;
+    if (_input.IsKeyDown(Key.A)) movement.X -= 1;
+    if (_input.IsKeyDown(Key.D)) movement.X += 1;
+    
+    if (movement != Vector2.Zero)
+    {
+        movement = Vector2.Normalize(movement);
+        transform.Move(movement * 200f * (float)gameTime.DeltaTime);
+    }
+}
+
+private void CheckCollisions()
+{
+    // ✅ Get player
+    var players = World.GetEntitiesByTag("Player");
+    if (players.Count == 0) return;
+    
+    var player = players[0];
+    var playerTransform = player.GetComponent<TransformComponent>();
+    var playerHealth = player.GetComponent<HealthComponent>();
+    
+    if (playerTransform == null || playerHealth == null) return;
+    
+    // ✅ Check collisions with enemies
+    var enemies = World.GetEntitiesByTag("Enemy");
+    foreach (var enemy in enemies)
+    {
+        var enemyTransform = enemy.GetComponent<TransformComponent>();
+        if (enemyTransform == null) continue;
+        
+        var distance = Vector2.Distance(
+            playerTransform.Position, 
+            enemyTransform.Position);
+        
+        if (distance < 30) // Collision radius
+        {
+            playerHealth.TakeDamage(10);
+            World.DestroyEntity(enemy);
+            
+            Logger.LogInformation("Player hit! Health: {Health}", playerHealth.Current);
+        }
+    }
+    
+    // ✅ Check pickups
+    var pickups = World.GetEntitiesByTag("Pickup");
+    foreach (var pickup in pickups)
+    {
+        var pickupTransform = pickup.GetComponent<TransformComponent>();
+        if (pickupTransform == null) continue;
+        
+        var distance = Vector2.Distance(
+            playerTransform.Position,
+            pickupTransform.Position);
+        
+        if (distance < 25) // Pickup radius
+        {
+            playerHealth.Heal(20);
+            World.DestroyEntity(pickup);
+            
+            Logger.LogInformation("Pickup collected! Health: {Health}", playerHealth.Current);
+        }
+    }
+}
+~~~
+
+---
+
+## World Query Methods
+
+### All Query Methods Available
+
+~~~csharp
+// 1. Get all entities
+IReadOnlyList<Entity> all = World.Entities;
+
+// 2. Find by name (first match)
+Entity? player = World.GetEntityByName("Player");
+
+// 3. Find by ID
+Entity? entity = World.GetEntityById(someGuid);
+
+// 4. Find by tag
+IReadOnlyList<Entity> enemies = World.GetEntitiesByTag("Enemy");
+
+// 5. Find with component
+IReadOnlyList<Entity> damageable = World.GetEntitiesWithComponent<HealthComponent>();
+
+// 6. Find with multiple components
+IReadOnlyList<Entity> movable = World.GetEntitiesWithComponents<
+    TransformComponent, 
+    VelocityComponent>();
+
+// 7. Find with predicate
+Entity? boss = World.FindEntity(e => 
+    e.Tags.Contains("Enemy") && 
+    e.GetComponent<HealthComponent>()?.Max > 100);
+~~~
+
+**Pattern:** All query methods return snapshots - safe to iterate while modifying entities.
+
+---
+
+## Rendering Entities
+
+### Step 6: Render Scene
+
+Add to `GameScene.cs`:
+
+~~~csharp
+protected override void OnRender(GameTime gameTime)
+{
+    // Option 1: Components render themselves (automatic)
+    // SpriteComponent.OnRender() is called automatically!
+    
+    // Option 2: Manual rendering
+    RenderHUD();
+}
+
+private void RenderHUD()
+{
+    // Find player
+    var players = World.GetEntitiesByTag("Player");
+    if (players.Count == 0) return;
+    
+    var player = players[0];
+    var health = player.GetComponent<HealthComponent>();
+    
+    if (health != null)
+    {
+        Renderer.DrawText(
+            $"Health: {health.Current}/{health.Max}",
+            10, 10,
+            Color.White);
+    }
+    
+    // Show entity counts
+    var enemies = World.GetEntitiesByTag("Enemy");
+    var pickups = World.GetEntitiesByTag("Pickup");
+    
+    Renderer.DrawText(
+        $"Enemies: {enemies.Count}  Pickups: {pickups.Count}",
+        10, 40,
+        Color.LightGray);
+    
+    // Instructions
+    Renderer.DrawText("WASD to move", 10, 80, Color.Gray);
+    Renderer.DrawText("Collect yellow pickups, avoid red enemies!", 10, 110, Color.Gray);
+}
+~~~
+
+---
+
+## Optional: Using Systems
+
+Systems are **optional** - use them for **performance optimization** with 1000+ entities:
+
+### Step 7: Create a System (Advanced)
 
 Create `Systems/MovementSystem.cs`:
 
-```csharp
+~~~csharp
 using Brine2D.Core;
 using Brine2D.ECS;
 using ECSDemo.Components;
 
 namespace ECSDemo.Systems;
 
+// ✅ Optional: Use systems for batch processing (performance)
 public class MovementSystem : IUpdateSystem
 {
-    private readonly World _world;
+    private readonly IEntityWorld _world;
     
     public string Name => "MovementSystem";
     public int UpdateOrder => 100;
     
-    public MovementSystem(World world)
+    public MovementSystem(IEntityWorld world)
     {
         _world = world;
     }
@@ -183,10 +602,10 @@ public class MovementSystem : IUpdateSystem
     {
         var deltaTime = (float)gameTime.DeltaTime;
         
-        // Query entities with Transform and Velocity
-        var entities = _world.QueryEntities()
-            .With<TransformComponent>()
-            .With<VelocityComponent>();
+        // ✅ Batch process all moving entities
+        var entities = _world.GetEntitiesWithComponents<
+            TransformComponent, 
+            VelocityComponent>();
         
         foreach (var entity in entities)
         {
@@ -195,383 +614,38 @@ public class MovementSystem : IUpdateSystem
             
             if (transform != null && velocity != null)
             {
-                // Update position based on velocity
-                transform.Position += velocity.Velocity * deltaTime;
+                transform.Position += velocity.Value * velocity.Speed * deltaTime;
             }
         }
     }
 }
-```
+~~~
 
-**What this does:**
-1. Queries all entities with Transform and Velocity
-2. Updates each entity's position based on velocity
-3. Uses deltaTime for frame-rate independence
+Register system in `Program.cs`:
 
----
+~~~csharp
+// Optional: Register systems for performance
+builder.Services.AddBrine2D(options => { ... });
 
-### Step 5: Render System
-
-Create `Systems/SpriteRenderSystem.cs`:
-
-```csharp
-using Brine2D.Core;
-using Brine2D.ECS;
-using Brine2D.Rendering;
-using ECSDemo.Components;
-
-namespace ECSDemo.Systems;
-
-public class SpriteRenderSystem : IRenderSystem
+// Add ECS systems (optional)
+builder.Services.AddObjectECS();
+builder.Services.ConfigureSystemPipelines(pipelines =>
 {
-    private readonly World _world;
-    private readonly IRenderer _renderer;
-    
-    public string Name => "SpriteRenderSystem";
-    public int RenderOrder => 100;
-    
-    public SpriteRenderSystem(World world, IRenderer renderer)
-    {
-        _world = world;
-        _renderer = renderer;
-    }
-    
-    public void Render(GameTime gameTime)
-    {
-        // Query entities with Transform and Sprite
-        var entities = _world.QueryEntities()
-            .With<TransformComponent>()
-            .With<SpriteComponent>();
-        
-        foreach (var entity in entities)
-        {
-            var transform = entity.GetComponent<TransformComponent>();
-            var sprite = entity.GetComponent<SpriteComponent>();
-            
-            if (transform != null && sprite != null)
-            {
-                _renderer.DrawRectangleFilled(
-                    transform.Position.X - sprite.Width / 2,
-                    transform.Position.Y - sprite.Height / 2,
-                    sprite.Width,
-                    sprite.Height,
-                    sprite.Color);
-            }
-        }
-    }
-}
-```
+    pipelines.AddSystem<MovementSystem>();
+});
+~~~
+
+**Pattern:** Systems are optional - most games don't need them! Use components with methods first, add systems only if profiling shows performance issues.
 
 ---
 
-### Step 6: Player Input System
+## Entity Factories (Best Practice)
 
-Create `Systems/PlayerInputSystem.cs`:
-
-```csharp
-using Brine2D.Core;
-using Brine2D.ECS;
-using Brine2D.Input;
-using ECSDemo.Components;
-using System.Numerics;
-
-namespace ECSDemo.Systems;
-
-public class PlayerInputSystem : IUpdateSystem
-{
-    private readonly World _world;
-    private readonly IInputService _input;
-    
-    public string Name => "PlayerInputSystem";
-    public int UpdateOrder => 10; // Run before movement
-    
-    public PlayerInputSystem(World world, IInputService input)
-    {
-        _world = world;
-        _input = input;
-    }
-    
-    public void Update(GameTime gameTime)
-    {
-        // Find player entity
-        var players = _world.QueryEntities()
-            .With<PlayerComponent>()
-            .With<VelocityComponent>();
-        
-        foreach (var player in players)
-        {
-            var velocity = player.GetComponent<VelocityComponent>();
-            
-            if (velocity != null)
-            {
-                // Calculate movement direction
-                var direction = Vector2.Zero;
-                
-                if (_input.IsKeyDown(Keys.W) || _input.IsKeyDown(Keys.Up))
-                    direction.Y -= 1;
-                if (_input.IsKeyDown(Keys.S) || _input.IsKeyDown(Keys.Down))
-                    direction.Y += 1;
-                if (_input.IsKeyDown(Keys.A) || _input.IsKeyDown(Keys.Left))
-                    direction.X -= 1;
-                if (_input.IsKeyDown(Keys.D) || _input.IsKeyDown(Keys.Right))
-                    direction.X += 1;
-                
-                // Normalize and apply speed
-                if (direction != Vector2.Zero)
-                {
-                    direction = Vector2.Normalize(direction);
-                }
-                
-                velocity.Velocity = direction * velocity.Speed;
-            }
-        }
-    }
-}
-```
-
----
-
-### Step 7: Enemy AI System
-
-Create `Systems/EnemyAISystem.cs`:
-
-```csharp
-using Brine2D.Core;
-using Brine2D.ECS;
-using ECSDemo.Components;
-using System.Numerics;
-
-namespace ECSDemo.Systems;
-
-public class EnemyAISystem : IUpdateSystem
-{
-    private readonly World _world;
-    
-    public string Name => "EnemyAISystem";
-    public int UpdateOrder => 20; // After input, before movement
-    
-    public EnemyAISystem(World world)
-    {
-        _world = world;
-    }
-    
-    public void Update(GameTime gameTime)
-    {
-        // Find player position
-        var players = _world.QueryEntities().With<PlayerComponent>();
-        var playerPosition = Vector2.Zero;
-        var hasPlayer = false;
-        
-        foreach (var player in players)
-        {
-            var transform = player.GetComponent<TransformComponent>();
-            if (transform != null)
-            {
-                playerPosition = transform.Position;
-                hasPlayer = true;
-                break;
-            }
-        }
-        
-        if (!hasPlayer) return;
-        
-        // Move enemies toward player
-        var enemies = _world.QueryEntities()
-            .With<EnemyComponent>()
-            .With<TransformComponent>()
-            .With<VelocityComponent>();
-        
-        foreach (var enemy in enemies)
-        {
-            var transform = enemy.GetComponent<TransformComponent>();
-            var velocity = enemy.GetComponent<VelocityComponent>();
-            
-            if (transform != null && velocity != null)
-            {
-                // Calculate direction to player
-                var direction = playerPosition - transform.Position;
-                
-                if (direction.Length() > 50f) // Keep distance
-                {
-                    direction = Vector2.Normalize(direction);
-                    velocity.Velocity = direction * velocity.Speed;
-                }
-                else
-                {
-                    velocity.Velocity = Vector2.Zero;
-                }
-            }
-        }
-    }
-}
-```
-
----
-
-### Step 8: Collision System
-
-Create `Systems/CollisionSystem.cs`:
-
-```csharp
-using Brine2D.Core;
-using Brine2D.ECS;
-using ECSDemo.Components;
-using Microsoft.Extensions.Logging;
-using System.Numerics;
-
-namespace ECSDemo.Systems;
-
-public class CollisionSystem : IUpdateSystem
-{
-    private readonly World _world;
-    private readonly ILogger<CollisionSystem> _logger;
-    
-    public string Name => "CollisionSystem";
-    public int UpdateOrder => 150; // After movement
-    
-    public CollisionSystem(World world, ILogger<CollisionSystem> logger)
-    {
-        _world = world;
-        _logger = logger;
-    }
-    
-    public void Update(GameTime gameTime)
-    {
-        // Get all collidable entities
-        var entities = _world.QueryEntities()
-            .With<TransformComponent>()
-            .With<SpriteComponent>()
-            .ToList();
-        
-        // Check player vs enemies
-        var players = _world.QueryEntities().With<PlayerComponent>();
-        
-        foreach (var player in players)
-        {
-            var playerTransform = player.GetComponent<TransformComponent>();
-            var playerSprite = player.GetComponent<SpriteComponent>();
-            var playerHealth = player.GetComponent<HealthComponent>();
-            
-            if (playerTransform == null || playerSprite == null) continue;
-            
-            var enemies = _world.QueryEntities().With<EnemyComponent>();
-            
-            foreach (var enemy in enemies)
-            {
-                var enemyTransform = enemy.GetComponent<TransformComponent>();
-                var enemySprite = enemy.GetComponent<SpriteComponent>();
-                
-                if (enemyTransform == null || enemySprite == null) continue;
-                
-                // Simple circle collision
-                var distance = Vector2.Distance(
-                    playerTransform.Position, 
-                    enemyTransform.Position);
-                
-                var collisionDistance = (playerSprite.Width + enemySprite.Width) / 2f;
-                
-                if (distance < collisionDistance)
-                {
-                    _logger.LogInformation("Player hit by enemy!");
-                    
-                    if (playerHealth != null)
-                    {
-                        playerHealth.Current -= 10;
-                    }
-                    
-                    // Push player back
-                    var pushDirection = Vector2.Normalize(
-                        playerTransform.Position - enemyTransform.Position);
-                    playerTransform.Position += pushDirection * 10f;
-                }
-            }
-        }
-    }
-}
-```
-
----
-
-### Step 9: Cleanup System
-
-Create `Systems/CleanupSystem.cs`:
-
-```csharp
-using Brine2D.Core;
-using Brine2D.ECS;
-using ECSDemo.Components;
-
-namespace ECSDemo.Systems;
-
-public class CleanupSystem : IUpdateSystem
-{
-    private readonly World _world;
-    
-    public string Name => "CleanupSystem";
-    public int UpdateOrder => 200; // Run last
-    
-    public CleanupSystem(World world)
-    {
-        _world = world;
-    }
-    
-    public void Update(GameTime gameTime)
-    {
-        // Remove dead entities
-        var entities = _world.QueryEntities()
-            .With<HealthComponent>();
-        
-        var toRemove = new List<Entity>();
-        
-        foreach (var entity in entities)
-        {
-            var health = entity.GetComponent<HealthComponent>();
-            
-            if (health != null && health.IsDead)
-            {
-                toRemove.Add(entity);
-            }
-        }
-        
-        foreach (var entity in toRemove)
-        {
-            _world.DestroyEntity(entity);
-        }
-        
-        // Remove off-screen entities
-        var allEntities = _world.QueryEntities()
-            .With<TransformComponent>();
-        
-        foreach (var entity in allEntities)
-        {
-            var transform = entity.GetComponent<TransformComponent>();
-            
-            if (transform != null)
-            {
-                // Remove if far off screen
-                if (transform.Position.X < -100 || transform.Position.X > 900 ||
-                    transform.Position.Y < -100 || transform.Position.Y > 700)
-                {
-                    if (!entity.HasComponent<PlayerComponent>()) // Don't remove player
-                    {
-                        _world.DestroyEntity(entity);
-                    }
-                }
-            }
-        }
-    }
-}
-```
-
----
-
-## Entity Factories
-
-### Step 10: Create Entity Factory
+### Step 8: Encapsulate Entity Creation
 
 Create `EntityFactory.cs`:
 
-```csharp
+~~~csharp
 using Brine2D.Core;
 using Brine2D.ECS;
 using ECSDemo.Components;
@@ -581,839 +655,336 @@ namespace ECSDemo;
 
 public static class EntityFactory
 {
-    public static Entity CreatePlayer(World world, Vector2 position)
+    public static Entity CreatePlayer(IEntityWorld world, Vector2 position)
     {
         var entity = world.CreateEntity("Player");
         
-        entity.AddComponent(new TransformComponent 
-        { 
-            Position = position 
-        });
+        var transform = entity.AddComponent<TransformComponent>();
+        transform.Position = position;
         
-        entity.AddComponent(new VelocityComponent 
-        { 
-            Speed = 200f 
-        });
+        var sprite = entity.AddComponent<SpriteComponent>();
+        sprite.Width = 32;
+        sprite.Height = 32;
+        sprite.Color = Color.Blue;
         
-        entity.AddComponent(new SpriteComponent 
-        { 
-            Width = 32, 
-            Height = 32, 
-            Color = Color.Blue 
-        });
+        var health = entity.AddComponent<HealthComponent>();
+        health.Max = 100;
+        health.Current = 100;
         
-        entity.AddComponent(new HealthComponent 
-        { 
-            Current = 100, 
-            Max = 100 
-        });
-        
-        entity.AddComponent(new PlayerComponent());
+        entity.Tags.Add("Player");
         
         return entity;
     }
     
-    public static Entity CreateEnemy(World world, Vector2 position)
+    public static Entity CreateEnemy(IEntityWorld world, Vector2 position)
     {
         var entity = world.CreateEntity("Enemy");
         
-        entity.AddComponent(new TransformComponent 
-        { 
-            Position = position 
-        });
+        var transform = entity.AddComponent<TransformComponent>();
+        transform.Position = position;
         
-        entity.AddComponent(new VelocityComponent 
-        { 
-            Speed = 100f 
-        });
+        var sprite = entity.AddComponent<SpriteComponent>();
+        sprite.Width = 24;
+        sprite.Height = 24;
+        sprite.Color = Color.Red;
         
-        entity.AddComponent(new SpriteComponent 
-        { 
-            Width = 24, 
-            Height = 24, 
-            Color = Color.Red 
-        });
+        var velocity = entity.AddComponent<VelocityComponent>();
+        velocity.Speed = 50f;
         
-        entity.AddComponent(new HealthComponent 
-        { 
-            Current = 50, 
-            Max = 50 
-        });
+        var health = entity.AddComponent<HealthComponent>();
+        health.Max = 50;
+        health.Current = 50;
         
-        entity.AddComponent(new EnemyComponent());
+        entity.Tags.Add("Enemy");
         
         return entity;
     }
     
-    public static Entity CreateProjectile(World world, Vector2 position, Vector2 direction)
+    public static Entity CreatePickup(IEntityWorld world, Vector2 position)
     {
-        var entity = world.CreateEntity("Projectile");
+        var entity = world.CreateEntity("Pickup");
         
-        entity.AddComponent(new TransformComponent 
-        { 
-            Position = position 
-        });
+        var transform = entity.AddComponent<TransformComponent>();
+        transform.Position = position;
         
-        entity.AddComponent(new VelocityComponent 
-        { 
-            Velocity = direction * 400f,
-            Speed = 400f 
-        });
+        var sprite = entity.AddComponent<SpriteComponent>();
+        sprite.Width = 16;
+        sprite.Height = 16;
+        sprite.Color = Color.Yellow;
         
-        entity.AddComponent(new SpriteComponent 
-        { 
-            Width = 8, 
-            Height = 8, 
-            Color = Color.Yellow 
-        });
-        
-        entity.AddComponent(new ProjectileComponent());
+        entity.Tags.Add("Pickup");
         
         return entity;
     }
 }
-```
+~~~
 
-**Pattern:** Factory methods encapsulate entity creation logic.
+Use in `GameScene.cs`:
+
+~~~csharp
+protected override Task OnLoadAsync(CancellationToken ct)
+{
+    // ✅ Clean entity creation via factory
+    _player = EntityFactory.CreatePlayer(World, new Vector2(400, 300));
+    
+    var random = new Random();
+    for (int i = 0; i < 5; i++)
+    {
+        EntityFactory.CreateEnemy(World, new Vector2(
+            random.Next(100, 700),
+            random.Next(100, 500)));
+    }
+    
+    for (int i = 0; i < 10; i++)
+    {
+        EntityFactory.CreatePickup(World, new Vector2(
+            random.Next(100, 700),
+            random.Next(100, 500)));
+    }
+    
+    return Task.CompletedTask;
+}
+~~~
 
 ---
 
-## Putting It All Together
+## Complete Working Example
 
-### Step 11: Create Game Scene
+Here's the complete `GameScene.cs`:
 
-Create `GameScene.cs`:
-
-```csharp
+~~~csharp
 using Brine2D.Core;
-using Brine2D.ECS;
 using Brine2D.Engine;
 using Brine2D.Input;
-using Brine2D.Rendering;
 using ECSDemo.Components;
-using ECSDemo.Systems;
-using Microsoft.Extensions.Logging;
 using System.Numerics;
 
 namespace ECSDemo;
 
 public class GameScene : Scene
 {
-    private readonly World _world;
-    private readonly IRenderer _renderer;
-    private readonly IInputService _input;
-    private readonly IGameContext _gameContext;
+    private readonly IInputContext _input;
+    private Entity? _player;
     
-    private float _enemySpawnTimer = 0f;
-    private const float EnemySpawnInterval = 2.0f;
-
-    public GameScene(
-        IRenderer renderer,
-        IInputService input,
-        IGameContext gameContext,
-        ILogger<GameScene> logger) : base(logger)
+    public GameScene(IInputContext input)
     {
-        _renderer = renderer;
         _input = input;
-        _gameContext = gameContext;
-        _world = new World();
     }
-
-    protected override void OnInitialize()
+    
+    protected override Task OnLoadAsync(CancellationToken ct)
     {
-        Logger.LogInformation("Initializing ECS Demo");
+        // ✅ World available automatically - scoped per scene!
         
-        // Register systems (order matters!)
-        _world.AddUpdateSystem(new PlayerInputSystem(_world, _input));
-        _world.AddUpdateSystem(new EnemyAISystem(_world));
-        _world.AddUpdateSystem(new MovementSystem(_world));
-        _world.AddUpdateSystem(new CollisionSystem(_world, 
-            LoggerFactory.CreateLogger<CollisionSystem>()));
-        _world.AddUpdateSystem(new CleanupSystem(_world));
+        // Create entities via factory
+        _player = EntityFactory.CreatePlayer(World, new Vector2(400, 300));
         
-        _world.AddRenderSystem(new SpriteRenderSystem(_world, _renderer));
+        var random = new Random();
+        for (int i = 0; i < 5; i++)
+        {
+            EntityFactory.CreateEnemy(World, new Vector2(
+                random.Next(100, 700),
+                random.Next(100, 500)));
+        }
         
-        // Create initial entities
-        CreatePlayer();
-        CreateInitialEnemies();
+        for (int i = 0; i < 10; i++)
+        {
+            EntityFactory.CreatePickup(World, new Vector2(
+                random.Next(100, 700),
+                random.Next(100, 500)));
+        }
+        
+        Logger.LogInformation("Created {Count} entities", World.Entities.Count);
+        
+        return Task.CompletedTask;
     }
-
+    
     protected override void OnUpdate(GameTime gameTime)
     {
-        // Exit on Escape
-        if (_input.IsKeyPressed(Keys.Escape))
+        HandlePlayerInput(gameTime);
+        CheckCollisions();
+        
+        // Check win condition
+        if (World.GetEntitiesByTag("Pickup").Count == 0)
         {
-            _gameContext.RequestExit();
-            return;
+            Logger.LogInformation("You win! All pickups collected!");
+            Environment.Exit(0);
         }
-        
-        // Spawn enemies periodically
-        _enemySpawnTimer += (float)gameTime.DeltaTime;
-        if (_enemySpawnTimer >= EnemySpawnInterval)
-        {
-            SpawnRandomEnemy();
-            _enemySpawnTimer = 0f;
-        }
-        
-        // Update all systems
-        _world.Update(gameTime);
     }
-
-    protected override void OnRender(GameTime gameTime)
+    
+    private void HandlePlayerInput(GameTime gameTime)
     {
-        _renderer.Clear(new Color(20, 20, 30));
+        var players = World.GetEntitiesByTag("Player");
+        if (players.Count == 0) return;
         
-        // Render all systems
-        _world.Render(gameTime);
-        
-        // Draw HUD
-        DrawHUD();
-    }
-
-    private void CreatePlayer()
-    {
-        EntityFactory.CreatePlayer(_world, new Vector2(400, 300));
-    }
-
-    private void CreateInitialEnemies()
-    {
-        EntityFactory.CreateEnemy(_world, new Vector2(100, 100));
-        EntityFactory.CreateEnemy(_world, new Vector2(700, 100));
-        EntityFactory.CreateEnemy(_world, new Vector2(100, 500));
-        EntityFactory.CreateEnemy(_world, new Vector2(700, 500));
-    }
-
-    private void SpawnRandomEnemy()
-    {
-        var random = new Random();
-        
-        // Spawn at random edge
-        var side = random.Next(4);
-        var position = side switch
-        {
-            0 => new Vector2(random.Next(50, 750), -50),        // Top
-            1 => new Vector2(random.Next(50, 750), 650),        // Bottom
-            2 => new Vector2(-50, random.Next(50, 550)),        // Left
-            3 => new Vector2(850, random.Next(50, 550)),        // Right
-            _ => new Vector2(400, 300)
-        };
-        
-        EntityFactory.CreateEnemy(_world, position);
-    }
-
-    private void DrawHUD()
-    {
-        // Draw player health
-        var players = _world.QueryEntities()
-            .With<PlayerComponent>()
-            .With<HealthComponent>();
-        
-        foreach (var player in players)
-        {
-            var health = player.GetComponent<HealthComponent>();
-            if (health != null)
-            {
-                _renderer.DrawText($"Health: {health.Current}/{health.Max}", 
-                    10, 10, Color.White);
-            }
-        }
-        
-        // Draw entity count
-        var entityCount = _world.GetAllEntities().Count();
-        _renderer.DrawText($"Entities: {entityCount}", 10, 30, Color.White);
-        
-        // Draw instructions
-        _renderer.DrawText("WASD: Move | ESC: Quit", 10, 570, Color.Gray);
-    }
-}
-```
-
----
-
-## Run Your Game
-
-### Step 12: Test It
-
-Run your ECS game:
-
-```sh
-dotnet run
-```
-
-**You should see:**
-1. Blue player square in center
-2. Red enemy squares around edges
-3. Enemies move toward player
-4. Player health decreases on collision
-5. New enemies spawn every 2 seconds
-6. Dead entities are removed
-7. Off-screen entities are cleaned up
-
-**Success!** You've built your first ECS game.
-
----
-
-## Architecture Diagram
-
-```mermaid
-graph TB
-    subgraph "Game Scene"
-        A[GameScene]
-    end
-    
-    subgraph "ECS World"
-        B[World]
-        B --> B1[Entity List]
-        B --> B2[Update Systems]
-        B --> B3[Render Systems]
-    end
-    
-    subgraph "Update Systems"
-        C1[PlayerInputSystem<br/>Order: 10]
-        C2[EnemyAISystem<br/>Order: 20]
-        C3[MovementSystem<br/>Order: 100]
-        C4[CollisionSystem<br/>Order: 150]
-        C5[CleanupSystem<br/>Order: 200]
-    end
-    
-    subgraph "Render Systems"
-        D1[SpriteRenderSystem<br/>Order: 100]
-    end
-    
-    subgraph "Entities"
-        E1[Player Entity]
-        E2[Enemy Entities]
-        E3[Projectile Entities]
-    end
-    
-    subgraph "Components"
-        F1[Transform]
-        F2[Velocity]
-        F3[Sprite]
-        F4[Health]
-        F5[Tags]
-    end
-    
-    A --> B
-    
-    B2 --> C1
-    B2 --> C2
-    B2 --> C3
-    B2 --> C4
-    B2 --> C5
-    
-    B3 --> D1
-    
-    B1 --> E1
-    B1 --> E2
-    B1 --> E3
-    
-    E1 --> F1
-    E1 --> F2
-    E1 --> F3
-    E1 --> F4
-    E1 --> F5
-    
-    E2 --> F1
-    E2 --> F2
-    E2 --> F3
-    E2 --> F4
-    E2 --> F5
-    
-    C1 -.->|Queries| E1
-    C2 -.->|Queries| E2
-    C3 -.->|Queries| E1
-    C3 -.->|Queries| E2
-    C4 -.->|Queries| E1
-    C4 -.->|Queries| E2
-    D1 -.->|Queries| E1
-    D1 -.->|Queries| E2
-    
-    style B fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-    style C1 fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-    style C2 fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-    style C3 fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-    style C4 fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-    style C5 fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
-    style D1 fill:#4a3d1f,stroke:#ce9178,stroke-width:2px,color:#fff
-```
-
-**Execution order:**
-1. PlayerInputSystem (10) - Process player input
-2. EnemyAISystem (20) - Calculate enemy AI
-3. MovementSystem (100) - Update positions
-4. CollisionSystem (150) - Check collisions
-5. CleanupSystem (200) - Remove dead entities
-6. SpriteRenderSystem (100) - Draw everything
-
----
-
-## Enhancements
-
-### Add Shooting
-
-Add shooting to `PlayerInputSystem`:
-
-```csharp
-public void Update(GameTime gameTime)
-{
-    var players = _world.QueryEntities()
-        .With<PlayerComponent>()
-        .With<TransformComponent>();
-    
-    foreach (var player in players)
-    {
+        var player = players[0];
         var transform = player.GetComponent<TransformComponent>();
         
-        // Shoot projectile on Space
-        if (_input.IsKeyPressed(Keys.Space) && transform != null)
+        if (transform == null) return;
+        
+        var movement = Vector2.Zero;
+        if (_input.IsKeyDown(Key.W)) movement.Y -= 1;
+        if (_input.IsKeyDown(Key.S)) movement.Y += 1;
+        if (_input.IsKeyDown(Key.A)) movement.X -= 1;
+        if (_input.IsKeyDown(Key.D)) movement.X += 1;
+        
+        if (movement != Vector2.Zero)
         {
-            // Shoot upward
-            EntityFactory.CreateProjectile(_world, 
-                transform.Position, 
-                new Vector2(0, -1));
+            movement = Vector2.Normalize(movement);
+            transform.Move(movement * 200f * (float)gameTime.DeltaTime);
         }
-        
-        // ... existing movement code
     }
-}
-```
-
-Add projectile vs enemy collision to `CollisionSystem`:
-
-```csharp
-// Check projectiles vs enemies
-var projectiles = _world.QueryEntities()
-    .With<ProjectileComponent>()
-    .With<TransformComponent>();
-
-foreach (var projectile in projectiles)
-{
-    var projTransform = projectile.GetComponent<TransformComponent>();
-    if (projTransform == null) continue;
     
-    var enemies = _world.QueryEntities().With<EnemyComponent>();
-    
-    foreach (var enemy in enemies)
+    private void CheckCollisions()
     {
-        var enemyTransform = enemy.GetComponent<TransformComponent>();
-        var enemyHealth = enemy.GetComponent<HealthComponent>();
+        var players = World.GetEntitiesByTag("Player");
+        if (players.Count == 0) return;
         
-        if (enemyTransform == null) continue;
+        var player = players[0];
+        var playerTransform = player.GetComponent<TransformComponent>();
+        var playerHealth = player.GetComponent<HealthComponent>();
         
-        var distance = Vector2.Distance(
-            projTransform.Position, 
-            enemyTransform.Position);
+        if (playerTransform == null || playerHealth == null) return;
         
-        if (distance < 20f)
+        // Check enemies
+        var enemies = World.GetEntitiesByTag("Enemy");
+        foreach (var enemy in enemies)
         {
-            if (enemyHealth != null)
+            var enemyTransform = enemy.GetComponent<TransformComponent>();
+            if (enemyTransform == null) continue;
+            
+            var distance = Vector2.Distance(
+                playerTransform.Position,
+                enemyTransform.Position);
+            
+            if (distance < 30)
             {
-                enemyHealth.Current -= 25;
+                playerHealth.TakeDamage(10);
+                World.DestroyEntity(enemy);
+                Logger.LogInformation("Hit! Health: {Health}", playerHealth.Current);
             }
-            
-            _world.DestroyEntity(projectile);
-            break;
         }
-    }
-}
-```
-
----
-
-### Add Score System
-
-Create `Components/ScoreComponent.cs`:
-
-```csharp
-public class ScoreComponent : Component
-{
-    public int Score { get; set; }
-}
-```
-
-Add to player:
-
-```csharp
-entity.AddComponent(new ScoreComponent());
-```
-
-Update score in collision system:
-
-```csharp
-if (enemyHealth != null && enemyHealth.IsDead)
-{
-    var playerScore = player.GetComponent<ScoreComponent>();
-    if (playerScore != null)
-    {
-        playerScore.Score += 10;
-    }
-}
-```
-
-Display in HUD:
-
-```csharp
-var score = player.GetComponent<ScoreComponent>();
-if (score != null)
-{
-    _renderer.DrawText($"Score: {score.Score}", 10, 50, Color.White);
-}
-```
-
----
-
-### Add Particle Effects
-
-Create `Components/ParticleComponent.cs`:
-
-```csharp
-public class ParticleComponent : Component
-{
-    public float Lifetime { get; set; }
-    public float MaxLifetime { get; set; }
-}
-```
-
-Create particle system:
-
-```csharp
-public class ParticleSystem : IUpdateSystem
-{
-    public string Name => "ParticleSystem";
-    public int UpdateOrder => 180;
-    
-    public void Update(GameTime gameTime)
-    {
-        var particles = _world.QueryEntities()
-            .With<ParticleComponent>();
         
-        foreach (var particle in particles)
+        // Check pickups
+        var pickups = World.GetEntitiesByTag("Pickup");
+        foreach (var pickup in pickups)
         {
-            var particleComp = particle.GetComponent<ParticleComponent>();
+            var pickupTransform = pickup.GetComponent<TransformComponent>();
+            if (pickupTransform == null) continue;
             
-            if (particleComp != null)
+            var distance = Vector2.Distance(
+                playerTransform.Position,
+                pickupTransform.Position);
+            
+            if (distance < 25)
             {
-                particleComp.Lifetime -= (float)gameTime.DeltaTime;
-                
-                if (particleComp.Lifetime <= 0)
-                {
-                    _world.DestroyEntity(particle);
-                }
-                
-                // Fade out
-                var sprite = particle.GetComponent<SpriteComponent>();
-                if (sprite != null)
-                {
-                    var alpha = (byte)(255 * (particleComp.Lifetime / particleComp.MaxLifetime));
-                    sprite.Color = new Color(sprite.Color.R, sprite.Color.G, sprite.Color.B, alpha);
-                }
+                playerHealth.Heal(20);
+                World.DestroyEntity(pickup);
+                Logger.LogInformation("Pickup! Health: {Health}", playerHealth.Current);
             }
         }
     }
+    
+    protected override void OnRender(GameTime gameTime)
+    {
+        // Components render automatically via OnRender()
+        RenderHUD();
+    }
+    
+    private void RenderHUD()
+    {
+        var players = World.GetEntitiesByTag("Player");
+        if (players.Count == 0) return;
+        
+        var player = players[0];
+        var health = player.GetComponent<HealthComponent>();
+        
+        if (health != null)
+        {
+            Renderer.DrawText(
+                $"Health: {health.Current}/{health.Max}",
+                10, 10,
+                Color.White);
+        }
+        
+        var enemies = World.GetEntitiesByTag("Enemy");
+        var pickups = World.GetEntitiesByTag("Pickup");
+        
+        Renderer.DrawText(
+            $"Enemies: {enemies.Count}  Pickups: {pickups.Count}",
+            10, 40,
+            Color.LightGray);
+        
+        Renderer.DrawText("WASD to move", 10, 80, Color.Gray);
+        Renderer.DrawText("Collect yellow, avoid red!", 10, 110, Color.Gray);
+    }
+    
+    protected override Task OnUnloadAsync(CancellationToken ct)
+    {
+        // ✅ No cleanup needed - World disposed automatically!
+        return Task.CompletedTask;
+    }
 }
-```
+~~~
 
 ---
 
-## Best Practices
+## Running the Game
 
-### DO
+Build and run:
 
-1. **Keep components simple**
-   ```csharp
-   // ✅ Good - just data
-   public class HealthComponent : Component
-   {
-       public int Current { get; set; }
-       public int Max { get; set; }
-   }
-   ```
+~~~sh
+dotnet run
+~~~
 
-2. **Use factories for creation**
-   ```csharp
-   // ✅ Good - encapsulated
-   var player = EntityFactory.CreatePlayer(_world, position);
-   ```
-
-3. **Order systems explicitly**
-   ```csharp
-   // ✅ Good - clear order
-   _world.AddUpdateSystem(new InputSystem(_world) { UpdateOrder = 10 });
-   _world.AddUpdateSystem(new PhysicsSystem(_world) { UpdateOrder = 50 });
-   _world.AddUpdateSystem(new MovementSystem(_world) { UpdateOrder = 100 });
-   ```
-
-4. **Query once per frame**
-   ```csharp
-   // ✅ Good - query once
-   var entities = _world.QueryEntities()
-       .With<TransformComponent>()
-       .With<VelocityComponent>()
-       .ToList();
-   
-   foreach (var entity in entities)
-   {
-       // Process
-   }
-   ```
-
-5. **Use tag components**
-   ```csharp
-   // ✅ Good - easy to query
-   public class PlayerComponent : Component { }
-   
-   var players = _world.QueryEntities().With<PlayerComponent>();
-   ```
-
-### DON'T
-
-1. **Don't put logic in components**
-   ```csharp
-   // ❌ Bad - logic in component
-   public class HealthComponent : Component
-   {
-       public void TakeDamage(int amount) { ... }
-   }
-   ```
-
-2. **Don't query inside loops**
-   ```csharp
-   // ❌ Bad - queries every iteration
-   for (int i = 0; i < 100; i++)
-   {
-       var enemies = _world.QueryEntities().With<EnemyComponent>();
-   }
-   ```
-
-3. **Don't forget deltaTime**
-   ```csharp
-   // ❌ Bad - frame-rate dependent
-   transform.Position += velocity.Velocity;
-   
-   // ✅ Good - frame-rate independent
-   transform.Position += velocity.Velocity * deltaTime;
-   ```
-
-4. **Don't create entities in tight loops**
-   ```csharp
-   // ❌ Bad - creates 1000 entities per frame!
-   protected override void OnUpdate(GameTime gameTime)
-   {
-       for (int i = 0; i < 1000; i++)
-       {
-           EntityFactory.CreateEnemy(_world, position);
-       }
-   }
-   ```
-
----
-
-## Troubleshooting
-
-### Problem: Entities not moving
-
-**Symptom:** Entities are created but don't move.
-
-**Solutions:**
-
-1. **Check World.Update is called:**
-   ```csharp
-   protected override void OnUpdate(GameTime gameTime)
-   {
-       _world.Update(gameTime); // Must call this!
-   }
-   ```
-
-2. **Verify systems are registered:**
-   ```csharp
-   _world.AddUpdateSystem(new MovementSystem(_world));
-   ```
-
-3. **Check component exists:**
-   ```csharp
-   if (entity.HasComponent<VelocityComponent>())
-   {
-       Logger.LogDebug("Entity has velocity");
-   }
-   ```
-
----
-
-### Problem: Nothing renders
-
-**Symptom:** Window is black, no entities visible.
-
-**Solutions:**
-
-1. **Check World.Render is called:**
-   ```csharp
-   protected override void OnRender(GameTime gameTime)
-   {
-       _renderer.Clear(Color.Black);
-       _world.Render(gameTime); // Must call this!
-   }
-   ```
-
-2. **Verify render system registered:**
-   ```csharp
-   _world.AddRenderSystem(new SpriteRenderSystem(_world, _renderer));
-   ```
-
-3. **Check entity has required components:**
-   ```csharp
-   entity.AddComponent(new TransformComponent());
-   entity.AddComponent(new SpriteComponent()); // Both needed!
-   ```
-
----
-
-### Problem: Systems run in wrong order
-
-**Symptom:** Collisions detect before movement, etc.
-
-**Solution:** Set UpdateOrder correctly:
-
-```csharp
-// ✅ Correct ordering
-public class InputSystem : IUpdateSystem
-{
-    public int UpdateOrder => 10; // First
-}
-
-public class MovementSystem : IUpdateSystem
-{
-    public int UpdateOrder => 100; // After input
-}
-
-public class CollisionSystem : IUpdateSystem
-{
-    public int UpdateOrder => 150; // After movement
-}
-```
-
-**Rule:** Lower order runs first.
-
----
-
-### Problem: Performance issues
-
-**Symptom:** Game runs slowly with many entities.
-
-**Solutions:**
-
-1. **Cache query results:**
-   ```csharp
-   // ✅ Good - query once
-   var entities = _world.QueryEntities()
-       .With<TransformComponent>()
-       .ToList();
-   ```
-
-2. **Remove unused entities:**
-   ```csharp
-   // Clean up off-screen entities
-   if (transform.Position.Y > 1000)
-   {
-       _world.DestroyEntity(entity);
-   }
-   ```
-
-3. **Use spatial partitioning:**
-   - Divide world into grid
-   - Only check collisions in same cell
+**Controls:**
+- **WASD** - Move player
+- **Collect yellow** - Heal (+20 HP)
+- **Avoid red** - Damage (-10 HP)
+- **Collect all pickups** - Win!
 
 ---
 
 ## Summary
 
-**What you built:**
+**World access patterns:**
 
-| Feature | Implementation |
-|---------|----------------|
-| **Components** | Transform, Velocity, Sprite, Health, Tags |
-| **Systems** | PlayerInput, EnemyAI, Movement, Collision, Cleanup |
-| **Entities** | Player, Enemies (via factories) |
-| **Game Loop** | Update systems → Render systems |
+| Pattern | Usage |
+|---------|-------|
+| **World property** | Available automatically in scenes |
+| **World.CreateEntity()** | Create entities |
+| **World.DestroyEntity()** | Destroy entities |
+| **World.GetEntitiesByTag()** | Find by tag |
+| **World.GetEntitiesWithComponent<T>()** | Find with component |
+| **World.Entities** | Get all entities |
+| **Scoped World** | Automatic cleanup per scene |
 
 **Key concepts:**
 
-| Concept | Usage |
-|---------|-------|
-| **Component** | Pure data (no logic) |
-| **System** | Pure logic (queries components) |
-| **Entity** | Composition of components |
-| **World** | Manages entities and systems |
-| **Factory** | Encapsulates entity creation |
+| Concept | Description |
+|---------|-------------|
+| **Hybrid ECS** | Components can have methods and logic |
+| **Optional systems** | Use for performance optimization only |
+| **Entity queries** | Safe snapshots, can modify during iteration |
+| **Automatic cleanup** | World disposed when scene unloads |
+| **Factory pattern** | Encapsulate entity creation |
 
-**System ordering:**
+**Recommended workflow:**
 
-| Order | System | Purpose |
-|-------|--------|---------|
-| 10 | PlayerInputSystem | Process input |
-| 20 | EnemyAISystem | Calculate AI |
-| 100 | MovementSystem | Update positions |
-| 150 | CollisionSystem | Check collisions |
-| 200 | CleanupSystem | Remove dead entities |
+1. ✅ Start with **components with methods** (beginner-friendly)
+2. ✅ Use **entity factories** to encapsulate creation
+3. ✅ Query entities with **World.GetEntitiesByTag()** or **World.GetEntitiesWithComponent<T>()**
+4. ✅ Add **systems** only if profiling shows performance issues
 
 ---
 
 ## Next Steps
 
-Now that you understand ECS basics, explore advanced topics:
-
-- **[Components Guide](components.md)** - Deep dive into component design
-- **[Systems Guide](systems.md)** - Advanced system patterns
-- **[Entities Guide](entities.md)** - Entity management and factories
-- **[Queries Guide](queries.md)** - Advanced entity queries
-- **[ECS Concepts](../../concepts/entity-component-system.md)** - Architectural deep dive
-
-**Try these challenges:**
-
-1. Add different enemy types (fast, slow, strong)
-2. Implement power-ups that modify player stats
-3. Add particle effects for explosions
-4. Create a wave-based spawning system
-5. Add a scoring and high score system
-6. Implement different weapon types
+- **[Components Guide](components.md)** - Deep dive into components with methods
+- **[Queries Guide](queries.md)** - Advanced query patterns
+- **[Systems Guide](systems.md)** - When and how to use systems
+- **[Entities Guide](entities.md)** - Entity lifecycle and patterns
+- **[ECS Concepts](../../concepts/entity-component-system.md)** - Understanding hybrid ECS
 
 ---
 
-## Quick Reference
-
-```csharp
-// Create World
-var world = new World();
-
-// Register systems
-world.AddUpdateSystem(new MovementSystem(world) { UpdateOrder = 100 });
-world.AddRenderSystem(new SpriteRenderSystem(world, renderer));
-
-// Create entity
-var entity = world.CreateEntity("Player");
-
-// Add components
-entity.AddComponent(new TransformComponent { Position = new Vector2(100, 100) });
-entity.AddComponent(new VelocityComponent { Speed = 200f });
-entity.AddComponent(new SpriteComponent { Width = 32, Height = 32 });
-
-// Query entities
-var entities = world.QueryEntities()
-    .With<TransformComponent>()
-    .With<VelocityComponent>();
-
-// Update and render
-protected override void OnUpdate(GameTime gameTime)
-{
-    world.Update(gameTime);
-}
-
-protected override void OnRender(GameTime gameTime)
-{
-    world.Render(gameTime);
-}
-```
-
----
-
-Ready to learn more about components? Check out [Components Guide](components.md)!
+**Remember:** Brine2D's hybrid ECS is beginner-friendly - components can have methods, systems are optional, and World is automatically scoped per scene! 🎮

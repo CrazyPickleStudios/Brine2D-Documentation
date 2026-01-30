@@ -1,715 +1,1074 @@
 ---
-title: ECS Components
-description: Design and implement effective components for your Brine2D games
+title: Components
+description: Deep dive into Brine2D's hybrid components - data, methods, and lifecycle
 ---
 
-# ECS Components
+# Components
 
-Components are the **building blocks** of Brine2D's Entity Component System. Unlike pure data-oriented ECS frameworks, Brine2D uses a **hybrid approach** where components can contain both data and logic, giving you flexibility for typical game development with optional performance optimization through systems.
+Components in Brine2D's **hybrid ECS** can contain both **data and methods** - making them beginner-friendly while still allowing optional system-based optimization.
 
-## What Are Components?
+## Overview
 
-**Components are classes** that inherit from `Component` and represent characteristics, behaviors, or attributes of entities. They can hold state AND logic.
+**What makes Brine2D components unique?**
 
-```csharp
+- ✅ **Methods allowed** - components can have logic (Unity-style)
+- ✅ **Lifecycle hooks** - OnAdded, OnUpdate, OnEnabled, OnDisabled, OnRemoved
+- ✅ **Helper methods** - GetComponent, GetRequiredComponent, TryGetComponent
+- ✅ **Entity access** - easy access to sibling components and entity properties
+- ✅ **Enable/disable** - runtime control via IsEnabled flag
+
+**Two approaches:**
+
+| Approach | When to Use | Complexity |
+|----------|-------------|------------|
+| **Components with methods** | Most games (recommended) | ⭐ Beginner |
+| **Pure data + systems** | Performance-critical (1000+ entities) | ⭐⭐⭐ Advanced |
+
+---
+
+## The Component Base Class
+
+### Core Properties
+
+~~~csharp
+public abstract class Component
+{
+    // Entity relationship
+    public Entity? Entity { get; internal set; }
+    public bool IsAttached => Entity != null;
+    
+    // State
+    public bool IsEnabled { get; set; } = true;
+    
+    // Shortcuts
+    public string EntityName => Entity?.Name ?? string.Empty;
+    public HashSet<string> EntityTags => Entity?.Tags ?? new HashSet<string>();
+    public TransformComponent? Transform => Entity?.GetComponent<TransformComponent>();
+    
+    // Helper methods
+    public T? GetComponent<T>() where T : Component;
+    public T GetRequiredComponent<T>() where T : Component;
+    public bool TryGetComponent<T>(out T? component) where T : Component;
+    public T? GetComponentInChildren<T>() where T : Component;
+    public T? GetComponentInParent<T>() where T : Component;
+    public void Destroy();
+    
+    // Lifecycle (override in derived classes)
+    protected internal virtual void OnAdded() { }
+    protected internal virtual void OnRemoved() { }
+    protected internal virtual void OnEnabled() { }
+    protected internal virtual void OnDisabled() { }
+    protected internal virtual void OnUpdate(GameTime gameTime) { }
+}
+~~~
+
+**Pattern:** Every component can access its entity, other components, and has lifecycle hooks.
+
+---
+
+## Creating Components
+
+### Simple Component with Data Only
+
+~~~csharp
+using Brine2D.ECS;
+using System.Numerics;
+
+public class TransformComponent : Component
+{
+    public Vector2 Position { get; set; }
+    public float Rotation { get; set; }
+    public Vector2 Scale { get; set; } = Vector2.One;
+}
+
+// Usage
+var entity = World.CreateEntity("Player");
+var transform = entity.AddComponent<TransformComponent>();
+transform.Position = new Vector2(100, 100);
+transform.Rotation = 45f;
+~~~
+
+**Pattern:** Simplest form - just data, no logic.
+
+---
+
+### Component with Methods (Recommended)
+
+~~~csharp
+using Brine2D.ECS;
+
+public class HealthComponent : Component
+{
+    public int Current { get; set; }
+    public int Max { get; set; }
+    
+    public bool IsDead => Current <= 0;
+    public float HealthPercent => (float)Current / Max;
+    
+    // ✅ Methods allowed in Brine2D!
+    public void TakeDamage(int amount)
+    {
+        Current = Math.Max(0, Current - amount);
+        
+        if (IsDead)
+        {
+            OnDeath();
+        }
+    }
+    
+    public void Heal(int amount)
+    {
+        Current = Math.Min(Max, Current + amount);
+    }
+    
+    public void SetHealth(int health)
+    {
+        Current = Math.Clamp(health, 0, Max);
+    }
+    
+    private void OnDeath()
+    {
+        // Death logic
+        Logger.LogInformation("{Entity} died!", EntityName);
+    }
+}
+
+// Usage - intuitive and clear!
+var health = entity.AddComponent<HealthComponent>();
+health.Max = 100;
+health.Current = 100;
+
+health.TakeDamage(25); // Simple method call
+health.Heal(10);
+~~~
+
+**Pattern:** Components with methods are intuitive - just like Unity!
+
+---
+
+### Component with Lifecycle Methods
+
+~~~csharp
 using Brine2D.Core;
 using Brine2D.ECS;
 using System.Numerics;
 
-// ✅ Simple data component
-public class TransformComponent : Component
+public class VelocityComponent : Component
 {
-    public Vector2 Position { get; set; }
-    public float Rotation { get; set; }
-    public Vector2 Scale { get; set; } = Vector2.One;
-}
-
-// ✅ Component with logic (perfectly fine!)
-public class LifetimeComponent : Component
-{
-    public float Lifetime { get; set; }
-    public bool AutoDestroy { get; set; } = true;
+    public Vector2 Value { get; set; }
+    public float Speed { get; set; } = 100f;
+    public float MaxSpeed { get; set; } = 500f;
     
+    // ✅ Lifecycle method - auto-movement
     protected internal override void OnUpdate(GameTime gameTime)
     {
         if (!IsEnabled) return;
         
-        Lifetime -= (float)gameTime.DeltaTime;
-        
-        if (Lifetime <= 0 && AutoDestroy)
+        if (Value != Vector2.Zero)
         {
-            Entity?.Destroy();
+            // Get sibling component
+            var transform = GetRequiredComponent<TransformComponent>();
+            
+            // Apply velocity
+            var deltaTime = (float)gameTime.DeltaTime;
+            transform.Position += Value * Speed * deltaTime;
+            
+            // Clamp speed
+            if (Value.Length() > MaxSpeed)
+            {
+                Value = Vector2.Normalize(Value) * MaxSpeed;
+            }
         }
     }
+    
+    // ✅ Helper methods
+    public void AddForce(Vector2 force)
+    {
+        Value += force;
+    }
+    
+    public void Stop()
+    {
+        Value = Vector2.Zero;
+    }
 }
-```
 
-**Key principle:** Components can be **simple data containers** or **self-contained behaviors** - use what makes sense for your game!
+// Usage - component handles movement automatically!
+var velocity = entity.AddComponent<VelocityComponent>();
+velocity.Value = new Vector2(1, 0); // Moving right
+velocity.Speed = 200f;
+
+// Component updates position every frame automatically
+~~~
+
+**Pattern:** `OnUpdate()` is called automatically - no systems needed!
 
 ---
 
-## Basic Component Structure
+## Component Lifecycle
 
-### Minimal Component
+### Lifecycle Flow
 
-The simplest component inherits from `Component`:
-
-```csharp
-using Brine2D.ECS;
-
-public class HealthComponent : Component
-{
-    public float Current { get; set; }
-    public float Max { get; set; }
+~~~mermaid
+stateDiagram-v2
+    [*] --> Created: new Component()
     
-    public float Percentage => Current / Max;
-    public bool IsDead => Current <= 0;
+    Created --> Added: entity.AddComponent()
+    
+    Added --> Attached: OnAdded()
+    note right of Attached
+        Component.Entity set
+        Setup resources
+        Subscribe to events
+    end note
+    
+    Attached --> Enabled: IsEnabled = true
+    
+    Enabled --> EnablingEvent: OnEnabled()
+    
+    EnablingEvent --> Active: Ready
+    
+    Active --> Updating: OnUpdate(gameTime)
+    note right of Updating
+        Called every frame
+        if IsEnabled = true
+    end note
+    
+    Updating --> Active: Frame complete
+    
+    Active --> Disabling: IsEnabled = false
+    
+    Disabling --> DisablingEvent: OnDisabled()
+    
+    DisablingEvent --> Disabled: Paused
+    
+    Disabled --> EnablingEvent: IsEnabled = true
+    
+    Active --> Removing: entity.RemoveComponent()
+    
+    Removing --> RemovedEvent: OnRemoved()
+    note right of RemovedEvent
+        Component.Entity = null
+        Cleanup resources
+        Unsubscribe events
+    end note
+    
+    RemovedEvent --> [*]
+~~~
+
+---
+
+### Lifecycle Methods
+
+#### OnAdded()
+
+~~~csharp
+public class MyComponent : Component
+{
+    private ITexture? _texture;
+    
+    protected internal override void OnAdded()
+    {
+        // ✅ Called once when added to entity
+        // Use for: Initialization, resource loading, event subscription
+        
+        base.OnAdded();
+        
+        Logger.LogInformation("Component added to {Entity}", EntityName);
+        
+        // Setup resources
+        _texture = LoadTexture("sprite.png");
+        
+        // Get required sibling components
+        var transform = GetRequiredComponent<TransformComponent>();
+        transform.Position = Vector2.Zero;
+        
+        // Subscribe to events
+        if (TryGetComponent<HealthComponent>(out var health))
+        {
+            health.OnDeath += HandleDeath;
+        }
+    }
+    
+    private void HandleDeath()
+    {
+        Logger.LogInformation("Entity died!");
+    }
 }
-```
+~~~
 
-### Component Lifecycle
+**Use for:**
+- Resource initialization
+- Getting required components
+- Event subscription
+- One-time setup
 
-Components have several lifecycle hooks you can override:
+---
 
-```csharp
+#### OnRemoved()
+
+~~~csharp
+public class MyComponent : Component
+{
+    private ITexture? _texture;
+    
+    protected internal override void OnRemoved()
+    {
+        // ✅ Called once when removed from entity
+        // Use for: Cleanup, resource disposal, event unsubscription
+        
+        Logger.LogInformation("Component removed from {Entity}", EntityName);
+        
+        // Dispose resources
+        _texture?.Dispose();
+        _texture = null;
+        
+        // Unsubscribe events
+        if (TryGetComponent<HealthComponent>(out var health))
+        {
+            health.OnDeath -= HandleDeath;
+        }
+        
+        base.OnRemoved();
+    }
+}
+~~~
+
+**Use for:**
+- Resource disposal
+- Event unsubscription
+- Save state
+- Cleanup
+
+---
+
+#### OnEnabled()
+
+~~~csharp
+public class MyComponent : Component
+{
+    protected internal override void OnEnabled()
+    {
+        // ✅ Called when IsEnabled changes from false to true
+        // Use for: Resume logic, re-enable features
+        
+        base.OnEnabled();
+        
+        Logger.LogInformation("Component enabled on {Entity}", EntityName);
+        
+        // Resume logic
+        ResumeAnimation();
+        EnableCollision();
+    }
+}
+~~~
+
+**Use for:**
+- Resume paused logic
+- Re-enable features
+- Refresh state
+
+---
+
+#### OnDisabled()
+
+~~~csharp
+public class MyComponent : Component
+{
+    protected internal override void OnDisabled()
+    {
+        // ✅ Called when IsEnabled changes from true to false
+        // Use for: Pause logic, disable features
+        
+        base.OnDisabled();
+        
+        Logger.LogInformation("Component disabled on {Entity}", EntityName);
+        
+        // Pause logic
+        PauseAnimation();
+        DisableCollision();
+    }
+}
+~~~
+
+**Use for:**
+- Pause active logic
+- Disable features temporarily
+- Save temporary state
+
+---
+
+#### OnUpdate(gameTime)
+
+~~~csharp
+public class MyComponent : Component
+{
+    private float _timer;
+    
+    protected internal override void OnUpdate(GameTime gameTime)
+    {
+        // ✅ Called every frame (if IsEnabled = true)
+        // Use for: Per-frame logic, animation, timers
+        
+        if (!IsEnabled) return; // Safety check
+        
+        var deltaTime = (float)gameTime.DeltaTime;
+        
+        // Update timer
+        _timer += deltaTime;
+        
+        // Get sibling components
+        var transform = GetComponent<TransformComponent>();
+        if (transform != null)
+        {
+            // Update position
+            transform.Position += new Vector2(100, 0) * deltaTime;
+        }
+        
+        // Periodic action
+        if (_timer >= 1f)
+        {
+            PerformAction();
+            _timer = 0f;
+        }
+    }
+    
+    private void PerformAction()
+    {
+        Logger.LogDebug("Action performed!");
+    }
+}
+~~~
+
+**Use for:**
+- Per-frame updates
+- Animation
+- Timers
+- Movement
+- State changes
+
+---
+
+## Component Helper Methods
+
+### Getting Sibling Components
+
+~~~csharp
+public class MyComponent : Component
+{
+    protected internal override void OnUpdate(GameTime gameTime)
+    {
+        // Method 1: GetComponent (safe, returns null if missing)
+        var transform = GetComponent<TransformComponent>();
+        if (transform != null)
+        {
+            transform.Position += Vector2.One;
+        }
+        
+        // Method 2: GetRequiredComponent (throws if missing)
+        var sprite = GetRequiredComponent<SpriteComponent>();
+        sprite.Color = Color.Red; // Safe - guaranteed to exist
+        
+        // Method 3: TryGetComponent (safe retrieval pattern)
+        if (TryGetComponent<HealthComponent>(out var health))
+        {
+            health.TakeDamage(10);
+        }
+    }
+}
+~~~
+
+**Pattern:** Use `GetRequiredComponent<T>()` for essential components, `GetComponent<T>()` for optional ones.
+
+---
+
+### Getting Components in Hierarchy
+
+~~~csharp
 public class MyComponent : Component
 {
     protected internal override void OnAdded()
     {
-        // Called when component is added to an entity
-        Logger.LogInformation("Component added!");
-    }
-    
-    protected internal override void OnRemoved()
-    {
-        // Called when component is removed
-        Logger.LogInformation("Component removed!");
-    }
-    
-    protected internal override void OnEnabled()
-    {
-        // Called when component is enabled
-        Logger.LogInformation("Component enabled!");
-    }
-    
-    protected internal override void OnDisabled()
-    {
-        // Called when component is disabled
-        Logger.LogInformation("Component disabled!");
-    }
-    
-    protected internal override void OnUpdate(GameTime gameTime)
-    {
-        // Called every frame if enabled
-        // Your logic here!
-    }
-}
-```
-
-### Using Components
-
-```csharp
-// Add component
-var health = entity.AddComponent<HealthComponent>();
-health.Current = 100;
-health.Max = 100;
-
-// Get component
-var health = entity.GetComponent<HealthComponent>();
-if (health != null)
-{
-    Console.WriteLine($"Health: {health.Current}/{health.Max}");
-}
-
-// Check if entity has component
-if (entity.HasComponent<HealthComponent>())
-{
-    // ...
-}
-
-// Remove component
-entity.RemoveComponent<HealthComponent>();
-
-// Enable/disable component
-health.IsEnabled = false; // Component won't update
-health.IsEnabled = true;  // Component resumes updating
-```
-
----
-
-## Component Types
-
-### Data-Only Components
-
-**Purpose:** Store state with no logic (processed by systems)
-
-```csharp
-// Simple position/rotation
-public class TransformComponent : Component
-{
-    public Vector2 Position { get; set; }
-    public float Rotation { get; set; }
-    public Vector2 Scale { get; set; } = Vector2.One;
-}
-
-// Movement velocity
-public class VelocityComponent : Component
-{
-    public Vector2 Velocity { get; set; }
-    public float MaxSpeed { get; set; }
-    public float Friction { get; set; }
-    
-    public void SetDirection(Vector2 direction, float speed)
-    {
-        Velocity = direction * speed;
-    }
-}
-
-// Sprite rendering data
-public class SpriteComponent : Component
-{
-    public string TexturePath { get; set; } = string.Empty;
-    public Color Tint { get; set; } = Color.White;
-    public Vector2 Origin { get; set; } = Vector2.Zero;
-}
-```
-
-**When to use:** When you want systems to process multiple entities efficiently.
-
-### Behavior Components
-
-**Purpose:** Self-contained logic that updates every frame
-
-```csharp
-// Timer that fires events
-public class TimerComponent : Component
-{
-    public float Duration { get; set; }
-    public float Elapsed { get; private set; }
-    public bool IsComplete { get; private set; }
-    
-    public event Action? OnComplete;
-    
-    protected internal override void OnUpdate(GameTime gameTime)
-    {
-        if (!IsEnabled || IsComplete) return;
+        // Get component in children (recursive search)
+        var childHealth = GetComponentInChildren<HealthComponent>();
         
-        Elapsed += (float)gameTime.DeltaTime;
+        // Get component in parent (searches upward)
+        var parentTransform = GetComponentInParent<TransformComponent>();
         
-        if (Elapsed >= Duration)
-        {
-            IsComplete = true;
-            OnComplete?.Invoke();
-        }
-    }
-}
-
-// Auto-destroy after time
-public class LifetimeComponent : Component
-{
-    public float Lifetime { get; set; }
-    public bool AutoDestroy { get; set; } = true;
-    
-    protected internal override void OnUpdate(GameTime gameTime)
-    {
-        if (!IsEnabled) return;
+        // Access Transform shortcut
+        var transform = Transform; // Same as GetComponent<TransformComponent>()
         
-        Lifetime -= (float)gameTime.DeltaTime;
-        
-        if (Lifetime <= 0 && AutoDestroy)
-        {
-            Entity?.Destroy();
-        }
-    }
-}
-
-// Follow another entity
-public class FollowComponent : Component
-{
-    public Entity? Target { get; set; }
-    public float Speed { get; set; } = 5f;
-    public float MinDistance { get; set; } = 10f;
-    
-    protected internal override void OnUpdate(GameTime gameTime)
-    {
-        if (!IsEnabled || Target == null) return;
-        
-        var myTransform = Entity?.GetComponent<TransformComponent>();
-        var targetTransform = Target.GetComponent<TransformComponent>();
-        
-        if (myTransform == null || targetTransform == null) return;
-        
-        var direction = targetTransform.Position - myTransform.Position;
-        var distance = direction.Length();
-        
-        if (distance > MinDistance)
-        {
-            direction = Vector2.Normalize(direction);
-            myTransform.Position += direction * Speed * (float)gameTime.DeltaTime;
-        }
-    }
-}
-```
-
-**When to use:** For simple, self-contained behaviors that don't need optimization.
-
-### Controller Components
-
-**Purpose:** Handle input or AI for entities
-
-```csharp
-// Player input controller
-public class PlayerControllerComponent : Component
-{
-    public float MoveSpeed { get; set; } = 200f;
-    public InputMode InputMode { get; set; } = InputMode.Keyboard;
-    public int GamepadIndex { get; set; } = 0;
-    public bool NormalizeDiagonals { get; set; } = true;
-    
-    public Vector2 InputDirection { get; set; }
-    
-    // Logic is in PlayerControllerSystem for performance
-}
-
-// AI controller
-public class AIControllerComponent : Component
-{
-    public AIBehavior Behavior { get; set; }
-    public float MoveSpeed { get; set; } = 100f;
-    public string TargetTag { get; set; } = "Player";
-    public float DetectionRange { get; set; } = 300f;
-    public float StopDistance { get; set; } = 50f;
-    
-    // Logic is in AISystem for performance
-}
-
-public enum AIBehavior
-{
-    Idle,
-    Patrol,
-    Chase,
-    Flee,
-    Attack
-}
-```
-
-**When to use:** When you need systems to process many entities efficiently (pathfinding, AI, etc.).
-
-### Reference Components
-
-**Purpose:** Hold references to external objects or other entities
-
-```csharp
-// Camera follow
-public class CameraFollowComponent : Component
-{
-    public string CameraName { get; set; } = "main";
-    public float Smoothing { get; set; } = 5f;
-    public Vector2 Offset { get; set; }
-}
-
-// Collision detection
-public class ColliderComponent : Component
-{
-    public ICollider? Shape { get; set; }
-    public bool IsTrigger { get; set; }
-}
-
-// Audio source
-public class AudioSourceComponent : Component
-{
-    public ISoundEffect? SoundEffect { get; set; }
-    public IMusic? Music { get; set; }
-    public float Volume { get; set; } = 1.0f;
-    public int LoopCount { get; set; } = 0;
-    public bool PlayOnEnable { get; set; }
-    
-    public bool TriggerPlay { get; set; }
-    public bool TriggerStop { get; set; }
-    public bool IsPlaying { get; set; }
-}
-```
-
----
-
-## When to Use Components vs Systems
-
-### Use Component Logic When:
-
-- ✅ Behavior is simple and self-contained
-- ✅ Only a few entities have this component
-- ✅ Logic is unique to each entity (timers, follow targets)
-- ✅ You want quick prototyping without creating systems
-
-```csharp
-// Perfect for component logic
-public class RotateComponent : Component
-{
-    public float Speed { get; set; } = 1f;
-    
-    protected internal override void OnUpdate(GameTime gameTime)
-    {
-        var transform = Entity?.GetComponent<TransformComponent>();
         if (transform != null)
         {
-            transform.Rotation += Speed * (float)gameTime.DeltaTime;
+            Logger.LogInformation("Position: {Position}", transform.Position);
         }
     }
 }
-```
+~~~
 
-### Use Systems When:
-
-- ✅ Many entities (10+) need the same processing
-- ✅ Logic can be batched for performance
-- ✅ Complex queries across multiple entities
-- ✅ You need specific execution order
-
-```csharp
-// Better as a system for performance
-public class VelocitySystem : IUpdateSystem
-{
-    private readonly IEntityWorld _world;
-    public int UpdateOrder => 100;
-    
-    public void Update(GameTime gameTime)
-    {
-        var deltaTime = (float)gameTime.DeltaTime;
-        
-        // Process ALL entities with Transform + Velocity efficiently
-        var entities = _world.GetEntitiesWithComponents<TransformComponent, VelocityComponent>();
-        
-        foreach (var entity in entities)
-        {
-            var transform = entity.GetComponent<TransformComponent>()!;
-            var velocity = entity.GetComponent<VelocityComponent>()!;
-            
-            transform.Position += velocity.Velocity * deltaTime;
-        }
-    }
-}
-```
+**Use for:**
+- Complex hierarchies (tank + turret)
+- UI layouts (panel + buttons)
+- Character rigs
 
 ---
 
-## Design Patterns
+### Entity Properties
 
-### Composition Over Inheritance
-
-Combine components for flexible behavior:
-
-```csharp
-// Create a player
-var player = world.CreateEntity("Player");
-player.AddComponent<TransformComponent>();
-player.AddComponent<SpriteComponent>();
-player.AddComponent<PlayerControllerComponent>();
-player.AddComponent<HealthComponent>();
-
-// Create a flying enemy
-var flyingEnemy = world.CreateEntity("FlyingEnemy");
-flyingEnemy.AddComponent<TransformComponent>();
-flyingEnemy.AddComponent<SpriteComponent>();
-flyingEnemy.AddComponent<AIControllerComponent>();
-flyingEnemy.AddComponent<HealthComponent>();
-flyingEnemy.AddComponent<FlyingMovementComponent>();
-
-// Create a boss (reuse + extend)
-var boss = world.CreateEntity("Boss");
-boss.AddComponent<TransformComponent>();
-boss.AddComponent<SpriteComponent>();
-boss.AddComponent<AIControllerComponent>();
-boss.AddComponent<HealthComponent>();
-boss.AddComponent<FlyingMovementComponent>();
-boss.AddComponent<BossAbilitiesComponent>(); // Unique behavior
-```
-
-### Component Communication
-
-Components can interact with each other:
-
-```csharp
-public class DamageOnContactComponent : Component
+~~~csharp
+public class MyComponent : Component
 {
-    public float Damage { get; set; } = 10f;
-    public string TargetTag { get; set; } = "Player";
+    protected internal override void OnAdded()
+    {
+        // Access entity properties
+        Logger.LogInformation("Attached to entity: {Name}", EntityName);
+        
+        // Check entity tags
+        if (EntityTags.Contains("Enemy"))
+        {
+            Logger.LogInformation("This is an enemy!");
+        }
+        
+        // Check if attached
+        if (IsAttached)
+        {
+            Logger.LogInformation("Component is attached to an entity");
+        }
+        
+        // Get entity directly
+        if (Entity != null)
+        {
+            Logger.LogInformation("Entity ID: {Id}", Entity.Id);
+        }
+    }
+}
+~~~
+
+**Properties available:**
+- `Entity` - the entity this component is attached to
+- `IsAttached` - whether component is attached to an entity
+- `EntityName` - name of the entity
+- `EntityTags` - tags of the entity
+- `Transform` - shortcut for GetComponent<TransformComponent>()
+
+---
+
+## Component State Management
+
+### IsEnabled Flag
+
+~~~csharp
+public class MyComponent : Component
+{
+    public void Initialize()
+    {
+        // Component enabled by default
+        IsEnabled = true;
+        
+        // Disable temporarily
+        IsEnabled = false; // OnDisabled() called
+        
+        // Re-enable
+        IsEnabled = true; // OnEnabled() called
+    }
     
     protected internal override void OnUpdate(GameTime gameTime)
     {
+        // OnUpdate only called if IsEnabled = true
+        // But good practice to check anyway
         if (!IsEnabled) return;
         
-        var collider = Entity?.GetComponent<ColliderComponent>();
-        if (collider == null) return;
-        
-        // Check collision (simplified)
-        foreach (var other in GetNearbyEntities())
-        {
-            if (other.Tags.Contains(TargetTag))
-            {
-                var health = other.GetComponent<HealthComponent>();
-                if (health != null)
-                {
-                    health.Current -= Damage;
-                }
-            }
-        }
+        // Update logic
     }
 }
-```
 
-### Using Events
-
-Components can fire events:
-
-```csharp
-public class HealthComponent : Component
+// Usage
+var component = entity.GetComponent<MyComponent>();
+if (component != null)
 {
-    private float _current;
+    component.IsEnabled = false; // Pause component
     
-    public float Current
+    // Later...
+    component.IsEnabled = true; // Resume component
+}
+~~~
+
+**Pattern:** Use `IsEnabled` to pause/resume components without removing them.
+
+---
+
+### Removing Components
+
+~~~csharp
+public class MyComponent : Component
+{
+    public void CheckHealth()
     {
-        get => _current;
-        set
+        if (TryGetComponent<HealthComponent>(out var health))
         {
-            var oldValue = _current;
-            _current = value;
-            
-            if (_current <= 0 && oldValue > 0)
+            if (health.IsDead)
             {
-                OnDeath?.Invoke();
+                // Remove this component
+                Destroy(); // Calls Entity.RemoveComponent(this)
+                
+                // OnRemoved() will be called automatically
             }
         }
     }
-    
-    public float Max { get; set; }
-    
-    public event Action? OnDeath;
-    public event Action<float>? OnDamageTaken;
-    
-    public void TakeDamage(float amount)
-    {
-        Current -= amount;
-        OnDamageTaken?.Invoke(amount);
-    }
 }
 
-// Subscribe to events
-var health = entity.GetComponent<HealthComponent>();
-health.OnDeath += () => Logger.LogInformation("Entity died!");
-health.OnDamageTaken += (amount) => Logger.LogInformation($"Took {amount} damage!");
-```
+// Or remove from entity directly
+entity.RemoveComponent<MyComponent>();
+~~~
+
+**Pattern:** `Destroy()` removes the component and calls `OnRemoved()`.
 
 ---
 
 ## Built-in Components
 
-Brine2D provides several utility components:
-
 ### TransformComponent
 
-```csharp
+~~~csharp
+using Brine2D.ECS.Components;
+
+public class TransformComponent : Component
+{
+    // Local transform (relative to parent)
+    public Vector2 LocalPosition { get; set; }
+    public float LocalRotation { get; set; }
+    public Vector2 LocalScale { get; set; } = Vector2.One;
+    
+    // World transform (calculated from hierarchy)
+    public Vector2 WorldPosition { get; set; }
+    public float WorldRotation { get; set; }
+    public Vector2 WorldScale { get; set; } = Vector2.One;
+    
+    // Hierarchy
+    public TransformComponent? Parent { get; }
+    public IReadOnlyList<TransformComponent> Children { get; }
+    
+    // Helper properties
+    public Vector2 Right { get; }
+    public Vector2 Up { get; }
+    public Vector2 Forward { get; }
+}
+
+// Usage
 var transform = entity.AddComponent<TransformComponent>();
-transform.Position = new Vector2(100, 200);
-transform.Rotation = MathF.PI / 4; // 45 degrees
-transform.Scale = new Vector2(2, 2); // 2x scale
+transform.LocalPosition = new Vector2(100, 100);
+transform.LocalRotation = 45f;
+transform.LocalScale = new Vector2(2, 2);
+~~~
 
-// Parent-child hierarchy
-childEntity.SetParent(parentEntity);
-childEntity.SetParent(null); // Unparent
-```
-
-### TimerComponent
-
-```csharp
-var timer = entity.AddComponent<TimerComponent>();
-timer.Duration = 3f; // 3 seconds
-timer.OnComplete += () => Logger.LogInformation("Timer finished!");
-```
+---
 
 ### LifetimeComponent
 
-```csharp
+~~~csharp
+using Brine2D.ECS.Components;
+
+public class LifetimeComponent : Component
+{
+    public float Lifetime { get; set; } = 5f; // Seconds
+    public float TimeRemaining { get; set; }
+    public bool AutoDestroy { get; set; } = true;
+    
+    public event Action? OnLifetimeExpired;
+    
+    protected internal override void OnUpdate(GameTime gameTime)
+    {
+        TimeRemaining -= (float)gameTime.DeltaTime;
+        
+        if (TimeRemaining <= 0)
+        {
+            OnLifetimeExpired?.Invoke();
+            
+            if (AutoDestroy)
+            {
+                Entity?.Destroy();
+            }
+        }
+    }
+    
+    public void ResetLifetime() { }
+    public void ExtendLifetime(float time) { }
+}
+
+// Usage - entity auto-destroys after 5 seconds
 var lifetime = entity.AddComponent<LifetimeComponent>();
-lifetime.Lifetime = 5f; // Auto-destroy after 5 seconds
-lifetime.AutoDestroy = true;
-```
-
-### TweenComponent
-
-```csharp
-var tween = entity.AddComponent<TweenComponent>();
-tween.Type = TweenType.Position;
-tween.StartPosition = new Vector2(0, 0);
-tween.EndPosition = new Vector2(100, 100);
-tween.Duration = 1f;
-tween.Easing = EasingType.EaseInOutQuad;
-tween.Loop = false;
-tween.PingPong = false;
-```
-
-### VelocityComponent
-
-```csharp
-var velocity = entity.AddComponent<VelocityComponent>();
-velocity.MaxSpeed = 200f;
-velocity.Friction = 5f;
-velocity.SetDirection(Vector2.UnitX, 100f); // Move right at 100 pixels/sec
-```
+lifetime.Lifetime = 5f;
+lifetime.OnLifetimeExpired += () => Logger.LogInformation("Entity expired!");
+~~~
 
 ---
 
-## Performance Considerations
+## Complete Component Examples
 
-### Component Updates
+### Example 1: Auto-Rotate Component
 
-Components update in the order they were added. If you have many entities:
+~~~csharp
+using Brine2D.Core;
+using Brine2D.ECS;
+using Brine2D.ECS.Components;
 
-```csharp
-// ⚠️ Acceptable for <50 entities
-public class SimpleComponent : Component
+public class AutoRotateComponent : Component
 {
+    public float RotationSpeed { get; set; } = 90f; // Degrees per second
+    public bool Clockwise { get; set; } = true;
+    
     protected internal override void OnUpdate(GameTime gameTime)
     {
-        // Simple logic here
-    }
-}
-
-// ✅ Better for 50+ entities - use a system instead
-public class OptimizedComponent : Component
-{
-    // Just data, no OnUpdate
-    public float Value { get; set; }
-}
-
-public class OptimizedSystem : IUpdateSystem
-{
-    public int UpdateOrder => 100;
-    
-    public void Update(GameTime gameTime)
-    {
-        // Batch process all entities
-        var entities = _world.GetEntitiesWithComponent<OptimizedComponent>();
-        foreach (var entity in entities)
+        if (!IsEnabled) return;
+        
+        var transform = GetRequiredComponent<TransformComponent>();
+        
+        var deltaTime = (float)gameTime.DeltaTime;
+        var rotation = RotationSpeed * deltaTime;
+        
+        if (!Clockwise)
         {
-            // Process efficiently
+            rotation = -rotation;
+        }
+        
+        transform.LocalRotation += rotation;
+        
+        // Wrap angle to 0-360
+        if (transform.LocalRotation >= 360f)
+        {
+            transform.LocalRotation -= 360f;
+        }
+        else if (transform.LocalRotation < 0f)
+        {
+            transform.LocalRotation += 360f;
         }
     }
 }
-```
 
-### Enable/Disable Components
-
-Disable components to skip updates:
-
-```csharp
-// Temporarily disable without removing
-component.IsEnabled = false;
-
-// Re-enable later
-component.IsEnabled = true;
-```
+// Usage
+var autoRotate = entity.AddComponent<AutoRotateComponent>();
+autoRotate.RotationSpeed = 180f; // 180 degrees per second
+autoRotate.Clockwise = true;
+~~~
 
 ---
 
-## Testing Components
+### Example 2: Health Regeneration Component
 
-Components are easy to test:
+~~~csharp
+using Brine2D.Core;
+using Brine2D.ECS;
 
-```csharp
-[Test]
-public void Timer_CompletesAfterDuration()
+public class HealthRegenComponent : Component
 {
-    var entity = new Entity();
-    var timer = entity.AddComponent<TimerComponent>();
-    timer.Duration = 1f;
+    public int RegenPerSecond { get; set; } = 5;
+    public float RegenDelay { get; set; } = 2f; // Wait 2s after damage
+    public bool EnableRegen { get; set; } = true;
     
-    bool completed = false;
-    timer.OnComplete += () => completed = true;
+    private float _timeSinceLastDamage;
+    private int _lastHealth;
     
-    // Simulate 1 second of updates
-    for (int i = 0; i < 60; i++)
+    protected internal override void OnAdded()
     {
-        timer.OnUpdate(new GameTime(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1f/60f)));
+        base.OnAdded();
+        
+        var health = GetRequiredComponent<HealthComponent>();
+        _lastHealth = health.Current;
     }
     
-    Assert.IsTrue(completed);
+    protected internal override void OnUpdate(GameTime gameTime)
+    {
+        if (!IsEnabled || !EnableRegen) return;
+        
+        var health = GetComponent<HealthComponent>();
+        if (health == null || health.IsDead) return;
+        
+        var deltaTime = (float)gameTime.DeltaTime;
+        
+        // Check if damaged
+        if (health.Current < _lastHealth)
+        {
+            _timeSinceLastDamage = 0f;
+        }
+        _lastHealth = health.Current;
+        
+        // Update timer
+        _timeSinceLastDamage += deltaTime;
+        
+        // Regenerate if delay passed
+        if (_timeSinceLastDamage >= RegenDelay && health.Current < health.Max)
+        {
+            var regenAmount = (int)(RegenPerSecond * deltaTime);
+            health.Heal(regenAmount);
+        }
+    }
 }
 
-[Test]
-public void Lifetime_DestroysEntity()
-{
-    var world = new EntityWorld();
-    var entity = world.CreateEntity();
-    
-    var lifetime = entity.AddComponent<LifetimeComponent>();
-    lifetime.Lifetime = 0.5f;
-    lifetime.AutoDestroy = true;
-    
-    // Simulate time passing
-    lifetime.OnUpdate(new GameTime(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1)));
-    
-    Assert.IsFalse(world.Entities.Contains(entity));
-}
-```
+// Usage
+var healthRegen = entity.AddComponent<HealthRegenComponent>();
+healthRegen.RegenPerSecond = 10;
+healthRegen.RegenDelay = 3f; // Wait 3 seconds after damage
+~~~
 
 ---
 
-## Quick Reference
+### Example 3: Follow Component
 
-### Component Checklist
+~~~csharp
+using Brine2D.Core;
+using Brine2D.ECS;
+using Brine2D.ECS.Components;
+using System.Numerics;
 
-When designing a component, ask:
+public class FollowComponent : Component
+{
+    public Guid TargetId { get; set; }
+    public float FollowSpeed { get; set; } = 100f;
+    public float MinDistance { get; set; } = 10f;
+    public bool RotateToTarget { get; set; } = true;
+    
+    protected internal override void OnUpdate(GameTime gameTime)
+    {
+        if (!IsEnabled) return;
+        if (TargetId == Guid.Empty) return;
+        
+        // Get target from World
+        var target = Entity?.World?.GetEntityById(TargetId);
+        if (target == null) return;
+        
+        var transform = GetRequiredComponent<TransformComponent>();
+        var targetTransform = target.GetComponent<TransformComponent>();
+        if (targetTransform == null) return;
+        
+        var deltaTime = (float)gameTime.DeltaTime;
+        
+        // Calculate direction
+        var direction = targetTransform.WorldPosition - transform.WorldPosition;
+        var distance = direction.Length();
+        
+        // Move if far enough
+        if (distance > MinDistance)
+        {
+            direction = Vector2.Normalize(direction);
+            transform.WorldPosition += direction * FollowSpeed * deltaTime;
+            
+            // Rotate to face target
+            if (RotateToTarget)
+            {
+                var angle = MathF.Atan2(direction.Y, direction.X);
+                transform.LocalRotation = angle * (180f / MathF.PI);
+            }
+        }
+    }
+    
+    public void SetTarget(Entity target)
+    {
+        TargetId = target.Id;
+    }
+}
 
-- ✅ Is it a class inheriting from `Component`?
-- ✅ Does it represent one concept? (single responsibility)
-- ✅ Is the logic simple enough for `OnUpdate()`? (or should it be a system?)
-- ✅ Does it use lifecycle hooks appropriately?
-- ✅ Can it be tested easily?
+// Usage
+var follow = entity.AddComponent<FollowComponent>();
+follow.SetTarget(player);
+follow.FollowSpeed = 150f;
+follow.MinDistance = 20f;
+~~~
 
-### Common Component Types
+---
 
-| Type | Example | Use Case |
-|------|---------|----------|
-| **Data-Only** | `TransformComponent` | Processed by systems |
-| **Behavior** | `LifetimeComponent` | Self-contained logic |
-| **Controller** | `PlayerControllerComponent` | Input/AI (used by systems) |
-| **Reference** | `AudioSourceComponent` | External objects |
-| **Utility** | `TimerComponent` | Reusable helpers |
+## Best Practices
+
+### ✅ DO
+
+**1. Use methods in components (beginner-friendly)**
+
+~~~csharp
+// ✅ Good - intuitive methods
+public class HealthComponent : Component
+{
+    public int Current { get; set; }
+    public int Max { get; set; }
+    
+    public void TakeDamage(int amount)
+    {
+        Current = Math.Max(0, Current - amount);
+    }
+}
+
+// Usage is clear
+health.TakeDamage(25);
+~~~
+
+**2. Use lifecycle methods for automatic behavior**
+
+~~~csharp
+// ✅ Good - component updates itself
+public class VelocityComponent : Component
+{
+    public Vector2 Value { get; set; }
+    
+    protected internal override void OnUpdate(GameTime gameTime)
+    {
+        var transform = GetRequiredComponent<TransformComponent>();
+        transform.Position += Value * (float)gameTime.DeltaTime;
+    }
+}
+~~~
+
+**3. Use GetRequiredComponent for essential dependencies**
+
+~~~csharp
+// ✅ Good - fail fast if missing
+protected internal override void OnUpdate(GameTime gameTime)
+{
+    var transform = GetRequiredComponent<TransformComponent>();
+    transform.Position += Vector2.One; // Safe
+}
+~~~
+
+**4. Clean up in OnRemoved**
+
+~~~csharp
+// ✅ Good - proper cleanup
+protected internal override void OnRemoved()
+{
+    _texture?.Dispose();
+    UnsubscribeEvents();
+    base.OnRemoved();
+}
+~~~
+
+---
+
+### ❌ DON'T
+
+**1. Don't avoid methods for no reason**
+
+~~~csharp
+// ❌ Bad - missing methods makes code verbose
+public class HealthComponent : Component
+{
+    public int Current { get; set; }
+}
+
+// Usage is tedious
+health.Current = Math.Max(0, health.Current - 25);
+
+// ✅ Good - add methods
+public void TakeDamage(int amount)
+{
+    Current = Math.Max(0, Current - amount);
+}
+~~~
+
+**2. Don't store entity references**
+
+~~~csharp
+// ❌ Bad - entity reference can become invalid
+public class FollowComponent : Component
+{
+    public Entity? Target { get; set; } // Can be destroyed!
+}
+
+// ✅ Good - store entity ID
+public class FollowComponent : Component
+{
+    public Guid TargetId { get; set; }
+    
+    protected internal override void OnUpdate(GameTime gameTime)
+    {
+        var target = Entity?.World?.GetEntityById(TargetId);
+        // ...
+    }
+}
+~~~
+
+**3. Don't forget to check IsEnabled**
+
+~~~csharp
+// ❌ Bad - doesn't respect IsEnabled
+protected internal override void OnUpdate(GameTime gameTime)
+{
+    // Always runs even if disabled!
+}
+
+// ✅ Good - check IsEnabled
+protected internal override void OnUpdate(GameTime gameTime)
+{
+    if (!IsEnabled) return;
+    // Update logic
+}
+~~~
+
+**4. Don't put unrelated logic in one component**
+
+~~~csharp
+// ❌ Bad - doing too much
+public class PlayerComponent : Component
+{
+    // Movement
+    public Vector2 Velocity { get; set; }
+    
+    // Health
+    public int Health { get; set; }
+    
+    // Inventory
+    public List<Item> Items { get; set; }
+    
+    // Too much responsibility!
+}
+
+// ✅ Good - separate concerns
+public class VelocityComponent : Component { }
+public class HealthComponent : Component { }
+public class InventoryComponent : Component { }
+~~~
+
+---
+
+## Summary
+
+**Component features:**
+
+| Feature | Usage |
+|---------|-------|
+| **Methods** | Logic in components (recommended) |
+| **Lifecycle** | OnAdded, OnUpdate, OnEnabled, OnDisabled, OnRemoved |
+| **Helpers** | GetComponent, GetRequiredComponent, TryGetComponent |
+| **Entity access** | Entity, EntityName, EntityTags, Transform |
+| **State** | IsEnabled, IsAttached |
+| **Remove** | Destroy() or entity.RemoveComponent<T>() |
+
+**Lifecycle methods:**
+
+| Method | When Called | Use For |
+|--------|-------------|---------|
+| **OnAdded()** | Once (when added) | Setup, initialization |
+| **OnRemoved()** | Once (when removed) | Cleanup, disposal |
+| **OnEnabled()** | IsEnabled true → false | Resume logic |
+| **OnDisabled()** | IsEnabled false → true | Pause logic |
+| **OnUpdate(gameTime)** | Every frame (if enabled) | Game logic, animation |
+
+**Helper methods:**
+
+| Method | Returns | Throws |
+|--------|---------|--------|
+| **GetComponent<T>()** | T? (null if missing) | No |
+| **GetRequiredComponent<T>()** | T (guaranteed) | Yes (if missing) |
+| **TryGetComponent<T>(out T?)** | bool | No |
+| **GetComponentInChildren<T>()** | T? (recursive) | No |
+| **GetComponentInParent<T>()** | T? (upward search) | No |
 
 ---
 
 ## Next Steps
 
-Now that you understand components, learn how to process them efficiently:
-
-<div class="grid cards" markdown>
-
--   **Systems Guide**
-
-    ---
-
-    Learn to create systems for performance-critical logic
-
-    [:octicons-arrow-right-24: Systems Guide](systems.md)
-
--   **Entities Guide**
-
-    ---
-
-    Master entity creation and management
-
-    [:octicons-arrow-right-24: Entities Guide](entities.md)
-
--   **ECS Concepts**
-
-    ---
-
-    Deeper dive into ECS architecture
-
-    [:octicons-arrow-right-24: ECS Concepts](../../concepts/entity-component-system.md)
-
-</div>
+- **[Entities Guide](entities.md)** - Entity management and patterns
+- **[Systems Guide](systems.md)** - Optional systems for performance
+- **[Queries Guide](queries.md)** - Find entities with components
+- **[ECS Getting Started](getting-started.md)** - Complete ECS tutorial
+- **[ECS Concepts](../../concepts/entity-component-system.md)** - Understanding hybrid ECS
 
 ---
 
-**Remember:** Brine2D's hybrid ECS gives you flexibility - use component logic for simplicity, systems for performance. Choose what fits your needs!
+**Remember:** Brine2D components can have methods and lifecycle hooks - this makes them beginner-friendly while still allowing optional system-based optimization for performance! 🎮

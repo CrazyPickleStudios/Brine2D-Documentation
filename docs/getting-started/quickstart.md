@@ -25,10 +25,10 @@ Before starting:
 
 Open your terminal and create a new console application:
 
-```sh
+~~~sh
 dotnet new console -n MyFirstGame
 cd MyFirstGame
-```
+~~~
 
 **What this does:**
 - Creates a new .NET 10 console application
@@ -41,10 +41,10 @@ cd MyFirstGame
 
 Add the Brine2D packages:
 
-```sh
+~~~sh
 dotnet add package Brine2D --version 0.9.0-beta
 dotnet add package Brine2D.SDL --version 0.9.0-beta
-```
+~~~
 
 **What this does:**
 - Installs **Brine2D** (core engine)
@@ -52,17 +52,17 @@ dotnet add package Brine2D.SDL --version 0.9.0-beta
 
 **Verify installation:**
 
-```sh
+~~~sh
 dotnet list package
-```
+~~~
 
 You should see:
 
-```
+~~~
 Top-level Package                Requested  Resolved
 > Brine2D                        0.9.0-beta 0.9.0-beta
 > Brine2D.SDL                    0.9.0-beta 0.9.0-beta
-```
+~~~
 
 ---
 
@@ -70,21 +70,18 @@ Top-level Package                Requested  Resolved
 
 Replace the contents of `Program.cs` with:
 
-```csharp
+~~~csharp
 using Brine2D.Core;
 using Brine2D.Engine;
 using Brine2D.Hosting;
 using Brine2D.Input;
-using Brine2D.Rendering;
 using Brine2D.SDL;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using System.Numerics;
 
 // Create application
 var builder = GameApplication.CreateBuilder(args);
 
-// Add Brine2D with sensible defaults (SDL3 backend, GPU rendering, input)
+// Add Brine2D with sensible defaults
 builder.Services.AddBrine2D(options =>
 {
     options.WindowTitle = "My First Game";
@@ -102,59 +99,57 @@ await game.RunAsync<GameScene>();
 // Game scene
 public class GameScene : Scene
 {
-    private readonly IRenderer _renderer;
-    private readonly IInputService _input;
-    private readonly IGameContext _gameContext;
+    private readonly IInputContext _input;
     
     private Vector2 _playerPosition = new(400, 300);
     private readonly float _speed = 200f;
 
-    public GameScene(
-        IRenderer renderer,
-        IInputService input,
-        IGameContext gameContext,
-        ILogger<GameScene> logger) : base(logger)
+    // ✅ Clean! Only inject YOUR dependencies
+    public GameScene(IInputContext input)
     {
-        _renderer = renderer;
         _input = input;
-        _gameContext = gameContext;
     }
 
     protected override void OnUpdate(GameTime gameTime)
     {
         // Exit on Escape
-        if (_input.IsKeyPressed(Keys.Escape))
+        if (_input.IsKeyPressed(Key.Escape))
         {
-            _gameContext.RequestExit();
+            // Request exit
             return;
         }
 
         // Move with WASD
         var deltaTime = (float)gameTime.DeltaTime;
         
-        if (_input.IsKeyDown(Keys.W)) _playerPosition.Y -= _speed * deltaTime;
-        if (_input.IsKeyDown(Keys.S)) _playerPosition.Y += _speed * deltaTime;
-        if (_input.IsKeyDown(Keys.A)) _playerPosition.X -= _speed * deltaTime;
-        if (_input.IsKeyDown(Keys.D)) _playerPosition.X += _speed * deltaTime;
+        if (_input.IsKeyDown(Key.W)) _playerPosition.Y -= _speed * deltaTime;
+        if (_input.IsKeyDown(Key.S)) _playerPosition.Y += _speed * deltaTime;
+        if (_input.IsKeyDown(Key.A)) _playerPosition.X -= _speed * deltaTime;
+        if (_input.IsKeyDown(Key.D)) _playerPosition.X += _speed * deltaTime;
     }
 
     protected override void OnRender(GameTime gameTime)
     {
-        // Clear screen
-        _renderer.Clear(new Color(20, 20, 30));
+        // Renderer available from base class!
+        Renderer.ClearColor = Color.FromArgb(20, 20, 30);
         
         // Draw player (simple rectangle)
-        _renderer.DrawRectangleFilled(
+        Renderer.DrawRectangleFilled(
             _playerPosition.X - 25,
             _playerPosition.Y - 25,
             50, 50,
             Color.Blue);
         
         // Draw instructions
-        _renderer.DrawText("WASD: Move | ESC: Quit", 10, 10, Color.White);
+        Renderer.DrawText("WASD: Move | ESC: Quit", 10, 10, Color.White);
     }
 }
-```
+~~~
+
+**✨ Notice the new pattern:**
+- Constructor only has **YOUR dependencies** (`IInputContext`)
+- `Logger`, `World`, `Renderer` available automatically in lifecycle methods
+- No more passing framework services through constructor!
 
 ---
 
@@ -162,9 +157,9 @@ public class GameScene : Scene
 
 Start your game:
 
-```sh
+~~~sh
 dotnet run
-```
+~~~
 
 **You should see:**
 - A window titled "My First Game"
@@ -183,84 +178,97 @@ Let's break down what each part does:
 
 ### Application Setup
 
-```csharp
+~~~csharp
 var builder = GameApplication.CreateBuilder(args);
 
-builder.Services.AddSDL3Rendering(options =>
+builder.Services.AddBrine2D(options =>
 {
     options.WindowTitle = "My First Game";
     options.WindowWidth = 800;
     options.WindowHeight = 600;
 });
 
-builder.Services.AddSDL3Input();
 builder.Services.AddScene<GameScene>();
 
 var game = builder.Build();
 await game.RunAsync<GameScene>();
-```
+~~~
 
 **What this does:**
 1. Creates a game application builder (like ASP.NET Core)
-2. Configures rendering (window settings)
-3. Adds input handling (keyboard, mouse, gamepad)
-4. Registers your game scene
-5. Builds and runs the game
+2. Configures Brine2D with sensible defaults (rendering, input, audio, ECS)
+3. Registers your game scene
+4. Builds and runs the game
 
 **Pattern:** This is dependency injection - Brine2D uses ASP.NET Core patterns.
 
 ---
 
-### Scene Class
+### Scene Class (NEW Pattern!)
 
-```csharp
+~~~csharp
 public class GameScene : Scene
 {
-    private readonly IRenderer _renderer;
-    private readonly IInputService _input;
-    private readonly IGameContext _gameContext;
+    private readonly IInputContext _input;
     
-    public GameScene(
-        IRenderer renderer,
-        IInputService input,
-        IGameContext gameContext,
-        ILogger<GameScene> logger) : base(logger)
+    // ✅ Only inject YOUR dependencies!
+    public GameScene(IInputContext input)
     {
-        _renderer = renderer;
         _input = input;
-        _gameContext = gameContext;
+    }
+    
+    protected override void OnRender(GameTime gameTime)
+    {
+        // ✅ Framework properties available automatically!
+        Logger.LogDebug("Rendering frame");
+        var player = World.CreateEntity("Player");
+        Renderer.DrawText("Hello", 10, 10, Color.White);
     }
 }
-```
+~~~
 
-**What this does:**
-- Inherits from `Scene` (base class for game scenes)
-- Injects dependencies via constructor (renderer, input, context)
-- Stores services for use in update/render
+**What's different:**
+- ✅ **Constructor**: Only YOUR services (`IInputContext`, `IAudioService`, etc.)
+- ✅ **Framework properties**: `Logger`, `World`, `Renderer` set automatically by framework
+- ✅ **Clean**: No more `ILogger<T>`, `IEntityWorld`, `IRenderer` in constructor
 
-**Pattern:** Constructor injection - services are automatically provided.
+**Pattern:** ASP.NET-style property injection for framework concerns.
+
+---
+
+### Framework Properties
+
+These are **available in all lifecycle methods** (after constructor):
+
+| Property | Type | Purpose |
+|----------|------|---------|
+| `Logger` | `ILogger` | Logging for this scene (typed automatically) |
+| `World` | `IEntityWorld` | Entity world (scoped per scene, auto-cleanup!) |
+| `Renderer` | `IRenderer` | Drawing + render state (clear color, camera, etc.) |
+
+**You never inject these** - they're set by SceneManager before any lifecycle methods run.
 
 ---
 
 ### Update Loop
 
-```csharp
+~~~csharp
 protected override void OnUpdate(GameTime gameTime)
 {
-    if (_input.IsKeyPressed(Keys.Escape))
+    if (_input.IsKeyPressed(Key.Escape))
     {
-        _gameContext.RequestExit();
+        // Exit game
         return;
     }
 
     var deltaTime = (float)gameTime.DeltaTime;
     
-    if (_input.IsKeyDown(Keys.W)) _playerPosition.Y -= _speed * deltaTime;
-    if (_input.IsKeyDown(Keys.S)) _playerPosition.Y += _speed * deltaTime;
-    if (_input.IsKeyDown(Keys.A)) _playerPosition.X -= _speed * deltaTime;
-    if (_input.IsKeyDown(Keys.D)) _playerPosition.X += _speed * deltaTime;
+    if (_input.IsKeyDown(Key.W)) _playerPosition.Y -= _speed * deltaTime;
+    if (_input.IsKeyDown(Key.S)) _playerPosition.Y += _speed * deltaTime;
+    if (_input.IsKeyDown(Key.A)) _playerPosition.X -= _speed * deltaTime;
+    if (_input.IsKeyDown(Key.D)) _playerPosition.X += _speed * deltaTime;
 }
-```
+~~~
 
 **What this does:**
 - Called every frame (~60 times per second)
@@ -274,24 +282,25 @@ protected override void OnUpdate(GameTime gameTime)
 
 ### Render Loop
 
-```csharp
+~~~csharp
 protected override void OnRender(GameTime gameTime)
 {
-    _renderer.Clear(new Color(20, 20, 30));
+    // Use Renderer property (set by framework)
+    Renderer.ClearColor = Color.FromArgb(20, 20, 30);
     
-    _renderer.DrawRectangleFilled(
+    Renderer.DrawRectangleFilled(
         _playerPosition.X - 25,
         _playerPosition.Y - 25,
         50, 50,
         Color.Blue);
     
-    _renderer.DrawText("WASD: Move | ESC: Quit", 10, 10, Color.White);
+    Renderer.DrawText("WASD: Move | ESC: Quit", 10, 10, Color.White);
 }
-```
+~~~
 
 **What this does:**
 - Called every frame after update
-- Clears the screen
+- Clears the screen (via `ClearColor`)
 - Draws game objects (sprites, shapes, text)
 - Presents the frame to the screen
 
@@ -301,27 +310,27 @@ protected override void OnRender(GameTime gameTime)
 
 ## Game Loop Diagram
 
-```mermaid
+~~~mermaid
 sequenceDiagram
     participant Game as Game Loop
     participant Scene as GameScene
-    participant Input as IInputService
+    participant Input as IInputContext
     participant Renderer as IRenderer
     
     loop Every Frame (~60 FPS)
         Game->>Input: Poll input events
         Game->>Scene: OnUpdate(gameTime)
-        Scene->>Input: IsKeyDown(Keys.W)?
+        Scene->>Input: IsKeyDown(Key.W)?
         Input-->>Scene: true/false
         Scene->>Scene: Update position
         
         Game->>Scene: OnRender(gameTime)
-        Scene->>Renderer: Clear(color)
-        Scene->>Renderer: DrawRectangle(...)
+        Scene->>Renderer: Set ClearColor
+        Scene->>Renderer: DrawRectangleFilled(...)
         Scene->>Renderer: DrawText(...)
         Renderer->>Renderer: Present frame
     end
-```
+~~~
 
 **Key concepts:**
 - **Update** runs first (game logic)
@@ -331,32 +340,63 @@ sequenceDiagram
 
 ---
 
+## Scoped EntityWorld (NEW!)
+
+**Each scene gets its own isolated `EntityWorld`** - this is huge!
+
+~~~csharp
+protected override Task OnLoadAsync(CancellationToken ct)
+{
+    // World is already available (scoped per scene!)
+    var player = World.CreateEntity("Player");
+    player.AddComponent<TransformComponent>();
+    
+    Logger.LogInformation("Created {Count} entities", World.Entities.Count);
+    
+    return Task.CompletedTask;
+}
+
+protected override Task OnUnloadAsync(CancellationToken ct)
+{
+    // ✅ No cleanup needed - World disposed automatically!
+    // All entities destroyed when scene ends
+    
+    return Task.CompletedTask;
+}
+~~~
+
+**Benefits:**
+- ✅ **Automatic cleanup** - entities destroyed when scene unloads
+- ✅ **No leaks** - impossible to forget cleanup
+- ✅ **Isolation** - scenes can't interfere with each other
+- ✅ **Fresh slate** - each scene starts with empty world
+
+**This matches ASP.NET's request scope pattern!**
+
+---
+
 ## Next Steps
 
 ### Add a Sprite
 
 Replace the rectangle with a texture:
 
-```csharp
+~~~csharp
 public class GameScene : Scene
 {
-    private readonly IRenderer _renderer;
     private ITexture? _playerTexture;
 
-    protected override async Task OnLoadAsync(CancellationToken cancellationToken)
+    protected override async Task OnLoadAsync(CancellationToken ct)
     {
-        _playerTexture = await _renderer.LoadTextureAsync(
-            "assets/player.png", 
-            cancellationToken);
+        // Renderer available here!
+        _playerTexture = await LoadTextureAsync("assets/player.png", ct);
     }
 
     protected override void OnRender(GameTime gameTime)
     {
-        _renderer.Clear(new Color(20, 20, 30));
-        
         if (_playerTexture != null)
         {
-            _renderer.DrawTexture(
+            Renderer.DrawTexture(
                 _playerTexture,
                 _playerPosition.X - 25,
                 _playerPosition.Y - 25,
@@ -364,7 +404,7 @@ public class GameScene : Scene
         }
     }
 }
-```
+~~~
 
 **Don't forget:** Create `assets/` folder and add `player.png`.
 
@@ -372,43 +412,36 @@ public class GameScene : Scene
 
 ### Add Sound Effects
 
-```csharp
+~~~csharp
 using Brine2D.Audio;
 
 public class GameScene : Scene
 {
+    private readonly IInputContext _input;
     private readonly IAudioService _audio;
     private ISoundEffect? _jumpSound;
 
-    public GameScene(
-        IAudioService audio,
-        ...) : base(...)
+    // ✅ Inject YOUR services
+    public GameScene(IInputContext input, IAudioService audio)
     {
+        _input = input;
         _audio = audio;
     }
 
-    protected override async Task OnLoadAsync(CancellationToken cancellationToken)
+    protected override async Task OnLoadAsync(CancellationToken ct)
     {
-        _jumpSound = await _audio.LoadSoundAsync(
-            "assets/jump.wav", 
-            cancellationToken);
+        _jumpSound = await _audio.LoadSoundAsync("assets/jump.wav", ct);
     }
 
     protected override void OnUpdate(GameTime gameTime)
     {
-        if (_input.IsKeyPressed(Keys.Space))
+        if (_input.IsKeyPressed(Key.Space))
         {
             _audio.PlaySound(_jumpSound);
         }
     }
 }
-```
-
-**Don't forget:** Add audio registration in `Program.cs`:
-
-```csharp
-builder.Services.AddSDL3Audio();
-```
+~~~
 
 ---
 
@@ -416,49 +449,45 @@ builder.Services.AddSDL3Audio();
 
 Create a menu scene:
 
-```csharp
+~~~csharp
 public class MenuScene : Scene
 {
-    private readonly IRenderer _renderer;
-    private readonly IInputService _input;
+    private readonly IInputContext _input;
     private readonly ISceneManager _sceneManager;
 
-    public MenuScene(
-        IRenderer renderer,
-        IInputService input,
-        ISceneManager sceneManager,
-        ILogger<MenuScene> logger) : base(logger)
+    // ✅ Only YOUR dependencies
+    public MenuScene(IInputContext input, ISceneManager sceneManager)
     {
-        _renderer = renderer;
         _input = input;
         _sceneManager = sceneManager;
     }
 
     protected override void OnUpdate(GameTime gameTime)
     {
-        if (_input.IsKeyPressed(Keys.Enter))
+        if (_input.IsKeyPressed(Key.Enter))
         {
-            _sceneManager.LoadScene<GameScene>();
+            await _sceneManager.LoadSceneAsync<GameScene>();
         }
     }
 
     protected override void OnRender(GameTime gameTime)
     {
-        _renderer.Clear(Color.Black);
-        _renderer.DrawText("Press ENTER to Start", 300, 280, Color.White);
+        // Renderer available!
+        Renderer.ClearColor = Color.Black;
+        Renderer.DrawText("Press ENTER to Start", 300, 280, Color.White);
     }
 }
-```
+~~~
 
 Register both scenes:
 
-```csharp
+~~~csharp
 builder.Services.AddScene<MenuScene>();
 builder.Services.AddScene<GameScene>();
 
 var game = builder.Build();
 await game.RunAsync<MenuScene>(); // Start with menu
-```
+~~~
 
 ---
 
@@ -466,36 +495,34 @@ await game.RunAsync<MenuScene>(); // Start with menu
 
 Already have a .NET 10 project? Add Brine2D to it:
 
-```sh
+~~~sh
 cd YourExistingProject
 
 # Add packages
 dotnet add package Brine2D --version 0.9.0-beta
 dotnet add package Brine2D.SDL --version 0.9.0-beta
-```
+~~~
 
 **Update your `Program.cs`:**
 
-```csharp
+~~~csharp
 using Brine2D.Hosting;
 using Brine2D.SDL;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = GameApplication.CreateBuilder(args);
 
-builder.Services.AddSDL3Rendering(options =>
+builder.Services.AddBrine2D(options =>
 {
     options.WindowTitle = "My Game";
     options.WindowWidth = 800;
     options.WindowHeight = 600;
 });
 
-builder.Services.AddSDL3Input();
 builder.Services.AddScene<GameScene>();
 
 var game = builder.Build();
 await game.RunAsync<GameScene>();
-```
+~~~
 
 **Create your scene** in a separate file (`GameScene.cs`).
 
@@ -503,37 +530,64 @@ await game.RunAsync<GameScene>();
 
 ## Troubleshooting
 
+### Problem: NullReferenceException on Renderer/Logger/World
+
+**Symptom:**
+
+~~~
+NullReferenceException: Object reference not set to an instance of an object
+at GameScene..ctor()
+~~~
+
+**Cause:** Trying to use framework properties in constructor.
+
+**Solution:**
+
+~~~csharp
+// ❌ Wrong - framework properties not set yet!
+public GameScene()
+{
+    Logger.LogInfo("Created"); // NullReferenceException!
+    var player = World.CreateEntity("Player"); // NullReferenceException!
+}
+
+// ✅ Correct - use in lifecycle methods
+protected override Task OnInitializeAsync(CancellationToken ct)
+{
+    Logger.LogInfo("Initializing"); // Works!
+    var player = World.CreateEntity("Player"); // Works!
+    return Task.CompletedTask;
+}
+~~~
+
+---
+
 ### Problem: Window doesn't appear
 
 **Symptom:** Console shows but no window opens.
 
 **Solutions:**
 
-1. **Check rendering registration:**
-   ```csharp
-   // Typical approach - AddBrine2D includes rendering
+1. **Check Brine2D registration:**
+   ~~~csharp
+   // ✅ Correct - includes everything
    builder.Services.AddBrine2D(options => 
    {
        options.WindowTitle = "My Game";
        options.WindowWidth = 800;
        options.WindowHeight = 600;
    });
-   
-   // Or power user approach - manual rendering setup
-   builder.Services.AddSDL3Rendering(options => { ... });
-   ```
+   ~~~
 
 2. **Verify scene is registered:**
-   ```csharp
-   // Must register scene
+   ~~~csharp
    builder.Services.AddScene<GameScene>();
-   ```
+   ~~~
 
 3. **Check scene is loaded:**
-   ```csharp
-   // Must specify starting scene
+   ~~~csharp
    await game.RunAsync<GameScene>();
-   ```
+   ~~~
 
 ---
 
@@ -544,27 +598,19 @@ await game.RunAsync<GameScene>();
 **Solutions:**
 
 1. **Check OnRender is called:**
-   ```csharp
+   ~~~csharp
    protected override void OnRender(GameTime gameTime)
    {
        Logger.LogInformation("Rendering!"); // Add debug log
-       _renderer.Clear(Color.Red); // Should show red
+       Renderer.ClearColor = Color.Red; // Should show red
    }
-   ```
+   ~~~
 
-2. **Verify renderer is injected:**
-   ```csharp
-   public GameScene(IRenderer renderer, ...) : base(...)
-   {
-       _renderer = renderer; // Don't forget to store it!
-   }
-   ```
-
-3. **Check coordinates are visible:**
-   ```csharp
+2. **Check coordinates are visible:**
+   ~~~csharp
    // Draw at 0,0 to test
-   _renderer.DrawRectangleFilled(0, 0, 100, 100, Color.Red);
-   ```
+   Renderer.DrawRectangleFilled(0, 0, 100, 100, Color.Red);
+   ~~~
 
 ---
 
@@ -574,34 +620,28 @@ await game.RunAsync<GameScene>();
 
 **Solutions:**
 
-1. **Check input registration:**
-   ```csharp
-   // Must have this!
-   builder.Services.AddSDL3Input();
-   ```
-
-2. **Verify input is injected:**
-   ```csharp
-   public GameScene(IInputService input, ...) : base(...)
+1. **Verify input is injected:**
+   ~~~csharp
+   public GameScene(IInputContext input)
    {
        _input = input; // Don't forget to store it!
    }
-   ```
+   ~~~
 
-3. **Test in OnUpdate, not OnRender:**
-   ```csharp
+2. **Test in OnUpdate, not OnRender:**
+   ~~~csharp
    // ✅ Correct
    protected override void OnUpdate(GameTime gameTime)
    {
-       if (_input.IsKeyDown(Keys.W)) { ... }
+       if (_input.IsKeyDown(Key.W)) { ... }
    }
    
    // ❌ Wrong
    protected override void OnRender(GameTime gameTime)
    {
-       if (_input.IsKeyDown(Keys.W)) { ... } // Won't work!
+       if (_input.IsKeyDown(Key.W)) { ... } // Won't work!
    }
-   ```
+   ~~~
 
 ---
 
@@ -611,19 +651,19 @@ await game.RunAsync<GameScene>();
 
 **Solution:** Always use `deltaTime`:
 
-```csharp
+~~~csharp
 // ❌ Wrong - speed depends on FPS
-if (_input.IsKeyDown(Keys.W))
+if (_input.IsKeyDown(Key.W))
 {
     _playerPosition.Y -= _speed; // Too fast at 60 FPS!
 }
 
 // ✅ Correct - consistent speed
-if (_input.IsKeyDown(Keys.W))
+if (_input.IsKeyDown(Key.W))
 {
     _playerPosition.Y -= _speed * deltaTime; // Frame-rate independent
 }
-```
+~~~
 
 **Why?**
 - Update runs ~60 times per second
@@ -636,117 +676,134 @@ if (_input.IsKeyDown(Keys.W))
 
 **Symptom:**
 
-```
+~~~
 error NU1101: Unable to find package Brine2D
-```
+~~~
 
 **Solutions:**
 
 1. **Check NuGet source:**
-   ```sh
+   ~~~sh
    dotnet nuget list source
-   ```
+   ~~~
    
    Should include `nuget.org`:
-   ```
+   ~~~
    https://api.nuget.org/v3/index.json
-   ```
+   ~~~
 
 2. **Clear cache and restore:**
-   ```sh
+   ~~~sh
    dotnet nuget locals all --clear
    dotnet restore
-   ```
+   ~~~
 
 3. **Verify package name (no typos):**
-   ```sh
+   ~~~sh
    # ❌ Wrong
    dotnet add package Brine2D-Engine
    
    # ✅ Correct
    dotnet add package Brine2D
-   ```
+   ~~~
 
 ---
 
 ## Best Practices
 
-### DO
+### ✅ DO
 
-1. **Always use deltaTime for movement**
-   ```csharp
+1. **Only inject YOUR dependencies in constructor**
+   ~~~csharp
+   public GameScene(IInputContext input, IAudioService audio) { }
+   ~~~
+
+2. **Use framework properties in lifecycle methods**
+   ~~~csharp
+   protected override Task OnInitializeAsync(CancellationToken ct)
+   {
+       Logger.LogInfo("Scene starting");
+       var player = World.CreateEntity("Player");
+       Renderer.ClearColor = Color.Navy;
+   }
+   ~~~
+
+3. **Always use deltaTime for movement**
+   ~~~csharp
    _position += _velocity * (float)gameTime.DeltaTime;
-   ```
-
-2. **Store injected services**
-   ```csharp
-   public GameScene(IRenderer renderer, ...) : base(...)
-   {
-       _renderer = renderer; // Store it!
-   }
-   ```
-
-3. **Check for null when using optional resources**
-   ```csharp
-   if (_playerTexture != null)
-   {
-       _renderer.DrawTexture(_playerTexture, x, y);
-   }
-   ```
+   ~~~
 
 4. **Use OnLoadAsync for loading assets**
-   ```csharp
+   ~~~csharp
    protected override async Task OnLoadAsync(CancellationToken ct)
    {
-       _texture = await _renderer.LoadTextureAsync("player.png", ct);
+       _texture = await LoadTextureAsync("player.png", ct);
    }
-   ```
+   ~~~
 
-5. **Handle exit gracefully**
-   ```csharp
-   if (_input.IsKeyPressed(Keys.Escape))
+5. **Let World cleanup happen automatically**
+   ~~~csharp
+   protected override Task OnUnloadAsync(CancellationToken ct)
    {
-       _gameContext.RequestExit();
+       // ✅ No cleanup needed - automatic!
+       return Task.CompletedTask;
    }
-   ```
+   ~~~
 
-### DON'T
+---
 
-1. **Don't poll input in OnRender**
-   ```csharp
+### ❌ DON'T
+
+1. **Don't access framework properties in constructor**
+   ~~~csharp
+   // ❌ Wrong - Logger/World/Renderer are null!
+   public GameScene()
+   {
+       Logger.LogInfo("Created"); // NullReferenceException!
+   }
+   ~~~
+
+2. **Don't inject Logger/World/Renderer**
+   ~~~csharp
+   // ❌ Wrong - framework provides these!
+   public GameScene(ILogger<GameScene> logger, IEntityWorld world)
+   {
+       // These are set automatically - don't inject them!
+   }
+   
+   // ✅ Correct - parameterless or YOUR services only
+   public GameScene() { }
+   public GameScene(IInputContext input) { }
+   ~~~
+
+3. **Don't manually cleanup World**
+   ~~~csharp
+   // ❌ Wrong - automatic!
+   protected override Task OnUnloadAsync(CancellationToken ct)
+   {
+       World.Clear(); // Not needed!
+       foreach (var entity in World.Entities)
+           World.DestroyEntity(entity); // Not needed!
+   }
+   ~~~
+
+4. **Don't poll input in OnRender**
+   ~~~csharp
    // ❌ Wrong
    protected override void OnRender(GameTime gameTime)
    {
-       if (_input.IsKeyDown(Keys.W)) { ... } // Input in update only!
+       if (_input.IsKeyDown(Key.W)) { ... } // Input in update only!
    }
-   ```
+   ~~~
 
-2. **Don't forget to inject dependencies**
-   ```csharp
-   // ❌ Wrong
-   public GameScene() : base(null) { }
-   
-   // ✅ Correct
-   public GameScene(IRenderer renderer, ...) : base(logger) { }
-   ```
-
-3. **Don't load assets in OnUpdate**
-   ```csharp
+5. **Don't load assets in OnUpdate**
+   ~~~csharp
    // ❌ Wrong - causes lag every frame!
    protected override void OnUpdate(GameTime gameTime)
    {
-       var texture = await _renderer.LoadTextureAsync(...); // NO!
+       var texture = await LoadTextureAsync(...); // NO!
    }
-   ```
-
-4. **Don't forget deltaTime**
-   ```csharp
-   // ❌ Wrong
-   _position += _velocity; // FPS-dependent
-   
-   // ✅ Correct
-   _position += _velocity * deltaTime; // FPS-independent
-   ```
+   ~~~
 
 ---
 
@@ -758,36 +815,47 @@ error NU1101: Unable to find package Brine2D
 |---------|-------------|
 | **GameApplication** | Entry point, similar to ASP.NET Core |
 | **Scene** | Container for game logic (update + render) |
-| **Dependency Injection** | Services injected via constructor |
+| **Property Injection** | Framework properties (Logger, World, Renderer) set automatically |
+| **Scoped World** | Each scene has isolated EntityWorld - automatic cleanup! |
+| **Dependency Injection** | YOUR services injected via constructor |
 | **Game Loop** | Update (logic) → Render (drawing) |
 | **deltaTime** | Frame-rate independent movement |
 
 **Key patterns:**
 
-```csharp
-// 1. Typical setup (recommended)
+~~~csharp
+// 1. Setup
 var builder = GameApplication.CreateBuilder(args);
 builder.Services.AddBrine2D(options =>
 {
     options.WindowTitle = "My Game";
     options.WindowWidth = 1280;
     options.WindowHeight = 720;
-    // Defaults: GPU backend with VSync enabled
 });
 builder.Services.AddScene<GameScene>();
 
-// 2. Scene
+// 2. Scene (NEW pattern!)
 public class GameScene : Scene
 {
-    public GameScene(IRenderer renderer, ...) : base(logger) { }
+    // ✅ Only YOUR dependencies
+    public GameScene(IInputContext input) { }
     
-    protected override void OnUpdate(GameTime gameTime) { }
-    protected override void OnRender(GameTime gameTime) { }
+    // ✅ Framework properties available in lifecycle methods
+    protected override void OnUpdate(GameTime gameTime)
+    {
+        Logger.LogDebug("Updating");
+        var player = World.GetEntityByName("Player");
+    }
+    
+    protected override void OnRender(GameTime gameTime)
+    {
+        Renderer.DrawText("Hello", 10, 10, Color.White);
+    }
 }
 
 // 3. Run
 await game.RunAsync<GameScene>();
-```
+~~~
 
 ---
 
@@ -795,6 +863,7 @@ await game.RunAsync<GameScene>();
 
 Now that you have a working game, explore more features:
 
+- **[Scenes Concept](../concepts/scenes.md)** - Deep dive into property injection and scoped World
 - **[Your First Game](first-game.md)** - Build a complete game with sprites, audio, and collision
 - **[Project Structure](project-structure.md)** - Organize your code
 - **[Configuration](configuration.md)** - Configure game settings
@@ -806,62 +875,60 @@ Now that you have a working game, explore more features:
 
 ## Quick Reference
 
-```csharp
+~~~csharp
 // Minimal Program.cs
 using Brine2D.Hosting;
 using Brine2D.SDL;
-using Microsoft.Extensions.DependencyInjection;
 
 var builder = GameApplication.CreateBuilder(args);
 
-builder.Services.AddSDL3Rendering(options =>
+builder.Services.AddBrine2D(options =>
 {
     options.WindowTitle = "My Game";
     options.WindowWidth = 800;
     options.WindowHeight = 600;
 });
 
-builder.Services.AddSDL3Input();
 builder.Services.AddScene<GameScene>();
 
 var game = builder.Build();
 await game.RunAsync<GameScene>();
-```
+~~~
 
-```csharp
-// Minimal Scene
+~~~csharp
+// Minimal Scene (NEW pattern!)
+using Brine2D.Core;
+using Brine2D.Engine;
+using Brine2D.Input;
+
 public class GameScene : Scene
 {
-    private readonly IRenderer _renderer;
-    private readonly IInputService _input;
-    private readonly IGameContext _gameContext;
+    private readonly IInputContext _input;
 
-    public GameScene(
-        IRenderer renderer,
-        IInputService input,
-        IGameContext gameContext,
-        ILogger<GameScene> logger) : base(logger)
+    // ✅ Only YOUR dependencies
+    public GameScene(IInputContext input)
     {
-        _renderer = renderer;
         _input = input;
-        _gameContext = gameContext;
     }
 
     protected override void OnUpdate(GameTime gameTime)
     {
-        if (_input.IsKeyPressed(Keys.Escape))
+        if (_input.IsKeyPressed(Key.Escape))
         {
-            _gameContext.RequestExit();
+            // Exit
         }
     }
 
     protected override void OnRender(GameTime gameTime)
     {
-        _renderer.Clear(Color.Black);
-        _renderer.DrawText("Hello, Brine2D!", 10, 10, Color.White);
+        // ✅ Framework properties available!
+        Renderer.ClearColor = Color.Black;
+        Renderer.DrawText("Hello, Brine2D!", 10, 10, Color.White);
+        
+        Logger.LogDebug("Rendered frame");
     }
 }
-```
+~~~
 
 ---
 

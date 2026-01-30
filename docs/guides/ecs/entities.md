@@ -1,887 +1,952 @@
 ---
-title: ECS Entities
-description: Master entity creation, management, and querying in Brine2D
+title: Entities
+description: Understanding entities in Brine2D's hybrid ECS - containers, lifecycle, and patterns
 ---
 
-# ECS Entities
+# Entities
 
-Entities are the **fundamental building blocks** of Brine2D's ECS. They're lightweight containers that hold components and represent game objects. Think of them as rows in a database or GameObjects in Unity, but simpler and more flexible.
+Entities are the foundation of Brine2D's **hybrid ECS** - they can be simple component containers or inherit custom behavior. Learn how to create, manage, and organize entities effectively.
 
-## What Are Entities?
+## Overview
 
-**Entities are containers** with:
-- Unique ID (Guid)
-- Optional name (for debugging)
-- Tags (for grouping/querying)
-- Components (data and behavior)
-- Lifecycle state (active/inactive)
+**What are entities?**
 
-```csharp
-using Brine2D.ECS;
+Entities in Brine2D are:
+- **Unique identifiers** (Guid + Name)
+- **Component containers** (hold data and logic)
+- **Tag holders** (for quick lookups)
+- **Optional behaviors** (override lifecycle methods)
+- **Scoped to World** (automatic cleanup per scene)
 
-var player = world.CreateEntity("Player");
+**Two approaches:**
 
-Console.WriteLine(player.Id);       // Guid: "123e4567-e89b-12d3..."
-Console.WriteLine(player.Name);     // "Player"
-Console.WriteLine(player.IsActive); // true
-Console.WriteLine(player.Tags);     // HashSet<string>
-```
+| Approach | When to Use | Complexity |
+|----------|-------------|------------|
+| **Simple entities** | Most games (component-based) | ⭐ Beginner |
+| **Custom entities** | Specialized objects (inheritance) | ⭐⭐ Intermediate |
+
+---
+
+## The Entity Class
+
+### Core Properties
+
+~~~csharp
+public class Entity
+{
+    // Identity
+    public Guid Id { get; } = Guid.NewGuid();
+    public string Name { get; set; } = string.Empty;
+    
+    // State
+    public bool IsActive { get; set; } = true;
+    public IEntityWorld? World { get; internal set; }
+    
+    // Organization
+    public HashSet<string> Tags => _tags;
+    
+    // Lifecycle (override in derived classes)
+    public virtual void OnInitialize() { }
+    public virtual void OnUpdate(GameTime gameTime) { }
+    public virtual void OnRender(IRenderer renderer) { }
+    public virtual void OnDestroy() { }
+}
+~~~
+
+**Pattern:** Every entity has a unique ID, optional name, tags for organization, and lifecycle hooks.
 
 ---
 
 ## Creating Entities
 
-### Basic Creation
+### Simple Entity Creation
 
-```csharp
-// Simple entity
-var entity = world.CreateEntity();
-
-// Entity with name
-var player = world.CreateEntity("Player");
-
-// Add tags for grouping
-player.Tags.Add("Player");
-player.Tags.Add("Controllable");
-```
-
-### Adding Components
-
-```csharp
-// Method 1: Add and configure separately
-var transform = player.AddComponent<TransformComponent>();
-transform.Position = new Vector2(100, 200);
-transform.Rotation = 0;
-
-// Method 2: Add and configure inline
-player.AddComponent<VelocityComponent>().MaxSpeed = 200f;
-
-// Method 3: Fluent syntax (chainable)
-var enemy = world.CreateEntity("Enemy")
-    .AddComponent<TransformComponent>()
-    .AddComponent<VelocityComponent>()
-    .AddComponent<SpriteComponent>()
-    .AddComponent<HealthComponent>();
-```
-
-### Using Prefabs
-
-For reusable entity templates:
-
-```csharp
-using Brine2D.ECS;
-
-// Create prefab
-var bulletPrefab = new EntityPrefab("Bullet");
-bulletPrefab.Tags.Add("Projectile");
-
-bulletPrefab.AddComponent<TransformComponent>();
-bulletPrefab.AddComponent<VelocityComponent>(v => v.MaxSpeed = 500f);
-bulletPrefab.AddComponent<SpriteComponent>(s => s.TexturePath = "assets/bullet.png");
-bulletPrefab.AddComponent<LifetimeComponent>(l => l.Lifetime = 3f);
-
-// Register prefab
-prefabLibrary.Register(bulletPrefab);
-
-// Instantiate many times
-for (int i = 0; i < 10; i++)
+~~~csharp
+public class GameScene : Scene
 {
-    var bullet = bulletPrefab.Instantiate(world, new Vector2(i * 50, 100));
+    protected override Task OnLoadAsync(CancellationToken ct)
+    {
+        // Create entity via World
+        var player = World.CreateEntity("Player");
+        
+        // Add components
+        var transform = player.AddComponent<TransformComponent>();
+        transform.Position = new Vector2(400, 300);
+        
+        var sprite = player.AddComponent<SpriteComponent>();
+        sprite.Width = 32;
+        sprite.Height = 32;
+        
+        // Add tags for easy lookup
+        player.Tags.Add("Player");
+        player.Tags.Add("Controllable");
+        
+        return Task.CompletedTask;
+    }
 }
-```
+~~~
+
+**Pattern:** Use `World.CreateEntity()` to create entities, then add components and tags.
+
+---
+
+### Custom Entity Classes
+
+Derive from `Entity` for specialized behavior:
+
+~~~csharp
+using Brine2D.Core;
+using Brine2D.ECS;
+using Brine2D.ECS.Components;
+using System.Numerics;
+
+public class PlayerEntity : Entity
+{
+    private TransformComponent? _transform;
+    private SpriteComponent? _sprite;
+    private HealthComponent? _health;
+    
+    public override void OnInitialize()
+    {
+        // Called once when entity is created
+        Name = "Player";
+        
+        // Setup components
+        _transform = AddComponent<TransformComponent>();
+        _transform.Position = new Vector2(400, 300);
+        
+        _sprite = AddComponent<SpriteComponent>();
+        _sprite.Width = 32;
+        _sprite.Height = 32;
+        _sprite.Color = Color.Blue;
+        
+        _health = AddComponent<HealthComponent>();
+        _health.Max = 100;
+        _health.Current = 100;
+        
+        Tags.Add("Player");
+    }
+    
+    public override void OnUpdate(GameTime gameTime)
+    {
+        // Custom player logic here
+        HandleMovement(gameTime);
+        
+        // ✅ Call base to update components
+        base.OnUpdate(gameTime);
+    }
+    
+    public override void OnRender(IRenderer renderer)
+    {
+        // Custom rendering (optional)
+        // Components render automatically via base.OnRender()
+    }
+    
+    public override void OnDestroy()
+    {
+        // Cleanup logic
+        Logger.LogInformation("Player destroyed");
+        
+        // ✅ Call base to cleanup components
+        base.OnDestroy();
+    }
+    
+    private void HandleMovement(GameTime gameTime)
+    {
+        // Player-specific logic
+    }
+}
+
+// Usage
+var player = World.CreateEntity<PlayerEntity>();
+~~~
+
+**Pattern:** Custom entities encapsulate initialization and behavior - Unity GameObject style.
 
 ---
 
 ## Entity Lifecycle
 
-Entities have several states and lifecycle events:
+### Complete Lifecycle Flow
 
-```mermaid
+~~~mermaid
 stateDiagram-v2
-    [*] --> Created: CreateEntity()
-    Created --> Initialized: OnInitialize()
-    Initialized --> Active: IsActive = true
-    Active --> Inactive: IsActive = false
-    Inactive --> Active: IsActive = true
-    Active --> Destroyed: Destroy()
-    Inactive --> Destroyed: Destroy()
-    Destroyed --> [*]
+    [*] --> Created: World.CreateEntity()
     
-    Active --> Active: OnUpdate() every frame
-```
+    Created --> Initializing: OnInitialize()
+    note right of Initializing
+        Called once
+        Setup components
+        Add tags
+    end note
+    
+    Initializing --> Active: Added to World
+    
+    Active --> Updating: OnUpdate(gameTime)
+    note right of Updating
+        Called every frame
+        Update logic
+        Base calls component.OnUpdate()
+    end note
+    
+    Updating --> Rendering: OnRender(renderer)
+    note right of Rendering
+        Called every frame
+        Custom rendering
+        Base calls component.OnRender()
+    end note
+    
+    Rendering --> Active: Frame complete
+    
+    Active --> Destroying: World.DestroyEntity()
+    
+    Destroying --> Cleanup: OnDestroy()
+    note right of Cleanup
+        Called once
+        Cleanup resources
+        Base removes all components
+    end note
+    
+    Cleanup --> [*]
+~~~
+
+---
 
 ### Lifecycle Methods
 
-```csharp
-public class MyEntity : Entity
+#### OnInitialize()
+
+~~~csharp
+public override void OnInitialize()
 {
-    protected internal override void OnInitialize()
-    {
-        // Called once when entity is created
-        // Set up initial state
-    }
+    // ✅ Called once when entity is created
+    // Use for: Setup, adding components, initializing state
     
-    protected internal override void OnUpdate(GameTime gameTime)
-    {
-        // Called every frame if entity is active
-        // Updates all enabled components
-    }
+    Name = "MyEntity";
     
-    protected internal override void OnDestroy()
-    {
-        // Called when entity is destroyed
-        // Clean up resources
-    }
+    var transform = AddComponent<TransformComponent>();
+    transform.Position = new Vector2(100, 100);
+    
+    Tags.Add("Enemy");
+    
+    Logger.LogInformation("Entity {Name} initialized", Name);
 }
-```
+~~~
 
-### Entity Events
-
-```csharp
-var entity = world.CreateEntity("Player");
-
-// Subscribe to entity events
-entity.OnComponentAdded += (e, component) =>
-{
-    Logger.LogInformation($"Added {component.GetType().Name}");
-};
-
-entity.OnComponentRemoved += (e, component) =>
-{
-    Logger.LogInformation($"Removed {component.GetType().Name}");
-};
-
-entity.OnDestroyed += (e) =>
-{
-    Logger.LogInformation($"Entity {e.Name} destroyed");
-};
-```
+**Use for:**
+- Adding components
+- Initial state setup
+- Adding tags
+- One-time configuration
 
 ---
 
-## Managing Entities
+#### OnUpdate(gameTime)
 
-### Activating/Deactivating
-
-```csharp
-// Disable entity (stops updates, keeps in world)
-entity.IsActive = false;
-
-// Re-enable entity
-entity.IsActive = true;
-
-// Check state
-if (entity.IsActive)
+~~~csharp
+public override void OnUpdate(GameTime gameTime)
 {
-    // Entity is updating
+    // ✅ Called every frame (if IsActive = true)
+    // Use for: Game logic, movement, state changes
+    
+    var transform = GetComponent<TransformComponent>();
+    if (transform != null)
+    {
+        // Custom logic
+        transform.Position += new Vector2(100, 0) * (float)gameTime.DeltaTime;
+    }
+    
+    // ✅ ALWAYS call base to update components!
+    base.OnUpdate(gameTime);
 }
-```
+~~~
 
-When deactivated:
-- Entity remains in world
-- Components don't update
-- Still queryable
-- Still renders (unless system checks `IsActive`)
+**Important:** Call `base.OnUpdate(gameTime)` to update all components!
+
+**Use for:**
+- Per-frame logic
+- State updates
+- Behavior implementation
+- Input handling
+
+---
+
+#### OnRender(renderer)
+
+~~~csharp
+public override void OnRender(IRenderer renderer)
+{
+    // ✅ Called every frame during render phase
+    // Use for: Custom rendering, debug visualization
+    
+    var transform = GetComponent<TransformComponent>();
+    if (transform != null)
+    {
+        // Custom rendering
+        renderer.DrawCircleOutline(
+            transform.Position.X,
+            transform.Position.Y,
+            50f,
+            Color.Red,
+            2f);
+    }
+    
+    // Components render automatically (SpriteComponent, etc.)
+    // No need to call base unless you want default behavior
+}
+~~~
+
+**Use for:**
+- Custom rendering
+- Debug visualization
+- Effects overlays
+
+---
+
+#### OnDestroy()
+
+~~~csharp
+public override void OnDestroy()
+{
+    // ✅ Called once when entity is destroyed
+    // Use for: Cleanup, disposing resources, saving state
+    
+    Logger.LogInformation("Entity {Name} destroyed", Name);
+    
+    // Cleanup custom resources
+    _customTexture?.Dispose();
+    
+    // ✅ ALWAYS call base to cleanup components!
+    base.OnDestroy();
+}
+~~~
+
+**Important:** Call `base.OnDestroy()` to cleanup all components!
+
+**Use for:**
+- Resource disposal
+- State saving
+- Event unsubscription
+- Custom cleanup
+
+---
+
+## Component Management
+
+### Adding Components
+
+~~~csharp
+// Method 1: Create and add in one step
+var transform = entity.AddComponent<TransformComponent>();
+transform.Position = new Vector2(100, 100);
+
+// Method 2: Add pre-configured component
+var sprite = new SpriteComponent
+{
+    Width = 32,
+    Height = 32,
+    Color = Color.Red
+};
+entity.AddComponent(sprite);
+
+// ✅ Adding duplicate components returns existing
+var transform2 = entity.AddComponent<TransformComponent>();
+// transform2 == transform (same instance)
+~~~
+
+**Pattern:** `AddComponent<T>()` prevents duplicates - returns existing if already added.
+
+---
+
+### Getting Components
+
+~~~csharp
+// Method 1: Try get (safe)
+var transform = entity.GetComponent<TransformComponent>();
+if (transform != null)
+{
+    transform.Position += Vector2.One;
+}
+
+// Method 2: Get required (throws if missing - ASP.NET pattern)
+var transform = entity.GetRequiredComponent<TransformComponent>();
+transform.Position += Vector2.One; // Safe, guaranteed to exist
+
+// Method 3: Check existence
+if (entity.HasComponent<HealthComponent>())
+{
+    var health = entity.GetComponent<HealthComponent>();
+    health.TakeDamage(10);
+}
+~~~
+
+**Pattern:** Use `GetComponent<T>()` for optional components, `GetRequiredComponent<T>()` when component must exist.
+
+---
+
+### Removing Components
+
+~~~csharp
+// Remove component by type
+bool removed = entity.RemoveComponent<VelocityComponent>();
+
+if (removed)
+{
+    Logger.LogInformation("Velocity removed");
+}
+
+// Get all components
+var allComponents = entity.GetAllComponents();
+foreach (var component in allComponents)
+{
+    Logger.LogDebug("Component: {Type}", component.GetType().Name);
+}
+~~~
+
+**Pattern:** Removing components calls `OnRemoved()` lifecycle method on the component.
+
+---
+
+## Tag Management
+
+### Working with Tags
+
+~~~csharp
+// Add tags
+entity.Tags.Add("Enemy");
+entity.Tags.Add("Flying");
+entity.Tags.Add("Boss");
+
+// Check tags
+if (entity.Tags.Contains("Enemy"))
+{
+    // Enemy logic
+}
+
+// Remove tags
+entity.Tags.Remove("Flying");
+
+// Clear all tags
+entity.Tags.Clear();
+
+// Query by tags
+var enemies = World.GetEntitiesByTag("Enemy");
+var bosses = World.GetEntitiesByTag("Boss");
+
+// Multiple tag check
+if (entity.Tags.Contains("Enemy") && entity.Tags.Contains("Boss"))
+{
+    // Boss enemy logic
+}
+~~~
+
+**Use tags for:**
+- Category identification (Enemy, Player, Projectile)
+- Behavior flags (Flying, Invincible, Stunned)
+- Querying entities quickly
+- Temporary states
+
+---
+
+## Entity State
+
+### IsActive Flag
+
+~~~csharp
+// Create entity
+var enemy = World.CreateEntity("Enemy");
+enemy.IsActive = true; // Active by default
+
+// Temporarily disable
+enemy.IsActive = false; // Won't be updated or rendered
+
+// Re-enable
+enemy.IsActive = true;
+
+// ✅ World.Update() skips inactive entities
+// ✅ Queries can filter by IsActive
+~~~
+
+**Pattern:** Use `IsActive` to temporarily disable entities without destroying them.
+
+---
 
 ### Destroying Entities
 
-```csharp
-// Method 1: Via entity
-entity.Destroy();
+~~~csharp
+// Method 1: Via World
+World.DestroyEntity(entity);
 
-// Method 2: Via world
-world.DestroyEntity(entity);
+// Method 2: Self-destruct
+entity.Destroy(); // Calls World.DestroyEntity(this)
 
-// Destruction:
-// - Fires OnDestroy event
-// - Calls OnRemoved on all components
-// - Removes from world
-// - Cannot be reused
-```
+// ✅ Destruction is deferred if called during frame update
+// Entity marked inactive immediately, removed at frame boundary
+~~~
 
-### Parent-Child Relationships
-
-```csharp
-// Create parent
-var player = world.CreateEntity("Player");
-player.AddComponent<TransformComponent>();
-
-// Create child
-var weapon = world.CreateEntity("Sword");
-weapon.AddComponent<TransformComponent>();
-
-// Set parent (requires transform hierarchy)
-weapon.SetParent(player);
-
-// Unparent
-weapon.SetParent(null);
-
-// When parent is destroyed, children are also destroyed
-```
+**Pattern:** Destruction is deferred during frame processing - safe to call in `OnUpdate()`.
 
 ---
 
-## Querying Entities
+## Entity Hierarchy (Advanced)
 
-Brine2D provides several ways to find entities:
+### Parent-Child Relationships
 
-### Get All Entities
+Entities can form hierarchies using **TransformComponent**:
 
-```csharp
-// Get all entities in world
-var allEntities = world.Entities;
+~~~csharp
+using Brine2D.ECS;
+using Brine2D.ECS.Components;
 
-foreach (var entity in allEntities)
-{
-    Console.WriteLine(entity.Name);
-}
-```
+// Create parent
+var tank = World.CreateEntity("Tank");
+var tankTransform = tank.AddComponent<TransformComponent>();
+tankTransform.Position = new Vector2(400, 300);
 
-### Query by Component
+// Create child (turret)
+var turret = World.CreateEntity("Turret");
+var turretTransform = turret.AddComponent<TransformComponent>();
+turretTransform.Position = new Vector2(0, -20); // Relative to parent
 
-```csharp
-// Get entities with specific component
-var withHealth = world.GetEntitiesWithComponent<HealthComponent>();
+// ✅ Set parent via extension method
+turret.SetParent(tank);
 
-foreach (var entity in withHealth)
-{
-    var health = entity.GetComponent<HealthComponent>()!;
-    Console.WriteLine($"{entity.Name}: {health.Current}/{health.Max}");
-}
-```
+// Child moves with parent
+tankTransform.Position = new Vector2(500, 300);
+// turret world position is now (500, 280)
 
-### Query by Multiple Components
+// Get parent
+var parent = turret.GetParent(); // Returns tank
 
-```csharp
-// Get entities with Transform AND Velocity
-var moving = world.GetEntitiesWithComponents<TransformComponent, VelocityComponent>();
+// Get children
+var children = tank.GetChildren(); // Returns turret
 
-foreach (var entity in moving)
-{
-    var transform = entity.GetComponent<TransformComponent>()!;
-    var velocity = entity.GetComponent<VelocityComponent>()!;
-    
-    // Process moving entity
-}
-```
+// Get all descendants (recursive)
+var descendants = tank.GetDescendants();
+~~~
 
-### Query by Tag
+**Pattern:** Hierarchy is managed through `TransformComponent` - children move/rotate with parent.
 
-```csharp
-// Get all enemies
-var enemies = world.GetEntitiesByTag("Enemy");
+---
 
-// Get entities with multiple tags (AND logic)
-var bossEnemies = world.GetEntitiesByTag("Enemy")
-    .Where(e => e.Tags.Contains("Boss"));
-```
+### Hierarchy Extension Methods
 
-### Find Specific Entity
+~~~csharp
+// Set parent (keeping world position)
+entity.SetParent(parent, keepWorldPosition: true);
 
-```csharp
-// Find by name
-var player = world.GetEntityByName("Player");
+// Set parent (using local position)
+entity.SetParent(parent, keepWorldPosition: false);
 
-// Find by ID
-var entity = world.GetEntityById(someGuid);
+// Get parent entity
+Entity? parent = entity.GetParent();
 
-// Find by predicate (custom logic)
-var boss = world.FindEntity(e => 
-    e.Tags.Contains("Enemy") && 
-    e.Name.Contains("Boss") &&
-    e.GetComponent<HealthComponent>()?.Max > 500
-);
-```
+// Get all direct children
+IEnumerable<Entity> children = entity.GetChildren();
+
+// Get all descendants (children + grandchildren + ...)
+IEnumerable<Entity> descendants = entity.GetDescendants();
+
+// Get root entity (topmost parent)
+Entity root = entity.GetRoot();
+
+// Remove from hierarchy
+entity.SetParent(null);
+~~~
+
+**Use hierarchy for:**
+- Complex objects (tank + turret)
+- UI layouts (panel + buttons)
+- Character rigs (body + limbs)
+- Scene graphs
 
 ---
 
 ## Entity Patterns
 
-### Factory Pattern
+### Pattern 1: Entity Factories
 
-Create entities through factory methods:
+~~~csharp
+using Brine2D.Core;
+using Brine2D.ECS;
+using Brine2D.ECS.Components;
+using System.Numerics;
 
-```csharp
-public class EntityFactory
+public static class EntityFactory
 {
-    private readonly IEntityWorld _world;
-    private readonly ITextureLoader _textureLoader;
-    
-    public EntityFactory(IEntityWorld world, ITextureLoader textureLoader)
+    public static Entity CreatePlayer(IEntityWorld world, Vector2 position)
     {
-        _world = world;
-        _textureLoader = textureLoader;
-    }
-    
-    public Entity CreatePlayer(Vector2 position)
-    {
-        var player = _world.CreateEntity("Player");
-        player.Tags.Add("Player");
-        player.Tags.Add("Controllable");
+        var entity = world.CreateEntity("Player");
         
-        player.AddComponent<TransformComponent>().Position = position;
-        player.AddComponent<VelocityComponent>().MaxSpeed = 200f;
-        player.AddComponent<PlayerControllerComponent>();
-        player.AddComponent<HealthComponent>().Max = 100;
+        var transform = entity.AddComponent<TransformComponent>();
+        transform.Position = position;
         
-        var sprite = player.AddComponent<SpriteComponent>();
-        sprite.TexturePath = "assets/player.png";
+        var sprite = entity.AddComponent<SpriteComponent>();
+        sprite.Width = 32;
+        sprite.Height = 32;
+        sprite.Color = Color.Blue;
         
-        return player;
-    }
-    
-    public Entity CreateEnemy(Vector2 position, EnemyType type)
-    {
-        var enemy = _world.CreateEntity($"Enemy_{type}");
-        enemy.Tags.Add("Enemy");
+        var health = entity.AddComponent<HealthComponent>();
+        health.Max = 100;
+        health.Current = 100;
         
-        enemy.AddComponent<TransformComponent>().Position = position;
-        enemy.AddComponent<VelocityComponent>();
-        enemy.AddComponent<AIControllerComponent>().Behavior = AIBehavior.Chase;
-        
-        switch (type)
-        {
-            case EnemyType.Weak:
-                enemy.AddComponent<HealthComponent>().Max = 30;
-                break;
-            case EnemyType.Strong:
-                enemy.AddComponent<HealthComponent>().Max = 100;
-                break;
-            case EnemyType.Boss:
-                enemy.AddComponent<HealthComponent>().Max = 500;
-                enemy.Tags.Add("Boss");
-                break;
-        }
-        
-        return enemy;
-    }
-    
-    public Entity CreateBullet(Vector2 position, Vector2 direction)
-    {
-        var bullet = _world.CreateEntity("Bullet");
-        bullet.Tags.Add("Projectile");
-        
-        bullet.AddComponent<TransformComponent>().Position = position;
-        bullet.AddComponent<VelocityComponent>().Velocity = direction * 500f;
-        bullet.AddComponent<LifetimeComponent>().Lifetime = 3f;
-        
-        return bullet;
-    }
-}
-
-public enum EnemyType
-{
-    Weak,
-    Strong,
-    Boss
-}
-```
-
-### Builder Pattern
-
-Fluent API for entity construction:
-
-```csharp
-public class EntityBuilder
-{
-    private readonly IEntityWorld _world;
-    private readonly Entity _entity;
-    
-    public EntityBuilder(IEntityWorld world, string name = "")
-    {
-        _world = world;
-        _entity = world.CreateEntity(name);
-    }
-    
-    public EntityBuilder WithTag(string tag)
-    {
-        _entity.Tags.Add(tag);
-        return this;
-    }
-    
-    public EntityBuilder WithTransform(Vector2 position)
-    {
-        _entity.AddComponent<TransformComponent>().Position = position;
-        return this;
-    }
-    
-    public EntityBuilder WithVelocity(float maxSpeed)
-    {
-        _entity.AddComponent<VelocityComponent>().MaxSpeed = maxSpeed;
-        return this;
-    }
-    
-    public EntityBuilder WithSprite(string texturePath)
-    {
-        _entity.AddComponent<SpriteComponent>().TexturePath = texturePath;
-        return this;
-    }
-    
-    public EntityBuilder WithHealth(float max)
-    {
-        var health = _entity.AddComponent<HealthComponent>();
-        health.Max = max;
-        health.Current = max;
-        return this;
-    }
-    
-    public EntityBuilder WithComponent<T>() where T : Component, new()
-    {
-        _entity.AddComponent<T>();
-        return this;
-    }
-    
-    public EntityBuilder WithComponent<T>(Action<T> configure) where T : Component, new()
-    {
-        var component = _entity.AddComponent<T>();
-        configure(component);
-        return this;
-    }
-    
-    public Entity Build() => _entity;
-}
-
-// Usage
-var player = new EntityBuilder(world, "Player")
-    .WithTag("Player")
-    .WithTag("Controllable")
-    .WithTransform(new Vector2(400, 300))
-    .WithVelocity(200f)
-    .WithSprite("assets/player.png")
-    .WithHealth(100)
-    .WithComponent<PlayerControllerComponent>()
-    .Build();
-```
-
-### Object Pool Pattern
-
-Reuse entities instead of creating/destroying:
-
-```csharp
-public class EntityPool
-{
-    private readonly IEntityWorld _world;
-    private readonly Queue<Entity> _pool = new();
-    private readonly EntityPrefab _prefab;
-    
-    public EntityPool(IEntityWorld world, EntityPrefab prefab, int initialSize = 10)
-    {
-        _world = world;
-        _prefab = prefab;
-        
-        // Pre-create entities
-        for (int i = 0; i < initialSize; i++)
-        {
-            var entity = prefab.Instantiate(world, Vector2.Zero);
-            entity.IsActive = false;
-            _pool.Enqueue(entity);
-        }
-    }
-    
-    public Entity Spawn(Vector2 position)
-    {
-        Entity entity;
-        
-        if (_pool.Count > 0)
-        {
-            // Reuse from pool
-            entity = _pool.Dequeue();
-            entity.IsActive = true;
-        }
-        else
-        {
-            // Create new
-            entity = _prefab.Instantiate(_world, position);
-        }
-        
-        // Reset position
-        var transform = entity.GetComponent<TransformComponent>();
-        if (transform != null)
-        {
-            transform.Position = position;
-        }
+        entity.Tags.Add("Player");
+        entity.Tags.Add("Controllable");
         
         return entity;
     }
     
-    public void Despawn(Entity entity)
+    public static Entity CreateEnemy(IEntityWorld world, Vector2 position, EnemyType type)
     {
-        // Reset state
-        var velocity = entity.GetComponent<VelocityComponent>();
-        if (velocity != null)
+        var entity = world.CreateEntity($"Enemy_{type}");
+        
+        var transform = entity.AddComponent<TransformComponent>();
+        transform.Position = position;
+        
+        var sprite = entity.AddComponent<SpriteComponent>();
+        sprite.Width = 24;
+        sprite.Height = 24;
+        sprite.Color = type switch
         {
-            velocity.Velocity = Vector2.Zero;
+            EnemyType.Grunt => Color.Red,
+            EnemyType.Tank => Color.DarkRed,
+            EnemyType.Flyer => Color.Orange,
+            _ => Color.Red
+        };
+        
+        var health = entity.AddComponent<HealthComponent>();
+        health.Max = type switch
+        {
+            EnemyType.Grunt => 50,
+            EnemyType.Tank => 200,
+            EnemyType.Flyer => 30,
+            _ => 50
+        };
+        health.Current = health.Max;
+        
+        entity.Tags.Add("Enemy");
+        if (type == EnemyType.Flyer)
+        {
+            entity.Tags.Add("Flying");
         }
         
-        // Deactivate and return to pool
-        entity.IsActive = false;
-        _pool.Enqueue(entity);
+        return entity;
     }
 }
 
 // Usage
-var bulletPool = new EntityPool(world, bulletPrefab, 50);
+var player = EntityFactory.CreatePlayer(World, new Vector2(400, 300));
+var grunt = EntityFactory.CreateEnemy(World, new Vector2(200, 200), EnemyType.Grunt);
+~~~
 
-// Spawn bullet
-var bullet = bulletPool.Spawn(playerPosition);
-
-// Later, despawn instead of destroy
-bulletPool.Despawn(bullet);
-```
+**Pattern:** Factory methods encapsulate entity creation - clean, reusable, testable.
 
 ---
 
-## Entity Groups
+### Pattern 2: Prefabs (Entity Templates)
 
-Organize entities into logical groups:
+~~~csharp
+using Brine2D.ECS;
+using Brine2D.ECS.Components;
 
-```csharp
-public class EntityGroup
+public class EntityPrefabs
 {
-    private readonly HashSet<Entity> _entities = new();
-    
-    public string Name { get; }
-    public IReadOnlyCollection<Entity> Entities => _entities;
-    
-    public EntityGroup(string name)
+    public static void ApplyPlayerPrefab(Entity entity, Vector2 position)
     {
-        Name = name;
-    }
-    
-    public void Add(Entity entity)
-    {
-        _entities.Add(entity);
-        entity.OnDestroyed += OnEntityDestroyed;
-    }
-    
-    public void Remove(Entity entity)
-    {
-        _entities.Remove(entity);
-        entity.OnDestroyed -= OnEntityDestroyed;
-    }
-    
-    private void OnEntityDestroyed(Entity entity)
-    {
-        _entities.Remove(entity);
-    }
-    
-    public void DestroyAll()
-    {
-        foreach (var entity in _entities.ToList())
-        {
-            entity.Destroy();
-        }
-        _entities.Clear();
-    }
-    
-    public void SetActiveAll(bool active)
-    {
-        foreach (var entity in _entities)
-        {
-            entity.IsActive = active;
-        }
-    }
-}
-
-// Usage
-var enemyGroup = new EntityGroup("Enemies");
-
-for (int i = 0; i < 10; i++)
-{
-    var enemy = factory.CreateEnemy(randomPosition, EnemyType.Weak);
-    enemyGroup.Add(enemy);
-}
-
-// Later...
-enemyGroup.DestroyAll(); // Destroy all enemies at once
-```
-
----
-
-## Advanced Querying
-
-### Filtering Queries
-
-```csharp
-// Get all active enemies with low health
-var weakEnemies = world.GetEntitiesByTag("Enemy")
-    .Where(e => e.IsActive)
-    .Where(e =>
-    {
-        var health = e.GetComponent<HealthComponent>();
-        return health != null && health.Percentage < 0.3f;
-    });
-
-// Get all projectiles moving right
-var rightMoving = world.GetEntitiesWithComponents<VelocityComponent>()
-    .Where(e => e.Tags.Contains("Projectile"))
-    .Where(e => e.GetComponent<VelocityComponent>()!.Velocity.X > 0);
-```
-
-### Spatial Queries
-
-```csharp
-public static class EntityQueryExtensions
-{
-    public static IEnumerable<Entity> WithinRadius(
-        this IEnumerable<Entity> entities,
-        Vector2 center,
-        float radius)
-    {
-        var radiusSquared = radius * radius;
+        var transform = entity.AddComponent<TransformComponent>();
+        transform.Position = position;
         
-        return entities.Where(e =>
-        {
-            var transform = e.GetComponent<TransformComponent>();
-            if (transform == null) return false;
-            
-            var distanceSquared = Vector2.DistanceSquared(transform.Position, center);
-            return distanceSquared <= radiusSquared;
-        });
+        var sprite = entity.AddComponent<SpriteComponent>();
+        sprite.Width = 32;
+        sprite.Height = 32;
+        sprite.Color = Color.Blue;
+        
+        var health = entity.AddComponent<HealthComponent>();
+        health.Max = 100;
+        health.Current = 100;
+        
+        entity.Tags.Add("Player");
     }
     
-    public static IEnumerable<Entity> InRectangle(
-        this IEnumerable<Entity> entities,
-        RectangleF bounds)
+    public static void ApplyPowerupPrefab(Entity entity, Vector2 position)
     {
-        return entities.Where(e =>
-        {
-            var transform = e.GetComponent<TransformComponent>();
-            return transform != null && bounds.Contains(transform.Position);
-        });
+        var transform = entity.AddComponent<TransformComponent>();
+        transform.Position = position;
+        
+        var sprite = entity.AddComponent<SpriteComponent>();
+        sprite.Width = 16;
+        sprite.Height = 16;
+        sprite.Color = Color.Yellow;
+        
+        var lifetime = entity.AddComponent<LifetimeComponent>();
+        lifetime.TimeToLive = 10f; // Despawn after 10 seconds
+        
+        entity.Tags.Add("Pickup");
     }
 }
 
 // Usage
-var nearbyEnemies = world.GetEntitiesByTag("Enemy")
-    .WithinRadius(playerPosition, 200f);
+var player = World.CreateEntity("Player");
+EntityPrefabs.ApplyPlayerPrefab(player, new Vector2(400, 300));
 
-var visibleEntities = world.GetEntitiesWithComponent<SpriteComponent>()
-    .InRectangle(cameraViewport);
-```
+var powerup = World.CreateEntity("Powerup");
+EntityPrefabs.ApplyPowerupPrefab(powerup, new Vector2(600, 200));
+~~~
 
-### Component-Based Filtering
-
-```csharp
-// Get entities that have Health AND Transform but NOT Dead tag
-var aliveEntities = world.GetEntitiesWithComponents<HealthComponent, TransformComponent>()
-    .Where(e => !e.Tags.Contains("Dead"));
-
-// Get entities with optional components
-var entities = world.GetEntitiesWithComponent<TransformComponent>();
-
-foreach (var entity in entities)
-{
-    var transform = entity.GetComponent<TransformComponent>()!;
-    var velocity = entity.GetComponent<VelocityComponent>(); // Optional
-    
-    if (velocity != null)
-    {
-        // Has velocity
-    }
-    else
-    {
-        // Stationary
-    }
-}
-```
+**Pattern:** Prefab methods apply pre-configured component sets to entities.
 
 ---
 
-## Performance Tips
+### Pattern 3: Entity Pooling
 
-### Query Caching
-
-Cache queries when possible:
-
-```csharp
-public class EnemyManager
+~~~csharp
+public class EntityPool
 {
     private readonly IEntityWorld _world;
-    private List<Entity>? _cachedEnemies;
-    private bool _isDirty = true;
+    private readonly Stack<Entity> _pool = new();
+    private readonly Func<Entity> _factory;
     
-    public EnemyManager(IEntityWorld world)
+    public EntityPool(IEntityWorld world, Func<Entity> factory, int initialSize = 10)
     {
         _world = world;
+        _factory = factory;
         
-        // Invalidate cache on entity changes
-        _world.OnEntityCreated += _ => _isDirty = true;
-        _world.OnEntityDestroyed += _ => _isDirty = true;
-    }
-    
-    public IEnumerable<Entity> GetEnemies()
-    {
-        if (_isDirty || _cachedEnemies == null)
+        // Pre-create entities
+        for (int i = 0; i < initialSize; i++)
         {
-            _cachedEnemies = _world.GetEntitiesByTag("Enemy").ToList();
-            _isDirty = false;
-        }
-        
-        return _cachedEnemies;
-    }
-}
-```
-
-### Minimize Lookups
-
-```csharp
-// ❌ Slow - multiple component lookups
-foreach (var entity in entities)
-{
-    if (entity.HasComponent<HealthComponent>())
-    {
-        var health = entity.GetComponent<HealthComponent>();
-        var transform = entity.GetComponent<TransformComponent>();
-        // Process...
-    }
-}
-
-// ✅ Fast - query for both components upfront
-var entities = world.GetEntitiesWithComponents<HealthComponent, TransformComponent>();
-
-foreach (var entity in entities)
-{
-    var health = entity.GetComponent<HealthComponent>()!;
-    var transform = entity.GetComponent<TransformComponent>()!;
-    // Process...
-}
-```
-
-### Use Tags Wisely
-
-Tags are faster than component checks:
-
-```csharp
-// ✅ Fast - tag check
-if (entity.Tags.Contains("Enemy"))
-{
-    // ...
-}
-
-// ⚠️ Slower - component check
-if (entity.HasComponent<EnemyComponent>())
-{
-    // ...
-}
-```
-
----
-
-## Debugging Entities
-
-### Entity Inspector
-
-```csharp
-public static class EntityDebugger
-{
-    public static void PrintEntity(Entity entity)
-    {
-        Console.WriteLine($"=== Entity: {entity.Name} ===");
-        Console.WriteLine($"ID: {entity.Id}");
-        Console.WriteLine($"Active: {entity.IsActive}");
-        Console.WriteLine($"Tags: {string.Join(", ", entity.Tags)}");
-        Console.WriteLine("Components:");
-        
-        foreach (var component in entity.GetAllComponents())
-        {
-            var enabled = component.IsEnabled ? "✓" : "✗";
-            Console.WriteLine($"  [{enabled}] {component.GetType().Name}");
+            var entity = _factory();
+            entity.IsActive = false;
+            _pool.Push(entity);
         }
     }
     
-    public static void PrintWorldStats(IEntityWorld world)
+    public Entity Get()
     {
-        Console.WriteLine($"=== World Statistics ===");
-        Console.WriteLine($"Total Entities: {world.Entities.Count}");
-        Console.WriteLine($"Active Entities: {world.Entities.Count(e => e.IsActive)}");
-        
-        // Count by tag
-        var tagCounts = world.Entities
-            .SelectMany(e => e.Tags)
-            .GroupBy(t => t)
-            .Select(g => new { Tag = g.Key, Count = g.Count() });
-        
-        Console.WriteLine("Entities by Tag:");
-        foreach (var tagCount in tagCounts)
+        if (_pool.Count > 0)
         {
-            Console.WriteLine($"  {tagCount.Tag}: {tagCount.Count}");
+            var entity = _pool.Pop();
+            entity.IsActive = true;
+            return entity;
         }
+        
+        // Create new if pool exhausted
+        return _factory();
+    }
+    
+    public void Return(Entity entity)
+    {
+        entity.IsActive = false;
+        _pool.Push(entity);
     }
 }
 
 // Usage
-EntityDebugger.PrintEntity(player);
-EntityDebugger.PrintWorldStats(world);
-```
+var projectilePool = new EntityPool(
+    World,
+    () => EntityFactory.CreateProjectile(World, Vector2.Zero),
+    initialSize: 50);
+
+// Get from pool
+var projectile = projectilePool.Get();
+var transform = projectile.GetComponent<TransformComponent>();
+transform.Position = playerPosition;
+
+// Return to pool (instead of destroying)
+projectilePool.Return(projectile);
+~~~
+
+**Pattern:** Object pooling reduces allocations - use for frequently created/destroyed entities (projectiles, particles).
 
 ---
 
-## Quick Reference
+## Best Practices
 
-### Entity Creation
+### ✅ DO
 
-```csharp
-var entity = world.CreateEntity("Name");
-entity.Tags.Add("Tag");
-entity.AddComponent<MyComponent>();
-```
+**1. Use factories for complex entities**
 
-### Entity Queries
+~~~csharp
+// ✅ Good - encapsulated creation
+var player = EntityFactory.CreatePlayer(World, position);
 
-```csharp
-world.Entities                                    // All entities
-world.GetEntityByName("Player")                   // By name
-world.GetEntityById(guid)                         // By ID
-world.GetEntitiesByTag("Enemy")                   // By tag
-world.GetEntitiesWithComponent<T>()               // By component
-world.GetEntitiesWithComponents<T1, T2>()         // By multiple
-world.FindEntity(e => /* predicate */)            // By condition
-```
+// ❌ Bad - scattered creation logic
+var player = World.CreateEntity("Player");
+player.AddComponent<TransformComponent>().Position = position;
+player.AddComponent<SpriteComponent>().Width = 32;
+// ... repeated everywhere
+~~~
 
-### Entity Management
+**2. Use tags for categorization**
 
-```csharp
-entity.IsActive = false;                          // Deactivate
-entity.Destroy();                                 // Destroy
-world.DestroyEntity(entity);                      // Destroy via world
-entity.OnDestroyed += handler;                    // Subscribe to events
-```
+~~~csharp
+// ✅ Good - tags for quick lookup
+entity.Tags.Add("Enemy");
+entity.Tags.Add("Flying");
+var enemies = World.GetEntitiesByTag("Enemy");
+
+// ❌ Bad - tag components for simple categories
+public class EnemyTag : Component { } // Overkill for simple flag
+~~~
+
+**3. Call base in lifecycle methods**
+
+~~~csharp
+// ✅ Good - components update
+public override void OnUpdate(GameTime gameTime)
+{
+    // Custom logic
+    base.OnUpdate(gameTime); // Updates components
+}
+
+// ❌ Bad - components never update
+public override void OnUpdate(GameTime gameTime)
+{
+    // Custom logic
+    // Missing base.OnUpdate() - components won't update!
+}
+~~~
+
+**4. Use GetRequiredComponent for essential components**
+
+~~~csharp
+// ✅ Good - fail fast if missing
+var transform = entity.GetRequiredComponent<TransformComponent>();
+transform.Position += Vector2.One;
+
+// ❌ Bad - null checks everywhere
+var transform = entity.GetComponent<TransformComponent>();
+if (transform != null)
+{
+    transform.Position += Vector2.One;
+}
+~~~
+
+---
+
+### ❌ DON'T
+
+**1. Don't store entity references long-term**
+
+~~~csharp
+// ❌ Bad - entity reference can become invalid
+private Entity? _target;
+
+public void SetTarget(Entity target)
+{
+    _target = target; // Might be destroyed later!
+}
+
+// ✅ Good - store entity ID
+private Guid _targetId;
+
+public void SetTarget(Entity target)
+{
+    _targetId = target.Id;
+}
+
+public Entity? GetTarget()
+{
+    return World?.GetEntityById(_targetId);
+}
+~~~
+
+**2. Don't create entities during iteration**
+
+~~~csharp
+// ❌ Bad - modifying collection during iteration
+foreach (var entity in World.Entities)
+{
+    World.CreateEntity("New"); // ❌ Can cause issues
+}
+
+// ✅ Good - defer creation
+var entitiesToCreate = new List<Action>();
+
+foreach (var entity in World.Entities)
+{
+    entitiesToCreate.Add(() => World.CreateEntity("New"));
+}
+
+foreach (var create in entitiesToCreate)
+{
+    create();
+}
+~~~
+
+**3. Don't forget to call base in OnDestroy**
+
+~~~csharp
+// ❌ Bad - components not cleaned up
+public override void OnDestroy()
+{
+    // Cleanup
+    // Missing base.OnDestroy() - components leak!
+}
+
+// ✅ Good - components cleaned up
+public override void OnDestroy()
+{
+    // Cleanup
+    base.OnDestroy(); // Removes all components
+}
+~~~
+
+**4. Don't use entities for simple data**
+
+~~~csharp
+// ❌ Bad - entity for simple value
+var scoreEntity = World.CreateEntity("Score");
+scoreEntity.AddComponent<ScoreComponent>().Value = 0;
+
+// ✅ Good - use a field/property
+private int _score = 0;
+~~~
+
+---
+
+## Summary
+
+**Entity features:**
+
+| Feature | Usage |
+|---------|-------|
+| **World.CreateEntity()** | Create entities |
+| **Entity.AddComponent<T>()** | Add components |
+| **Entity.GetComponent<T>()** | Get components (safe) |
+| **Entity.GetRequiredComponent<T>()** | Get components (throws if missing) |
+| **Entity.Tags** | Categorize entities |
+| **Entity.IsActive** | Enable/disable entity |
+| **Entity.Destroy()** | Remove from world |
+
+**Lifecycle methods:**
+
+| Method | When Called | Use For |
+|--------|-------------|---------|
+| **OnInitialize()** | Once (creation) | Setup, add components |
+| **OnUpdate(gameTime)** | Every frame | Game logic, state updates |
+| **OnRender(renderer)** | Every frame | Custom rendering |
+| **OnDestroy()** | Once (destruction) | Cleanup, save state |
+
+**Common patterns:**
+
+| Pattern | Usage |
+|---------|-------|
+| **Entity factories** | Encapsulate creation logic |
+| **Custom entities** | Inherit for specialized behavior |
+| **Tags** | Quick categorization and lookup |
+| **Hierarchy** | Parent-child relationships via Transform |
+| **Pooling** | Reuse entities (projectiles, particles) |
 
 ---
 
 ## Next Steps
 
-Now that you understand entities, explore related topics:
-
-<div class="grid cards" markdown>
-
--   **Components Guide**
-
-    ---
-
-    Learn how to create and use components
-
-    [:octicons-arrow-right-24: Components Guide](components.md)
-
--   **Systems Guide**
-
-    ---
-
-    Write systems that process entities efficiently
-
-    [:octicons-arrow-right-24: Systems Guide](systems.md)
-
--   **ECS Concepts**
-
-    ---
-
-    Understand the big picture
-
-    [:octicons-arrow-right-24: ECS Concepts](../../concepts/entity-component-system.md)
-
-</div>
+- **[Components Guide](components.md)** - Deep dive into components with methods
+- **[Systems Guide](systems.md)** - Optional systems for performance
+- **[Queries Guide](queries.md)** - Find entities efficiently
+- **[ECS Getting Started](getting-started.md)** - Complete ECS tutorial
+- **[ECS Concepts](../../concepts/entity-component-system.md)** - Understanding hybrid ECS
 
 ---
 
-**Remember:** Entities are simple containers. The real power comes from combining components to create complex behaviors through composition!
+**Remember:** Entities are flexible - use them as simple component containers or derive custom classes for specialized behavior. Tags make lookups fast, and World scoping means automatic cleanup! 🎮

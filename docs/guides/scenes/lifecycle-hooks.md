@@ -1,517 +1,881 @@
 ---
 title: Lifecycle Hooks
-description: Advanced manual control for power users
+description: Inject custom behavior into scene lifecycle with hooks - similar to ASP.NET middleware
 ---
 
-# Lifecycle Hooks
+# Scene Lifecycle Hooks
 
-Lifecycle hooks provide fine-grained control over when and how your game logic executes. This guide covers advanced usage for power users who need manual control.
+Lifecycle hooks allow you to **inject behavior automatically** into the scene update and render loops. Think of them as **ASP.NET middleware for games** - registered once, executed automatically.
 
-!!! info "Advanced Feature"
-    Most games should use automatic execution. Only opt-out if you have a specific need for manual control.
+## Overview
 
----
+**What are lifecycle hooks?**
 
-## What Are Lifecycle Hooks?
+Hooks run **before and after** scene update/render methods:
 
-Lifecycle hooks are integration points where Brine2D automatically executes systems (like ECS pipelines) at specific points in the game loop:
+| Hook | When It Runs | Use For |
+|------|--------------|---------|
+| `PreUpdate` | Before `OnUpdate()` | Input layers, camera setup |
+| `PostUpdate` | After `OnUpdate()` | ECS systems, physics, AI |
+| `PreRender` | Before `OnRender()` | ECS rendering, sprite batching |
+| `PostRender` | After `OnRender()` | Debug overlays, UI chrome |
 
-```mermaid
-graph LR
-    A[Input] --> B[PreUpdate Hooks]
-    B --> C[Scene.Update]
-    C --> D[PostUpdate Hooks]
-    D --> E[PreRender Hooks]
-    E --> F[Scene.Render]
-    F --> G[PostRender Hooks]
-    
-    style A fill:#264f78,stroke:#4fc1ff,stroke-width:2px,color:#fff
-    style B fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-    style C fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
-    style D fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-    style E fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-    style F fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
-    style G fill:#2d5016,stroke:#4ec9b0,stroke-width:2px,color:#fff
-```
-
-**Default behavior (automatic execution):**
-
-- ✅ Input layers process input automatically
-- ✅ ECS systems run automatically at correct times
-- ✅ Frame management handled automatically (`Clear`/`BeginFrame`/`EndFrame`)
-- ✅ Components update automatically
+**Why use hooks?**
+- ✅ **Automatic** - registered once, runs for every scene
+- ✅ **Ordered** - control execution order
+- ✅ **Composable** - multiple hooks work together
+- ✅ **Opt-out** - scenes can disable hooks if needed
 
 ---
 
-## Automatic vs Manual Execution
+## The ISceneLifecycleHook Interface
 
-### Automatic Execution (Default)
-
-This is what most games should use:
-
-```csharp
-public class GameScene : Scene
+~~~csharp
+public interface ISceneLifecycleHook
 {
-    private readonly IEntityWorld _world;
+    /// <summary>
+    /// Execution order (lower runs first).
+    /// Recommended ranges:
+    /// - 0-50: Pre-processing (input layers, camera setup)
+    /// - 100-200: ECS systems
+    /// - 500+: Post-processing (debug overlays, UI)
+    /// </summary>
+    int Order { get; }
     
-    protected override void OnUpdate(GameTime gameTime)
-    {
-        // Just write your game logic
-        CheckWinCondition();
-        
-        // Systems run automatically!
-        // Components update automatically!
-    }
+    /// <summary>
+    /// Called before scene.Update().
+    /// Use for input processing, camera setup, etc.
+    /// </summary>
+    void PreUpdate(GameTime gameTime);
     
-    protected override void OnRender(GameTime gameTime)
-    {
-        // Frame management automatic!
-        // ECS rendering automatic!
-        
-        _renderer.DrawText($"Score: {_score}", 10, 10, Color.White);
-    }
+    /// <summary>
+    /// Called after scene.Update().
+    /// Use for ECS systems, physics, AI, etc.
+    /// </summary>
+    void PostUpdate(GameTime gameTime);
+    
+    /// <summary>
+    /// Called before scene.Render().
+    /// Use for ECS rendering, sprite batching, etc.
+    /// </summary>
+    void PreRender(GameTime gameTime);
+    
+    /// <summary>
+    /// Called after scene.Render().
+    /// Use for debug overlays, UI chrome, etc.
+    /// </summary>
+    void PostRender(GameTime gameTime);
 }
-```
+~~~
 
-**Benefits:**
+---
 
-- Simple and straightforward
-- Less boilerplate code
-- Hard to mess up
-- ASP.NET-like developer experience
+## Execution Flow
 
-### Manual Execution (Power Users)
+### Update Loop with Hooks
 
-Disable automatic behavior when you need fine control:
+~~~mermaid
+sequenceDiagram
+    participant SM as SceneManager
+    participant H1 as Hook 1 (Order: 10)
+    participant H2 as Hook 2 (Order: 100)
+    participant S as Scene
+    participant EW as EntityWorld
+    participant H3 as Hook 3 (Order: 500)
+    
+    SM->>H1: PreUpdate(gameTime)
+    SM->>H2: PreUpdate(gameTime)
+    SM->>H3: PreUpdate(gameTime)
+    
+    SM->>S: OnUpdate(gameTime)
+    Note over S: Scene game logic
+    
+    SM->>EW: Update(gameTime)
+    Note over EW: Components updated
+    
+    SM->>H1: PostUpdate(gameTime)
+    SM->>H2: PostUpdate(gameTime)
+    Note over H2: ECS systems run here
+    SM->>H3: PostUpdate(gameTime)
+~~~
 
-```csharp
-public class ManualControlScene : Scene
+### Render Loop with Hooks
+
+~~~mermaid
+sequenceDiagram
+    participant SM as SceneManager
+    participant R as Renderer
+    participant H1 as Hook 1 (Order: 10)
+    participant H2 as Hook 2 (Order: 100)
+    participant S as Scene
+    participant H3 as Hook 3 (Order: 500)
+    
+    SM->>R: BeginFrame()
+    
+    SM->>H1: PreRender(gameTime)
+    SM->>H2: PreRender(gameTime)
+    Note over H2: ECS rendering
+    SM->>H3: PreRender(gameTime)
+    
+    SM->>S: OnRender(gameTime)
+    Note over S: Scene rendering
+    
+    SM->>H1: PostRender(gameTime)
+    SM->>H2: PostRender(gameTime)
+    SM->>H3: PostRender(gameTime)
+    Note over H3: Debug overlays, UI
+    
+    SM->>R: EndFrame()
+~~~
+
+---
+
+## Built-in Hooks
+
+### ECSLifecycleHook
+
+Brine2D includes a built-in hook for **ECS systems**:
+
+~~~csharp
+internal class ECSLifecycleHook : ISceneLifecycleHook
 {
     private readonly UpdatePipeline _updatePipeline;
     
-    // Disable automatic system execution
-    public override bool EnableLifecycleHooks => false;
+    public int Order => 100; // Runs in middle range
     
-    protected override void OnUpdate(GameTime gameTime)
-    {
-        // Manually execute systems
-        _updatePipeline.Execute(gameTime);
-        _world.Update(gameTime);
-    }
-}
-```
-
-**Use manual control when:**
-
-- You need custom execution order
-- You want conditional system execution
-- You're implementing fixed timestep logic
-- You need to skip systems based on game state
-
----
-
-## Disabling Automatic Behavior
-
-### Option 1: Disable Lifecycle Hooks Only
-
-Keep automatic frame management but control systems manually:
-
-```csharp
-public class ManualSystemsScene : Scene
-{
-    private readonly UpdatePipeline _updatePipeline;
-    private readonly RenderPipeline _renderPipeline;
-    
-    public override bool EnableLifecycleHooks => false;
-    
-    public ManualSystemsScene(
-        UpdatePipeline updatePipeline,
-        RenderPipeline renderPipeline,
-        ILogger<ManualSystemsScene> logger) : base(logger)
+    public ECSLifecycleHook(UpdatePipeline updatePipeline)
     {
         _updatePipeline = updatePipeline;
-        _renderPipeline = renderPipeline;
     }
     
-    protected override void OnUpdate(GameTime gameTime)
+    public void PreUpdate(GameTime gameTime) { }
+    
+    public void PostUpdate(GameTime gameTime)
     {
+        // Execute all ECS update systems
         _updatePipeline.Execute(gameTime);
     }
     
-    protected override void OnRender(GameTime gameTime)
-    {
-        // Frame management still automatic
-        _renderPipeline.Execute(_renderer);
-    }
+    public void PreRender(GameTime gameTime) { }
+    public void PostRender(GameTime gameTime) { }
 }
-```
+~~~
 
-### Option 2: Full Manual Control
+**Registered automatically** when you call `AddBrine2D()` or `AddObjectECS()`.
 
-Disable both system execution and frame management:
+---
 
-```csharp
-public class FullManualControlScene : Scene
+## Creating Custom Hooks
+
+### Example: Debug Overlay Hook
+
+~~~csharp
+using Brine2D.Core;
+using Brine2D.Engine;
+using Brine2D.Rendering;
+
+public class DebugOverlayHook : ISceneLifecycleHook
 {
     private readonly IRenderer _renderer;
-    private readonly UpdatePipeline _updatePipeline;
-    private readonly RenderPipeline _renderPipeline;
+    private readonly IGameContext _gameContext;
     
-    public override bool EnableLifecycleHooks => false;
-    public override bool EnableAutomaticFrameManagement => false;
+    public int Order => 500; // Run after everything else
     
-    protected override void OnUpdate(GameTime gameTime)
+    public DebugOverlayHook(IRenderer renderer, IGameContext gameContext)
     {
-        _updatePipeline.Execute(gameTime);
+        _renderer = renderer;
+        _gameContext = gameContext;
     }
     
-    protected override void OnRender(GameTime gameTime)
+    public void PreUpdate(GameTime gameTime) { }
+    public void PostUpdate(GameTime gameTime) { }
+    public void PreRender(GameTime gameTime) { }
+    
+    public void PostRender(GameTime gameTime)
     {
-        _renderer.Clear(Color.Black);
-        _renderer.BeginFrame();
+        // Draw FPS counter
+        var fps = 1.0 / gameTime.DeltaTime;
+        _renderer.DrawText(
+            $"FPS: {fps:F0}", 
+            10, 10, 
+            Color.Yellow);
         
-        _renderPipeline.Execute(_renderer);
-        
-        _renderer.EndFrame();
+        // Draw memory usage
+        var memory = GC.GetTotalMemory(false) / 1024 / 1024;
+        _renderer.DrawText(
+            $"Memory: {memory} MB", 
+            10, 30, 
+            Color.Yellow);
     }
 }
-```
+
+// Register in Program.cs
+builder.Services.AddSingleton<ISceneLifecycleHook, DebugOverlayHook>();
+~~~
 
 ---
 
-## Understanding Hook Execution Order
+### Example: Input Layer Hook
 
-```mermaid
-sequenceDiagram
-    participant GL as Game Loop
-    participant SM as SceneManager
-    participant H as Lifecycle Hooks
-    participant S as Scene
-    
-    GL->>SM: Update()
-    
-    SM->>H: PreUpdate Hooks
-    Note over H: Input layers, etc.
-    
-    SM->>S: OnUpdate()
-    Note over S: Your game logic
-    
-    SM->>H: PostUpdate Hooks
-    Note over H: ECS systems, physics
-    
-    GL->>SM: Render()
-    
-    SM->>H: PreRender Hooks
-    Note over H: ECS rendering
-    
-    SM->>S: OnRender()
-    Note over S: Your UI/debug
-    
-    SM->>H: PostRender Hooks
-    Note over H: Debug overlays
-```
+~~~csharp
+using Brine2D.Core;
+using Brine2D.Engine;
+using Brine2D.Input;
 
-**Built-in hooks:**
+public class InputLayerHook : ISceneLifecycleHook
+{
+    private readonly InputLayerManager _inputManager;
+    
+    public int Order => 10; // Run first
+    
+    public InputLayerHook(InputLayerManager inputManager)
+    {
+        _inputManager = inputManager;
+    }
+    
+    public void PreUpdate(GameTime gameTime)
+    {
+        // Process input layers before scene update
+        _inputManager.Update();
+    }
+    
+    public void PostUpdate(GameTime gameTime) { }
+    public void PreRender(GameTime gameTime) { }
+    public void PostRender(GameTime gameTime) { }
+}
 
-| Hook | Order | Phase | Purpose |
-|------|-------|-------|---------|
-| InputLayerHook | 0 | PreUpdate | Process input layers |
-| ECSUpdateHook | 100 | PostUpdate | Run ECS update systems |
-| ECSRenderHook | 0 | PreRender | Run ECS render systems |
+// Register
+builder.Services.AddSingleton<ISceneLifecycleHook, InputLayerHook>();
+~~~
 
 ---
 
-## Practical Examples
+### Example: Camera Setup Hook
 
-### Pausable Game
+~~~csharp
+using Brine2D.Core;
+using Brine2D.Engine;
+using Brine2D.Rendering;
 
-Run systems only when game is not paused:
-
-```csharp
-public class PausableGameScene : Scene
+public class CameraSetupHook : ISceneLifecycleHook
 {
-    private readonly UpdatePipeline _updatePipeline;
-    private readonly IEntityWorld _world;
-    private readonly IInputService _input;
-    private bool _isPaused;
+    private readonly IRenderer _renderer;
+    private readonly Camera _camera;
     
-    public override bool EnableLifecycleHooks => false;
+    public int Order => 20; // After input, before scene update
+    
+    public CameraSetupHook(IRenderer renderer, Camera camera)
+    {
+        _renderer = renderer;
+        _camera = camera;
+    }
+    
+    public void PreUpdate(GameTime gameTime)
+    {
+        // Update camera before scene logic
+        _camera.Update(gameTime);
+    }
+    
+    public void PostUpdate(GameTime gameTime) { }
+    
+    public void PreRender(GameTime gameTime)
+    {
+        // Apply camera transform before rendering
+        _renderer.SetCamera(_camera);
+    }
+    
+    public void PostRender(GameTime gameTime)
+    {
+        // Reset camera after rendering
+        _renderer.ResetCamera();
+    }
+}
+
+// Register
+builder.Services.AddSingleton<ISceneLifecycleHook, CameraSetupHook>();
+~~~
+
+---
+
+## Hook Ordering
+
+### Recommended Order Ranges
+
+| Order Range | Purpose | Examples |
+|-------------|---------|----------|
+| **0-50** | Pre-processing | Input layers, camera setup, state validation |
+| **100-200** | Core systems | ECS update systems, physics, AI |
+| **300-400** | Effects & animations | Particle systems, animation controllers |
+| **500+** | Post-processing | Debug overlays, UI chrome, profilers |
+
+**Pattern:** Lower order = runs first. Use gaps (10, 20, 30) to allow insertion between hooks.
+
+---
+
+### Multiple Hooks Example
+
+~~~csharp
+var builder = GameApplication.CreateBuilder(args);
+
+// Order: 10 - Input processing
+builder.Services.AddSingleton<ISceneLifecycleHook, InputLayerHook>();
+
+// Order: 20 - Camera setup
+builder.Services.AddSingleton<ISceneLifecycleHook, CameraSetupHook>();
+
+// Order: 100 - ECS systems (registered automatically)
+builder.Services.AddBrine2D(options => { ... });
+
+// Order: 300 - Particle effects
+builder.Services.AddSingleton<ISceneLifecycleHook, ParticleSystemHook>();
+
+// Order: 500 - Debug overlay
+builder.Services.AddSingleton<ISceneLifecycleHook, DebugOverlayHook>();
+
+var game = builder.Build();
+~~~
+
+**Execution order:**
+1. InputLayerHook (10)
+2. CameraSetupHook (20)
+3. ECSLifecycleHook (100)
+4. ParticleSystemHook (300)
+5. DebugOverlayHook (500)
+
+---
+
+## Disabling Hooks Per Scene
+
+Scenes can **opt-out** of hooks if they need manual control:
+
+~~~csharp
+public class CustomScene : Scene
+{
+    // Disable automatic lifecycle hooks
+    public override bool EnableLifecycleHooks { get; set; } = false;
     
     protected override void OnUpdate(GameTime gameTime)
     {
-        // Always handle input
-        if (_input.IsKeyPressed(Keys.P))
-        {
-            _isPaused = !_isPaused;
-            Logger.LogInformation("Game {State}", _isPaused ? "PAUSED" : "RESUMED");
-        }
-        
-        // Only run systems when not paused
-        if (!_isPaused)
-        {
-            _updatePipeline.Execute(gameTime);
-            _world.Update(gameTime);
-        }
+        // ✅ Full manual control
+        // No hooks run - you handle everything
     }
 }
-```
+~~~
 
-### Fixed Timestep
+**Use cases:**
+- Loading screens
+- Cutscenes with custom update logic
+- Performance-critical scenes
+- Testing/debugging
 
-Implement frame-rate independent physics:
+---
 
-```csharp
-public class FixedTimestepScene : Scene
+## Advanced Patterns
+
+### Conditional Hook Execution
+
+~~~csharp
+public class ConditionalDebugHook : ISceneLifecycleHook
 {
-    private readonly UpdatePipeline _updatePipeline;
-    private const float FixedDeltaTime = 1f / 60f;
-    private float _accumulator;
+    private readonly IRenderer _renderer;
+    private readonly IConfiguration _config;
     
-    public override bool EnableLifecycleHooks => false;
+    public int Order => 500;
     
-    protected override void OnUpdate(GameTime gameTime)
+    public ConditionalDebugHook(IRenderer renderer, IConfiguration config)
     {
-        var deltaTime = (float)gameTime.DeltaTime;
-        _accumulator += deltaTime;
-        
-        while (_accumulator >= FixedDeltaTime)
+        _renderer = renderer;
+        _config = config;
+    }
+    
+    public void PreUpdate(GameTime gameTime) { }
+    public void PostUpdate(GameTime gameTime) { }
+    public void PreRender(GameTime gameTime) { }
+    
+    public void PostRender(GameTime gameTime)
+    {
+        // Only run in debug builds or when enabled
+        if (!_config.GetValue<bool>("Debug:ShowOverlay"))
         {
-            var fixedGameTime = new GameTime(
-                gameTime.TotalTime,
-                FixedDeltaTime,
-                gameTime.FrameCount
-            );
-            
-            _updatePipeline.Execute(fixedGameTime);
-            _accumulator -= FixedDeltaTime;
+            return;
+        }
+        
+        // Draw debug info
+        _renderer.DrawText("Debug Mode", 10, 10, Color.Red);
+    }
+}
+~~~
+
+---
+
+### Hook with Scene Access
+
+~~~csharp
+public class SceneInfoHook : ISceneLifecycleHook
+{
+    private readonly ISceneManager _sceneManager;
+    private readonly IRenderer _renderer;
+    
+    public int Order => 510;
+    
+    public SceneInfoHook(ISceneManager sceneManager, IRenderer renderer)
+    {
+        _sceneManager = sceneManager;
+        _renderer = renderer;
+    }
+    
+    public void PreUpdate(GameTime gameTime) { }
+    public void PostUpdate(GameTime gameTime) { }
+    public void PreRender(GameTime gameTime) { }
+    
+    public void PostRender(GameTime gameTime)
+    {
+        // Access current scene
+        var scene = _sceneManager.CurrentScene;
+        if (scene != null)
+        {
+            _renderer.DrawText(
+                $"Scene: {scene.Name}", 
+                10, 50, 
+                Color.Cyan);
         }
     }
 }
-```
+~~~
 
-### Selective System Execution
+---
 
-Run only specific systems:
+### Hook with Error Handling
 
-```csharp
-public class CustomPipelineScene : Scene
+Hooks run inside **try-catch blocks** - errors are logged but don't crash the game:
+
+~~~csharp
+public class RiskyHook : ISceneLifecycleHook
 {
-    private readonly PlayerControllerSystem _playerController;
-    private readonly PhysicsSystem _physics;
-    private readonly SpriteRenderingSystem _spriteRenderer;
+    private readonly ILogger<RiskyHook> _logger;
     
-    public override bool EnableLifecycleHooks => false;
-    public override bool EnableAutomaticFrameManagement => false;
+    public int Order => 100;
     
-    protected override void OnUpdate(GameTime gameTime)
+    public RiskyHook(ILogger<RiskyHook> logger)
     {
-        _playerController.Update(gameTime);
-        _physics.Update(gameTime);
-        // Skip AI, audio, etc.
+        _logger = logger;
     }
     
-    protected override void OnRender(GameTime gameTime)
+    public void PreUpdate(GameTime gameTime) { }
+    
+    public void PostUpdate(GameTime gameTime)
     {
-        _renderer.Clear(Color.Black);
-        _renderer.BeginFrame();
-        
-        _spriteRenderer.Render(_renderer);
-        // Skip particles, debug rendering
-        
-        _renderer.EndFrame();
+        try
+        {
+            // Risky operation
+            PerformComplexCalculation();
+        }
+        catch (Exception ex)
+        {
+            // ✅ SceneManager catches and logs this
+            // Other hooks still run
+            _logger.LogError(ex, "Complex calculation failed");
+        }
+    }
+    
+    public void PreRender(GameTime gameTime) { }
+    public void PostRender(GameTime gameTime) { }
+}
+~~~
+
+**Pattern:** SceneManager wraps hook calls in try-catch, logs errors, continues execution.
+
+---
+
+## Complete Example
+
+### Game with Multiple Hooks
+
+~~~csharp
+using Brine2D.Hosting;
+using Brine2D.SDL;
+using Microsoft.Extensions.DependencyInjection;
+
+var builder = GameApplication.CreateBuilder(args);
+
+// Configure Brine2D (includes ECSLifecycleHook at order 100)
+builder.Services.AddBrine2D(options =>
+{
+    options.WindowTitle = "Hook Demo";
+    options.WindowWidth = 1280;
+    options.WindowHeight = 720;
+});
+
+// Register custom hooks
+builder.Services.AddSingleton<ISceneLifecycleHook, InputLayerHook>();     // Order: 10
+builder.Services.AddSingleton<ISceneLifecycleHook, CameraSetupHook>();    // Order: 20
+builder.Services.AddSingleton<ISceneLifecycleHook, ParticleSystemHook>(); // Order: 300
+builder.Services.AddSingleton<ISceneLifecycleHook, DebugOverlayHook>();   // Order: 500
+
+// Register scenes
+builder.Services.AddScene<GameScene>();
+
+var game = builder.Build();
+await game.RunAsync<GameScene>();
+~~~
+
+### Hook Implementations
+
+~~~csharp
+// 1. Input Layer Hook (Order: 10)
+public class InputLayerHook : ISceneLifecycleHook
+{
+    private readonly InputLayerManager _inputManager;
+    public int Order => 10;
+    
+    public InputLayerHook(InputLayerManager inputManager) 
+        => _inputManager = inputManager;
+    
+    public void PreUpdate(GameTime gameTime) 
+        => _inputManager.Update();
+    
+    public void PostUpdate(GameTime gameTime) { }
+    public void PreRender(GameTime gameTime) { }
+    public void PostRender(GameTime gameTime) { }
+}
+
+// 2. Camera Setup Hook (Order: 20)
+public class CameraSetupHook : ISceneLifecycleHook
+{
+    private readonly IRenderer _renderer;
+    private readonly Camera _camera;
+    public int Order => 20;
+    
+    public CameraSetupHook(IRenderer renderer, Camera camera)
+    {
+        _renderer = renderer;
+        _camera = camera;
+    }
+    
+    public void PreUpdate(GameTime gameTime) 
+        => _camera.Update(gameTime);
+    
+    public void PostUpdate(GameTime gameTime) { }
+    
+    public void PreRender(GameTime gameTime) 
+        => _renderer.SetCamera(_camera);
+    
+    public void PostRender(GameTime gameTime) 
+        => _renderer.ResetCamera();
+}
+
+// 3. ECS Hook (Order: 100) - registered automatically
+
+// 4. Particle System Hook (Order: 300)
+public class ParticleSystemHook : ISceneLifecycleHook
+{
+    private readonly ParticleManager _particles;
+    public int Order => 300;
+    
+    public ParticleSystemHook(ParticleManager particles) 
+        => _particles = particles;
+    
+    public void PreUpdate(GameTime gameTime) { }
+    public void PostUpdate(GameTime gameTime) 
+        => _particles.Update(gameTime);
+    
+    public void PreRender(GameTime gameTime) 
+        => _particles.Render();
+    
+    public void PostRender(GameTime gameTime) { }
+}
+
+// 5. Debug Overlay Hook (Order: 500)
+public class DebugOverlayHook : ISceneLifecycleHook
+{
+    private readonly IRenderer _renderer;
+    public int Order => 500;
+    
+    public DebugOverlayHook(IRenderer renderer) 
+        => _renderer = renderer;
+    
+    public void PreUpdate(GameTime gameTime) { }
+    public void PostUpdate(GameTime gameTime) { }
+    public void PreRender(GameTime gameTime) { }
+    
+    public void PostRender(GameTime gameTime)
+    {
+        var fps = 1.0 / gameTime.DeltaTime;
+        _renderer.DrawText($"FPS: {fps:F0}", 10, 10, Color.Yellow);
     }
 }
-```
+~~~
 
 ---
 
 ## Best Practices
 
-!!! success "Do This"
-    ✅ Use automatic execution by default  
-    ✅ Document why you disabled hooks  
-    ✅ Keep manual logic simple  
-    ✅ Test thoroughly  
+### ✅ DO
 
-!!! failure "Avoid This"
-    ❌ Disabling hooks without a reason  
-    ❌ Forgetting to call systems  
-    ❌ Mixing automatic and manual in same scene  
-    ❌ Skipping frame management calls  
+**1. Use appropriate order ranges**
+
+~~~csharp
+// ✅ Good - clear separation
+public class InputHook : ISceneLifecycleHook 
+{
+    public int Order => 10; // Pre-processing
+}
+
+public class PhysicsHook : ISceneLifecycleHook 
+{
+    public int Order => 150; // Core systems
+}
+
+public class DebugHook : ISceneLifecycleHook 
+{
+    public int Order => 500; // Post-processing
+}
+~~~
+
+**2. Keep hooks focused**
+
+~~~csharp
+// ✅ Good - single responsibility
+public class InputLayerHook : ISceneLifecycleHook
+{
+    public void PreUpdate(GameTime gameTime)
+    {
+        // Only handle input layers
+        _inputManager.Update();
+    }
+}
+~~~
+
+**3. Use constructor injection**
+
+~~~csharp
+// ✅ Good - DI services
+public class MyHook : ISceneLifecycleHook
+{
+    private readonly IRenderer _renderer;
+    private readonly ILogger<MyHook> _logger;
+    
+    public MyHook(IRenderer renderer, ILogger<MyHook> logger)
+    {
+        _renderer = renderer;
+        _logger = logger;
+    }
+}
+~~~
+
+**4. Handle errors gracefully**
+
+~~~csharp
+// ✅ Good - defensive programming
+public void PostUpdate(GameTime gameTime)
+{
+    try
+    {
+        PerformComplexOperation();
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, "Operation failed");
+        // Don't throw - let other hooks run
+    }
+}
+~~~
 
 ---
 
-## Performance Considerations
+### ❌ DON'T
 
-**Automatic execution overhead:**
+**1. Don't use conflicting orders**
 
-The overhead of automatic hooks is negligible (~0.01ms). Don't disable for performance unless profiling proves it's necessary.
-
-**Manual control CAN help when:**
-
-- Skipping entire systems based on game state
-- Batching expensive operations
-- Running systems at different intervals
-- Implementing custom scheduling
-
-```csharp
-public class OptimizedScene : Scene
+~~~csharp
+// ❌ Bad - same order as ECS hook
+public class MyHook : ISceneLifecycleHook
 {
-    private readonly AISystem _aiSystem;
-    private int _frameCount;
-    
-    public override bool EnableLifecycleHooks => false;
-    
-    protected override void OnUpdate(GameTime gameTime)
-    {
-        _frameCount++;
-        
-        // Run AI every 3 frames instead of every frame
-        if (_frameCount % 3 == 0)
-        {
-            _aiSystem.Update(gameTime);
-        }
-    }
+    public int Order => 100; // Conflicts with ECSLifecycleHook!
 }
-```
+
+// ✅ Good - use gap between ranges
+public class MyHook : ISceneLifecycleHook
+{
+    public int Order => 150; // Clear gap
+}
+~~~
+
+**2. Don't do heavy work in wrong phase**
+
+~~~csharp
+// ❌ Bad - rendering in update
+public void PostUpdate(GameTime gameTime)
+{
+    _renderer.DrawText("Hello", 10, 10, Color.White); // Wrong phase!
+}
+
+// ✅ Good - render in render phase
+public void PostRender(GameTime gameTime)
+{
+    _renderer.DrawText("Hello", 10, 10, Color.White); // Correct!
+}
+~~~
+
+**3. Don't store scene references**
+
+~~~csharp
+// ❌ Bad - scene reference can become stale
+private IScene? _currentScene;
+
+public void PreUpdate(GameTime gameTime)
+{
+    _currentScene?.Update(gameTime); // Stale!
+}
+
+// ✅ Good - get scene from SceneManager
+public void PreUpdate(GameTime gameTime)
+{
+    var scene = _sceneManager.CurrentScene; // Fresh!
+}
+~~~
+
+**4. Don't block the hook**
+
+~~~csharp
+// ❌ Bad - blocking operation
+public void PostUpdate(GameTime gameTime)
+{
+    Thread.Sleep(1000); // Freezes entire game!
+    var data = DownloadData().Result; // Blocks!
+}
+
+// ✅ Good - async operations off-thread
+public void PostUpdate(GameTime gameTime)
+{
+    // Queue async work for later
+    _asyncQueue.Enqueue(async () => await DownloadData());
+}
+~~~
 
 ---
 
-## Debugging Manual Execution
+## Troubleshooting
 
-### Check Hook Status at Startup
+### Problem: Hook not executing
 
-```csharp
-protected override void OnInitialize()
-{
-    if (!EnableLifecycleHooks)
-    {
-        Logger.LogWarning("Lifecycle hooks DISABLED - manual control active");
-    }
-    
-    if (!EnableAutomaticFrameManagement)
-    {
-        Logger.LogWarning("Frame management DISABLED - you must call Clear/BeginFrame/EndFrame");
-    }
-}
-```
+**Symptom:** Your hook's methods never run.
 
-### Common Issues
+**Solutions:**
 
-**Problem:** Systems not running
+1. **Check registration:**
+   ~~~csharp
+   // ✅ Correct
+   builder.Services.AddSingleton<ISceneLifecycleHook, MyHook>();
+   ~~~
 
-```csharp
-// Check if hooks are enabled
-public override bool EnableLifecycleHooks => true; // ← Make sure this is true
+2. **Verify scene has hooks enabled:**
+   ~~~csharp
+   public class MyScene : Scene
+   {
+       public override bool EnableLifecycleHooks { get; set; } = true; // ✅
+   }
+   ~~~
 
-// Or call systems manually
-_updatePipeline.Execute(gameTime);
-```
-
-**Problem:** Black screen
-
-```csharp
-// Enable automatic frame management
-public override bool EnableAutomaticFrameManagement => true;
-
-// Or call manually
-_renderer.Clear(Color.Black);
-_renderer.BeginFrame();
-// ... rendering ...
-_renderer.EndFrame();
-```
+3. **Check hook is resolved:**
+   ~~~csharp
+   // Debug in startup
+   var hooks = serviceProvider.GetServices<ISceneLifecycleHook>();
+   Console.WriteLine($"Registered hooks: {hooks.Count()}");
+   ~~~
 
 ---
 
-## Migration Guide
+### Problem: Hooks running in wrong order
 
-### From Automatic to Manual
+**Symptom:** Hook A runs after Hook B, but should run before.
 
-**Before:**
+**Solution:**
 
-```csharp
-public class GameScene : Scene
+~~~csharp
+// Check Order properties
+public class HookA : ISceneLifecycleHook
 {
-    protected override void OnUpdate(GameTime gameTime)
+    public int Order => 10; // Should run first
+}
+
+public class HookB : ISceneLifecycleHook
+{
+    public int Order => 100; // Should run second
+}
+~~~
+
+---
+
+### Problem: Hook errors crash game
+
+**Symptom:** Exception in hook stops entire game.
+
+**Solution:**
+
+Hooks are wrapped in try-catch by SceneManager:
+
+~~~csharp
+// This is handled automatically - errors are logged
+public void PostUpdate(GameTime gameTime)
+{
+    throw new Exception("Oops!"); // Logged, other hooks continue
+}
+
+// But you should still handle your own errors
+public void PostUpdate(GameTime gameTime)
+{
+    try
     {
-        // Game logic
+        RiskyOperation();
+    }
+    catch (Exception ex)
+    {
+        _logger.LogError(ex, "Operation failed");
     }
 }
-```
-
-**After:**
-
-```csharp
-public class GameScene : Scene
-{
-    private readonly UpdatePipeline _updatePipeline;
-    private readonly IEntityWorld _world;
-    
-    public override bool EnableLifecycleHooks => false; // Add this
-    
-    public GameScene(
-        UpdatePipeline updatePipeline,
-        IEntityWorld world,
-        ILogger<GameScene> logger) : base(logger)
-    {
-        _updatePipeline = updatePipeline;
-        _world = world;
-    }
-    
-    protected override void OnUpdate(GameTime gameTime)
-    {
-        // Game logic
-        
-        _updatePipeline.Execute(gameTime); // Add this
-        _world.Update(gameTime);           // Add this
-    }
-}
-```
-
-### From Manual to Automatic
-
-Remove the overrides and manual calls:
-
-```csharp
-public class GameScene : Scene
-{
-    // Remove: public override bool EnableLifecycleHooks => false;
-    // Remove: _updatePipeline.Execute(gameTime);
-    
-    protected override void OnUpdate(GameTime gameTime)
-    {
-        // Just your game logic
-    }
-}
-```
+~~~
 
 ---
 
 ## Summary
 
-| Feature | Automatic | Manual |
-|---------|-----------|--------|
-| Complexity | Low | High |
-| Flexibility | Medium | Maximum |
-| Error-prone | Low | High |
-| Performance | Excellent | Excellent |
-| Recommended | Most games | Advanced needs |
+**Lifecycle hooks:**
 
-**Key takeaway:** Start with automatic execution. Only switch to manual control when you hit a specific limitation.
+| Hook | Phase | Use For |
+|------|-------|---------|
+| `PreUpdate` | Before scene update | Input processing, state setup |
+| `PostUpdate` | After scene update | ECS systems, physics, AI |
+| `PreRender` | Before scene render | ECS rendering, sprite batching |
+| `PostRender` | After scene render | Debug overlays, UI chrome |
 
----
+**Key benefits:**
 
-## See Also
+| Benefit | Description |
+|---------|-------------|
+| **Automatic** | Registered once, runs for all scenes |
+| **Ordered** | Control execution order with `Order` property |
+| **Composable** | Multiple hooks work together seamlessly |
+| **Flexible** | Scenes can opt-out with `EnableLifecycleHooks = false` |
 
-- [Scene Lifecycle](lifecycle.md) - Understanding scene phases
-- [Scene Transitions](transitions.md) - Loading screens and fades
-- [ECS Systems](../ecs/systems.md) - Creating custom systems
-- [Game Loop](../../concepts/game-loop.md) - How the game loop works
+**Common patterns:**
+
+| Pattern | Usage |
+|---------|-------|
+| **Pre-processing hooks** | Order 0-50 (input, camera) |
+| **Core system hooks** | Order 100-200 (ECS, physics) |
+| **Post-processing hooks** | Order 500+ (debug, UI) |
+| **Conditional execution** | Check config/flags before running |
 
 ---
 
 ## Next Steps
 
-- Learn about [Scene Transitions](transitions.md) for smooth scene changes
-- Explore [ECS Systems](../ecs/systems.md) to create custom game logic
-- Check out the [Manual Control Sample](../../samples/advanced.md) for complete examples
+- **[Scene Transitions](transitions.md)** - Smooth scene changes
+- **[ECS Systems](../ecs/systems.md)** - Build custom ECS systems
+- **[Scene Management](../../concepts/scenes.md)** - Complete scene lifecycle
+- **[Dependency Injection](../../concepts/dependency-injection.md)** - Service registration patterns
+
+---
+
+**Remember:** Lifecycle hooks run automatically for every scene (unless disabled). Use them to inject cross-cutting behavior like input processing, ECS systems, or debug overlays! 🎮
