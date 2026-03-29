@@ -1,13 +1,8 @@
----
+﻿---
 title: Home
 ---
 
 # Brine2D Game Engine
-
-!!! tip "What's New in v0.9.0-beta"
-    Package separation, track-based audio, performance monitoring, GPU renderer improvements, and .NET 10 support!
-    
-    [:octicons-arrow-right-24: See What's New](whats-new/v0.9.0-beta.md)
 
 ## Modern 2D game development with .NET elegance
 
@@ -57,20 +52,21 @@ Just like ASP.NET, Brine2D provides sensible defaults that just work. Focus on b
 
 ### First-Class Dependency Injection
 
-Built on Microsoft's DI container, Brine2D makes testable, maintainable code the default—not the exception.
+Built on Microsoft's DI container, Brine2D makes testable, maintainable code the default — not the exception.
 
 ```csharp
 using Brine2D.Core;
-using Brine2D.Input;
-using Brine2D.Rendering;
-using Microsoft.Extensions.Logging;
+using Brine2D.Engine;
 
 public class GameScene : Scene
 {
-    // Constructor injection - just like ASP.NET controllers
-    public GameScene(IRenderer renderer, IInputService input, ILogger<GameScene> logger) : base(logger)
+    // Only inject YOUR services — framework properties are set automatically
+    public GameScene(IGameContext gameContext) { }
+
+    protected override void OnUpdate(GameTime gameTime)
     {
-        // Dependencies automatically injected!
+        // Logger, World, Renderer, Input, Audio, Game — all available as properties!
+        Logger.LogDebug("Updating");
     }
 }
 ```
@@ -81,17 +77,16 @@ public class GameScene : Scene
 |------------------|-------------|-------------------|
 | `WebApplicationBuilder` | `GameApplicationBuilder` | Configure your game with the same patterns |
 | Controllers | Scenes | Organize game logic into manageable units |
-| Middleware Pipeline | **System Pipelines** | Automatic execution via lifecycle hooks |
-| `appsettings.json` | `gamesettings.json` | JSON configuration with hot reload |
-| `ILogger<T>` | `ILogger<T>` | Structured logging everywhere |
+| Middleware Pipeline | **ECS Systems** | Automatic execution via scene world |
+| `ILogger<T>` | `Logger` property | Structured logging everywhere |
 | Entity Framework | **Scene Management** | Transitions, loading screens |
 
 ### Production-Ready Architecture
 
-- **Modular by design** - Mix and match only what you need
-- **Clean separation of concerns** - Abstractions over implementations
-- **Testable** - Mock any service, test any component
-- **Cross-platform** - Windows, macOS, Linux support via SDL3
+- **Modular by design** — Mix and match only what you need
+- **Clean separation of concerns** — Abstractions over implementations
+- **Testable** — Mock any service, test any component
+- **Cross-platform** — Windows, macOS, Linux support via SDL3
 
 ## See It In Action
 
@@ -102,56 +97,38 @@ using Brine2D.Core;
 using Brine2D.Engine;
 using Brine2D.Hosting;
 using Brine2D.Input;
-using Brine2D.Rendering;
-using Brine2D.SDL;
-using Microsoft.Extensions.Logging;
 
-// Create builder (like ASP.NET's WebApplication.CreateBuilder)
 var builder = GameApplication.CreateBuilder(args);
 
-// Add Brine2D with sensible defaults (SDL3 backend, GPU rendering, input, audio)
-builder.Services.AddBrine2D(options =>
+builder.Configure(options =>
 {
-    options.WindowTitle = "My Game";
-    options.WindowWidth = 1280;
-    options.WindowHeight = 720;
+    options.Window.Title = "My Game";
+    options.Window.Width = 1280;
+    options.Window.Height = 720;
 });
 
-builder.Services.AddScene<GameScene>();
+builder.AddScene<GameScene>();
 
-// Build and run
-var game = builder.Build();
+await using var game = builder.Build();
 await game.RunAsync<GameScene>();
 
-// Define your scene (like an ASP.NET controller)
 public class GameScene : Scene
 {
-    private readonly IInputService _input;
-    private readonly IRenderer _renderer;
     private readonly IGameContext _gameContext;
 
-    public GameScene
-    (
-        IRenderer renderer,
-        IInputService input,
-        IGameContext gameContext,
-        ILogger<GameScene> logger
-    ) : base(logger)
+    public GameScene(IGameContext gameContext)
     {
-        _renderer = renderer;
-        _input = input;
         _gameContext = gameContext;
     }
 
     protected override void OnRender(GameTime gameTime)
     {
-        // Frame management happens automatically!
-        _renderer.DrawText("Hello, Brine2D!", 100, 100, Color.White);
+        Renderer.DrawText("Hello, Brine2D!", 100, 100, Color.White);
     }
 
     protected override void OnUpdate(GameTime gameTime)
     {
-        if (_input.IsKeyPressed(Keys.Escape))
+        if (Input.IsKeyPressed(Key.Escape))
         {
             _gameContext.RequestExit();
         }
@@ -171,10 +148,11 @@ That's it! A complete game window with input handling and rendering.
 - Line drawing with configurable thickness
 
 ### **Hybrid Entity Component System**
-- Components are classes that can contain logic
-- Optional systems for performance optimization
+- Components as data containers
+- EntityBehaviors for per-entity logic with DI support
+- Optional systems for batch processing optimization
 - Composition over inheritance for flexible entities
-- ASP.NET-style system pipelines with automatic execution
+- Scoped EntityWorld per scene with automatic cleanup
 
 ### **Advanced Query System**
 - Fluent API for complex entity searches
@@ -200,65 +178,38 @@ That's it! A complete game window with input handling and rendering.
 - ECS integration with audio sources and listeners
 
 ### **Advanced Particle System**
-- Object pooling for zero-allocation performance
-- Particle textures with custom sprites
-- Rotation, trails, and blend modes
-- 7 emitter shapes (point, circle, ring, box, cone, line, burst)
+- GPU-accelerated particle rendering
+- Configurable emitters and particle lifetime
+- Integration with ECS
 
-### **Collision Detection**
-- Box and circle colliders
-- Spatial partitioning for performance
-- Physics response (bounce, slide, push)
-
-### **Tilemap Support**
-- Tiled (.tmj) file format
-- Automatic collision generation
-- Layer rendering
+### **Asset Pipeline**
+- Unified `IAssetLoader` with caching and ref-counting
+- Typed `AssetManifest` for parallel preloading
+- Scoped lifetime — assets released automatically on scene unload
+- Optional `Brine2D.Build` package for compile-time asset constants
 
 ### **Complete UI Framework**
-- 15+ production-ready components
+- Production-ready components
 - Buttons, sliders, text inputs, dialogs, tabs
 - Scroll views, tooltips, dropdowns
 - Input layer management
 
 ## Project Structure
 
-Brine2D follows a clean, modular architecture:
+Brine2D is a single NuGet package with a clean internal architecture:
 
 ```
-Brine2D/ 
-    ├── Brine2D.Core         # Core abstractions (IScene, ITexture, etc.)
-    ├── Brine2D.Engine        # Game loop, scene management, transitions
-    ├── Brine2D.Hosting       # ASP.NET-style hosting model 
-    ├── Brine2D.ECS           # Entity Component System 
-    ├── Brine2D.Rendering     # Rendering abstractions 
-    ├── Brine2D.Rendering.SDL # SDL3 rendering implementation 
-    ├── Brine2D.Rendering.ECS # ECS rendering systems 
-    ├── Brine2D.Input         # Input abstractions 
-    ├── Brine2D.Input.SDL     # SDL3 input implementation 
-    ├── Brine2D.Input.ECS     # ECS input systems 
-    ├── Brine2D.Audio         # Audio abstractions 
-    ├── Brine2D.Audio.SDL     # SDL3 audio implementation 
-    ├── Brine2D.Audio.ECS     # ECS audio systems 
-    └── Brine2D.UI            # Complete UI framework
+Brine2D/
+    ├── Assets            # Asset loading, caching, manifests
+    ├── Audio             # Audio abstractions and SDL3 implementation
+    ├── Core              # Core types (GameTime, Color, etc.)
+    ├── ECS               # Entity Component System
+    ├── Engine            # Game loop, scenes, transitions
+    ├── Hosting           # ASP.NET-style hosting model
+    ├── Input             # Input abstractions and SDL3 implementation
+    ├── Rendering         # Rendering abstractions and SDL3 GPU implementation
+    └── UI                # UI framework
 ```
-
-Each package is focused, testable, and can be swapped with custom implementations.
-
-## What's New in 0.9.0-beta
-
-Brine2D 0.9.0-beta is a major architectural release with significant improvements:
-
-- **Package Separation** - Cleaner architecture with Brine2D + Brine2D.SDL packages
-- **Track-Based Audio** - New track-based API replaces channel-based system for precise control
-- **Performance Monitoring** - Built-in overlay with FPS, frame time, memory stats, and batch efficiency
-- **GPU Renderer** - Now the default with automatic batching and improved performance
-- **Post-Processing** - Render-to-texture pipeline with screen shake, vignette, and custom shaders
-- **ECS Multi-Threading** - Parallel entity processing with thread-safe collections
-- **.NET 10 Support** - Built on the latest .NET with modern language features
-- **8+ Performance Improvements** - 30% faster queries, 50% fewer allocations, 10x+ sprite batching
-
-[Read the full changelog](whats-new/v0.9.0-beta.md)
 
 ## Who Is This For?
 
@@ -300,21 +251,21 @@ Build internal tools and games with maintainable code.
 
     [:octicons-arrow-right-24: Learn More](tutorials/index.md)
 
--   :material-file-document: **Concepts**
+-   :material-file-document: **Fundamentals**
 
     ---
 
     Deep dive into Brine2D's architecture
 
-    [:octicons-arrow-right-24: Read Docs](concepts/index.md)
+    [:octicons-arrow-right-24: Read Docs](fundamentals/scenes.md)
 
--   :material-code-tags: **FeatureDemos**
+-   :material-code-tags: **Feature Demos**
 
     ---
 
     Interactive demos showcasing all major features
 
-    [:octicons-arrow-right-24: Browse Demos](samples/index.md)
+    [:octicons-arrow-right-24: Browse Demos](samples/feature-demos.md)
 
 </div>
 
@@ -323,7 +274,7 @@ Build internal tools and games with maintainable code.
 - **GitHub**: [CrazyPickleStudios/Brine2D](https://github.com/CrazyPickleStudios/Brine2D)
 - **Issues**: Report bugs or request features
 - **Discussions**: Ask questions and share ideas
-- **License**: MIT - Use it anywhere, even commercially
+- **License**: MIT — Use it anywhere, even commercially
 
 ---
 
@@ -331,5 +282,5 @@ Build internal tools and games with maintainable code.
 **Ready to build games the ASP.NET way?**
 
 [Get Started :material-arrow-right:](getting-started/quickstart.md){ .md-button .md-button--primary }
-[View Demos :material-github:](samples/index.md){ .md-button }
+[View Demos :material-github:](samples/feature-demos.md){ .md-button }
 </div>

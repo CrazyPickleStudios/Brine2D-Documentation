@@ -1,337 +1,663 @@
+﻿---
+title: Guides
+description: Advanced guides and deep-dives for mastering Brine2D
 ---
-title: Guides Overview
-description: Practical guides for building games with Brine2D
+
+# Guides
+
+Advanced topics and in-depth guides for building production-ready games with Brine2D. These guides assume you've completed the [tutorials](../tutorials/index.md) and understand the basics.
+
 ---
 
-# Guides Overview
+## What Are Guides?
 
-Welcome to the **Brine2D Guides**! These practical, task-focused tutorials will help you build real game features step-by-step.
+**Tutorials:** Step-by-step instructions for beginners
 
-## What You'll Learn
+**Guides:** Deep-dives into specific topics for experienced developers
 
-Guides are organized by feature area, each with complete working examples you can copy and adapt for your games.
+**Use guides when:**
+- You need advanced patterns
+- You're optimizing performance
+- You're building production games
+- You want architectural best practices
+
+---
+
+## Available Guides
+
+### Architecture & Patterns
+
+| Guide | Topic | Difficulty |
+|-------|-------|------------|
+| **[Scene Management](scene-management.md)** | Advanced scene patterns | ⭐⭐ Intermediate |
+| **[State Management](state-management.md)** | Game state across scenes | ⭐⭐ Intermediate |
+| **[Service Patterns](service-patterns.md)** | Custom services & DI | ⭐⭐⭐ Advanced |
+
+---
+
+### Performance
+
+| Guide | Topic | Difficulty |
+|-------|-------|------------|
+| **[Object Pooling](object-pooling.md)** | Reduce GC pressure | ⭐⭐⭐ Advanced |
+| **[Batch Rendering](batch-rendering.md)** | Optimize draw calls | ⭐⭐⭐ Advanced |
+| **[Memory Management](memory-management.md)** | Avoid allocations | ⭐⭐⭐ Advanced |
+
+---
+
+### Game Systems
+
+| Guide | Topic | Difficulty |
+|-------|-------|------------|
+| **[Physics Integration](physics-integration.md)** | Custom physics | ⭐⭐⭐ Advanced |
+| **[Save System](save-system.md)** | Serialization & persistence | ⭐⭐ Intermediate |
+| **[Achievement System](achievement-system.md)** | Unlockables & progress | ⭐⭐ Intermediate |
+
+---
+
+### Production
+
+| Guide | Topic | Difficulty |
+|-------|-------|------------|
+| **[Deployment](deployment.md)** | Publishing your game | ⭐⭐ Intermediate |
+| **[Debugging](debugging.md)** | Advanced debugging | ⭐⭐ Intermediate |
+| **[Testing](testing.md)** | Testing strategies | ⭐⭐⭐ Advanced |
+
+---
+
+## Scene Management
+
+**Deep dive into advanced scene patterns.**
+
+### Multiple Active Scenes
+
+**Use case:** Persistent HUD + game scene
+
+```csharp
+public class SceneStack
+{
+    private readonly Stack<Scene> _scenes = new();
+    
+    public void Push(Scene scene)
+    {
+        _scenes.Push(scene);
+        scene.Initialize();
+    }
+    
+    public void Pop()
+    {
+        var scene = _scenes.Pop();
+        scene.Unload();
+    }
+    
+    public void Update(GameTime gameTime)
+    {
+        // Update all scenes in stack
+        foreach (var scene in _scenes.Reverse())
+        {
+            scene.Update(gameTime);
+        }
+    }
+}
+
+// Usage
+_sceneStack.Push(new GameScene());
+_sceneStack.Push(new HUDScene());  // Overlays game scene
+```
+
+---
+
+### Scene Data Passing
+
+**Pattern 1: Singleton service**
+
+```csharp
+public class GameState
+{
+    public int Level { get; set; }
+    public int Score { get; set; }
+    public string PlayerName { get; set; } = "";
+}
+
+// Register
+builder.Services.AddSingleton<GameState>();
+
+// Scene 1: Set data
+public class MenuScene : Scene
+{
+    private readonly GameState _state;
+    
+    public MenuScene(GameState state)
+    {
+        _state = state;
+    }
+    
+    protected override void OnUpdate(GameTime gameTime)
+    {
+        if (_input.IsKeyPressed(Key.Enter))
+        {
+            _state.PlayerName = _nameInput.Text;
+            _state.Level = 1;
+            await _sceneManager.LoadSceneAsync<GameScene>();
+        }
+    }
+}
+
+// Scene 2: Read data
+public class GameScene : Scene
+{
+    private readonly GameState _state;
+    
+    public GameScene(GameState state)
+    {
+        _state = state;
+    }
+    
+    protected override Task OnLoadAsync(CancellationToken ct)
+    {
+        Logger.LogInformation("Loading level {Level} for {Player}", 
+            _state.Level, _state.PlayerName);
+        return Task.CompletedTask;
+    }
+}
+```
+
+[:octicons-arrow-right-24: Full Guide: Scene Management](scene-management.md)
+
+---
+
+## Object Pooling
+
+**Reduce garbage collection pressure with object pooling.**
+
+### Why Pool?
+
+**Problem:**
+```csharp
+// ❌ Creates garbage every frame
+protected override void OnUpdate(GameTime gameTime)
+{
+    if (_input.IsMouseButtonPressed(MouseButton.Left))
+    {
+        var bullet = new Bullet();  // Allocates memory
+        bullet.Fire(_playerPosition);
+    }
+}
+```
+
+**Performance:** 60 bullets/sec = 3600 objects/min = frequent GC pauses
+
+---
+
+### Generic Pool Implementation
+
+```csharp
+public class ObjectPool<T> where T : new()
+{
+    private readonly Stack<T> _pool = new();
+    private readonly Action<T>? _resetAction;
+    
+    public ObjectPool(int initialSize = 16, Action<T>? resetAction = null)
+    {
+        _resetAction = resetAction;
+        
+        for (int i = 0; i < initialSize; i++)
+        {
+            _pool.Push(new T());
+        }
+    }
+    
+    public T Get()
+    {
+        if (_pool.Count > 0)
+            return _pool.Pop();
+        
+        return new T();  // Grow if needed
+    }
+    
+    public void Return(T item)
+    {
+        _resetAction?.Invoke(item);
+        _pool.Push(item);
+    }
+}
+```
+
+---
+
+### Usage Example
+
+```csharp
+public class BulletManager
+{
+    private readonly ObjectPool<Bullet> _bulletPool;
+    
+    public BulletManager()
+    {
+        _bulletPool = new ObjectPool<Bullet>(
+            initialSize: 100,
+            resetAction: bullet => bullet.Reset()
+        );
+    }
+    
+    public void Fire(Vector2 position, Vector2 direction)
+    {
+        var bullet = _bulletPool.Get();  // Reuse
+        bullet.Position = position;
+        bullet.Direction = direction;
+        bullet.OnDestroy += () => _bulletPool.Return(bullet);  // Auto-return
+    }
+}
+```
+
+**Result:** Zero allocations, no GC pauses!
+
+[:octicons-arrow-right-24: Full Guide: Object Pooling](object-pooling.md)
+
+---
+
+## Save System
+
+**Persist game data between sessions.**
+
+### JSON Serialization
+
+```csharp
+public class SaveData
+{
+    public int Level { get; set; }
+    public int Score { get; set; }
+    public Vector2 PlayerPosition { get; set; }
+    public List<string> UnlockedAchievements { get; set; } = new();
+}
+
+public class SaveSystem
+{
+    private readonly string _savePath;
+    
+    public SaveSystem()
+    {
+        var appData = Environment.GetFolderPath(
+            Environment.SpecialFolder.ApplicationData);
+        _savePath = Path.Combine(appData, "MyGame", "save.json");
+    }
+    
+    public async Task SaveAsync(SaveData data)
+    {
+        Directory.CreateDirectory(Path.GetDirectoryName(_savePath)!);
+        
+        var json = JsonSerializer.Serialize(data, new JsonSerializerOptions
+        {
+            WriteIndented = true
+        });
+        
+        await File.WriteAllTextAsync(_savePath, json);
+    }
+    
+    public async Task<SaveData?> LoadAsync()
+    {
+        if (!File.Exists(_savePath))
+            return null;
+        
+        var json = await File.ReadAllTextAsync(_savePath);
+        return JsonSerializer.Deserialize<SaveData>(json);
+    }
+}
+```
+
+---
+
+### Integration
+
+```csharp
+// Register
+builder.Services.AddSingleton<SaveSystem>();
+
+// Game scene
+public class GameScene : Scene
+{
+    private readonly SaveSystem _saveSystem;
+    
+    public GameScene(SaveSystem saveSystem)
+    {
+        _saveSystem = saveSystem;
+    }
+    
+    protected override async Task OnLoadAsync(CancellationToken ct)
+    {
+        // Load save
+        var save = await _saveSystem.LoadAsync();
+        if (save != null)
+        {
+            _level = save.Level;
+            _score = save.Score;
+            _playerPosition = save.PlayerPosition;
+        }
+    }
+    
+    public async Task SaveGameAsync()
+    {
+        var data = new SaveData
+        {
+            Level = _level,
+            Score = _score,
+            PlayerPosition = _playerPosition
+        };
+        
+        await _saveSystem.SaveAsync(data);
+    }
+}
+```
+
+[:octicons-arrow-right-24: Full Guide: Save System](save-system.md)
+
+---
+
+## Batch Rendering
+
+**Minimize draw calls for maximum performance.**
+
+### Texture Atlas
+
+```csharp
+public class SpriteAtlas
+{
+    private readonly ITexture _atlasTexture;
+    private readonly Dictionary<string, Rectangle> _regions;
+    
+    public ITexture Texture => _atlasTexture;
+    
+    public Rectangle GetRegion(string name)
+    {
+        return _regions[name];
+    }
+}
+
+// Build at startup
+public class AtlasBuilder
+{
+    public static async Task<SpriteAtlas> BuildAsync(
+        IRenderer renderer,
+        Dictionary<string, ITexture> sprites)
+    {
+        // Pack sprites into single texture (implementation omitted)
+        var packed = PackTextures(sprites);
+        
+        return new SpriteAtlas(packed.Texture, packed.Regions);
+    }
+}
+```
+
+---
+
+### Batch Drawing
+
+```csharp
+public class SpriteBatch
+{
+    private readonly List<DrawCommand> _commands = new();
+    private SpriteAtlas? _currentAtlas;
+    
+    public void Draw(string spriteName, Vector2 position)
+    {
+        _commands.Add(new DrawCommand
+        {
+            SpriteName = spriteName,
+            Position = position
+        });
+    }
+    
+    public void Flush(IRenderer renderer)
+    {
+        if (_currentAtlas == null) return;
+        
+        // Group by texture (atlas)
+        var grouped = _commands.GroupBy(c => c.Atlas);
+        
+        foreach (var group in grouped)
+        {
+            // ONE draw call per atlas
+            renderer.DrawBatch(group.Key.Texture, group.ToList());
+        }
+        
+        _commands.Clear();
+    }
+}
+```
+
+**Result:** 1000 sprites = 1-2 draw calls instead of 1000!
+
+[:octicons-arrow-right-24: Full Guide: Batch Rendering](batch-rendering.md)
+
+---
+
+## Testing Strategies
+
+**Write testable game code.**
+
+### Unit Testing Game Logic
+
+```csharp
+public class PlayerTests
+{
+    [Fact]
+    public void TakeDamage_ReducesHealth()
+    {
+        var player = new Player { Health = 100 };
+        
+        player.TakeDamage(25);
+        
+        Assert.Equal(75, player.Health);
+    }
+    
+    [Fact]
+    public void TakeDamage_WhenHealthZero_PlayerDies()
+    {
+        var player = new Player { Health = 10 };
+        var died = false;
+        player.OnDeath += () => died = true;
+        
+        player.TakeDamage(10);
+        
+        Assert.True(died);
+    }
+}
+```
+
+---
+
+### Integration Testing Scenes
+
+```csharp
+public class SceneTests
+{
+    [Fact]
+    public async Task GameScene_LoadsWithoutCrashing()
+    {
+        var services = new ServiceCollection();
+        services.AddSingleton<IInputContext>(new MockInputContext());
+        services.AddSingleton<IAudioService>(new MockAudioService());
+        
+        var provider = services.BuildServiceProvider();
+        var scene = ActivatorUtilities.CreateInstance<GameScene>(provider);
+        
+        await scene.LoadAsync(CancellationToken.None);
+        
+        Assert.NotNull(scene);
+    }
+}
+```
+
+[:octicons-arrow-right-24: Full Guide: Testing](testing.md)
+
+---
+
+## Deployment
+
+**Publish your game for distribution.**
+
+### Single-File Publish
+
+```bash
+# Windows
+dotnet publish -c Release -r win-x64 \
+    --self-contained \
+    /p:PublishSingleFile=true \
+    /p:IncludeNativeLibrariesForSelfExtract=true
+
+# macOS
+dotnet publish -c Release -r osx-x64 \
+    --self-contained \
+    /p:PublishSingleFile=true
+
+# Linux
+dotnet publish -c Release -r linux-x64 \
+    --self-contained \
+    /p:PublishSingleFile=true
+```
+
+**Output:** Single executable + assets folder
+
+---
+
+### Steam Distribution
+
+```xml
+<!-- YourGame.csproj -->
+<PropertyGroup>
+    <PublishDir>bin\Publish\Steam\$(RuntimeIdentifier)\</PublishDir>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+</PropertyGroup>
+
+<Target Name="CopySteamFiles" AfterTargets="Publish">
+    <Copy SourceFiles="steam_api64.dll" 
+          DestinationFolder="$(PublishDir)" />
+</Target>
+```
+
+[:octicons-arrow-right-24: Full Guide: Deployment](deployment.md)
 
 ---
 
 ## Guide Categories
 
-### Getting Started
+### By Experience Level
 
-| Guide | Description | Difficulty |
-|-------|-------------|------------|
-| **[Quick Start](getting-started/quick-start.md)** | Create your first game in 5 minutes | ⭐ Beginner |
-| **[Project Structure](getting-started/project-structure.md)** | Organize your game project | ⭐ Beginner |
-| **[Configuration](getting-started/configuration.md)** | Set up game settings and options | ⭐ Beginner |
-
----
-
-### Input Handling
-
-| Guide | Description | Difficulty |
-|-------|-------------|------------|
-| **[Keyboard Input](input/keyboard.md)** | Handle keyboard controls | ⭐ Beginner |
-| **[Mouse Input](input/mouse.md)** | Implement mouse interaction | ⭐ Beginner |
-| **[Gamepad Support](input/gamepad.md)** | Add controller support | ⭐⭐ Intermediate |
-| **[Input Layers](input/input-layers.md)** | Priority-based input routing | ⭐⭐ Intermediate |
-| **[Text Input](input/text-input.md)** | Handle text fields and chat | ⭐⭐ Intermediate |
+| Level | Guides | Prerequisites |
+|-------|--------|---------------|
+| **Intermediate** | Scene Management, Save System, Deployment | Completed tutorials |
+| **Advanced** | Object Pooling, Batch Rendering, Testing | Production experience |
+| **Expert** | Service Patterns, Memory Management, Physics | Deep .NET knowledge |
 
 ---
 
-### Rendering & Graphics
+### By Topic Area
 
-| Guide | Description | Difficulty |
-|-------|-------------|------------|
-| **[Drawing Basics](rendering/drawing-basics.md)** | Shapes, colors, and primitives | ⭐ Beginner |
-| **[Loading Textures](rendering/textures.md)** | Load and display images | ⭐ Beginner |
-| **[Sprite Rendering](rendering/sprites.md)** | Draw sprites and sprite sheets | ⭐ Beginner |
-| **[Animation](rendering/animation.md)** | Create sprite animations | ⭐⭐ Intermediate |
-| **[Camera System](rendering/camera.md)** | Implement camera movement | ⭐⭐ Intermediate |
-| **[Text Rendering](rendering/text.md)** | Display text and fonts | ⭐ Beginner |
-| **[Particle Effects](rendering/particles.md)** | Add visual effects | ⭐⭐⭐ Advanced |
+| Area | Guides |
+|------|--------|
+| **Architecture** | Scene Management, State Management, Service Patterns |
+| **Performance** | Object Pooling, Batch Rendering, Memory Management |
+| **Game Systems** | Save System, Achievement System, Physics Integration |
+| **Production** | Deployment, Debugging, Testing |
 
 ---
 
-### Audio & Sound
+## How to Use Guides
 
-| Guide | Description | Difficulty |
-|-------|-------------|------------|
-| **[Sound Effects](audio/sound-effects.md)** | Play sounds (jump, shoot, etc.) | ⭐ Beginner |
-| **[Background Music](audio/music.md)** | Add looping music | ⭐ Beginner |
-| **[Audio Mixing](audio/mixing.md)** | Control volume and balance | ⭐⭐ Intermediate |
-| **[3D Audio](audio/spatial-audio.md)** | Position-based sound | ⭐⭐⭐ Advanced |
+### 1. Choose Your Focus
 
----
+**Building a game?** Start with Scene Management and Save System
 
-### Collision Detection
+**Optimizing?** Jump to Object Pooling and Batch Rendering
 
-| Guide | Description | Difficulty |
-|-------|-------------|------------|
-| **[Basic Collision](collision/basics.md)** | Rectangle and circle collision | ⭐ Beginner |
-| **[Collision Response](collision/response.md)** | Bounce, slide, and push | ⭐⭐ Intermediate |
-| **[Collision Layers](collision/layers.md)** | Selective collision filtering | ⭐⭐ Intermediate |
-| **[Spatial Partitioning](collision/optimization.md)** | Optimize collision detection | ⭐⭐⭐ Advanced |
+**Shipping?** Read Deployment and Testing
 
 ---
 
-### Tilemaps & Levels
+### 2. Follow the Pattern
 
-| Guide | Description | Difficulty |
-|-------|-------------|------------|
-| **[Tiled Integration](tilemaps/tiled.md)** | Load Tiled JSON maps | ⭐⭐ Intermediate |
-| **[Tilemap Rendering](tilemaps/rendering.md)** | Efficient tilemap drawing | ⭐⭐ Intermediate |
-| **[Tilemap Collision](tilemaps/collision.md)** | Tile-based collision | ⭐⭐ Intermediate |
-| **[Layer Management](tilemaps/layers.md)** | Background, foreground layers | ⭐⭐ Intermediate |
+Each guide follows this structure:
 
----
-
-### UI & Menus
-
-| Guide | Description | Difficulty |
-|-------|-------------|------------|
-| **[Buttons](ui/buttons.md)** | Create clickable buttons | ⭐ Beginner |
-| **[Labels & Text](ui/labels.md)** | Display UI text | ⭐ Beginner |
-| **[Sliders](ui/sliders.md)** | Volume and setting sliders | ⭐⭐ Intermediate |
-| **[Text Input](ui/text-input.md)** | Name entry, chat boxes | ⭐⭐ Intermediate |
-| **[Dialogs](ui/dialogs.md)** | Modal popup windows | ⭐⭐ Intermediate |
-| **[Menus](ui/menus.md)** | Main menu, pause menu | ⭐⭐ Intermediate |
-| **[HUD](ui/hud.md)** | Health bars, score display | ⭐ Beginner |
+1. **Problem statement** - What issue does this solve?
+2. **Solution pattern** - Recommended approach
+3. **Implementation** - Complete working code
+4. **Best practices** - Tips and gotchas
+5. **Examples** - Real-world usage
 
 ---
 
-### Game Mechanics
+### 3. Adapt to Your Needs
 
-| Guide | Description | Difficulty |
-|-------|-------------|------------|
-| **[Player Movement](mechanics/movement.md)** | WASD, 8-direction, smooth | ⭐ Beginner |
-| **[Jump & Gravity](mechanics/jumping.md)** | Platformer physics | ⭐⭐ Intermediate |
-| **[Shooting](mechanics/shooting.md)** | Projectile system | ⭐⭐ Intermediate |
-| **[Enemy AI](mechanics/enemy-ai.md)** | Simple enemy behavior | ⭐⭐ Intermediate |
-| **[Health System](mechanics/health.md)** | Damage and death | ⭐ Beginner |
-| **[Inventory](mechanics/inventory.md)** | Item management | ⭐⭐⭐ Advanced |
-| **[Save/Load](mechanics/save-load.md)** | Game state persistence | ⭐⭐⭐ Advanced |
+**Guides are starting points, not rules.**
+
+Modify patterns to fit your game's specific requirements.
 
 ---
 
-### Architecture & Patterns
+## Learning Path
 
-| Guide | Description | Difficulty |
-|-------|-------------|------------|
-| **[Component System](architecture/components.md)** | Entity-component pattern | ⭐⭐⭐ Advanced |
-| **[State Machines](architecture/state-machines.md)** | Manage game/entity states | ⭐⭐ Intermediate |
-| **[Event System](architecture/events.md)** | Decouple with events | ⭐⭐ Intermediate |
-| **[Object Pooling](architecture/pooling.md)** | Reduce allocations | ⭐⭐⭐ Advanced |
+**Recommended guide reading order:**
 
----
+```mermaid
+graph TB
+    A["Complete Tutorials"]
+    B["Scene Management"]
+    C["State Management"]
+    D["Save System"]
+    E["Object Pooling"]
+    F["Batch Rendering"]
+    G["Testing"]
+    H["Deployment"]
+    I["Ship Your Game!"]
+    
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G --> H
+    H --> I
+    
+    style A fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
+    style I fill:#4a2d4a,stroke:#c586c0,stroke-width:3px,color:#fff
+```
 
-### Performance & Optimization
-
-| Guide | Description | Difficulty |
-|-------|-------------|------------|
-| **[Profiling](performance/profiling.md)** | Measure performance | ⭐⭐ Intermediate |
-| **[Reducing Allocations](performance/gc.md)** | Minimize garbage collection | ⭐⭐⭐ Advanced |
-| **[Draw Call Batching](performance/batching.md)** | Optimize rendering | ⭐⭐⭐ Advanced |
-| **[Asset Streaming](performance/streaming.md)** | Load assets on demand | ⭐⭐⭐ Advanced |
-
----
-
-### Testing & Debugging
-
-| Guide | Description | Difficulty |
-|-------|-------------|------------|
-| **[Unit Testing](testing/unit-tests.md)** | Test game logic | ⭐⭐ Intermediate |
-| **[Debug Visualization](testing/debug-draw.md)** | Visualize collisions, paths | ⭐ Beginner |
-| **[Logging](testing/logging.md)** | Effective log messages | ⭐ Beginner |
-| **[Hot Reload](testing/hot-reload.md)** | Fast iteration | ⭐⭐ Intermediate |
-
----
-
-### Packaging & Distribution
-
-| Guide | Description | Difficulty |
-|-------|-------------|------------|
-| **[Publishing](packaging/publishing.md)** | Build release versions | ⭐⭐ Intermediate |
-| **[Cross-Platform](packaging/cross-platform.md)** | Windows, Linux, macOS | ⭐⭐⭐ Advanced |
-| **[Installers](packaging/installers.md)** | Create setup programs | ⭐⭐ Intermediate |
+**Time investment:** ~2-3 hours per guide
 
 ---
 
-## Learning Paths
+## Related Resources
 
-### Path 1: Complete Beginner
+### Documentation
+- [Tutorials](../tutorials/index.md) - Learn the basics first
+- [API Reference](../api/index.md) - Complete API docs
+- [Samples](../samples/index.md) - Working examples
+- [Performance](../performance/index.md) - Optimization techniques
 
-Start here if you're new to game development:
-
-1. **[Quick Start](getting-started/quick-start.md)** - Get something on screen
-2. **[Keyboard Input](input/keyboard.md)** - Make it interactive
-3. **[Drawing Basics](rendering/drawing-basics.md)** - Understand rendering
-4. **[Loading Textures](rendering/textures.md)** - Add graphics
-5. **[Player Movement](mechanics/movement.md)** - Create player control
-
-**Result:** A simple game with a player you can move around!
-
----
-
-### Path 2: Intermediate Developer
-
-You've built simple games before:
-
-1. **[Sprite Rendering](rendering/sprites.md)** - Work with sprite sheets
-2. **[Animation](rendering/animation.md)** - Bring sprites to life
-3. **[Basic Collision](collision/basics.md)** - Add physics
-4. **[Camera System](rendering/camera.md)** - Follow the player
-5. **[Tiled Integration](tilemaps/tiled.md)** - Build levels
-
-**Result:** A platformer or top-down game with levels!
+### External
+- [.NET Performance Tips](https://learn.microsoft.com/en-us/dotnet/core/performance/) - Microsoft docs
+- [Game Programming Patterns](https://gameprogrammingpatterns.com/) - Free online book
+- [Performance Best Practices](https://learn.microsoft.com/en-us/dotnet/framework/performance/) - .NET patterns
 
 ---
 
-### Path 3: Advanced Developer
+## Contributing Guides
 
-You want to optimize and polish:
+**Want to write a guide?**
 
-1. **[Component System](architecture/components.md)** - Clean architecture
-2. **[Object Pooling](architecture/pooling.md)** - Reduce GC pressure
-3. **[Spatial Partitioning](collision/optimization.md)** - Fast collision
-4. **[Profiling](performance/profiling.md)** - Find bottlenecks
-5. **[Asset Streaming](performance/streaming.md)** - Large game optimization
+1. Pick a topic you've mastered
+2. Fork the [documentation repo](https://github.com/CrazyPickleStudios/Brine2D-Documentation)
+3. Follow the guide template
+4. Submit pull request
 
-**Result:** A polished, performant game ready for release!
+**Good guide topics:**
+- Patterns you've used in production
+- Solutions to common problems
+- Performance optimizations you've discovered
 
----
-
-## How to Use These Guides
-
-### Structure
-
-Each guide follows this format:
-
-1. **Overview** - What you'll build
-2. **Prerequisites** - What you need to know first
-3. **Step-by-Step** - Complete walkthrough
-4. **Complete Code** - Copy-paste ready examples
-5. **Explanation** - How it works
-6. **Common Issues** - Troubleshooting
-7. **Next Steps** - Related guides
+[:octicons-arrow-right-24: Contributing Guidelines](../contributing/index.md)
 
 ---
 
-### Code Examples
-
-All code examples are:
-- ✅ **Complete** - No placeholder comments
-- ✅ **Tested** - Works with Brine2D .NET 10
-- ✅ **Commented** - Explains key concepts
-- ✅ **Copy-Paste Ready** - Use immediately
-
----
-
-### Difficulty Levels
-
-| Symbol | Level | Description |
-|--------|-------|-------------|
-| ⭐ | **Beginner** | No prior experience needed |
-| ⭐⭐ | **Intermediate** | Some game dev experience helpful |
-| ⭐⭐⭐ | **Advanced** | Requires solid C# and game dev knowledge |
-
----
-
-## Complete Examples
-
-### Example 1: Simple Platformer
-
-Combines these guides:
-- Player Movement
-- Jump & Gravity
-- Basic Collision
-- Camera System
-- Tilemap Rendering
-
-**[See Full Tutorial →](examples/platformer.md)**
-
----
-
-### Example 2: Top-Down Shooter
-
-Combines these guides:
-- Player Movement
-- Shooting
-- Enemy AI
-- Health System
-- Particle Effects
-
-**[See Full Tutorial →](examples/shooter.md)**
-
----
-
-### Example 3: Menu System
-
-Combines these guides:
-- Buttons
-- Sliders
-- Text Input
-- Dialogs
-- Save/Load
-
-**[See Full Tutorial →](examples/menu-system.md)**
-
----
-
-## Find What You Need
-
-### By Feature
-
-- Need to load sprites? → [Loading Textures](rendering/textures.md)
-- Want controller support? → [Gamepad Support](input/gamepad.md)
-- Adding sound? → [Sound Effects](audio/sound-effects.md)
-- Building UI? → [UI Guides](ui/)
-
-### By Problem
-
-- "My game is slow" → [Performance Guides](performance/)
-- "Collisions aren't working" → [Collision Guides](collision/)
-- "How do I organize my code?" → [Architecture Guides](architecture/)
-
----
-
-## Contributing
-
-Found something unclear? Want to add a guide?
-
-1. Check existing guides for style
-2. Follow the template structure
-3. Include complete code examples
-4. Test everything works
-
-**[Contribution Guidelines →](../contributing.md)**
-
----
-
-## Need Help?
-
-- **Discord:** Join our community
-- **GitHub Issues:** Report problems
-- **Stack Overflow:** Tag `brine2d`
-- **Twitter:** [@Brine2D](https://twitter.com/brine2d)
-
----
-
-## Quick Reference
-
-| I want to... | Go to... |
-|-------------|----------|
-| **Move a character** | [Player Movement](mechanics/movement.md) |
-| **Handle clicks** | [Mouse Input](input/mouse.md) |
-| **Play a sound** | [Sound Effects](audio/sound-effects.md) |
-| **Show a button** | [Buttons](ui/buttons.md) |
-| **Detect collision** | [Basic Collision](collision/basics.md) |
-| **Load a level** | [Tiled Integration](tilemaps/tiled.md) |
-| **Follow the player** | [Camera System](rendering/camera.md) |
-| **Animate a sprite** | [Animation](rendering/animation.md) |
-| **Display health bar** | [HUD](ui/hud.md) |
-| **Save progress** | [Save/Load](mechanics/save-load.md) |
-
----
-
-Ready to start building? Pick a guide and let's code!
-
-**[Begin with Quick Start →](getting-started/quick-start.md)**
+**Ready to level up?** Start with [Scene Management](scene-management.md) or choose a guide that fits your needs!

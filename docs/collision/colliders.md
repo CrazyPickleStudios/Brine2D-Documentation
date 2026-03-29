@@ -1,9 +1,9 @@
 ﻿---
-title: Samples
-description: Samples in Brine2D
+title: Colliders
+description: Colliders in Brine2D
 ---
 
-# Samples
+# Colliders
 
 !!! note "Coming Soon"
     This page is under construction. Check back with the next release.

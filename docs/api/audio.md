@@ -1,9 +1,9 @@
 ﻿---
-title: Samples
-description: Samples in Brine2D
+title: Brine2D.Audio API
+description: Brine2D.Audio API in Brine2D
 ---
 
-# Samples
+# Brine2D.Audio API
 
 !!! note "Coming Soon"
     This page is under construction. Check back with the next release.

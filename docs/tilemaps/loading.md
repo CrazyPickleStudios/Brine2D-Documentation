@@ -1,9 +1,9 @@
 ﻿---
-title: Samples
-description: Samples in Brine2D
+title: Loading Tilemaps
+description: Loading Tilemaps in Brine2D
 ---
 
-# Samples
+# Loading Tilemaps
 
 !!! note "Coming Soon"
     This page is under construction. Check back with the next release.

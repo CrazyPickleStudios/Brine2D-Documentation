@@ -1,9 +1,9 @@
 ﻿---
-title: Samples
-description: Samples in Brine2D
+title: Custom UI
+description: Custom UI in Brine2D
 ---
 
-# Samples
+# Custom UI
 
 !!! note "Coming Soon"
     This page is under construction. Check back with the next release.

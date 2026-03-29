@@ -1,9 +1,9 @@
 ﻿---
-title: Samples
-description: Samples in Brine2D
+title: Building a Platformer
+description: Building a Platformer in Brine2D
 ---
 
-# Samples
+# Building a Platformer
 
 !!! note "Coming Soon"
     This page is under construction. Check back with the next release.

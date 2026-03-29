@@ -1,9 +1,9 @@
 ﻿---
-title: Samples
-description: Samples in Brine2D
+title: Collision Detection
+description: Collision Detection in Brine2D
 ---
 
-# Samples
+# Collision Detection
 
 !!! note "Coming Soon"
     This page is under construction. Check back with the next release.

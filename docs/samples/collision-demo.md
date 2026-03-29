@@ -1,9 +1,9 @@
 ﻿---
-title: Samples
-description: Samples in Brine2D
+title: Collision Demo
+description: Collision Demo in Brine2D
 ---
 
-# Samples
+# Collision Demo
 
 !!! note "Coming Soon"
     This page is under construction. Check back with the next release.

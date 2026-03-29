@@ -1,9 +1,9 @@
 ﻿---
-title: Samples
-description: Samples in Brine2D
+title: Animation Demo
+description: Animation Demo in Brine2D
 ---
 
-# Samples
+# Animation Demo
 
 !!! note "Coming Soon"
     This page is under construction. Check back with the next release.

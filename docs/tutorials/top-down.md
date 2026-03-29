@@ -1,9 +1,9 @@
 ﻿---
-title: Samples
-description: Samples in Brine2D
+title: Top-Down Adventure
+description: Top-Down Adventure in Brine2D
 ---
 
-# Samples
+# Top-Down Adventure
 
 !!! note "Coming Soon"
     This page is under construction. Check back with the next release.

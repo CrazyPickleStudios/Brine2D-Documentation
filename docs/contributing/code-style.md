@@ -1,9 +1,9 @@
 ﻿---
-title: Samples
-description: Samples in Brine2D
+title: Code Style
+description: Code Style in Brine2D
 ---
 
-# Samples
+# Code Style
 
 !!! note "Coming Soon"
     This page is under construction. Check back with the next release.

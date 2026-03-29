@@ -1,9 +1,9 @@
 ﻿---
-title: Samples
-description: Samples in Brine2D
+title: Basic Game
+description: Basic Game in Brine2D
 ---
 
-# Samples
+# Basic Game
 
 !!! note "Coming Soon"
     This page is under construction. Check back with the next release.

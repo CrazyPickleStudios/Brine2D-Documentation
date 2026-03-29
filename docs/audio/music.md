@@ -1,9 +1,9 @@
 ﻿---
-title: Samples
-description: Samples in Brine2D
+title: Music Playback
+description: Music Playback in Brine2D
 ---
 
-# Samples
+# Music Playback
 
 !!! note "Coming Soon"
     This page is under construction. Check back with the next release.

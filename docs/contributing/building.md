@@ -1,9 +1,9 @@
 ﻿---
-title: Samples
-description: Samples in Brine2D
+title: Building from Source
+description: Building from Source in Brine2D
 ---
 
-# Samples
+# Building from Source
 
 !!! note "Coming Soon"
     This page is under construction. Check back with the next release.

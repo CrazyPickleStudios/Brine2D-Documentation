@@ -1,9 +1,9 @@
 ﻿---
-title: Samples
-description: Samples in Brine2D
+title: Rendering Tiles
+description: Rendering Tiles in Brine2D
 ---
 
-# Samples
+# Rendering Tiles
 
 !!! note "Coming Soon"
     This page is under construction. Check back with the next release.

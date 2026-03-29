@@ -1,4 +1,4 @@
-site_name: Brine2D Documentation
+﻿site_name: Brine2D Documentation
 
 theme:
   name: material
@@ -7,6 +7,11 @@ theme:
   features:
     - content.code.copy
     - content.code.select
+    - navigation.tabs           
+    - navigation.sections      
+    - navigation.top          
+    - search.suggest           
+    - search.highlight    
    
 extra_javascript:
   - https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js
@@ -16,20 +21,23 @@ extra_css:
   - stylesheets/prism-material-slate.css
 
 nav:
-  - Overview: index.md
+  - Home: index.md
   
-  - What's New: 
-      - v0.9.0-beta: whats-new/v0.9.0-beta.md
-      - v0.8.0-beta: whats-new/v0.8.0-beta.md
-      - v0.7.0-beta: whats-new/v0.7.0-beta.md
-      - v0.6.0-beta: whats-new/v0.6.0-beta.md
-  
-  - Getting Started:
-      - Quick Start: getting-started/quickstart.md
+  - Get Started:
+      - Overview: getting-started/index.md
       - Installation: getting-started/installation.md
+      - Quick Start: getting-started/quickstart.md
       - Your First Game: getting-started/first-game.md
       - Project Structure: getting-started/project-structure.md
       - Configuration: getting-started/configuration.md
+  
+  - What's New:
+      - Overview: whats-new/index.md
+      - v0.9.5-beta: whats-new/v-0.9.5-beta.md
+      - v0.9.0-beta: whats-new/v-0.9.0-beta.md
+      - v0.8.0-beta: whats-new/v-0.8.0-beta.md
+      - v0.7.0-beta: whats-new/v-0.7.0-beta.md
+      - v0.6.0-beta: whats-new/v-0.6.0-beta.md
   
   - Tutorials:
       - Overview: tutorials/index.md
@@ -39,65 +47,86 @@ nav:
       - Building a Platformer: tutorials/platformer.md
       - Top-Down Adventure: tutorials/top-down.md
   
-  - Guides:
-      - Overview: guides/index.md
-      - Rendering:
-          - Choosing a Renderer: guides/rendering/choosing-renderer.md
-          - GPU Renderer: guides/rendering/gpu-renderer.md
-          - Sprites & Textures: guides/rendering/sprites.md
-          - Texture Atlasing: guides/rendering/texture-atlasing.md
-          - Post-Processing: guides/rendering/post-processing.md
-          - Cameras: guides/rendering/cameras.md
-          - Particles: guides/rendering/particles.md
-          - Drawing Primitives: guides/rendering/primitives.md
-      - Input:
-          - Keyboard: guides/input/keyboard.md
-          - Mouse: guides/input/mouse.md
-          - Gamepad Support: guides/input/gamepad.md
-          - Input Layers: guides/input/layers.md
-      - Audio:
-          - Getting Started: guides/audio/getting-started.md
-          - Sound Effects: guides/audio/sound-effects.md
-          - Music Playback: guides/audio/music.md
-          - Spatial Audio: guides/audio/spatial-audio.md
-      - Scenes:
-          - Scene Lifecycle: guides/scenes/lifecycle.md
-          - Scene Transitions: guides/scenes/transitions.md
-          - Lifecycle Hooks: guides/scenes/lifecycle-hooks.md
-      - Collision:
-          - Collision System: guides/collision/system.md
-          - Colliders: guides/collision/colliders.md
-      - Tilemaps:
-          - Loading Tilemaps: guides/tilemaps/loading.md
-          - Rendering Tiles: guides/tilemaps/rendering.md
-      - UI Framework:
-          - UI Components: guides/ui/components.md
-          - Custom UI: guides/ui/custom.md
-      - Entity Component System:
-          - Getting Started: guides/ecs/getting-started.md
-          - Components: guides/ecs/components.md
-          - Systems: guides/ecs/systems.md
-          - Entities: guides/ecs/entities.md
-          - Queries: guides/ecs/queries.md
-          - Multi-Threading: guides/ecs/multi-threading.md
-      - Performance:
-          - Monitoring: guides/performance/monitoring.md
-          - Optimization: guides/performance/optimization.md
-      - Events:
-          - Window Events: guides/events/window-events.md
+  - Fundamentals:
+      - Overview: fundamentals/index.md
+      - Architecture: fundamentals/architecture.md
+      - Dependency Injection: fundamentals/dependency-injection.md
+      - Game Loop: fundamentals/game-loop.md
+      - Builder Pattern: fundamentals/builder-pattern.md
+      - ECS Deep Dive: fundamentals/entity-component-system.md
   
-  - Concepts:
-      - Overview: concepts/index.md
-      - Architecture: concepts/architecture.md
-      - Dependency Injection: concepts/dependency-injection.md
-      - Game Loop: concepts/game-loop.md
-      - Builder Pattern: concepts/builder-pattern.md
-      - Scene Management: concepts/scenes.md
-      - Entity Component System: concepts/entity-component-system.md
+  - Rendering:
+      - Overview: rendering/index.md
+      - Choosing a Renderer: rendering/choosing-renderer.md
+      - GPU Renderer: rendering/gpu-renderer.md
+      - Sprites & Textures: rendering/sprites.md
+      - Texture Atlasing: rendering/texture-atlasing.md
+      - Post-Processing: rendering/post-processing.md
+      - Cameras: rendering/cameras.md
+      - Particles: rendering/particles.md
+      - Drawing Primitives: rendering/primitives.md
+  
+  - Input:
+      - Overview: input/index.md
+      - Keyboard: input/keyboard.md
+      - Mouse: input/mouse.md
+      - Gamepad Support: input/gamepad.md
+      - Input Layers: input/layers.md
+  
+  - Audio:
+      - Overview: audio/index.md
+      - Getting Started: audio/getting-started.md
+      - Sound Effects: audio/sound-effects.md
+      - Music Playback: audio/music.md
+      - Spatial Audio: audio/spatial-audio.md
+  
+  - Scenes:
+      - Overview: scenes/index.md
+      - Scene Transitions: scenes/transitions.md
+  
+  - Assets:
+      - Overview: assets/index.md
+      - Loading Assets: assets/loading.md
+      - Asset Manifests: assets/manifests.md
+      - Brine2D.Build: assets/build-package.md
+  
+  - ECS:
+      - Overview: ecs/index.md
+      - Getting Started: ecs/getting-started.md
+      - Entities: ecs/entities.md
+      - Components: ecs/components.md
+      - Systems: ecs/systems.md
+      - Queries: ecs/queries.md
+      - Multi-Threading: ecs/multi-threading.md
+  
+  - Collision:
+      - Overview: collision/index.md
+      - Collision System: collision/system.md
+      - Colliders: collision/colliders.md
+  
+  - Tilemaps:
+      - Overview: tilemaps/index.md
+      - Loading Tilemaps: tilemaps/loading.md
+      - Rendering Tiles: tilemaps/rendering.md
+  
+  - UI:
+      - Overview: ui/index.md
+      - UI Components: ui/components.md
+      - Custom UI: ui/custom.md
+  
+  - Performance:
+      - Overview: performance/index.md
+      - Monitoring: performance/monitoring.md
+      - Optimization: performance/optimization.md
+  
+  - Events:
+      - Overview: events/index.md
+      - Window Events: events/window-events.md
   
   - API Reference:
       - Overview: api/index.md
       - Brine2D.Core: api/core.md
+      - Brine2D.Engine: api/engine.md
       - Brine2D.Rendering: api/rendering.md
       - Brine2D.Input: api/input.md
       - Brine2D.Audio: api/audio.md
@@ -105,6 +134,7 @@ nav:
   
   - Samples:
       - Overview: samples/index.md
+      - FeatureDemos: samples/feature-demos.md
       - Basic Game: samples/basic-game.md
       - Animation Demo: samples/animation-demo.md
       - Collision Demo: samples/collision-demo.md
@@ -116,7 +146,9 @@ nav:
       - Building from Source: contributing/building.md
 
 plugins:
-  - search
+  - search:
+      lang: en
+      separator: '[\s\-\.]+'
 
 markdown_extensions:  
   - admonition

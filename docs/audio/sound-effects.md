@@ -1,9 +1,9 @@
 ﻿---
-title: Samples
-description: Samples in Brine2D
+title: Sound Effects
+description: Sound Effects in Brine2D
 ---
 
-# Samples
+# Sound Effects
 
 !!! note "Coming Soon"
     This page is under construction. Check back with the next release.

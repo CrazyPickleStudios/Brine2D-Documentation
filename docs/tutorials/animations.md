@@ -1,4 +1,4 @@
----
+﻿---
 title: Animation System Tutorial
 description: Master sprite sheet animations in Brine2D with AnimationClip and SpriteAnimator
 ---
@@ -152,8 +152,7 @@ You load **one PNG file** and tell the system which rectangular section to displ
 
 ```csharp
 // Load the entire sprite sheet (one file)
-_spriteSheet = await _textureLoader.LoadTextureAsync(
-    "assets/sprites/character.png",  // ← Your single PNG
+_spriteSheet = await _assets.GetOrLoadTextureAsync("assets/sprites/character.png",  // ← Your single PNG
     TextureScaleMode.Nearest,
     cancellationToken
 );
@@ -186,33 +185,25 @@ namespace MyGame;
 
 public class AnimatedSpriteScene : Scene
 {
-    private readonly IRenderer _renderer;
-    private readonly IInputService _input;
-    private readonly ITextureLoader _textureLoader;
+            private readonly IAssetLoader _assets;
     private readonly IGameContext _gameContext;
     private readonly ILoggerFactory _loggerFactory;
 
     public AnimatedSpriteScene(
         IRenderer renderer,
-        IInputService input,
-        ITextureLoader textureLoader,
+        IInputContext input,
+        IAssetLoader textureLoader,
         IGameContext gameContext,
         ILoggerFactory loggerFactory,
         ILogger<AnimatedSpriteScene> logger
-    ) : base(logger)
+    )
     {
-        _renderer = renderer;
-        _input = input;
-        _textureLoader = textureLoader;
+        _assets = assets;
         _gameContext = gameContext;
         _loggerFactory = loggerFactory;
     }
 
-    protected override void OnInitialize()
-    {
-        Logger.LogInformation("Animated Sprite Scene initialized!");
     }
-}
 ```
 
 ---
@@ -239,8 +230,7 @@ protected override async Task OnLoadAsync(CancellationToken cancellationToken)
 
     if (File.Exists(spriteSheetPath))
     {
-        _spriteSheet = await _textureLoader.LoadTextureAsync(
-            spriteSheetPath,
+        _spriteSheet = await _assets.GetOrLoadTextureAsync(spriteSheetPath,
             TextureScaleMode.Nearest, // Important for pixel art!
             cancellationToken
         );
@@ -252,7 +242,7 @@ protected override async Task OnLoadAsync(CancellationToken cancellationToken)
     {
         Logger.LogWarning("Sprite sheet not found, using placeholder");
         // 576x24 = 24 frames at 24x24 each
-        _spriteSheet = _textureLoader.CreateTexture(576, 24, TextureScaleMode.Nearest);
+        _spriteSheet = _assets.CreateTexture(576, 24, TextureScaleMode.Nearest);
     }
 
     // Create the animator (we'll add animations next)
@@ -392,28 +382,28 @@ protected override void OnUpdate(GameTime gameTime)
 {
     var deltaTime = (float)gameTime.DeltaTime;
 
-    if (_input.IsKeyPressed(Keys.Escape))
+    if (Input.IsKeyPressed(Key.Escape))
     {
         _gameContext.RequestExit();
     }
 
     // Animation switching
-    if (_input.IsKeyPressed(Keys.D1))
+    if (Input.IsKeyPressed(Key.D1))
     {
         _animator?.Play("idle");
         Logger.LogInformation("Playing: idle");
     }
-    if (_input.IsKeyPressed(Keys.D2))
+    if (Input.IsKeyPressed(Key.D2))
     {
         _animator?.Play("walk");
         Logger.LogInformation("Playing: walk");
     }
-    if (_input.IsKeyPressed(Keys.D3))
+    if (Input.IsKeyPressed(Key.D3))
     {
         _animator?.Play("run");
         Logger.LogInformation("Playing: run");
     }
-    if (_input.IsKeyPressed(Keys.D4))
+    if (Input.IsKeyPressed(Key.D4))
     {
         _animator?.Play("jump");
         Logger.LogInformation("Playing: jump");
@@ -435,8 +425,8 @@ Now we draw the current animation frame:
 ```csharp
 protected override void OnRender(GameTime gameTime)
 {
-    _renderer.Clear(new Color(40, 40, 40));
-    _renderer.BeginFrame();
+    Renderer.Clear(new Color(40, 40, 40));
+    Renderer.BeginFrame();
 
     if (_spriteSheet != null && _animator?.CurrentFrame != null)
     {
@@ -452,14 +442,14 @@ protected override void OnRender(GameTime gameTime)
         var drawY = _position.Y - (destHeight / 2);
 
         // Draw the current frame
-        _renderer.DrawTexture(
+        Renderer.DrawTexture(
             _spriteSheet,
             rect.X, rect.Y, rect.Width, rect.Height,  // Source rectangle
             drawX, drawY, destWidth, destHeight       // Destination rectangle
         );
     }
 
-    _renderer.EndFrame();
+    Renderer.EndFrame();
 }
 ```
 
@@ -479,13 +469,13 @@ protected override void OnUpdate(GameTime gameTime)
 {
     var deltaTime = (float)gameTime.DeltaTime;
 
-    if (_input.IsKeyPressed(Keys.Escape))
+    if (Input.IsKeyPressed(Key.Escape))
     {
         _gameContext.RequestExit();
     }
 
     // Pause/Resume
-    if (_input.IsKeyPressed(Keys.Space))
+    if (Input.IsKeyPressed(Key.Space))
     {
         if (_animator?.IsPlaying == true)
         {
@@ -502,11 +492,11 @@ protected override void OnUpdate(GameTime gameTime)
     // Speed control
     if (_animator != null)
     {
-        if (_input.IsKeyDown(Keys.LeftShift))
+        if (Input.IsKeyDown(Key.LeftShift))
         {
             _animator.Speed = 2.0f; // 2x faster
         }
-        else if (_input.IsKeyDown(Keys.LeftControl))
+        else if (Input.IsKeyDown(Key.LeftControl))
         {
             _animator.Speed = 0.5f; // Half speed (slow-mo)
         }
@@ -517,10 +507,10 @@ protected override void OnUpdate(GameTime gameTime)
     }
 
     // Animation switching (1-4 keys)
-    if (_input.IsKeyPressed(Keys.D1)) _animator?.Play("idle");
-    if (_input.IsKeyPressed(Keys.D2)) _animator?.Play("walk");
-    if (_input.IsKeyPressed(Keys.D3)) _animator?.Play("run");
-    if (_input.IsKeyPressed(Keys.D4)) _animator?.Play("jump");
+    if (Input.IsKeyPressed(Key.D1)) _animator?.Play("idle");
+    if (Input.IsKeyPressed(Key.D2)) _animator?.Play("walk");
+    if (Input.IsKeyPressed(Key.D3)) _animator?.Play("run");
+    if (Input.IsKeyPressed(Key.D4)) _animator?.Play("jump");
 
     _animator?.Update(deltaTime);
 }
@@ -537,17 +527,17 @@ protected override void OnUpdate(GameTime gameTime)
 {
     var deltaTime = (float)gameTime.DeltaTime;
 
-    if (_input.IsKeyPressed(Keys.Escape))
+    if (Input.IsKeyPressed(Key.Escape))
     {
         _gameContext.RequestExit();
     }
 
     // Calculate movement
     var movement = Vector2.Zero;
-    if (_input.IsKeyDown(Keys.W)) movement.Y -= 1;
-    if (_input.IsKeyDown(Keys.S)) movement.Y += 1;
-    if (_input.IsKeyDown(Keys.A)) movement.X -= 1;
-    if (_input.IsKeyDown(Keys.D)) movement.X += 1;
+    if (Input.IsKeyDown(Key.W)) movement.Y -= 1;
+    if (Input.IsKeyDown(Key.S)) movement.Y += 1;
+    if (Input.IsKeyDown(Key.A)) movement.X -= 1;
+    if (Input.IsKeyDown(Key.D)) movement.X += 1;
 
     // Choose animation based on movement
     if (movement != Vector2.Zero)
@@ -556,7 +546,7 @@ protected override void OnUpdate(GameTime gameTime)
         _position += movement * _speed * deltaTime;
 
         // Run if holding Shift, otherwise walk
-        if (_input.IsKeyDown(Keys.LeftShift))
+        if (Input.IsKeyDown(Key.LeftShift))
         {
             _animator?.Play("run");
         }
@@ -572,7 +562,7 @@ protected override void OnUpdate(GameTime gameTime)
     }
 
     // Jump animation (overrides movement)
-    if (_input.IsKeyPressed(Keys.Space))
+    if (Input.IsKeyPressed(Key.Space))
     {
         _animator?.Play("jump");
     }
@@ -599,9 +589,7 @@ namespace MyGame;
 
 public class AnimatedSpriteScene : Scene
 {
-    private readonly IRenderer _renderer;
-    private readonly IInputService _input;
-    private readonly ITextureLoader _textureLoader;
+            private readonly IAssetLoader _assets;
     private readonly IGameContext _gameContext;
     private readonly ILoggerFactory _loggerFactory;
 
@@ -612,29 +600,16 @@ public class AnimatedSpriteScene : Scene
 
     public AnimatedSpriteScene(
         IRenderer renderer,
-        IInputService input,
-        ITextureLoader textureLoader,
+        IInputContext input,
+        IAssetLoader textureLoader,
         IGameContext gameContext,
         ILoggerFactory loggerFactory,
         ILogger<AnimatedSpriteScene> logger
-    ) : base(logger)
+    )
     {
-        _renderer = renderer;
-        _input = input;
-        _textureLoader = textureLoader;
+        _assets = assets;
         _gameContext = gameContext;
         _loggerFactory = loggerFactory;
-    }
-
-    protected override void OnInitialize()
-    {
-        Logger.LogInformation("Animated Sprite Scene initialized!");
-        Logger.LogInformation("Controls:");
-        Logger.LogInformation("  WASD - Move");
-        Logger.LogInformation("  Shift - Run");
-        Logger.LogInformation("  Space - Jump");
-        Logger.LogInformation("  1-4 - Manual animation select");
-        Logger.LogInformation("  ESC - Exit");
     }
 
     protected override async Task OnLoadAsync(CancellationToken cancellationToken)
@@ -645,8 +620,7 @@ public class AnimatedSpriteScene : Scene
 
         if (File.Exists(spriteSheetPath))
         {
-            _spriteSheet = await _textureLoader.LoadTextureAsync(
-                spriteSheetPath,
+            _spriteSheet = await _assets.GetOrLoadTextureAsync(spriteSheetPath,
                 TextureScaleMode.Nearest,
                 cancellationToken
             );
@@ -657,7 +631,7 @@ public class AnimatedSpriteScene : Scene
         else
         {
             Logger.LogWarning("Sprite sheet not found, using placeholder");
-            _spriteSheet = _textureLoader.CreateTexture(576, 24, TextureScaleMode.Nearest);
+            _spriteSheet = _assets.CreateTexture(576, 24, TextureScaleMode.Nearest);
         }
 
         _animator = new SpriteAnimator(_loggerFactory.CreateLogger<SpriteAnimator>());
@@ -708,23 +682,23 @@ public class AnimatedSpriteScene : Scene
     {
         var deltaTime = (float)gameTime.DeltaTime;
 
-        if (_input.IsKeyPressed(Keys.Escape))
+        if (Input.IsKeyPressed(Key.Escape))
         {
             _gameContext.RequestExit();
         }
 
         // Manual animation selection (1-4 keys)
-        if (_input.IsKeyPressed(Keys.D1)) _animator?.Play("idle");
-        if (_input.IsKeyPressed(Keys.D2)) _animator?.Play("walk");
-        if (_input.IsKeyPressed(Keys.D3)) _animator?.Play("run");
-        if (_input.IsKeyPressed(Keys.D4)) _animator?.Play("jump");
+        if (Input.IsKeyPressed(Key.D1)) _animator?.Play("idle");
+        if (Input.IsKeyPressed(Key.D2)) _animator?.Play("walk");
+        if (Input.IsKeyPressed(Key.D3)) _animator?.Play("run");
+        if (Input.IsKeyPressed(Key.D4)) _animator?.Play("jump");
 
         // Movement-based animation
         var movement = Vector2.Zero;
-        if (_input.IsKeyDown(Keys.W)) movement.Y -= 1;
-        if (_input.IsKeyDown(Keys.S)) movement.Y += 1;
-        if (_input.IsKeyDown(Keys.A)) movement.X -= 1;
-        if (_input.IsKeyDown(Keys.D)) movement.X += 1;
+        if (Input.IsKeyDown(Key.W)) movement.Y -= 1;
+        if (Input.IsKeyDown(Key.S)) movement.Y += 1;
+        if (Input.IsKeyDown(Key.A)) movement.X -= 1;
+        if (Input.IsKeyDown(Key.D)) movement.X += 1;
 
         if (movement != Vector2.Zero)
         {
@@ -732,12 +706,12 @@ public class AnimatedSpriteScene : Scene
             _position += movement * _speed * deltaTime;
 
             // Only auto-play movement animations if not manually selected
-            if (!_input.IsKeyPressed(Keys.D1) && 
-                !_input.IsKeyPressed(Keys.D2) && 
-                !_input.IsKeyPressed(Keys.D3) && 
-                !_input.IsKeyPressed(Keys.D4))
+            if (!Input.IsKeyPressed(Key.D1) && 
+                !Input.IsKeyPressed(Key.D2) && 
+                !Input.IsKeyPressed(Key.D3) && 
+                !Input.IsKeyPressed(Key.D4))
             {
-                if (_input.IsKeyDown(Keys.LeftShift))
+                if (Input.IsKeyDown(Key.LeftShift))
                 {
                     _animator?.Play("run");
                 }
@@ -747,16 +721,16 @@ public class AnimatedSpriteScene : Scene
                 }
             }
         }
-        else if (!_input.IsKeyPressed(Keys.D1) && 
-                 !_input.IsKeyPressed(Keys.D2) && 
-                 !_input.IsKeyPressed(Keys.D3) && 
-                 !_input.IsKeyPressed(Keys.D4))
+        else if (!Input.IsKeyPressed(Key.D1) && 
+                 !Input.IsKeyPressed(Key.D2) && 
+                 !Input.IsKeyPressed(Key.D3) && 
+                 !Input.IsKeyPressed(Key.D4))
         {
             _animator?.Play("idle");
         }
 
         // Jump overrides other animations
-        if (_input.IsKeyPressed(Keys.Space))
+        if (Input.IsKeyPressed(Key.Space))
         {
             _animator?.Play("jump");
         }
@@ -766,8 +740,8 @@ public class AnimatedSpriteScene : Scene
 
     protected override void OnRender(GameTime gameTime)
     {
-        _renderer.Clear(new Color(40, 40, 40));
-        _renderer.BeginFrame();
+        Renderer.Clear(new Color(40, 40, 40));
+        Renderer.BeginFrame();
 
         if (_spriteSheet != null && _animator?.CurrentFrame != null)
         {
@@ -781,20 +755,20 @@ public class AnimatedSpriteScene : Scene
             var drawX = _position.X - (destWidth / 2);
             var drawY = _position.Y - (destHeight / 2);
 
-            _renderer.DrawTexture(
+            Renderer.DrawTexture(
                 _spriteSheet,
                 rect.X, rect.Y, rect.Width, rect.Height,
                 drawX, drawY, destWidth, destHeight);
         }
 
-        _renderer.EndFrame();
+        Renderer.EndFrame();
     }
 
     protected override Task OnUnloadAsync(CancellationToken cancellationToken)
     {
         if (_spriteSheet != null)
         {
-            _textureLoader.UnloadTexture(_spriteSheet);
+            _assets.ReleaseTexture(_spriteSheet);
         }
 
         return Task.CompletedTask;

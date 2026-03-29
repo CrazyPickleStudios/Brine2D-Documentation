@@ -1,9 +1,9 @@
 ﻿---
-title: Samples
-description: Samples in Brine2D
+title: UI Components
+description: UI Components in Brine2D
 ---
 
-# Samples
+# UI Components
 
 !!! note "Coming Soon"
     This page is under construction. Check back with the next release.

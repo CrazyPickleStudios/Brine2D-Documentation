@@ -1,9 +1,9 @@
 ﻿---
-title: Samples
-description: Samples in Brine2D
+title: Brine2D.Core API
+description: Brine2D.Core API in Brine2D
 ---
 
-# Samples
+# Brine2D.Core API
 
 !!! note "Coming Soon"
     This page is under construction. Check back with the next release.
