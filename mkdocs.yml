@@ -7,8 +7,6 @@ theme:
   features:
     - content.code.copy
     - content.code.select
-    - navigation.sections
-    - navigation.expand
     - navigation.indexes      
     - navigation.top          
     - search.suggest           
