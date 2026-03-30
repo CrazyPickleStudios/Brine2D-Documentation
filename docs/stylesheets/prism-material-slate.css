@@ -211,7 +211,8 @@
 .hero-logo {
     display: block;
     margin: 0 auto 1rem;
-    max-width: 180px;
+    width: 180px;
+    height: auto;
 }
 .hero-center {
     text-align: center;

@@ -1,12 +1,10 @@
 ---
 title: Home
-hide:
-  - navigation
 ---
 
 <div class="hero-center" markdown>
 
-![Brine2D Logo](images/logo.png){ .hero-logo }
+<img src="images/logo.png" alt="Brine2D Logo" class="hero-logo">
 
 # Brine2D
 
