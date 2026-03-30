@@ -1,4 +1,4 @@
-﻿---
+---
 title: Your First Game
 description: Build a complete game with sprites, audio, collision detection, and scoring
 ---
@@ -346,13 +346,13 @@ protected override async Task OnLoadAsync(CancellationToken ct, IProgress<float>
 **Solution:**
 
 ```csharp
-// :x: Wrong — World is null in constructor!
+// ❌ Wrong — World is null in constructor!
 public GameScene()
 {
     var player = World.CreateEntity("Player"); // Throws!
 }
 
-// :white_check_mark: Correct — Use OnEnter or OnLoadAsync
+// ✅ Correct — Use OnEnter or OnLoadAsync
 protected override void OnEnter()
 {
     var player = World.CreateEntity("Player"); // Works!

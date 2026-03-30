@@ -1,4 +1,4 @@
-﻿---
+---
 title: Keyboard Input
 description: Handle keyboard input in Brine2D — key states, movement, and common patterns
 ---
@@ -185,13 +185,13 @@ protected override void OnUpdate(GameTime gameTime)
 Use `IsKeyPressed`, not `IsKeyDown`:
 
 ```csharp
-// :x: Wrong — repeats every frame
+// ❌ Wrong — repeats every frame
 if (Input.IsKeyDown(Key.Space))
 {
     Jump(); // Jumps 60 times per second!
 }
 
-// :white_check_mark: Correct — once per press
+// ✅ Correct — once per press
 if (Input.IsKeyPressed(Key.Space))
 {
     Jump();

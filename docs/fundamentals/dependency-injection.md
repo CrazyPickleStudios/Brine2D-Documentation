@@ -1,4 +1,4 @@
-﻿---
+---
 title: Dependency Injection
 description: How Brine2D uses Microsoft's DI container — scoped scenes, framework properties, and custom services
 ---
@@ -223,8 +223,8 @@ builder.Services.AddSingleton<GameState>(); // Don't forget!
 Change from Singleton to Scoped:
 
 ```csharp
-builder.Services.AddSingleton<CollisionSystem>(); // :x: Persists forever
-builder.Services.AddScoped<CollisionSystem>();     // :white_check_mark: Fresh per scene
+builder.Services.AddSingleton<CollisionSystem>(); // ❌ Persists forever
+builder.Services.AddScoped<CollisionSystem>();     // ✅ Fresh per scene
 ```
 
 ---

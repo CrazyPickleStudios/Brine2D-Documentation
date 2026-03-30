@@ -1,4 +1,4 @@
-﻿---
+---
 title: Input
 description: Handle keyboard, mouse, and gamepad input in Brine2D games
 ---
@@ -238,7 +238,7 @@ protected override void OnUpdate(GameTime gameTime)
 3. **Don't use IsKeyPressed() for movement** — will be choppy
 
 ```csharp
-// :x: Bad pattern
+// ❌ Bad pattern
 protected override void OnRender(GameTime gameTime)
 {
     // Wrong — input in render!
@@ -262,7 +262,7 @@ protected override void OnRender(GameTime gameTime)
 1. **Check polling in OnUpdate:**
 
 ```csharp
-// :white_check_mark: Correct
+// ✅ Correct
 protected override void OnUpdate(GameTime gameTime)
 {
     if (Input.IsKeyDown(Key.W)) { ... }
@@ -280,13 +280,13 @@ protected override void OnUpdate(GameTime gameTime)
 **Solution:** Always use deltaTime
 
 ```csharp
-// :x: Wrong — FPS dependent
+// ❌ Wrong — FPS dependent
 if (Input.IsKeyDown(Key.W))
 {
     _position.Y -= 5;  // Moves 5 pixels per frame (300px/sec at 60fps!)
 }
 
-// :white_check_mark: Correct — consistent speed
+// ✅ Correct — consistent speed
 if (Input.IsKeyDown(Key.W))
 {
     _position.Y -= 200 * (float)gameTime.DeltaTime;  // 200 pixels per second

@@ -1,4 +1,4 @@
-﻿---
+---
 title: Sprites & Textures
 description: Load and draw sprites and textures in Brine2D
 ---
@@ -157,7 +157,7 @@ public class GameScene : Scene
 5. **Batch by texture** — draw all sprites using the same texture together
 
 ```csharp
-// :white_check_mark: Good — all enemies share one texture
+// ✅ Good — all enemies share one texture
 foreach (var enemy in _enemies)
 {
     Renderer.DrawTexture(_enemyTexture, enemy.Position);

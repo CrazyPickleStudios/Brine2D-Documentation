@@ -1,4 +1,4 @@
-﻿---
+---
 title: Scenes
 description: Scenes are the building blocks of your Brine2D game — lifecycle, transitions, and patterns
 ---
@@ -273,10 +273,10 @@ public GameScene(GameState gameState) => _gameState = gameState;
 Use lifecycle methods, not the constructor:
 
 ```csharp
-// :x: Wrong
+// ❌ Wrong
 public GameScene() { Logger.LogInformation(""Created""); }
 
-// :white_check_mark: Correct
+// ✅ Correct
 protected override void OnEnter() { Logger.LogInformation(""Scene entered""); }
 ```
 
