@@ -148,6 +148,6 @@ Brine2D/
 
 <div class="hero-center" markdown>
 
-**MIT licensed. Made with :heart: by [CrazyPickle Studios](https://github.com/CrazyPickleStudios) :pickle:**
+**MIT licensed. Made with :heart: by [CrazyPickle Studios](https://github.com/CrazyPickleStudios) :cucumber:**
 
 </div>
