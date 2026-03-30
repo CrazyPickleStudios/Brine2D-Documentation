@@ -84,7 +84,7 @@ public class GameScene : Scene
 If you need input in a service or behavior, inject `IInputContext` via constructor:
 
 ```csharp
-public class PlayerMovementBehavior : EntityBehavior
+public class PlayerMovementBehavior : Behavior
 {
     private readonly IInputContext _input;
 

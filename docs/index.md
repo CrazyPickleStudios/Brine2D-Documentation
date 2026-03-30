@@ -6,8 +6,6 @@ title: Home
 
 <img src="images/logo.png" alt="Brine2D Logo" class="hero-logo">
 
-# Brine2D
-
 <p class="hero-tagline">A 2D game engine for .NET 10, built on SDL3.<br>
 If you know ASP.NET, you already know how this works.</p>
 
@@ -64,12 +62,12 @@ That's a window, a game loop, input, and rendering. No boilerplate, no XML, no c
 
 ---
 
-## What's in the box
+## Features
 
 | Feature | What it does |
 |---|---|
 | **GPU Rendering** | Hardware-accelerated via SDL3 GPU (Vulkan / Metal / D3D12). Sprites, sprite sheets, animations, cameras, line drawing, render targets. |
-| **Hybrid ECS** | Components for data, EntityBehaviors for per-entity logic with DI, Systems for batch processing. One `World` per scene, cleaned up automatically. |
+| **Hybrid ECS** | Components for data, Behaviors for per-entity logic with DI, Systems for batch processing. One `World` per scene, cleaned up automatically. |
 | **Scene Management** | Async loading, transitions with fades, loading screens with progress. Register scenes at startup, swap at runtime. |
 | **Asset Pipeline** | Unified `IAssetLoader` with ref-counted caching. Typed `AssetManifest` for parallel preloading. Assets release when the scene unloads. |
 | **Input** | Keyboard, mouse, gamepad. Polling and event-driven. Input layers for UI-eats-input patterns. |
@@ -77,7 +75,7 @@ That's a window, a game loop, input, and rendering. No boilerplate, no XML, no c
 | **Particles** | GPU-accelerated emitters with configurable lifetime, integrated with ECS. |
 | **Collision** | AABB and circle colliders, spatial queries, collision events. |
 | **UI** | Buttons, sliders, text inputs, dialogs, tabs, scroll views, tooltips, dropdowns. |
-| **DI everywhere** | Built on `Microsoft.Extensions.DependencyInjection`. Scenes and EntityBehaviors get constructor injection. Framework services come as properties — no wiring needed. |
+| **DI everywhere** | Built on `Microsoft.Extensions.DependencyInjection`. Scenes and Behaviors get constructor injection. Framework services come as properties — no wiring needed. |
 
 ---
 

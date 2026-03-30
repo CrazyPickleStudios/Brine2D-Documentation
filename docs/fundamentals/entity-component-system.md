@@ -12,7 +12,7 @@ Brine2D uses a **hybrid ECS** designed to be beginner-friendly with optional per
 | Concept | Purpose | Example |
 |---------|---------|---------|
 | **Component** | Data container with lifecycle hooks | `HealthComponent`, `TransformComponent` |
-| **EntityBehavior** | Per-entity logic with DI support | `PlayerMovementBehavior`, `EnemyAIBehavior` |
+| **Behavior** | Per-entity logic with DI support | `PlayerMovementBehavior`, `EnemyAIBehavior` |
 | **System** | Batch processing for performance | `MovementSystem`, `CollisionDetectionSystem` |
 
 ## Quick Example
@@ -28,7 +28,7 @@ public class HealthComponent : Component
 }
 
 // 2. Behavior — per-entity logic
-public class DamageFlashBehavior : EntityBehavior
+public class DamageFlashBehavior : Behavior
 {
     protected override void Update(GameTime gameTime)
     {
@@ -54,7 +54,7 @@ protected override void OnEnter()
 | Scenario | Components | Behaviors | Systems |
 |----------|-----------|-----------|---------|
 | Data storage | :white_check_mark: | :x: | :x: |
-| Unique entity behavior (player, boss) | :white_check_mark: | :white_check_mark: | :x: |
+| Unique behavior (player, boss) | :white_check_mark: | :white_check_mark: | :x: |
 | Simple games (< 500 entities) | :white_check_mark: | :white_check_mark: | :x: |
 | Performance-critical (1000+ entities) | :white_check_mark: | :x: | :white_check_mark: |
 

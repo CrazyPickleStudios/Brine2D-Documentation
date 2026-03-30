@@ -163,7 +163,7 @@ public class GameScene : Scene { }
 // File: Behaviors/PlayerMovementBehavior.cs
 namespace MyGame.Behaviors;
 
-public class PlayerMovementBehavior : EntityBehavior { }
+public class PlayerMovementBehavior : Behavior { }
 ```
 
 ---
@@ -303,7 +303,7 @@ MyGame/
 ├── Scenes/                 # Game scenes
 │   ├── MenuScene.cs
 │   └── GameScene.cs
-├── Behaviors/              # Entity behaviors
+├── Behaviors/              # Behaviors
 │   ├── PlayerMovementBehavior.cs
 │   └── EnemyAIBehavior.cs
 ├── Systems/                # ECS systems

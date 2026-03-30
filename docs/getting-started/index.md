@@ -122,7 +122,7 @@ public class HealthComponent : Component
 }
 
 // Per-entity logic with DI
-public class PlayerMovementBehavior : EntityBehavior
+public class PlayerMovementBehavior : Behavior
 {
     private readonly IInputContext _input;
 

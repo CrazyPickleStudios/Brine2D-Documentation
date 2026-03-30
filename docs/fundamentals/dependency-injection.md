@@ -141,12 +141,12 @@ builder.Services.AddMyGameSystems();
 
 ---
 
-## EntityBehavior and DI
+## Behavior and DI
 
-`EntityBehavior` supports constructor injection — behaviors are resolved from DI:
+`Behavior` supports constructor injection — behaviors are resolved from DI:
 
 ```csharp
-public class PlayerMovementBehavior : EntityBehavior
+public class PlayerMovementBehavior : Behavior
 {
     private readonly IInputContext _input;
 
