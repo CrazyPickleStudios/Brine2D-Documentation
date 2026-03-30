@@ -4,6 +4,8 @@ theme:
   name: material
   palette:
     scheme: slate
+  logo: images/logo.png
+  favicon: images/logo.png
   features:
     - content.code.copy
     - content.code.select
