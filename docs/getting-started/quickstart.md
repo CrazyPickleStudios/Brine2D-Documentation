@@ -46,7 +46,7 @@ dotnet add package Brine2D
 ```
 
 **What this does:**
-- Installs **Brine2D** (core engine, rendering, input, audio — everything you need)
+- Installs **Brine2D** (core engine, rendering, input, audio - everything you need)
 
 **Verify installation:**
 
@@ -182,7 +182,7 @@ await game.RunAsync<GameScene>();
 3. Registers your game scene
 4. Builds and runs the game
 
-**Pattern:** This is dependency injection — Brine2D uses ASP.NET Core patterns.
+**Pattern:** This is dependency injection - Brine2D uses ASP.NET Core patterns.
 
 ---
 
@@ -210,7 +210,7 @@ public class GameScene : Scene
 **What's important:**
 - **Constructor**: Only YOUR services (`IGameContext`, custom services, etc.)
 - **Framework properties**: `Logger`, `World`, `Renderer`, `Input`, `Audio`, `Game` set automatically by the framework
-- **Clean**: No need to inject `ILogger<T>`, `IEntityWorld`, `IRenderer`, `IInputContext` — they're all properties
+- **Clean**: No need to inject `ILogger<T>`, `IEntityWorld`, `IRenderer`, `IInputContext` - they're all properties
 
 ---
 
@@ -227,7 +227,7 @@ These are **available in all lifecycle methods** (after constructor):
 | `Audio` | `IAudioPlayer` | Play sounds and music |
 | `Game` | `IGameContext` | Game context (request exit, game time) |
 
-**You never inject these** — they're set by SceneManager before any lifecycle methods run.
+**You never inject these** - they're set by SceneManager before any lifecycle methods run.
 
 ---
 
@@ -373,8 +373,8 @@ await game.RunAsync<GameScene>();
 |---------|-------------|
 | **GameApplication** | Entry point, similar to ASP.NET Core |
 | **Scene** | Container for game logic (update + render) |
-| **Framework Properties** | Logger, World, Renderer, Input, Audio, Game — set automatically |
-| **Scoped World** | Each scene has isolated EntityWorld — automatic cleanup! |
+| **Framework Properties** | Logger, World, Renderer, Input, Audio, Game - set automatically |
+| **Scoped World** | Each scene has isolated EntityWorld - automatic cleanup! |
 | **Dependency Injection** | YOUR services injected via constructor |
 | **Game Loop** | Update (logic) → Render (drawing) |
 | **deltaTime** | Frame-rate independent movement |
@@ -420,11 +420,11 @@ await game.RunAsync<GameScene>();
 
 Now that you have a working game, explore more features:
 
-- **[Your First Game](first-game.md)** — Build a complete game with sprites, audio, and collision
-- **[Project Structure](project-structure.md)** — Organize your code
-- **[Configuration](configuration.md)** — Configure game settings
-- **[Input Guide](../input/keyboard.md)** — Master keyboard, mouse, and gamepad input
-- **[Rendering Guide](../rendering/sprites.md)** — Work with sprites and textures
+- **[Your First Game](first-game.md)** - Build a complete game with sprites, audio, and collision
+- **[Project Structure](project-structure.md)** - Organize your code
+- **[Configuration](configuration.md)** - Configure game settings
+- **[Input Guide](../input/keyboard.md)** - Master keyboard, mouse, and gamepad input
+- **[Rendering Guide](../rendering/sprites.md)** - Work with sprites and textures
 
 ---
 

@@ -44,13 +44,13 @@ public class GameScene : Scene
 // Basic load
 var texture = await _assets.GetOrLoadTextureAsync(""assets/images/player.png"", cancellationToken: ct);
 
-// Pixel art — use Nearest filtering for sharp scaling
+// Pixel art - use Nearest filtering for sharp scaling
 var pixelArt = await _assets.GetOrLoadTextureAsync(
     ""assets/images/player.png"",
     TextureScaleMode.Nearest,
     ct);
 
-// Smooth graphics — use Linear filtering (default)
+// Smooth graphics - use Linear filtering (default)
 var smooth = await _assets.GetOrLoadTextureAsync(
     ""assets/images/background.png"",
     TextureScaleMode.Linear,
@@ -71,7 +71,7 @@ Renderer.DrawTexture(texture, new Vector2(100, 200));
 // Draw with explicit size
 Renderer.DrawTexture(texture, 100f, 200f, 64f, 64f);
 
-// Full control — position, source rect, origin, rotation, scale, color, flip
+// Full control - position, source rect, origin, rotation, scale, color, flip
 Renderer.DrawTexture(
     texture,
     position: new Vector2(400, 300),
@@ -150,14 +150,14 @@ public class GameScene : Scene
 
 ## Best Practices
 
-1. **Load in `OnLoadAsync`** — never in `OnRender` or `OnUpdate`
-2. **Use `Nearest` for pixel art** — `Linear` will make it blurry
-3. **Use relative paths** — `"assets/images/player.png"`, not absolute paths
-4. **Use `AssetManifest`** for multiple assets — parallel loading
-5. **Batch by texture** — draw all sprites using the same texture together
+1. **Load in `OnLoadAsync`** - never in `OnRender` or `OnUpdate`
+2. **Use `Nearest` for pixel art** - `Linear` will make it blurry
+3. **Use relative paths** - `"assets/images/player.png"`, not absolute paths
+4. **Use `AssetManifest`** for multiple assets - parallel loading
+5. **Batch by texture** - draw all sprites using the same texture together
 
 ```csharp
-// ✅ Good — all enemies share one texture
+// ✅ Good - all enemies share one texture
 foreach (var enemy in _enemies)
 {
     Renderer.DrawTexture(_enemyTexture, enemy.Position);
@@ -192,6 +192,6 @@ await _assets.GetOrLoadTextureAsync(""assets/images/player.png"", TextureScaleMo
 
 ## Next Steps
 
-- **[Cameras](cameras.md)** — Camera movement and zoom
-- **[Drawing Primitives](primitives.md)** — Lines, rectangles, circles
-- **[Texture Atlasing](texture-atlasing.md)** — Runtime sprite packing
+- **[Cameras](cameras.md)** - Camera movement and zoom
+- **[Drawing Primitives](primitives.md)** - Lines, rectangles, circles
+- **[Texture Atlasing](texture-atlasing.md)** - Runtime sprite packing

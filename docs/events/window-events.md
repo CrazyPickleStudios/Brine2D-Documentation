@@ -1,4 +1,4 @@
-﻿---
+---
 title: Window Events
 description: Handle window resize, minimize, and lifecycle events in Brine2D
 ---
@@ -206,7 +206,7 @@ protected override void OnInitialize()
 }
 ```
 
-**⚠️ Warning:** Lambda expressions are harder to unsubscribe from. Use named methods when possible.
+**?? Warning:** Lambda expressions are harder to unsubscribe from. Use named methods when possible.
 
 ---
 
@@ -462,7 +462,7 @@ public class AspectRatioScene : Scene
     
     protected override void OnRender(GameTime gameTime)
     {
-        _renderer.Clear(Color.Black);
+        Renderer.ClearColor = Color.Black;
         _renderer.BeginFrame();
         
         // Draw letterbox bars (black)
@@ -496,7 +496,7 @@ public class AspectRatioScene : Scene
 2. **Use named methods for event handlers**
 
    ```csharp
-   // ✅ Good - easy to unsubscribe
+   // ? Good - easy to unsubscribe
    _eventBus?.Subscribe<WindowResizedEvent>(OnWindowResized);
    
    private void OnWindowResized(WindowResizedEvent evt)
@@ -508,14 +508,14 @@ public class AspectRatioScene : Scene
 3. **Check for null EventBus**
 
    ```csharp
-   // ✅ Good - EventBus is optional
+   // ? Good - EventBus is optional
    _eventBus?.Subscribe<WindowResizedEvent>(OnWindowResized);
    ```
 
 4. **Subscribe in OnInitialize**
 
    ```csharp
-   // ✅ Good - consistent lifecycle
+   // ? Good - consistent lifecycle
    protected override void OnInitialize()
    {
        _eventBus?.Subscribe<WindowResizedEvent>(OnWindowResized);
@@ -525,7 +525,7 @@ public class AspectRatioScene : Scene
 5. **Enable window resizing if needed**
 
    ```csharp
-   // ✅ In configuration
+   // ? In configuration
    options.Resizable = true;
    ```
 
@@ -536,7 +536,7 @@ public class AspectRatioScene : Scene
 1. **Don't forget to unsubscribe**
 
    ```csharp
-   // ❌ Bad - memory leak!
+   // ? Bad - memory leak!
    protected override void OnDispose()
    {
        // Forgot to unsubscribe!
@@ -546,7 +546,7 @@ public class AspectRatioScene : Scene
 2. **Don't use lambdas without storing reference**
 
    ```csharp
-   // ❌ Bad - can't unsubscribe
+   // ? Bad - can't unsubscribe
    _eventBus?.Subscribe<WindowResizedEvent>(evt =>
    {
        // Can't unsubscribe this!
@@ -556,7 +556,7 @@ public class AspectRatioScene : Scene
 3. **Don't subscribe multiple times**
 
    ```csharp
-   // ❌ Bad - duplicate subscriptions
+   // ? Bad - duplicate subscriptions
    protected override void OnInitialize()
    {
        _eventBus?.Subscribe<WindowResizedEvent>(OnWindowResized);
@@ -567,10 +567,10 @@ public class AspectRatioScene : Scene
 4. **Don't assume EventBus exists**
 
    ```csharp
-   // ❌ Bad - might be null
+   // ? Bad - might be null
    _eventBus.Subscribe<WindowResizedEvent>(OnWindowResized);
    
-   // ✅ Good - null-conditional
+   // ? Good - null-conditional
    _eventBus?.Subscribe<WindowResizedEvent>(OnWindowResized);
    ```
 
@@ -711,7 +711,7 @@ public class GameScene : Scene
 Both GPU and Legacy renderers automatically handle window events:
 
 ```csharp
-// In SDL3GPURenderer / SDL3Renderer
+// In SDL3Renderer / SDL3Renderer
 public SDL3Renderer(
     ILogger<SDL3Renderer> logger,
     ILoggerFactory loggerFactory,
@@ -783,7 +783,7 @@ private void OnWindowResized(WindowResizedEvent evt)
 **Solution:**
 
 ```csharp
-// ✅ Always unsubscribe
+// ? Always unsubscribe
 protected override void OnDispose()
 {
     _eventBus?.Unsubscribe<WindowResizedEvent>(OnWindowResized);
@@ -802,7 +802,7 @@ protected override void OnDispose()
 **Solution:**
 
 ```csharp
-// ✅ Subscribe only once
+// ? Subscribe only once
 protected override void OnInitialize()
 {
     // Unsubscribe first (if reinitializing)
@@ -971,7 +971,7 @@ public class ResponsiveGameScene : Scene
     
     protected override void OnRender(GameTime gameTime)
     {
-        _renderer.Clear(Color.CornflowerBlue);
+        Renderer.ClearColor = Color.CornflowerBlue;
         _renderer.BeginFrame();
         
         // Game rendering here...

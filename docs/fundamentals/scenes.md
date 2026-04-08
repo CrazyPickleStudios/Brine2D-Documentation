@@ -5,7 +5,7 @@ description: How scenes organize your Brine2D game into distinct states
 
 # Scene Management
 
-Scenes are the building blocks of your game. Each scene represents a distinct screen or state — menu, gameplay, pause, game over.
+Scenes are the building blocks of your game. Each scene represents a distinct screen or state - menu, gameplay, pause, game over.
 
 ## How Scenes Work
 
@@ -76,6 +76,6 @@ public class GameScene : Scene
 
 For the complete lifecycle reference, framework property availability, transitions, and patterns:
 
-[:octicons-arrow-right-24: Scenes — Full Guide](../scenes/index.md)
+[:octicons-arrow-right-24: Scenes - Full Guide](../scenes/index.md)
 
 [:octicons-arrow-right-24: Scene Transitions](../scenes/transitions.md)

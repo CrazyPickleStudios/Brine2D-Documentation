@@ -22,7 +22,7 @@ If you know ASP.NET, you already know how this works.</p>
 
 ## What is Brine2D?
 
-Brine2D is a full 2D game engine — not a rendering library. Scenes, entities, audio, input, collision, particles, UI, and a DI container all ship together and work out of the box. Everything you'd normally spend the first two weeks building yourself is already here.
+Brine2D is a full 2D game engine - not a rendering library. Scenes, entities, audio, input, collision, particles, UI, and a DI container all ship together and work out of the box. Everything you'd normally spend the first two weeks building yourself is already here.
 
 It follows the same hosting model as ASP.NET Core: `GameApplicationBuilder` → configure → build → run. If you've written a `WebApplication`, you'll be writing games in about ten minutes.
 
@@ -75,7 +75,7 @@ That's a window, a game loop, input, and rendering. No boilerplate, no XML, no c
 | **Particles** | GPU-accelerated emitters with configurable lifetime, integrated with ECS. |
 | **Collision** | AABB and circle colliders, spatial queries, collision events. |
 | **UI** | Buttons, sliders, text inputs, dialogs, tabs, scroll views, tooltips, dropdowns. |
-| **DI everywhere** | Built on `Microsoft.Extensions.DependencyInjection`. Scenes and Behaviors get constructor injection. Framework services come as properties — no wiring needed. |
+| **DI everywhere** | Built on `Microsoft.Extensions.DependencyInjection`. Scenes and Behaviors get constructor injection. Framework services come as properties - no wiring needed. |
 
 ---
 
@@ -128,7 +128,7 @@ Brine2D/
 
     ---
 
-    Architecture, scenes, ECS, DI — how it all fits together.
+    Architecture, scenes, ECS, DI - how it all fits together.
 
     [:octicons-arrow-right-24: Fundamentals](fundamentals/index.md)
 

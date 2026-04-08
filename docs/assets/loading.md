@@ -27,17 +27,17 @@ public class GameScene : Scene
 ### Textures
 
 ```csharp
-// Default (linear filtering — smooth scaling)
+// Default (linear filtering - smooth scaling)
 var texture = await _assets.GetOrLoadTextureAsync(""assets/images/background.png"", cancellationToken: ct);
 
-// Nearest filtering — sharp pixel art
+// Nearest filtering - sharp pixel art
 var pixelArt = await _assets.GetOrLoadTextureAsync(
     ""assets/images/player.png"",
     TextureScaleMode.Nearest,
     ct);
 ```
 
-The `(path, scaleMode)` pair is the cache key — the same file at different scale modes is cached separately.
+The `(path, scaleMode)` pair is the cache key - the same file at different scale modes is cached separately.
 
 ### Sound Effects
 
@@ -60,7 +60,7 @@ var font = await _assets.GetOrLoadFontAsync(""assets/fonts/ui.ttf"", size: 16, c
 Renderer.SetDefaultFont(font);
 ```
 
-The `(path, size)` pair is the cache key — the same file at different sizes is cached separately.
+The `(path, size)` pair is the cache key - the same file at different sizes is cached separately.
 
 ---
 
@@ -119,5 +119,5 @@ protected override async Task OnLoadAsync(CancellationToken ct, IProgress<float>
 
 ## Next Steps
 
-- **[Asset Manifests](manifests.md)** — Parallel preloading with typed manifests
-- **[Brine2D.Build](build-package.md)** — Compile-time asset path generation
+- **[Asset Manifests](manifests.md)** - Parallel preloading with typed manifests
+- **[Brine2D.Build](build-package.md)** - Compile-time asset path generation

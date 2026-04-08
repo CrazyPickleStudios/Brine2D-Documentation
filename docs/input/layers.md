@@ -48,9 +48,9 @@ public class GameScene : Scene
 
 ## How It Works
 
-1. **Layers are processed by priority** — highest first
-2. **A layer can consume input** — returning `true` blocks lower layers
-3. **Check consumption flags** — `KeyboardConsumed`, `MouseConsumed`
+1. **Layers are processed by priority** - highest first
+2. **A layer can consume input** - returning `true` blocks lower layers
+3. **Check consumption flags** - `KeyboardConsumed`, `MouseConsumed`
 
 **Typical priorities:**
 
@@ -86,6 +86,6 @@ protected override void OnUpdate(GameTime gameTime)
 
 ## Next Steps
 
-- **[Keyboard Input](keyboard.md)** — Keyboard input handling
-- **[Mouse Input](mouse.md)** — Mouse and cursor control
-- **[UI](../ui/index.md)** — Build interactive UI
+- **[Keyboard Input](keyboard.md)** - Keyboard input handling
+- **[Mouse Input](mouse.md)** - Mouse and cursor control
+- **[UI](../ui/index.md)** - Build interactive UI

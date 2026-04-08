@@ -1,6 +1,6 @@
 ---
 title: Keyboard Input
-description: Handle keyboard input in Brine2D — key states, movement, and common patterns
+description: Handle keyboard input in Brine2D - key states, movement, and common patterns
 ---
 
 # Keyboard Input
@@ -32,7 +32,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 ## Key States
 
-### IsKeyDown — Held This Frame
+### IsKeyDown - Held This Frame
 
 Returns `true` every frame the key is held down. Use for continuous actions like movement.
 
@@ -43,7 +43,7 @@ if (Input.IsKeyDown(Key.W))
 }
 ```
 
-### IsKeyPressed — Just Pressed This Frame
+### IsKeyPressed - Just Pressed This Frame
 
 Returns `true` only on the **first frame** the key is pressed. Use for one-shot actions.
 
@@ -54,7 +54,7 @@ if (Input.IsKeyPressed(Key.Space))
 }
 ```
 
-### IsKeyReleased — Just Released This Frame
+### IsKeyReleased - Just Released This Frame
 
 Returns `true` only on the frame the key is released. Use for charge-release mechanics.
 
@@ -177,21 +177,21 @@ protected override void OnUpdate(GameTime gameTime)
 ### Keys not responding
 
 1. **Check you're in OnUpdate**, not OnRender
-2. **Check window has focus** — click the game window
-3. **Check spelling** — it's `Key.Space`, not `Key.Space`
+2. **Check window has focus** - click the game window
+3. **Check spelling** - it's `Key.Space`, not `Key.Space`
 
 ### Action repeats unexpectedly
 
 Use `IsKeyPressed`, not `IsKeyDown`:
 
 ```csharp
-// ❌ Wrong — repeats every frame
+// ❌ Wrong - repeats every frame
 if (Input.IsKeyDown(Key.Space))
 {
     Jump(); // Jumps 60 times per second!
 }
 
-// ✅ Correct — once per press
+// ✅ Correct - once per press
 if (Input.IsKeyPressed(Key.Space))
 {
     Jump();
@@ -223,6 +223,6 @@ if (direction != Vector2.Zero)
 
 ## Next Steps
 
-- **[Mouse Input](mouse.md)** — Handle mouse input
-- **[Gamepad Input](gamepad.md)** — Controller support
-- **[Input Layers](layers.md)** — Priority-based input
+- **[Mouse Input](mouse.md)** - Handle mouse input
+- **[Gamepad Input](gamepad.md)** - Controller support
+- **[Input Layers](layers.md)** - Priority-based input

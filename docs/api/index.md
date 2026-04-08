@@ -1,4 +1,4 @@
-﻿---
+---
 title: API Reference
 description: Complete API documentation for all Brine2D packages
 ---
@@ -210,7 +210,7 @@ protected override void OnRender(GameTime gameTime)
     
     // Draw shapes
     Renderer.DrawRectangleFilled(200, 200, 50, 50, Color.Red);
-    Renderer.DrawCircle(300, 300, 25, Color.Blue);
+    Renderer.DrawCircleOutline(300, 300, 25, Color.Blue);
     
     // Draw text
     Renderer.DrawText("Score: 100", 10, 10, Color.White);
@@ -334,7 +334,7 @@ Three properties are set automatically by the framework:
 
 1. **Audio API:**
    - `PlaySound()` returns `nint` (was `int`)
-   - `StopChannel()` → `StopTrack()`
+   - `StopChannel()` ? `StopTrack()`
 
 2. **Package structure:**
    - Split into `Brine2D` + `Brine2D.SDL`
@@ -396,9 +396,9 @@ xmldoc2md Brine2D.dll --output docs/api
 
 Help improve the API documentation:
 
-- 📝 [Report missing docs](https://github.com/CrazyPickleStudios/Brine2D/issues/new?labels=documentation)
-- 🤝 [Submit corrections](https://github.com/CrazyPickleStudios/Brine2D/pulls)
-- 💡 [Request examples](https://github.com/CrazyPickleStudios/Brine2D/discussions)
+- ?? [Report missing docs](https://github.com/CrazyPickleStudios/Brine2D/issues/new?labels=documentation)
+- ?? [Submit corrections](https://github.com/CrazyPickleStudios/Brine2D/pulls)
+- ?? [Request examples](https://github.com/CrazyPickleStudios/Brine2D/discussions)
 
 ---
 
@@ -406,9 +406,9 @@ Help improve the API documentation:
 
 | Package | Link |
 |---------|------|
-| Brine2D.Core | [View API →](core.md) |
-| Brine2D.Engine | [View API →](engine.md) |
-| Brine2D.Rendering | [View API →](rendering.md) |
-| Brine2D.Input | [View API →](input.md) |
-| Brine2D.Audio | [View API →](audio.md) |
-| Brine2D.ECS | [View API →](ecs.md) |
+| Brine2D.Core | [View API ?](core.md) |
+| Brine2D.Engine | [View API ?](engine.md) |
+| Brine2D.Rendering | [View API ?](rendering.md) |
+| Brine2D.Input | [View API ?](input.md) |
+| Brine2D.Audio | [View API ?](audio.md) |
+| Brine2D.ECS | [View API ?](ecs.md) |

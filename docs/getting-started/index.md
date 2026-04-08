@@ -29,9 +29,9 @@ Follow these guides in order for the smoothest onboarding experience:
 
 Before you begin, make sure you have:
 
-- **Basic C# knowledge** — Variables, classes, methods
-- **Familiarity with .NET** — Creating console apps, using NuGet
-- **Optional: ASP.NET Core experience** — Brine2D uses similar patterns
+- **Basic C# knowledge** - Variables, classes, methods
+- **Familiarity with .NET** - Creating console apps, using NuGet
+- **Optional: ASP.NET Core experience** - Brine2D uses similar patterns
 
 ---
 
@@ -104,9 +104,9 @@ public class GameScene : Scene
 
 Unlike strict ECS engines, Brine2D's ECS is **beginner-friendly**:
 
-- **Components** — Data containers with `OnAdded`/`OnRemoved` hooks
-- **Behaviors** — Per-entity logic with DI support (like Unity MonoBehaviours)
-- **Systems** — Optional batch processing for performance optimization
+- **Components** - Data containers with `OnAdded`/`OnRemoved` hooks
+- **Behaviors** - Per-entity logic with DI support (like Unity MonoBehaviours)
+- **Systems** - Optional batch processing for performance optimization
 
 ```csharp
 // Data component
@@ -142,7 +142,7 @@ public class PlayerMovementBehavior : Behavior
 
 ### Automatic Scene Scoping
 
-**Each scene gets its own isolated EntityWorld** — automatic cleanup, no memory leaks!
+**Each scene gets its own isolated EntityWorld** - automatic cleanup, no memory leaks!
 
 ```csharp
 public class MenuScene : Scene
@@ -153,7 +153,7 @@ public class MenuScene : Scene
             World.CreateEntity($"Button_{i}");
     }
 
-    // No cleanup needed — World disposed automatically on scene unload!
+    // No cleanup needed - World disposed automatically on scene unload!
 }
 ```
 
@@ -173,11 +173,11 @@ public class MenuScene : Scene
 
 ### Can I use this for commercial games?
 
-**Yes!** Brine2D is **MIT licensed** — use it anywhere, including commercial projects, no royalties.
+**Yes!** Brine2D is **MIT licensed** - use it anywhere, including commercial projects, no royalties.
 
 ### Is there a visual editor?
 
-**No.** Brine2D is **code-first** — everything is C# code. If you prefer visual editors, try Unity or Godot.
+**No.** Brine2D is **code-first** - everything is C# code. If you prefer visual editors, try Unity or Godot.
 
 **Advantage:** Better version control, easier code review, no editor lock-in.
 
@@ -189,9 +189,9 @@ public class MenuScene : Scene
 
 Start here and follow in order:
 
-1. [Installation](installation.md) — Install prerequisites
-2. [Quick Start](quickstart.md) — Your first window
-3. [Your First Game](first-game.md) — Complete game tutorial
+1. [Installation](installation.md) - Install prerequisites
+2. [Quick Start](quickstart.md) - Your first window
+3. [Your First Game](first-game.md) - Complete game tutorial
 
 ### Experienced Developers
 
@@ -204,8 +204,8 @@ Jump to what you need:
 
 You'll feel right at home:
 
-1. [Quick Start](quickstart.md) — Familiar builder pattern
-2. [Scenes](../scenes/index.md) — Scene lifecycle and DI patterns
+1. [Quick Start](quickstart.md) - Familiar builder pattern
+2. [Scenes](../scenes/index.md) - Scene lifecycle and DI patterns
 
 ---
 
@@ -213,21 +213,21 @@ You'll feel right at home:
 
 ### Documentation
 
-- **[Tutorials](../tutorials/index.md)** — Step-by-step learning paths
-- **[Fundamentals](../fundamentals/scenes.md)** — Deep architectural knowledge
-- **[Samples](../samples/feature-demos.md)** — Working example projects
+- **[Tutorials](../tutorials/index.md)** - Step-by-step learning paths
+- **[Fundamentals](../fundamentals/scenes.md)** - Deep architectural knowledge
+- **[Samples](../samples/feature-demos.md)** - Working example projects
 
 ### External Resources
 
-- [.NET 10 Documentation](https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-10) — Language features
-- [ASP.NET Core Fundamentals](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/) — Learn the patterns
+- [.NET 10 Documentation](https://learn.microsoft.com/en-us/dotnet/core/whats-new/dotnet-10) - Language features
+- [ASP.NET Core Fundamentals](https://learn.microsoft.com/en-us/aspnet/core/fundamentals/) - Learn the patterns
 
 ---
 
 ## Need Help?
 
-- [Open an issue](https://github.com/CrazyPickleStudios/Brine2D/issues) — Bug reports, feature requests
-- [Start a discussion](https://github.com/CrazyPickleStudios/Brine2D/discussions) — Questions, ideas
+- [Open an issue](https://github.com/CrazyPickleStudios/Brine2D/issues) - Bug reports, feature requests
+- [Start a discussion](https://github.com/CrazyPickleStudios/Brine2D/discussions) - Questions, ideas
 
 ---
 

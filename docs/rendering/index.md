@@ -1,11 +1,11 @@
-﻿---
-title: Rendering
-description: Complete guide to 2D graphics rendering in Brine2D - sprites, textures, cameras, particles, and more
+---
+title: Rendering Overview
+description: Introduction to rendering in Brine2D - sprites, shapes, text, cameras, and more
 ---
 
 # Rendering
 
-Learn everything about 2D graphics rendering in Brine2D - from basic sprites to advanced particle systems and post-processing effects.
+Brine2D's rendering system gives you everything you need for 2D games - from basic sprites to advanced particle systems and post-processing effects.
 
 ---
 
@@ -15,31 +15,31 @@ Learn everything about 2D graphics rendering in Brine2D - from basic sprites to 
 public class RenderingScene : Scene
 {
     private ITexture? _playerTexture;
-    
-        private readonly IAssetLoader _assets;
+
+    private readonly IAssetLoader _assets;
 
     public RenderingScene(IAssetLoader assets) => _assets = assets;
 
     protected override async Task OnLoadAsync(CancellationToken ct, IProgress<float>? progress = null)
     {
-        _playerTexture = await _assets.GetOrLoadTextureAsync(""assets/images/player.png"", cancellationToken: ct);
+        _playerTexture = await _assets.GetOrLoadTextureAsync("assets/images/player.png", cancellationToken: ct);
     }
-    
+
     protected override void OnRender(GameTime gameTime)
     {
         // Renderer available automatically!
         Renderer.ClearColor = Color.Black;
-        
+
         // Draw texture
         if (_playerTexture != null)
         {
             Renderer.DrawTexture(_playerTexture, 100, 100, 64, 64);
         }
-        
+
         // Draw shapes
         Renderer.DrawRectangleFilled(200, 200, 50, 50, Color.Red);
         Renderer.DrawCircleFilled(300, 300, 25, Color.Blue);
-        
+
         // Draw text
         Renderer.DrawText("Hello, Brine2D!", 10, 10, Color.White);
     }
@@ -54,8 +54,8 @@ public class RenderingScene : Scene
 
 | Guide | Description | Difficulty |
 |-------|-------------|------------|
-| **[Choosing a Renderer](choosing-renderer.md)** | GPU vs Legacy renderer comparison | ⭐ Beginner |
-| **[GPU Renderer](gpu-renderer.md)** | Modern GPU-accelerated rendering (default) | ⭐ Beginner |
+| **[Rendering Architecture](choosing-renderer.md)** | Interfaces, GPU drivers, headless mode | ⭐ Beginner |
+| **[GPU Renderer](gpu-renderer.md)** | Render targets, scissor rects, blend modes, text | ⭐ Beginner |
 | **[Sprites & Textures](sprites.md)** | Load and draw images | ⭐ Beginner |
 | **[Drawing Primitives](primitives.md)** | Shapes, lines, and basic graphics | ⭐ Beginner |
 
@@ -71,7 +71,7 @@ public class RenderingScene : Scene
 | Guide | Description | Difficulty |
 |-------|-------------|------------|
 | **[Particles](particles.md)** | Particle systems for visual effects | ⭐⭐⭐ Advanced |
-| **[Post-Processing](post-processing.md)** | Screen shaders and effects | ⭐⭐⭐ Advanced |
+| **[Post-Processing](post-processing.md)** | Off-screen rendering and effects | ⭐⭐⭐ Advanced |
 
 ---
 
@@ -79,33 +79,28 @@ public class RenderingScene : Scene
 
 ### Renderer Architecture
 
-Brine2D supports multiple rendering backends:
+Brine2D has a single GPU-accelerated renderer built on the SDL3 GPU API:
 
 ```mermaid
 graph TB
-    IRenderer["IRenderer<br/>(Interface)"]
-    
-    GPU["SDL3GPURenderer<br/>(Vulkan/Metal/D3D12)"]
-    Legacy["SDL3Renderer<br/>(SDL_Renderer)"]
-    
+    IRenderer["IRenderer / IDrawContext<br/>(Interfaces)"]
+
+    GPU["SDL3Renderer<br/>(Vulkan/Metal/D3D12)"]
+    Headless["HeadlessRenderer<br/>(Servers & Testing)"]
+
     IRenderer --> GPU
-    IRenderer --> Legacy
-    
+    IRenderer --> Headless
+
     GPU --> Vulkan["Vulkan"]
     GPU --> Metal["Metal"]
     GPU --> D3D12["Direct3D 12"]
-    
-    Legacy --> D3D11["Direct3D 11"]
-    Legacy --> OpenGL["OpenGL"]
-    
+
     style IRenderer fill:#2d5016,stroke:#4ec9b0,stroke-width:3px,color:#fff
     style GPU fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
-    style Legacy fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style Headless fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
 ```
 
-**Default:** GPU renderer (faster, modern features)
-
-[:octicons-arrow-right-24: Learn more in Choosing a Renderer](choosing-renderer.md)
+[:octicons-arrow-right-24: Learn more in Rendering Architecture](choosing-renderer.md)
 
 ---
 
@@ -118,23 +113,23 @@ sequenceDiagram
     participant GL as Game Loop
     participant S as Scene
     participant R as Renderer
-    
+
     loop Every Frame (~60 FPS)
         GL->>S: OnUpdate(gameTime)
         S->>S: Update game logic
-        
+
         GL->>R: BeginFrame()
-        GL->>R: Clear(color)
         GL->>S: OnRender(gameTime)
         S->>R: DrawTexture(...)
         S->>R: DrawRectangle(...)
         S->>R: DrawText(...)
+        GL->>R: ApplyPostProcessing()
         GL->>R: EndFrame()
         R->>R: Present to screen
     end
 ```
 
-**Pattern:** Update game state, then render. Renderer handles frame management automatically.
+**Pattern:** Update game state, then render. The framework manages `BeginFrame` / `EndFrame` automatically.
 
 ---
 
@@ -147,7 +142,7 @@ public class GameScene : Scene
 {
     // ✅ No injection needed!
     // Renderer is a framework property
-    
+
     protected override void OnRender(GameTime gameTime)
     {
         // Renderer available automatically
@@ -168,9 +163,9 @@ public class GameScene : Scene
 ```csharp
 private ITexture? _sprite;
 
-protected override async Task OnLoadAsync(CancellationToken ct)
+protected override async Task OnLoadAsync(CancellationToken ct, IProgress<float>? progress = null)
 {
-    _sprite = await LoadTextureAsync("assets/sprite.png", ct);
+    _sprite = await _assets.GetOrLoadTextureAsync("assets/sprite.png", cancellationToken: ct);
 }
 
 protected override void OnRender(GameTime gameTime)
@@ -193,10 +188,10 @@ protected override void OnRender(GameTime gameTime)
 {
     // Filled rectangle
     Renderer.DrawRectangleFilled(100, 100, 50, 50, Color.Red);
-    
+
     // Circle outline
-    Renderer.DrawCircle(200, 200, 25, Color.Blue);
-    
+    Renderer.DrawCircleOutline(200, 200, 25, Color.Blue);
+
     // Line
     Renderer.DrawLine(300, 300, 400, 400, Color.Green, thickness: 2);
 }
@@ -216,7 +211,7 @@ protected override void OnUpdate(GameTime gameTime)
     // Follow player
     _camera.Position = _playerPosition;
     _camera.Zoom = 2.0f;
-    
+
     // Apply camera transform
     Renderer.Camera = _camera;
 }
@@ -257,7 +252,7 @@ emitter.BlendMode = BlendMode.Additive;  // Fire effect
 var textures = new List<ITexture>();
 for (int i = 0; i < 10; i++)
 {
-    textures.Add(await LoadTextureAsync($"assets/sprite{i}.png", ct));
+    textures.Add(await _assets.GetOrLoadTextureAsync($"assets/sprite{i}.png", cancellationToken: ct));
 }
 
 // Build atlas at runtime
@@ -281,63 +276,39 @@ Renderer.DrawTexture(atlas.AtlasTexture, region.SourceRect, destRect);
 
 ### Reduce Draw Calls
 
-**Problem:** Each `DrawTexture()` call is a separate draw call (expensive!)
+**Problem:** Each texture switch is expensive.
 
-**Solution:** Use texture atlasing to batch sprites
+**Solution:** Use texture atlasing to batch sprites.
 
 ```csharp
-// ❌ Bad - 100 draw calls
+// ❌ Bad - each sprite may use a different texture, causing many draw calls
 for (int i = 0; i < 100; i++)
 {
-    Renderer.DrawTexture(_sprite, x[i], y[i]);
+    Renderer.DrawTexture(_sprites[i], x[i], y[i]);
 }
 
-// ✅ Good - 1 draw call with atlas
+// ✅ Good - all sprites in one atlas, batched automatically
 var atlas = await AtlasBuilder.BuildAtlasAsync(Renderer, sprites);
-Renderer.DrawTexture(atlas.AtlasTexture, ...); // Batched automatically!
+Renderer.DrawTexture(atlas.AtlasTexture, ...); // Batched!
 ```
-
-**Result:** 90-99% fewer draw calls, 10x+ better performance
 
 [:octicons-arrow-right-24: Learn more: Texture Atlasing](texture-atlasing.md)
 
 ---
 
-### Use GPU Renderer
-
-**GPU renderer** (default) is 2-3x faster than legacy renderer:
-
-```csharp
-// GPU renderer (default)
-builder.Services.AddBrine2D(options =>
-{
-    options.Backend = GraphicsBackend.GPU;  // Default
-});
-```
-
-**Advantages:**
-- Automatic sprite batching
-- Hardware acceleration
-- Modern shader support
-- Post-processing effects
-
-[:octicons-arrow-right-24: Learn more: GPU Renderer](gpu-renderer.md)
-
----
-
 ### Minimize Texture Loads
 
-**Problem:** Loading textures is slow
+**Problem:** Loading textures is slow.
 
-**Solution:** Load once in `OnLoadAsync()`, cache texture references
+**Solution:** Load once in `OnLoadAsync`, cache references, or use `AssetManifest` for parallel loading.
 
 ```csharp
 // ✅ Good - load once
 private ITexture? _sprite;
 
-protected override async Task OnLoadAsync(CancellationToken ct)
+protected override async Task OnLoadAsync(CancellationToken ct, IProgress<float>? progress = null)
 {
-    _sprite = await LoadTextureAsync("assets/sprite.png", ct);
+    _sprite = await _assets.GetOrLoadTextureAsync("assets/sprite.png", cancellationToken: ct);
 }
 
 protected override void OnRender(GameTime gameTime)
@@ -376,24 +347,23 @@ Use built-in performance monitoring:
 
 ### ✅ DO
 
-1. **Use GPU renderer** (default) for best performance
-2. **Load textures in OnLoadAsync()** - Keep OnRender() fast
-3. **Use texture atlasing** - Batch sprites that render together
-4. **Set clear color once** - Don't change every frame
-5. **Cache texture references** - Don't reload textures
+1. **Load textures in `OnLoadAsync`** - keep `OnRender` fast
+2. **Use texture atlasing** - batch sprites that render together
+3. **Set `ClearColor` once** - don't change every frame
+4. **Cache texture references** - don't reload textures
+5. **Use `AssetManifest`** - parallel loading with ref counting
 
 ```csharp
 // ✅ Good pattern
-    protected override async Task OnLoadAsync(CancellationToken ct, IProgress<float>? progress = null)
-    {
-        _sprites = await LoadSpritesAsync(ct);
-        _atlas = await BuildAtlasAsync(_sprites, ct);
-    }
+protected override async Task OnLoadAsync(CancellationToken ct, IProgress<float>? progress = null)
+{
+    await _assets.PreloadAsync(_manifest, cancellationToken: ct);
+}
 
 protected override void OnRender(GameTime gameTime)
 {
-    Renderer.ClearColor = Color.Black;  // Set once
-    Renderer.DrawTexture(_atlas.AtlasTexture, ...);  // Cached
+    Renderer.ClearColor = Color.Black;
+    Renderer.DrawTexture(_manifest.Background, 0, 0);
 }
 ```
 
@@ -401,23 +371,19 @@ protected override void OnRender(GameTime gameTime)
 
 ### ❌ DON'T
 
-1. **Don't inject IRenderer** - Use the framework property
-2. **Don't load assets in OnRender()** - Causes lag
-3. **Don't change clear color every frame** - Unnecessary
-4. **Don't draw thousands of individual sprites** - Use atlasing
-5. **Don't forget to unload textures** - Memory leaks
+1. **Don't inject `IRenderer`** - use the `Renderer` framework property
+2. **Don't load assets in `OnRender`** - causes lag
+3. **Don't change `ClearColor` every frame** - unnecessary
+4. **Don't draw thousands of individual sprites** - use atlasing
 
 ```csharp
 // ❌ Bad pattern
 protected override void OnRender(GameTime gameTime)
 {
     // Don't load in render!
-    var sprite = await LoadTextureAsync("sprite.png");  // NO!
-    
-    // Don't change clear color based on game state
-    Renderer.ClearColor = _isNight ? Color.Black : Color.Blue;  // Avoid
-    
-    // Don't draw many individual sprites
+    var sprite = await _assets.GetOrLoadTextureAsync("sprite.png");  // NO!
+
+    // Don't draw many individual sprites without atlasing
     for (int i = 0; i < 1000; i++)
     {
         Renderer.DrawTexture(_sprites[i], ...);  // Use atlas instead!
@@ -431,9 +397,9 @@ protected override void OnRender(GameTime gameTime)
 
 ### "Texture is null" Error
 
-**Symptom:** `NullReferenceException` when drawing
+**Symptom:** `NullReferenceException` when drawing.
 
-**Solution:** Make sure texture loaded successfully
+**Solution:** Ensure the texture loaded successfully in `OnLoadAsync`.
 
 ```csharp
 protected override void OnRender(GameTime gameTime)
@@ -460,14 +426,14 @@ protected override void OnRender(GameTime gameTime)
 ```csharp
 protected override void OnRender(GameTime gameTime)
 {
-    Logger.LogDebug("OnRender called");  // Debug
-    
+    Logger.LogDebug("OnRender called");
+
     if (_sprite == null)
     {
         Logger.LogWarning("Sprite is null!");
         return;
     }
-    
+
     // Draw at 0,0 to test
     Renderer.DrawTexture(_sprite, 0, 0, 64, 64);
 }
@@ -485,10 +451,10 @@ protected override void OnRender(GameTime gameTime)
 
 2. **FPS** - Should be 60 (or monitor refresh rate)
    - If low: Profile with performance monitor
-   - Solution: Reduce draw calls, use GPU renderer
+   - Solution: Reduce draw calls
 
 3. **Memory usage** - Check for texture leaks
-   - Solution: Unload textures in `OnUnloadAsync()`
+   - Solution: Use `AssetManifest` for automatic lifecycle management
 
 [:octicons-arrow-right-24: Performance Guide](../performance/optimization.md)
 

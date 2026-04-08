@@ -72,7 +72,7 @@ public class GameScene : Scene
 {
     protected override void OnUpdate(GameTime gameTime)
     {
-        // Use Input directly — no constructor injection needed
+        // Use Input directly - no constructor injection needed
         if (Input.IsKeyDown(Key.W))
         {
             _position.Y -= 200f * (float)gameTime.DeltaTime;
@@ -142,7 +142,7 @@ var pos = Input.MousePosition;
 // Movement delta since last frame
 var delta = Input.MouseDelta;
 
-// Scroll wheel (float — positive = up)
+// Scroll wheel (float - positive = up)
 var scroll = Input.ScrollWheelDelta;
 
 // Buttons
@@ -206,9 +206,9 @@ uiLayer.OnKeyPressed += (key) =>
 
 1. **Use the `Input` framework property** in scenes
 2. **Poll input in OnUpdate()** only
-3. **Use deltaTime for movement** — frame-rate independent
-4. **Check IsKeyPressed() for actions** — jump, shoot, etc.
-5. **Use IsKeyDown() for continuous** — movement
+3. **Use deltaTime for movement** - frame-rate independent
+4. **Check IsKeyPressed() for actions** - jump, shoot, etc.
+5. **Use IsKeyDown() for continuous** - movement
 
 ```csharp
 protected override void OnUpdate(GameTime gameTime)
@@ -233,18 +233,18 @@ protected override void OnUpdate(GameTime gameTime)
 
 ### :x: DON'T
 
-1. **Don't poll input in OnRender()** — wrong lifecycle method
-2. **Don't forget deltaTime** — movement will be FPS-dependent
-3. **Don't use IsKeyPressed() for movement** — will be choppy
+1. **Don't poll input in OnRender()** - wrong lifecycle method
+2. **Don't forget deltaTime** - movement will be FPS-dependent
+3. **Don't use IsKeyPressed() for movement** - will be choppy
 
 ```csharp
 // ❌ Bad pattern
 protected override void OnRender(GameTime gameTime)
 {
-    // Wrong — input in render!
+    // Wrong - input in render!
     if (Input.IsKeyDown(Key.W))
     {
-        _position.Y -= _speed;  // Also wrong — no deltaTime!
+        _position.Y -= _speed;  // Also wrong - no deltaTime!
     }
 }
 ```
@@ -280,13 +280,13 @@ protected override void OnUpdate(GameTime gameTime)
 **Solution:** Always use deltaTime
 
 ```csharp
-// ❌ Wrong — FPS dependent
+// ❌ Wrong - FPS dependent
 if (Input.IsKeyDown(Key.W))
 {
     _position.Y -= 5;  // Moves 5 pixels per frame (300px/sec at 60fps!)
 }
 
-// ✅ Correct — consistent speed
+// ✅ Correct - consistent speed
 if (Input.IsKeyDown(Key.W))
 {
     _position.Y -= 200 * (float)gameTime.DeltaTime;  // 200 pixels per second
@@ -311,11 +311,11 @@ if (!Input.IsGamepadConnected())
 
 ## Related Topics
 
-- [Keyboard](keyboard.md) — Complete keyboard guide
-- [Mouse](mouse.md) — Mouse input details
-- [Gamepad Support](gamepad.md) — Controller integration
-- [Input Layers](layers.md) — Advanced input routing
-- [Quick Start](../getting-started/quickstart.md) — Basic input example
+- [Keyboard](keyboard.md) - Complete keyboard guide
+- [Mouse](mouse.md) - Mouse input details
+- [Gamepad Support](gamepad.md) - Controller integration
+- [Input Layers](layers.md) - Advanced input routing
+- [Quick Start](../getting-started/quickstart.md) - Basic input example
 
 ---
 

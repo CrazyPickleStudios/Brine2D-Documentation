@@ -1,11 +1,11 @@
 ---
 title: Scenes
-description: Scenes are the building blocks of your Brine2D game — lifecycle, transitions, and patterns
+description: Scenes are the building blocks of your Brine2D game - lifecycle, transitions, and patterns
 ---
 
 # Scenes
 
-Scenes are the building blocks of your game. Each scene represents a distinct state or screen — menu, gameplay, pause, game over, etc. Think of them like **ASP.NET Controllers**: each one handles a specific part of your application.
+Scenes are the building blocks of your game. Each scene represents a distinct state or screen - menu, gameplay, pause, game over, etc. Think of them like **ASP.NET Controllers**: each one handles a specific part of your application.
 
 ---
 
@@ -90,12 +90,12 @@ Six properties are set automatically by the engine before `OnLoadAsync`:
 The `SceneManager` handles frame management and ECS execution automatically each frame:
 
 1. Calls `scene.OnUpdate(gameTime)`
-2. Calls `world.Update(gameTime)` — runs all update systems, then behaviors
+2. Calls `world.Update(gameTime)` - runs all update systems, then behaviors
 3. Calls `scene.OnFixedUpdate(fixedTime)` zero or more times
 4. Calls `world.FixedUpdate(fixedTime)` for each fixed step
 5. Manages `BeginFrame`/`EndFrame`
-6. Calls `world.Render(renderer)` — runs all render systems, then behaviors
-7. Calls `scene.OnRender(gameTime)` — your overlays on top
+6. Calls `world.Render(renderer)` - runs all render systems, then behaviors
+7. Calls `scene.OnRender(gameTime)` - your overlays on top
 
 **You never call:** `world.Update()`, `world.Render()`, `renderer.BeginFrame()`, `renderer.EndFrame()`
 
@@ -250,19 +250,19 @@ public GameScene(GameState gameState) => _gameState = gameState;
 
 ### :white_check_mark: DO
 
-1. **Load assets in OnLoadAsync** — use `IAssetLoader` with async/await
-2. **Create entities in OnEnter** — after assets are loaded
-3. **Use framework properties** — Logger, World, Renderer, Input, Audio, Game
-4. **Use OnExit for main-thread cleanup** — stop audio, release SDL resources
-5. **Use singleton services** — for data that persists between scenes
+1. **Load assets in OnLoadAsync** - use `IAssetLoader` with async/await
+2. **Create entities in OnEnter** - after assets are loaded
+3. **Use framework properties** - Logger, World, Renderer, Input, Audio, Game
+4. **Use OnExit for main-thread cleanup** - stop audio, release SDL resources
+5. **Use singleton services** - for data that persists between scenes
 
 ### :x: DON'T
 
-1. **Don't access framework properties in constructor** — they're not set yet
-2. **Don't create entities in constructor** — World not available
-3. **Don't manually clear World** — automatic on scene unload
-4. **Don't access Renderer/Input/Audio in OnUnloadAsync** — use OnExit instead
-5. **Don't call World.Update or Renderer.BeginFrame** — automatic
+1. **Don't access framework properties in constructor** - they're not set yet
+2. **Don't create entities in constructor** - World not available
+3. **Don't manually clear World** - automatic on scene unload
+4. **Don't access Renderer/Input/Audio in OnUnloadAsync** - use OnExit instead
+5. **Don't call World.Update or Renderer.BeginFrame** - automatic
 
 ---
 
@@ -290,6 +290,6 @@ protected override void OnEnter() { Logger.LogInformation(""Scene entered""); }
 
 ## Related Topics
 
-- [Scene Transitions](transitions.md) — Smooth scene changes and loading screens
-- [ECS](../ecs/index.md) — Entity Component System
-- [Assets](../assets/index.md) — Asset loading and manifests
+- [Scene Transitions](transitions.md) - Smooth scene changes and loading screens
+- [ECS](../ecs/index.md) - Entity Component System
+- [Assets](../assets/index.md) - Asset loading and manifests

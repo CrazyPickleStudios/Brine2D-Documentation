@@ -1,4 +1,4 @@
-﻿---
+---
 title: Builder Pattern
 description: Master the GameApplicationBuilder for configuring your Brine2D games
 ---
@@ -46,12 +46,12 @@ var builder = GameApplication.CreateBuilder(args);
 
 // Step 2: Add Brine2D with sensible defaults
 // This includes: SDL3 backend, GPU rendering, input, application lifetime
-builder.Services.AddBrine2D(options =>
+builder.Configure(options =>
 {
     options.Window.Title = "My Game";
     options.Window.Width = 1280;
     options.Window.Height = 720;
-    // Defaults: GraphicsBackend.GPU with VSync enabled
+    // Defaults: VSync enabled, auto GPU driver selection
 });
 
 // Step 3: Register your game scene
@@ -82,7 +82,7 @@ builder.Services.AddBrineEngine();         // Game loop, scene manager
 builder.Configure(options => 
 {
     options.Window.Title = "My Game";
-    options.Backend = GraphicsBackend.LegacyRenderer; // Custom backend
+    options.Rendering.PreferredGPUDriver = GPUDriver.Vulkan; // Force specific driver
 });
 
 // Inject custom services
@@ -126,10 +126,10 @@ internal GameApplicationBuilder(string[] args)
 ```
 
 **What it does:**
-1. ✅ Loads `gamesettings.json` automatically
-2. ✅ Registers core engine services (GameLoop, SceneManager, etc.)
-3. ✅ Sets up console logging
-4. ✅ Supports environment-specific configs
+1. ? Loads `gamesettings.json` automatically
+2. ? Registers core engine services (GameLoop, SceneManager, etc.)
+3. ? Sets up console logging
+4. ? Supports environment-specific configs
 
 ---
 
@@ -297,7 +297,7 @@ public GameApplication Build()
 ```csharp
 var game = builder.Build();
 
-// ❌ Too late! Container is sealed
+// ? Too late! Container is sealed
 builder.AddScene<NewScene>(); // Throws exception
 ```
 
@@ -341,11 +341,10 @@ builder.AddScene<PauseScene>();
 // gamesettings.json
 {
   "Rendering": {
-    "WindowTitle": "My Game",
-    "WindowWidth": 1280,
-    "WindowHeight": 720,
+    "Title": "My Game",
+    "Width": 1280,
+    "Height": 720,
     "VSync": true,
-    "Backend": "GPU"
   }
 }
 
@@ -394,10 +393,10 @@ else
 
 ```
 MyGame/
-├── gamesettings.json                 # Base config (all environments)
-├── gamesettings.Development.json     # Dev overrides
-├── gamesettings.Production.json      # Prod overrides
-└── Program.cs
++-- gamesettings.json                 # Base config (all environments)
++-- gamesettings.Development.json     # Dev overrides
++-- gamesettings.Production.json      # Prod overrides
++-- Program.cs
 ```
 
 ---
@@ -446,7 +445,7 @@ public static class MyGameExtensions
         services.Configure(options =>
         {
             configuration.GetSection("Rendering").Bind(options);
-            options.Backend = GraphicsBackend.LegacyRenderer; // Custom backend
+            options.Rendering.PreferredGPUDriver = GPUDriver.Vulkan; // Force specific driver
         });
         
         // Custom systems
@@ -512,7 +511,7 @@ else
 // ========================================
 
 // Typical approach - use AddBrine2D for rendering and input
-builder.Services.AddBrine2D(options =>
+builder.Configure(options =>
 {
     options.Window.Title = "My Game";
     options.Window.Width = 1920;
@@ -546,11 +545,10 @@ await game.RunAsync<GameScene>();
   },
   "Rendering": {
     "WindowTitle": "My Awesome Game",
-    "WindowWidth": 1920,
-    "WindowHeight": 1080,
+    "Width": 1920,
+    "Height": 1080,
     "VSync": true,
     "Fullscreen": false,
-    "Backend": "GPU",
     "PreferredGPUDriver": "vulkan"
   },
   "Audio": {
@@ -633,7 +631,7 @@ else if (OperatingSystem.IsLinux())
 var backend = builder.Configuration["Rendering:Backend"];
 if (backend == "GPU")
 {
-    // GPU rendering is the default — no configuration needed
+    // GPU rendering is the default - no configuration needed
 }
 else
 {
@@ -693,12 +691,12 @@ if (renderingoptions.Window.Height < 480)
 1. **Don't modify builder after Build()**
    ```csharp
    var game = builder.Build();
-   builder.AddScene<NewScene>(); // ❌ Throws!
+   builder.AddScene<NewScene>(); // ? Throws!
    ```
 
 2. **Don't register services in scenes**
    ```csharp
-   // ❌ Wrong place!
+   // ? Wrong place!
    protected override void OnInitialize()
    {
        builder.Services.AddSingleton<IService, Service>();
@@ -707,10 +705,10 @@ if (renderingoptions.Window.Height < 480)
 
 3. **Don't hard-code configuration**
    ```csharp
-   // ❌ Bad
+   // ? Bad
    options.Window.Width = 1280;
    
-   // ✅ Good
+   // ? Good
    builder.Configuration.GetSection("Rendering").Bind(options);
    ```
 

@@ -287,9 +287,9 @@ FileNotFoundException: Could not find file 'assets/player.png'
 
 ## Next Steps
 
-- **[Configuration](configuration.md)** — Configure your game
-- **[First Game](first-game.md)** — Build a complete game
-- **[Scenes](../scenes/index.md)** — Understand scene architecture
+- **[Configuration](configuration.md)** - Configure your game
+- **[First Game](first-game.md)** - Build a complete game
+- **[Scenes](../scenes/index.md)** - Understand scene architecture
 
 ---
 

@@ -38,7 +38,7 @@ public class GameScene : Scene
 
     protected override void OnEnter()
     {
-        // Implicit conversion — no .Value needed
+        // Implicit conversion - no .Value needed
         _player.Sprite.Texture = _manifest.Player;
         Audio.PlayMusic(_manifest.Theme);
     }
@@ -75,7 +75,7 @@ await _assets.PreloadAsync(_manifest, progress, cancellationToken: ct);
 - Loads all `AssetRef<T>` fields in parallel
 - Reports progress as each asset completes
 - Assets are safe to use from `OnEnter` onwards
-- Partial failures throw `AggregateException` — successfully loaded assets are still cached
+- Partial failures throw `AggregateException` - successfully loaded assets are still cached
 
 ---
 
@@ -100,7 +100,7 @@ bool loaded = playerRef.IsLoaded;       // Check state
 // Unload a specific manifest (decrements reference counts)
 _assets.Unload(_manifest);
 
-// Or let scoped IAssetLoader handle it — automatic on scene unload
+// Or let scoped IAssetLoader handle it - automatic on scene unload
 ```
 
 ---
@@ -123,5 +123,5 @@ public class LevelAssets : AssetManifest
 
 ## Next Steps
 
-- **[Loading Assets](loading.md)** — Direct loading API reference
-- **[Brine2D.Build](build-package.md)** — Compile-time asset path generation
+- **[Loading Assets](loading.md)** - Direct loading API reference
+- **[Brine2D.Build](build-package.md)** - Compile-time asset path generation

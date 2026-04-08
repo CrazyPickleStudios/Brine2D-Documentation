@@ -1,4 +1,4 @@
-﻿---
+---
 title: Texture Atlasing
 description: Runtime sprite packing for optimal rendering performance
 ---
@@ -152,7 +152,7 @@ public class GameScene : Scene
 {
     private TextureAtlas? _gameAtlas;
     
-    protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
+    protected override async Task OnLoadAsync(CancellationToken ct, IProgress<float>? progress = null)
     {
         // Build atlas during scene initialization
         var spritePaths = new[]
@@ -252,7 +252,7 @@ public class LevelScene : Scene
 {
     private AtlasManager? _atlasManager;
     
-    protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
+    protected override async Task OnLoadAsync(CancellationToken ct, IProgress<float>? progress = null)
     {
         _atlasManager = new AtlasManager(_renderer, _assets);
         
@@ -383,7 +383,7 @@ public class MultiAtlasScene : Scene
     private TextureAtlas? _environmentAtlas;
     private TextureAtlas? _effectsAtlas;
     
-    protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
+    protected override async Task OnLoadAsync(CancellationToken ct, IProgress<float>? progress = null)
     {
         // Characters (high resolution, infrequent updates)
         _characterAtlas = await BuildCharacterAtlas();
@@ -567,7 +567,7 @@ public class GameScene : Scene
         _atlasManager = atlasManager;
     }
     
-    protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
+    protected override async Task OnLoadAsync(CancellationToken ct, IProgress<float>? progress = null)
     {
         // Load atlases before creating entities
         await _atlasManager.LoadAtlasAsync("game", new[]
@@ -589,7 +589,7 @@ public class GameScene : Scene
 ```csharp
 public class PreloadScene : Scene
 {
-    protected override async Task OnInitializeAsync(CancellationToken cancellationToken)
+    protected override async Task OnLoadAsync(CancellationToken ct, IProgress<float>? progress = null)
     {
         // Build all atlases during loading screen
         var atlases = new Dictionary<string, string[]>
@@ -606,7 +606,7 @@ public class PreloadScene : Scene
         }
         
         // Transition to game scene
-        await _sceneManager.LoadSceneAsync<GameScene>();
+        Game.LoadScene<GameScene>();
     }
 }
 ```

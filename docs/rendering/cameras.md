@@ -1,4 +1,4 @@
-﻿---
+---
 title: Camera System
 description: Create smooth camera movement, zooming, and following with Brine2D
 ---
@@ -10,11 +10,11 @@ Learn how to implement camera movement, zoom, rotation, and player following to 
 ## Overview
 
 A **camera** in 2D games defines what portion of the game world is visible on screen. Think of it like a virtual viewport that can:
-- ✅ **Move** - Pan around the world
-- ✅ **Zoom** - Get closer or farther from action
-- ✅ **Rotate** - Tilt the view (optional)
-- ✅ **Follow** - Track player smoothly
-- ✅ **Constrain** - Stay within world bounds
+- ? **Move** - Pan around the world
+- ? **Zoom** - Get closer or farther from action
+- ? **Rotate** - Tilt the view (optional)
+- ? **Follow** - Track player smoothly
+- ? **Constrain** - Stay within world bounds
 
 ```mermaid
 graph TD
@@ -42,9 +42,9 @@ graph TD
 
 ## Prerequisites
 
-- ✅ [Quick Start](../getting-started/quick-start.md) - Basic scene setup
-- ✅ [Drawing Basics](drawing-basics.md) - Understand rendering
-- ✅ [Player Movement](../mechanics/movement.md) - Have something to follow
+- ? [Quick Start](../getting-started/quick-start.md) - Basic scene setup
+- ? [Drawing Basics](drawing-basics.md) - Understand rendering
+- ? [Player Movement](../mechanics/movement.md) - Have something to follow
 
 ---
 
@@ -87,7 +87,7 @@ public class CameraScene : Scene
     
     protected override void OnRender(GameTime gameTime)
     {
-        _renderer.Clear(Color.CornflowerBlue);
+        Renderer.ClearColor = Color.CornflowerBlue;
         _renderer.BeginFrame();
         
         // Draw at world position (camera transforms automatically)
@@ -128,12 +128,12 @@ _renderer.DrawRectangle(100, 100, 50, 50, Color.Red);
 
 ```
 World Space (large):           Screen Space (viewport):
-┌─────────────────────┐       ┌───────────┐
-│                     │       │           │
-│   Player @(500,300) │  →→→  │ Player    │
-│                     │       │ (centered)|
-│  2000x2000 pixels   │       │ 1280x720  │
-└─────────────────────┘       └───────────┘
++---------------------+       +-----------+
+�                     �       �           �
+�   Player @(500,300) �  ???  � Player    �
+�                     �       � (centered)|
+�  2000x2000 pixels   �       � 1280x720  �
++---------------------+       +-----------+
 ```
 
 ---
@@ -417,16 +417,16 @@ protected override void OnUpdate(GameTime gameTime)
 
 ```
 Deadzone Visualization:
-┌──────────────────┐
-│                  │
-│   ┌────────┐     │
-│   │ Player │     │ Camera doesn't move
-│   └────────┘     │
-│   (deadzone)     │
-│                  │
-└──────────────────┘
++------------------+
+�                  �
+�   +--------+     �
+�   � Player �     � Camera doesn't move
+�   +--------+     �
+�   (deadzone)     �
+�                  �
++------------------+
 
-Player moves outside → Camera follows
+Player moves outside ? Camera follows
 ```
 
 ---
@@ -597,7 +597,7 @@ public class CameraGameScene : Scene
     // ============================================
     protected override void OnRender(GameTime gameTime)
     {
-        _renderer.Clear(new Color(40, 40, 40));
+        Renderer.ClearColor = new Color(40, 40, 40);
         _renderer.BeginFrame();
         
         // Draw grid (to visualize camera movement)
@@ -747,7 +747,7 @@ protected override void OnRender(GameTime gameTime)
 {
     // Render main game view
     _renderer.Camera = _gameCamera;
-    _renderer.Clear(Color.Black);
+    Renderer.ClearColor = Color.Black;
     _renderer.BeginFrame();
     DrawGameWorld();
     _renderer.EndFrame();
@@ -779,11 +779,11 @@ protected override void OnRender(GameTime gameTime)
 _camera.LerpTo(_playerPosition, 5f * deltaTime); // Not 50f!
 
 // 2. Don't mix immediate and lerp
-// ❌ Bad
+// ? Bad
 _camera.Position = _playerPosition; // Instant
 _camera.LerpTo(_playerPosition, 5f * deltaTime); // Smooth
 
-// ✅ Good - pick one
+// ? Good - pick one
 _camera.LerpTo(_playerPosition, 5f * deltaTime);
 ```
 
@@ -851,23 +851,23 @@ protected override void OnRender(GameTime gameTime)
 
 1. **Don't update camera position multiple times per frame**
    ```csharp
-   // ❌ Bad - conflicts
+   // ? Bad - conflicts
    _camera.Position = _playerPosition;
    _camera.LerpTo(_target, 5f);
    ```
 
 2. **Don't forget delta time** in camera movement
    ```csharp
-   // ❌ Bad
+   // ? Bad
    _camera.LerpTo(_target, 5f);
    
-   // ✅ Good
+   // ? Good
    _camera.LerpTo(_target, 5f * deltaTime);
    ```
 
 3. **Don't use extreme zoom values** (causes rendering issues)
    ```csharp
-   // ❌ Bad
+   // ? Bad
    _camera.Zoom = 0.01f; // Too small
    _camera.Zoom = 100f;  // Too large
    ```
@@ -907,8 +907,8 @@ protected override void OnRender(GameTime gameTime)
 | **Smooth Follow** | `camera.LerpTo(target, 5f * dt)` | Smooth tracking |
 | **Zoom** | `camera.Zoom = 2.0f` | Get closer |
 | **Bounds** | `new CameraBounds(0, 0, w, h)` | Constrain view |
-| **Screen→World** | `camera.ScreenToWorld(pos)` | Mouse to world |
-| **World→Screen** | `camera.WorldToScreen(pos)` | World to screen |
+| **Screen?World** | `camera.ScreenToWorld(pos)` | Mouse to world |
+| **World?Screen** | `camera.WorldToScreen(pos)` | World to screen |
 
 ---
 

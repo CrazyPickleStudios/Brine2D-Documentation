@@ -56,8 +56,8 @@ public class MovingSpriteScene : Scene
 
 **What's happening:**
 
-- We inject `IAssetLoader` — the unified service for loading textures, sounds, fonts, and music
-- Framework properties (`Input`, `Renderer`, `Logger`, `World`, `Audio`, `Game`) are set automatically — no constructor injection needed for those
+- We inject `IAssetLoader` - the unified service for loading textures, sounds, fonts, and music
+- Framework properties (`Input`, `Renderer`, `Logger`, `World`, `Audio`, `Game`) are set automatically - no constructor injection needed for those
 
 ---
 
@@ -82,7 +82,7 @@ protected override async Task OnLoadAsync(CancellationToken ct, IProgress<float>
 
 **Key points:**
 
-- `GetOrLoadTextureAsync` loads and caches the texture — subsequent calls return the cached version
+- `GetOrLoadTextureAsync` loads and caches the texture - subsequent calls return the cached version
 - `TextureScaleMode.Nearest` keeps pixel art sharp when scaled
 - Always pass the `CancellationToken`
 
@@ -102,7 +102,7 @@ protected override void OnRender(GameTime gameTime)
 }
 ```
 
-**Note:** Frame management (clear, begin, end) is automatic — just draw.
+**Note:** Frame management (clear, begin, end) is automatic - just draw.
 
 ---
 
@@ -139,7 +139,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 **Key points:**
 
-- `IsKeyDown` returns `true` every frame the key is held — perfect for movement
+- `IsKeyDown` returns `true` every frame the key is held - perfect for movement
 - Multiplying by `deltaTime` makes movement frame-rate independent (same speed at 30fps and 144fps)
 - `Vector2.Normalize` prevents diagonal movement from being 41% faster
 
@@ -236,21 +236,21 @@ public class MovingSpriteScene : Scene
 
 ### Easy
 
-1. **Change the speed** — make the sprite faster or slower
-2. **Different keys** — add gamepad support with `Input.GetGamepadLeftStick()`
-3. **Background color** — set `Renderer.ClearColor` in `OnEnter`
+1. **Change the speed** - make the sprite faster or slower
+2. **Different keys** - add gamepad support with `Input.GetGamepadLeftStick()`
+3. **Background color** - set `Renderer.ClearColor` in `OnEnter`
 
 ### Medium
 
-4. **Multiple sprites** — load and move 2-3 sprites independently
-5. **Wrap-around** — when the sprite leaves one edge, appear on the opposite
-6. **Speed boost** — hold Shift to move 2x faster
+4. **Multiple sprites** - load and move 2-3 sprites independently
+5. **Wrap-around** - when the sprite leaves one edge, appear on the opposite
+6. **Speed boost** - hold Shift to move 2x faster
 
 ### Hard
 
-7. **Smooth acceleration** — gradually speed up and slow down
-8. **Mouse follow** — move toward the mouse with `Input.MousePosition`
-9. **Rotation** — rotate the sprite to face the direction of movement
+7. **Smooth acceleration** - gradually speed up and slow down
+8. **Mouse follow** - move toward the mouse with `Input.MousePosition`
+9. **Rotation** - rotate the sprite to face the direction of movement
 
 ---
 
@@ -262,12 +262,12 @@ public class MovingSpriteScene : Scene
 :white_check_mark: **Delta time** for frame-rate independent movement
 :white_check_mark: **Vector math** with `Vector2.Normalize()`
 :white_check_mark: **Boundary checking** with `Math.Clamp()`
-:white_check_mark: **Scene lifecycle** — Load, Update, Render
+:white_check_mark: **Scene lifecycle** - Load, Update, Render
 
 ---
 
 ## Next Steps
 
-- **[Animation System](animations.md)** — Animate your sprite with sprite sheets
-- **[Keyboard Guide](../input/keyboard.md)** — Master all keyboard input
-- **[First Game](../getting-started/first-game.md)** — Build a complete game
+- **[Animation System](animations.md)** - Animate your sprite with sprite sheets
+- **[Keyboard Guide](../input/keyboard.md)** - Master all keyboard input
+- **[First Game](../getting-started/first-game.md)** - Build a complete game

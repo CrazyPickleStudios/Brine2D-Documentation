@@ -1,4 +1,4 @@
-﻿---
+---
 title: Particle System
 description: Create stunning particle effects with Brine2D's advanced particle system
 ---
@@ -124,13 +124,13 @@ emitter.EndRotation = MathF.PI * 2; // End angle (full rotation)
 emitter.RotationSpeed = 2f; // Radians per second (constant spin)
 
 // Random rotation variance
-emitter.RotationSpread = MathF.PI / 4; // ±45 degrees initial rotation
+emitter.RotationSpread = MathF.PI / 4; // �45 degrees initial rotation
 ```
 
 **Rotation Modes:**
 
 ```csharp
-// Lerp rotation (smooth start → end)
+// Lerp rotation (smooth start ? end)
 emitter.StartRotation = 0f;
 emitter.EndRotation = MathF.PI; // 180 degree rotation over lifetime
 emitter.RotationSpeed = 0f; // Disabled
@@ -141,7 +141,7 @@ emitter.RotationSpeed = 3f; // Spin at 3 rad/s regardless of lifetime
 
 // Random initial rotation
 emitter.StartRotation = 0f;
-emitter.RotationSpread = MathF.PI; // Random ±180 degrees
+emitter.RotationSpread = MathF.PI; // Random �180 degrees
 emitter.RotationSpeed = 1f; // All spin at same speed
 ```
 
@@ -190,7 +190,7 @@ var emitter = entity.AddComponent<ParticleEmitterComponent>();
 emitter.BlendMode = BlendMode.Additive;
 
 // Alpha blending (smoke, fog, default)
-emitter.BlendMode = BlendMode.AlphaBlend;
+emitter.BlendMode = BlendMode.Alpha;
 
 // No blending (solid particles)
 emitter.BlendMode = BlendMode.None;
@@ -266,11 +266,11 @@ emitter.SpawnRadius = 10f; // Shape-specific size
 Control particle appearance:
 
 ```csharp
-// Color interpolation (start → end over lifetime)
+// Color interpolation (start ? end over lifetime)
 emitter.StartColor = new Color(255, 200, 0, 255); // Bright yellow, opaque
 emitter.EndColor = new Color(255, 50, 0, 0); // Dark red, transparent
 
-// Size interpolation (start → end over lifetime)
+// Size interpolation (start ? end over lifetime)
 emitter.StartSize = 8f; // pixels
 emitter.EndSize = 2f; // Shrink over time
 
@@ -302,9 +302,9 @@ Control particle movement:
 emitter.InitialVelocity = new Vector2(0, -100); // Upward
 
 // Velocity spread (random angle variance in degrees)
-emitter.VelocitySpread = 45f; // ±45° cone
+emitter.VelocitySpread = 45f; // �45� cone
 
-// Gravity (acceleration, pixels per second²)
+// Gravity (acceleration, pixels per second�)
 emitter.Gravity = new Vector2(0, 200); // Pull down
 
 // No gravity (floating particles)
@@ -329,8 +329,8 @@ fireEmitter.EmitterShape = EmitterShape.Circle;
 fireEmitter.SpawnRadius = 15f;
 
 // Appearance
-fireEmitter.TexturePath = "assets/particles/fire.png"; // ← NEW
-fireEmitter.BlendMode = BlendMode.Additive; // ← NEW
+fireEmitter.TexturePath = "assets/particles/fire.png"; // ? NEW
+fireEmitter.BlendMode = BlendMode.Additive; // ? NEW
 fireEmitter.StartColor = new Color(255, 200, 0, 255);
 fireEmitter.EndColor = new Color(255, 50, 0, 0);
 fireEmitter.StartSize = 8f;
@@ -358,15 +358,15 @@ fireEmitter.Gravity = new Vector2(0, -20);
 var explosionEmitter = entity.AddComponent<ParticleEmitterComponent>();
 
 // Emission (burst)
-explosionEmitter.EmitterShape = EmitterShape.Burst; // ← NEW
-explosionEmitter.BurstCount = 100; // ← NEW
+explosionEmitter.EmitterShape = EmitterShape.Burst; // ? NEW
+explosionEmitter.BurstCount = 100; // ? NEW
 explosionEmitter.IsEmitting = false;
 explosionEmitter.MaxParticles = 100;
 explosionEmitter.ParticleLifetime = 1f;
 
 // Appearance
-explosionEmitter.TexturePath = "assets/particles/explosion.png"; // ← NEW
-explosionEmitter.BlendMode = BlendMode.Additive; // ← NEW
+explosionEmitter.TexturePath = "assets/particles/explosion.png"; // ? NEW
+explosionEmitter.BlendMode = BlendMode.Additive; // ? NEW
 explosionEmitter.StartColor = new Color(255, 255, 255, 255);
 explosionEmitter.EndColor = new Color(255, 100, 0, 0);
 explosionEmitter.StartSize = 12f;
@@ -395,12 +395,12 @@ smokeEmitter.IsEmitting = true;
 smokeEmitter.EmissionRate = 20f;
 smokeEmitter.MaxParticles = 100;
 smokeEmitter.ParticleLifetime = 3f;
-smokeEmitter.EmitterShape = EmitterShape.Circle; // ← NEW
+smokeEmitter.EmitterShape = EmitterShape.Circle; // ? NEW
 smokeEmitter.SpawnRadius = 5f;
 
 // Appearance
-smokeEmitter.TexturePath = "assets/particles/smoke.png"; // ← NEW
-smokeEmitter.BlendMode = BlendMode.AlphaBlend; // ← NEW
+smokeEmitter.TexturePath = "assets/particles/smoke.png"; // ? NEW
+smokeEmitter.BlendMode = BlendMode.Alpha; // ? NEW
 smokeEmitter.StartColor = new Color(60, 60, 60, 200);
 smokeEmitter.EndColor = new Color(150, 150, 150, 0);
 smokeEmitter.StartSize = 4f;
@@ -423,7 +423,7 @@ smokeEmitter.Gravity = new Vector2(0, -10);
 var spellEmitter = entity.AddComponent<ParticleEmitterComponent>();
 
 // Emission
-spellEmitter.EmitterShape = EmitterShape.Ring; // ← Ring shape
+spellEmitter.EmitterShape = EmitterShape.Ring; // ? Ring shape
 spellEmitter.SpawnRadius = 40f;
 spellEmitter.IsEmitting = true;
 spellEmitter.EmissionRate = 60f;
@@ -493,7 +493,7 @@ trailEmitter.Gravity = Vector2.Zero;
 var fountainEmitter = entity.AddComponent<ParticleEmitterComponent>();
 
 // Emission
-fountainEmitter.EmitterShape = EmitterShape.Cone; // ← Cone shape
+fountainEmitter.EmitterShape = EmitterShape.Cone; // ? Cone shape
 fountainEmitter.ConeAngle = MathF.PI / 6; // 30 degree cone
 fountainEmitter.IsEmitting = true;
 fountainEmitter.EmissionRate = 80f;
@@ -502,7 +502,7 @@ fountainEmitter.ParticleLifetime = 2.5f;
 
 // Appearance
 fountainEmitter.TexturePath = "assets/particles/water.png";
-fountainEmitter.BlendMode = BlendMode.AlphaBlend;
+fountainEmitter.BlendMode = BlendMode.Alpha;
 fountainEmitter.StartColor = new Color(100, 150, 255, 200);
 fountainEmitter.EndColor = new Color(100, 150, 255, 0);
 fountainEmitter.StartSize = 4f;
@@ -555,7 +555,7 @@ public void CreateExplosion(Vector2 position)
     // Layer 3: Smoke aftermath
     var smokeEmitter = CreateChildEmitter(explosionEntity);
     smokeEmitter.EmissionRate = 30f;
-    smokeEmitter.BlendMode = BlendMode.AlphaBlend;
+    smokeEmitter.BlendMode = BlendMode.Alpha;
     smokeEmitter.StartColor = new Color(60, 60, 60, 200);
     smokeEmitter.EndColor = new Color(120, 120, 120, 0);
     smokeEmitter.ParticleLifetime = 3f;
@@ -634,13 +634,13 @@ public class ParticleEmitterComponent
     
     private void EmitParticle()
     {
-        var particle = _pool.Get(); // ✅ Reuse from pool
+        var particle = _pool.Get(); // ? Reuse from pool
         // Configure particle...
     }
     
     private void KillParticle(Particle particle)
     {
-        _pool.Return(particle); // ✅ Return to pool
+        _pool.Return(particle); // ? Return to pool
     }
 }
 ```
@@ -648,16 +648,16 @@ public class ParticleEmitterComponent
 ### Performance Tips
 
 ```csharp
-// ✅ GOOD: Reasonable particle counts
+// ? GOOD: Reasonable particle counts
 emitter.MaxParticles = 200; // ~200 particles = negligible cost
 
-// ⚠️ ACCEPTABLE: Many particles
+// ?? ACCEPTABLE: Many particles
 emitter.MaxParticles = 1000; // ~1000 particles = minor cost
 
-// ❌ BAD: Too many particles
+// ? BAD: Too many particles
 emitter.MaxParticles = 10000; // > 10k particles = significant cost
 
-// ✅ SOLUTION: Use multiple smaller emitters
+// ? SOLUTION: Use multiple smaller emitters
 for (int i = 0; i < 10; i++)
 {
     var smallEmitter = CreateEmitter();
@@ -676,7 +676,7 @@ for (int i = 0; i < 10; i++)
 ### Texture Optimization
 
 ```csharp
-// ✅ GOOD: Pack particle textures into atlas
+// ? GOOD: Pack particle textures into atlas
 var atlas = await AtlasBuilder.BuildAtlasAsync(
     _renderer,
     _assets,
@@ -771,7 +771,7 @@ emitter.ParticleLifetime = 2f; // Not too short
 emitter.StartColor = new Color(255, 255, 255, 255); // Alpha = 255
 
 // 5. Check blend mode
-emitter.BlendMode = BlendMode.AlphaBlend; // Or Additive
+emitter.BlendMode = BlendMode.Alpha; // Or Additive
 ```
 
 ### Textures Not Loading

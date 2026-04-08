@@ -260,10 +260,10 @@ If you need to apply new settings (like resolution), do it between scenes, not d
 
 ## Next Steps
 
-- [Your First Game](first-game.md) — Build a complete game
-- [Project Structure](project-structure.md) — Understanding the architecture
-- [Scenes](../scenes/index.md) — Deep dive into scenes
+- [Your First Game](first-game.md) - Build a complete game
+- [Project Structure](project-structure.md) - Understanding the architecture
+- [Scenes](../scenes/index.md) - Deep dive into scenes
 
 ---
 
-Configuration in Brine2D keeps things simple — configure once, validate automatically, and focus on your game!
+Configuration in Brine2D keeps things simple - configure once, validate automatically, and focus on your game!

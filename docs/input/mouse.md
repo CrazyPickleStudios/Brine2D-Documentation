@@ -23,7 +23,7 @@ protected override void OnUpdate(GameTime gameTime)
         SpawnAt(mousePos);
     }
 
-    // Scroll wheel (float — positive = up)
+    // Scroll wheel (float - positive = up)
     if (Input.ScrollWheelDelta != 0)
     {
         _zoom += Input.ScrollWheelDelta * 0.1f;
@@ -153,7 +153,7 @@ if (scroll != 0)
 
 - `ScrollWheelDelta` is a `float`, not a `Vector2`
 - Check in `OnUpdate`, not `OnRender`
-- Value resets each frame — check `!= 0`, don't accumulate
+- Value resets each frame - check `!= 0`, don't accumulate
 
 ### Mouse delta always zero
 
@@ -177,6 +177,6 @@ if (scroll != 0)
 
 ## Next Steps
 
-- **[Keyboard Input](keyboard.md)** — Keyboard input handling
-- **[Gamepad Input](gamepad.md)** — Controller support
-- **[Input Layers](layers.md)** — Priority-based input
+- **[Keyboard Input](keyboard.md)** - Keyboard input handling
+- **[Gamepad Input](gamepad.md)** - Controller support
+- **[Input Layers](layers.md)** - Priority-based input

@@ -79,7 +79,7 @@ nav:
   
   - Rendering:
       - Overview: rendering/index.md
-      - Choosing a Renderer: rendering/choosing-renderer.md
+      - Rendering Architecture: rendering/choosing-renderer.md
       - GPU Renderer: rendering/gpu-renderer.md
       - Sprites & Textures: rendering/sprites.md
       - Texture Atlasing: rendering/texture-atlasing.md

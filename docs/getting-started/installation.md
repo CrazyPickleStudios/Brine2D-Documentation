@@ -11,10 +11,10 @@ Get Brine2D up and running in minutes with .NET 10 and your favorite IDE.
 
 Brine2D is a **single package** for .NET 10:
 
-- **Brine2D** — Core engine, rendering, input, audio, ECS — everything you need
+- **Brine2D** - Core engine, rendering, input, audio, ECS - everything you need
 
 Optional packages:
-- **Brine2D.Build** — Compile-time asset path generation (auto-generates typed `Assets` class from your assets folder)
+- **Brine2D.Build** - Compile-time asset path generation (auto-generates typed `Assets` class from your assets folder)
 
 ---
 
@@ -22,12 +22,12 @@ Optional packages:
 
 ### Required
 
-- :white_check_mark: **.NET 10 SDK** — [Download here](https://dotnet.microsoft.com/download/dotnet/10.0)
-- :white_check_mark: **IDE** — Visual Studio 2022+, VS Code, or Rider
+- :white_check_mark: **.NET 10 SDK** - [Download here](https://dotnet.microsoft.com/download/dotnet/10.0)
+- :white_check_mark: **IDE** - Visual Studio 2022+, VS Code, or Rider
 
 ### Optional
 
-- :bulb: **Git** — For cloning samples
+- :bulb: **Git** - For cloning samples
 
 ---
 
@@ -331,10 +331,10 @@ FileNotFoundException: Could not find file 'assets/player.png'
 
 Now that Brine2D is installed, let's create your first game!
 
-- **[Quick Start](quickstart.md)** — Create your first scene in 5 minutes
-- **[Your First Game](first-game.md)** — Build a complete game
-- **[Project Structure](project-structure.md)** — Organize your project
-- **[Configuration](configuration.md)** — Configure your game
+- **[Quick Start](quickstart.md)** - Create your first scene in 5 minutes
+- **[Your First Game](first-game.md)** - Build a complete game
+- **[Project Structure](project-structure.md)** - Organize your project
+- **[Configuration](configuration.md)** - Configure your game
 
 ---
 

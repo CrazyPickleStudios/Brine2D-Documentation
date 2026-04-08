@@ -1,4 +1,4 @@
-﻿---
+---
 title: Samples Overview
 description: Complete working examples demonstrating Brine2D features
 ---
@@ -243,7 +243,7 @@ _ballVelocity = CollisionResponse.Bounce(_ballVelocity, penetration, 0.7f);
 - `FadeTransition` between scenes
 - Custom loading screens with progress bars
 - Async scene loading
-- Scene chaining (A → B → C → A)
+- Scene chaining (A ? B ? C ? A)
 - Transition customization (duration, color)
 
 **Controls:**
@@ -371,7 +371,7 @@ public class ManualControlScene : Scene
     protected override void OnRender(GameTime gameTime)
     {
         // You control frame management
-        _renderer.Clear(Color.Black);
+        Renderer.ClearColor = Color.Black;
         _renderer.BeginFrame();
         
         _renderPipeline.Execute(_renderer);
@@ -389,26 +389,26 @@ See [Lifecycle Hooks Guide](../guides/scenes/lifecycle-hooks.md) for full docume
 
 ```
 FeatureDemos/
-├── Scenes/
-│   ├── MainMenuScene.cs           # Interactive demo selector
-│   ├── DemoSceneBase.cs           # Shared base class
-│   ├── ECS/
-│   │   ├── QueryDemoScene.cs      # Query system showcase
-│   │   └── ParticleDemoScene.cs   # Particle effects
-│   ├── Collision/
-│   │   └── CollisionDemoScene.cs  # Physics demo
-│   ├── Transitions/
-│   │   ├── TransitionDemoScene.cs # Transition showcase
-│   │   ├── SceneA.cs              # Chain scene A
-│   │   ├── SceneB.cs              # Chain scene B
-│   │   └── SceneC.cs              # Chain scene C
-│   ├── UI/
-│   │   └── UIDemoScene.cs         # Complete UI showcase
-│   └── Advanced/
-│       └── ManualControlScene.cs  # Power user demo
-├── Program.cs                      # Entry point
-├── gamesettings.json               # Configuration
-└── FeatureDemos.csproj             # Project file
++-- Scenes/
+�   +-- MainMenuScene.cs           # Interactive demo selector
+�   +-- DemoSceneBase.cs           # Shared base class
+�   +-- ECS/
+�   �   +-- QueryDemoScene.cs      # Query system showcase
+�   �   +-- ParticleDemoScene.cs   # Particle effects
+�   +-- Collision/
+�   �   +-- CollisionDemoScene.cs  # Physics demo
+�   +-- Transitions/
+�   �   +-- TransitionDemoScene.cs # Transition showcase
+�   �   +-- SceneA.cs              # Chain scene A
+�   �   +-- SceneB.cs              # Chain scene B
+�   �   +-- SceneC.cs              # Chain scene C
+�   +-- UI/
+�   �   +-- UIDemoScene.cs         # Complete UI showcase
+�   +-- Advanced/
+�       +-- ManualControlScene.cs  # Power user demo
++-- Program.cs                      # Entry point
++-- gamesettings.json               # Configuration
++-- FeatureDemos.csproj             # Project file
 ```
 
 ---

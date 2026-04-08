@@ -1,11 +1,11 @@
 ﻿---
 title: Assets
-description: Load, cache, and manage game assets in Brine2D — textures, sounds, music, and fonts
+description: Load, cache, and manage game assets in Brine2D - textures, sounds, music, and fonts
 ---
 
 # Assets
 
-Brine2D provides a unified asset pipeline through `IAssetLoader`. No content pipeline, no build step, no `.mgcb` files — drag files into your `assets/` folder and load them.
+Brine2D provides a unified asset pipeline through `IAssetLoader`. No content pipeline, no build step, no `.mgcb` files - drag files into your `assets/` folder and load them.
 
 ---
 
@@ -55,7 +55,7 @@ The single service for all asset types:
 
 ### Caching
 
-Assets are cached automatically. Calling `GetOrLoadTextureAsync` twice with the same path returns the cached texture — no disk I/O on the second call.
+Assets are cached automatically. Calling `GetOrLoadTextureAsync` twice with the same path returns the cached texture - no disk I/O on the second call.
 
 ### Scoped Lifetime
 
@@ -107,5 +107,5 @@ MyGame/
 
 ## Related Topics
 
-- [Sprites & Textures](../rendering/sprites.md) — Drawing loaded textures
-- [Scenes](../scenes/index.md) — Scene lifecycle and asset loading patterns
+- [Sprites & Textures](../rendering/sprites.md) - Drawing loaded textures
+- [Scenes](../scenes/index.md) - Scene lifecycle and asset loading patterns

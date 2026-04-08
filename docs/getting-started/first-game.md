@@ -9,7 +9,7 @@ Build a complete game from scratch in 30 minutes. You'll create an asteroid dodg
 
 ## What You'll Build
 
-**Asteroid Dodge** — A simple but complete game where you:
+**Asteroid Dodge** - A simple but complete game where you:
 - Control a spaceship with WASD or arrow keys
 - Dodge incoming asteroids
 - Collect power-ups for bonus points
@@ -54,11 +54,11 @@ mkdir assets/audio
 ```
 
 **Download assets** (or create your own):
-- `player.png` — 32x32 spaceship sprite
-- `asteroid.png` — 32x32 asteroid sprite
-- `powerup.png` — 32x32 star sprite
-- `explosion.wav` — Collision sound effect
-- `collect.wav` — Power-up collection sound
+- `player.png` - 32x32 spaceship sprite
+- `asteroid.png` - 32x32 asteroid sprite
+- `powerup.png` - 32x32 star sprite
+- `explosion.wav` - Collision sound effect
+- `collect.wav` - Power-up collection sound
 
 ---
 
@@ -89,7 +89,7 @@ await game.RunAsync<GameScene>();
 
 ## Step 3: Game State Service
 
-Create `GameState.cs` — a **singleton service** for persistent data:
+Create `GameState.cs` - a **singleton service** for persistent data:
 
 ```csharp
 public class GameState
@@ -308,7 +308,7 @@ protected override void OnRender(GameTime gameTime)
 ### 2. Scoped World
 
 ```csharp
-// World is scoped per scene — automatic cleanup!
+// World is scoped per scene - automatic cleanup!
 protected override Task OnUnloadAsync(CancellationToken ct)
 {
     // All entities destroyed automatically when the scene unloads
@@ -346,13 +346,13 @@ protected override async Task OnLoadAsync(CancellationToken ct, IProgress<float>
 **Solution:**
 
 ```csharp
-// ❌ Wrong — World is null in constructor!
+// ❌ Wrong - World is null in constructor!
 public GameScene()
 {
     var player = World.CreateEntity("Player"); // Throws!
 }
 
-// ✅ Correct — Use OnEnter or OnLoadAsync
+// ✅ Correct - Use OnEnter or OnLoadAsync
 protected override void OnEnter()
 {
     var player = World.CreateEntity("Player"); // Works!
@@ -385,10 +385,10 @@ private void RestartGame()
 
 Now that you've built a complete game, explore more features:
 
-- **[Project Structure](project-structure.md)** — Organize larger projects
-- **[Scenes](../scenes/index.md)** — Scene lifecycle and transitions
-- **[Rendering](../rendering/sprites.md)** — Sprites and textures
-- **[Input](../input/keyboard.md)** — Keyboard, mouse, and gamepad
+- **[Project Structure](project-structure.md)** - Organize larger projects
+- **[Scenes](../scenes/index.md)** - Scene lifecycle and transitions
+- **[Rendering](../rendering/sprites.md)** - Sprites and textures
+- **[Input](../input/keyboard.md)** - Keyboard, mouse, and gamepad
 
 ---
 

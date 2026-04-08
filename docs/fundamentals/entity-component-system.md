@@ -5,7 +5,7 @@ description: Understanding Brine2D's hybrid Entity Component System architecture
 
 # Entity Component System
 
-Brine2D uses a **hybrid ECS** designed to be beginner-friendly with optional performance optimization. You don't need to learn systems or queries to get started — components and behaviors are enough for most games.
+Brine2D uses a **hybrid ECS** designed to be beginner-friendly with optional performance optimization. You don't need to learn systems or queries to get started - components and behaviors are enough for most games.
 
 ## The Three Building Blocks
 
@@ -18,7 +18,7 @@ Brine2D uses a **hybrid ECS** designed to be beginner-friendly with optional per
 ## Quick Example
 
 ```csharp
-// 1. Component — data
+// 1. Component - data
 public class HealthComponent : Component
 {
     public int Current { get; set; } = 100;
@@ -27,7 +27,7 @@ public class HealthComponent : Component
     protected internal override void OnAdded() => Current = Max;
 }
 
-// 2. Behavior — per-entity logic
+// 2. Behavior - per-entity logic
 public class DamageFlashBehavior : Behavior
 {
     protected override void Update(GameTime gameTime)
@@ -69,7 +69,7 @@ protected override void OnEnter()
 {
     World.CreateEntity(""Player"");
     World.CreateEntity(""Enemy"");
-    // Both destroyed automatically when scene unloads — no cleanup needed!
+    // Both destroyed automatically when scene unloads - no cleanup needed!
 }
 ```
 
@@ -77,7 +77,7 @@ protected override void OnEnter()
 
 For the complete ECS guide with detailed coverage of entities, components, behaviors, systems, and queries:
 
-[:octicons-arrow-right-24: ECS — Full Guide](../ecs/index.md)
+[:octicons-arrow-right-24: ECS - Full Guide](../ecs/index.md)
 
 [:octicons-arrow-right-24: ECS Getting Started](../ecs/getting-started.md)
 

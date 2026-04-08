@@ -64,7 +64,7 @@ public interface ISceneTransition
 
 ### The LoadingScene Class
 
-`LoadingScene` extends `SceneBase` (not `Scene`) — it does NOT have a `World`. Loading screens are visual-only and render between scene scopes.
+`LoadingScene` extends `SceneBase` (not `Scene`) - it does NOT have a `World`. Loading screens are visual-only and render between scene scopes.
 
 ```csharp
 public abstract class LoadingScene : SceneBase
@@ -80,7 +80,7 @@ public abstract class LoadingScene : SceneBase
 - :white_check_mark: Progress tracking (0.0 to 1.0)
 - :white_check_mark: Status messages
 - :white_check_mark: Thread-safe progress updates
-- :white_check_mark: No EntityWorld — visual-only
+- :white_check_mark: No EntityWorld - visual-only
 
 ---
 
@@ -245,5 +245,5 @@ public interface ISceneManager
 
 ## Next Steps
 
-- **[Scene Lifecycle](lifecycle-hooks.md)** — Scene lifecycle in depth
-- **[Scenes Overview](index.md)** — Scene concepts
+- **[Scene Lifecycle](lifecycle-hooks.md)** - Scene lifecycle in depth
+- **[Scenes Overview](index.md)** - Scene concepts

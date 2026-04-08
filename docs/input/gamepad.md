@@ -1,12 +1,12 @@
 ﻿---
 title: Gamepad Input
-description: Handle controller/gamepad input in Brine2D — buttons, sticks, triggers
+description: Handle controller/gamepad input in Brine2D - buttons, sticks, triggers
 ---
 
 # Gamepad Input
 
 Handle gamepad/controller input using the `Input` framework property (`IInputContext`).
-Brine2D uses **Xbox-style layout** via SDL3 — all controllers (PlayStation, Nintendo, etc.) are mapped to this layout automatically.
+Brine2D uses **Xbox-style layout** via SDL3 - all controllers (PlayStation, Nintendo, etc.) are mapped to this layout automatically.
 
 ---
 
@@ -100,10 +100,10 @@ if (Input.IsGamepadButtonReleased(GamepadButton.X)) ReleaseCharge();
 ## Analog Sticks
 
 ```csharp
-// Left stick — typically movement
+// Left stick - typically movement
 var leftStick = Input.GetGamepadLeftStick();  // Vector2, -1 to 1
 
-// Right stick — typically camera/aim
+// Right stick - typically camera/aim
 var rightStick = Input.GetGamepadRightStick();  // Vector2, -1 to 1
 ```
 
@@ -170,7 +170,7 @@ protected override void OnUpdate(GameTime gameTime)
     if (Input.IsKeyDown(Key.A)) direction.X -= 1;
     if (Input.IsKeyDown(Key.D)) direction.X += 1;
 
-    // Gamepad (add to keyboard — player can use either)
+    // Gamepad (add to keyboard - player can use either)
     if (Input.IsGamepadConnected())
     {
         var stick = Input.GetGamepadLeftStick();
@@ -201,7 +201,7 @@ protected override void OnUpdate(GameTime gameTime)
 
 ### Stick drift
 
-Apply a dead zone — 0.15 (15%) is recommended:
+Apply a dead zone - 0.15 (15%) is recommended:
 
 ```csharp
 if (stick.Length() > 0.15f) { /* use stick */ }
@@ -222,6 +222,6 @@ if (stick.Length() > 0.15f) { /* use stick */ }
 
 ## Next Steps
 
-- **[Keyboard Input](keyboard.md)** — Keyboard input handling
-- **[Mouse Input](mouse.md)** — Mouse and cursor control
-- **[Input Layers](layers.md)** — Priority-based input
+- **[Keyboard Input](keyboard.md)** - Keyboard input handling
+- **[Mouse Input](mouse.md)** - Mouse and cursor control
+- **[Input Layers](layers.md)** - Priority-based input

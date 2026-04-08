@@ -109,5 +109,5 @@ public class LevelAssets : AssetManifest
 
 ## Next Steps
 
-- **[Asset Manifests](manifests.md)** — Using manifests with or without Brine2D.Build
-- **[Loading Assets](loading.md)** — Direct loading API
+- **[Asset Manifests](manifests.md)** - Using manifests with or without Brine2D.Build
+- **[Loading Assets](loading.md)** - Direct loading API
