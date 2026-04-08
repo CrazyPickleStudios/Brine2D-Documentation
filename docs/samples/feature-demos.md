@@ -390,22 +390,22 @@ See [Lifecycle Hooks Guide](../guides/scenes/lifecycle-hooks.md) for full docume
 ```
 FeatureDemos/
 +-- Scenes/
-¦   +-- MainMenuScene.cs           # Interactive demo selector
-¦   +-- DemoSceneBase.cs           # Shared base class
-¦   +-- ECS/
-¦   ¦   +-- QueryDemoScene.cs      # Query system showcase
-¦   ¦   +-- ParticleDemoScene.cs   # Particle effects
-¦   +-- Collision/
-¦   ¦   +-- CollisionDemoScene.cs  # Physics demo
-¦   +-- Transitions/
-¦   ¦   +-- TransitionDemoScene.cs # Transition showcase
-¦   ¦   +-- SceneA.cs              # Chain scene A
-¦   ¦   +-- SceneB.cs              # Chain scene B
-¦   ¦   +-- SceneC.cs              # Chain scene C
-¦   +-- UI/
-¦   ¦   +-- UIDemoScene.cs         # Complete UI showcase
-¦   +-- Advanced/
-¦       +-- ManualControlScene.cs  # Power user demo
+Â¦   +-- MainMenuScene.cs           # Interactive demo selector
+Â¦   +-- DemoSceneBase.cs           # Shared base class
+Â¦   +-- ECS/
+Â¦   Â¦   +-- QueryDemoScene.cs      # Query system showcase
+Â¦   Â¦   +-- ParticleDemoScene.cs   # Particle effects
+Â¦   +-- Collision/
+Â¦   Â¦   +-- CollisionDemoScene.cs  # Physics demo
+Â¦   +-- Transitions/
+Â¦   Â¦   +-- TransitionDemoScene.cs # Transition showcase
+Â¦   Â¦   +-- SceneA.cs              # Chain scene A
+Â¦   Â¦   +-- SceneB.cs              # Chain scene B
+Â¦   Â¦   +-- SceneC.cs              # Chain scene C
+Â¦   +-- UI/
+Â¦   Â¦   +-- UIDemoScene.cs         # Complete UI showcase
+Â¦   +-- Advanced/
+Â¦       +-- ManualControlScene.cs  # Power user demo
 +-- Program.cs                      # Entry point
 +-- gamesettings.json               # Configuration
 +-- FeatureDemos.csproj             # Project file
