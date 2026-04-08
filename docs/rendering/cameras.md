@@ -129,10 +129,10 @@ _renderer.DrawRectangle(100, 100, 50, 50, Color.Red);
 ```
 World Space (large):           Screen Space (viewport):
 +---------------------+       +-----------+
-¦                     ¦       ¦           ¦
-¦   Player @(500,300) ¦  ???  ¦ Player    ¦
-¦                     ¦       ¦ (centered)|
-¦  2000x2000 pixels   ¦       ¦ 1280x720  ¦
+|                     |       |           |
+|   Player @(500,300) |  ???  | Player    |
+|                     |       | (centered)|
+|  2000x2000 pixels   |       | 1280x720  |
 +---------------------+       +-----------+
 ```
 
@@ -418,12 +418,12 @@ protected override void OnUpdate(GameTime gameTime)
 ```
 Deadzone Visualization:
 +------------------+
-¦                  ¦
-¦   +--------+     ¦
-¦   ¦ Player ¦     ¦ Camera doesn't move
-¦   +--------+     ¦
-¦   (deadzone)     ¦
-¦                  ¦
+|                  |
+|   +--------+     |
+|   | Player |     | Camera doesn't move
+|   +--------+     |
+|   (deadzone)     |
+|                  |
 +------------------+
 
 Player moves outside ? Camera follows
