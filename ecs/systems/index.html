@@ -1,0 +1,6215 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Deep dive into ECS systems - create custom game logic systems in Brine2D">
+      
+      
+      
+      
+        <link rel="prev" href="../components/">
+      
+      
+        <link rel="next" href="../queries/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../images/logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>ECS Systems - Brine2D Documentation</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/prism-material-slate.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ecs-systems" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Brine2D Documentation" class="md-header__button md-logo" aria-label="Brine2D Documentation" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Brine2D Documentation
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              ECS Systems
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme)" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m14.3 16-.7-2h-3.2l-.7 2H7.8L11 7h2l3.2 9zM20 8.69V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12zm-9.15 3.96h2.3L12 9z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_2" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="indigo"  aria-label="Switch to system preference"  type="radio" name="__palette" id="__palette_2">
+    
+      <label class="md-header__button md-icon" title="Switch to system preference" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Brine2D Documentation" class="md-nav__button md-logo" aria-label="Brine2D Documentation" data-md-component="logo">
+      
+  <img src="../../images/logo.png" alt="logo">
+
+    </a>
+    Brine2D Documentation
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../getting-started/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Get Started
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Get Started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Installation
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/quickstart/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Quick Start
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/first-game/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Your First Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/project-structure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project Structure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/configuration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Configuration
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../whats-new/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    What's New
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_3" id="__nav_3_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    What's New
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../whats-new/v-0.9.5-beta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.9.5-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../whats-new/v-0.9.0-beta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.9.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../whats-new/v-0.8.0-beta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.8.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../whats-new/v-0.7.0-beta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.7.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../whats-new/v-0.6.0-beta/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    v0.6.0-beta
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../tutorials/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tutorials
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tutorials
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/moving-sprites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Moving Sprites
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/animations/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/collision/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision Detection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/platformer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building a Platformer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tutorials/top-down/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Top-Down Adventure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../fundamentals/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fundamentals
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_5" id="__nav_5_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Fundamentals
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../fundamentals/architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../fundamentals/dependency-injection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../fundamentals/game-loop/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Game Loop
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../fundamentals/builder-pattern/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Builder Pattern
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../fundamentals/entity-component-system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ECS Deep Dive
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../rendering/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_6" id="__nav_6_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Rendering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/choosing-renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/gpu-renderer/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GPU Renderer
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/sprites/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sprites & Textures
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/texture-atlasing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Texture Atlasing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/post-processing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Post-Processing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/cameras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cameras
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/particles/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Particles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../rendering/primitives/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Drawing Primitives
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_7" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../input/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_7" id="__nav_7_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Input
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/keyboard/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keyboard
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/mouse/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mouse
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/gamepad/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Gamepad Support
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../input/layers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Input Layers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_8" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../audio/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Audio
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_8" id="__nav_8_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Audio
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/sound-effects/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Sound Effects
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/music/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Music Playback
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../audio/spatial-audio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spatial Audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_9" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../scenes/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scenes
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_9" id="__nav_9_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_9_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_9">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Scenes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../scenes/transitions/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Scene Transitions
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_10" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../assets/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Assets
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_10" id="__nav_10_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_10_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_10">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Assets
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../assets/loading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Loading Assets
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../assets/manifests/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Asset Manifests
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../assets/build-package/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Build
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_11" checked>
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ECS
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_11" id="__nav_11_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_11_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_11">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    ECS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../entities/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Entities
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Systems
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Systems
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="System Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#update-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Update Systems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#render-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Render Systems
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Systems
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Creating Systems">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-update-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Update System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-render-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Render System
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-ordering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Ordering
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="System Ordering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#update-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Update Order
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#render-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Render Order
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-system-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common System Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common System Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#physics-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physics System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#collision-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collision System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#animation-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Animation System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#health-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#particle-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Particle System
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Communication
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="System Communication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#event-based-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event-Based Communication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shared-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shared Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#system-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conditional-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditional Systems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parallel-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parallel Systems
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Optimization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Optimization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cache-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cache Queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#early-exit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Early Exit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spatial-partitioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Partitioning
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#debugging-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debugging Systems
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Debugging Systems">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#system-profiling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Profiling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debug-visualization-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debug Visualization System
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DO
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DON'T
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-system-not-running" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: System not running
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-systems-run-in-wrong-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Systems run in wrong order
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-performance-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Performance issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-systems-interfering-with-each-other" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Systems interfering with each other
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../queries/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Queries
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../multi-threading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-Threading
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_12" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../collision/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_12" id="__nav_12_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_12_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_12">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Collision
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../collision/system/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision System
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../collision/colliders/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Colliders
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_13" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../tilemaps/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Tilemaps
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_13" id="__nav_13_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_13_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_13">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Tilemaps
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tilemaps/loading/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Loading Tilemaps
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../tilemaps/rendering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Rendering Tiles
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_14" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../ui/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_14" id="__nav_14_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_14_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_14">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    UI
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ui/components/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    UI Components
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../ui/custom/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Custom UI
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_15" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../performance/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Performance
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_15" id="__nav_15_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_15_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_15">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Performance
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../performance/monitoring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Monitoring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../performance/optimization/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Optimization
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_16" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../events/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Events
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_16" id="__nav_16_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_16_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_16">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Events
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../events/window-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Window Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_17" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../api/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    API Reference
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_17" id="__nav_17_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_17_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_17">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    API Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/core/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Core
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/engine/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Engine
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/rendering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Rendering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/input/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Input
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/audio/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.Audio
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../api/ecs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Brine2D.ECS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_18" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../samples/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Samples
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_18" id="__nav_18_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_18_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_18">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Samples
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../samples/feature-demos/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FeatureDemos
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../samples/basic-game/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic Game
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../samples/animation-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Animation Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../samples/collision-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Collision Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../samples/ecs-demo/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ECS Demo
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_19" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../contributing/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Contributing
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_19" id="__nav_19_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_19_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_19">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Contributing
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/code-style/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Code Style
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../contributing/building/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Building from Source
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="System Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#update-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Update Systems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#render-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Render Systems
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#creating-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating Systems
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Creating Systems">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#basic-update-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Update System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#basic-render-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Basic Render System
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-ordering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Ordering
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="System Ordering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#update-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Update Order
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#render-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Render Order
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-system-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common System Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common System Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#physics-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Physics System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ai-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AI System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#collision-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Collision System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#animation-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Animation System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#health-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health System
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#particle-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Particle System
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#system-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Communication
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="System Communication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#event-based-communication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event-Based Communication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#shared-components" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Shared Components
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#advanced-patterns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Advanced Patterns
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Advanced Patterns">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#system-groups" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Groups
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#conditional-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Conditional Systems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parallel-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parallel Systems
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#performance-optimization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Performance Optimization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Performance Optimization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cache-queries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cache Queries
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#early-exit" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Early Exit
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spatial-partitioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spatial Partitioning
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#debugging-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debugging Systems
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Debugging Systems">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#system-profiling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        System Profiling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debug-visualization-system" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debug Visualization System
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Best Practices">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DO
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dont" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DON'T
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Troubleshooting">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-system-not-running" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: System not running
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-systems-run-in-wrong-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Systems run in wrong order
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-performance-issues" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Performance issues
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#problem-systems-interfering-with-each-other" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem: Systems interfering with each other
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Summary
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#next-steps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Next Steps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#quick-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Reference
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="ecs-systems">ECS Systems<a class="headerlink" href="#ecs-systems" title="Permanent link">&para;</a></h1>
+<p>Master ECS systems - the logic layer of your game that processes entities with specific components.</p>
+<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
+<p>Systems contain game logic and operate on entities with specific components:</p>
+<ul>
+<li><strong>Update Systems</strong> - Process game logic each frame</li>
+<li><strong>Render Systems</strong> - Draw entities to screen</li>
+<li><strong>Specialized Systems</strong> - Physics, AI, collision, etc.</li>
+</ul>
+<p><strong>Core principle:</strong> Systems have logic, components have data.</p>
+<p><strong>Benefits:</strong>
+- Clear separation of concerns
+- Easy to add/remove features
+- Testable in isolation
+- Reusable across projects</p>
+<hr />
+<h2 id="system-types">System Types<a class="headerlink" href="#system-types" title="Permanent link">&para;</a></h2>
+<h3 id="update-systems">Update Systems<a class="headerlink" href="#update-systems" title="Permanent link">&para;</a></h3>
+<p>Process game logic each frame:</p>
+<pre class="highlight"><code class="language-csharp">public interface IUpdateSystem
+{
+    string Name { get; }
+    int UpdateOrder { get; }
+    void Update(GameTime gameTime);
+}</code></pre>
+<p><strong>Usage:</strong>
+- Physics simulation
+- AI behavior
+- Player input
+- Collision detection
+- Animation
+- Health/damage</p>
+<hr />
+<h3 id="render-systems">Render Systems<a class="headerlink" href="#render-systems" title="Permanent link">&para;</a></h3>
+<p>Draw entities to screen:</p>
+<pre class="highlight"><code class="language-csharp">public interface IRenderSystem
+{
+    string Name { get; }
+    int RenderOrder { get; }
+    void Render(GameTime gameTime);
+}</code></pre>
+<p><strong>Usage:</strong>
+- Sprite rendering
+- Particle effects
+- Debug visualization
+- UI rendering
+- Post-processing</p>
+<hr />
+<h2 id="system-lifecycle">System Lifecycle<a class="headerlink" href="#system-lifecycle" title="Permanent link">&para;</a></h2>
+<pre class="mermaid"><code>stateDiagram-v2
+    [*] --&gt; Registered: AddUpdateSystem()
+    Registered --&gt; Sorted: Sort by UpdateOrder
+    Sorted --&gt; Ready: System ready
+
+    Ready --&gt; Updating: World.Update()
+    Updating --&gt; Processing: Process entities
+    Processing --&gt; Updating: Next frame
+
+    Ready --&gt; Rendering: World.Render()
+    Rendering --&gt; Drawing: Draw entities
+    Drawing --&gt; Rendering: Next frame
+
+    Updating --&gt; Disposed: Game ends
+    Rendering --&gt; Disposed: Game ends
+    Disposed --&gt; [*]</code></pre>
+<p><strong>Lifecycle stages:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Description</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Registered</strong></td>
+<td>Added to world</td>
+<td><code>AddUpdateSystem()</code></td>
+</tr>
+<tr>
+<td><strong>Sorted</strong></td>
+<td>Ordered by priority</td>
+<td>After registration</td>
+</tr>
+<tr>
+<td><strong>Updating</strong></td>
+<td>Processing entities</td>
+<td>Every <code>World.Update()</code></td>
+</tr>
+<tr>
+<td><strong>Rendering</strong></td>
+<td>Drawing entities</td>
+<td>Every <code>World.Render()</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="creating-systems">Creating Systems<a class="headerlink" href="#creating-systems" title="Permanent link">&para;</a></h2>
+<h3 id="basic-update-system">Basic Update System<a class="headerlink" href="#basic-update-system" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">using Brine2D.Core;
+using Brine2D.ECS;
+
+public class MovementSystem : IUpdateSystem
+{
+    private readonly World _world;
+
+    public string Name =&gt; "MovementSystem";
+    public int UpdateOrder =&gt; 100;
+
+    public MovementSystem(World world)
+    {
+        _world = world;
+    }
+
+    public void Update(GameTime gameTime)
+    {
+        var deltaTime = (float)gameTime.DeltaTime;
+
+        // Query entities
+        var entities = _world.QueryEntities()
+            .With&lt;TransformComponent&gt;()
+            .With&lt;VelocityComponent&gt;();
+
+        // Process each entity
+        foreach (var entity in entities)
+        {
+            var transform = entity.GetComponent&lt;TransformComponent&gt;();
+            var velocity = entity.GetComponent&lt;VelocityComponent&gt;();
+
+            if (transform != null &amp;&amp; velocity != null)
+            {
+                transform.Position += velocity.Velocity * deltaTime;
+            }
+        }
+    }
+}</code></pre>
+<p><strong>Pattern:</strong>
+1. Query entities with required components
+2. Get components from each entity
+3. Process game logic
+4. Use deltaTime for frame-rate independence</p>
+<hr />
+<h3 id="basic-render-system">Basic Render System<a class="headerlink" href="#basic-render-system" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">using Brine2D.Core;
+using Brine2D.ECS;
+using Brine2D.Rendering;
+
+public class SpriteRenderSystem : IRenderSystem
+{
+    private readonly World _world;
+    private readonly IRenderer _renderer;
+
+    public string Name =&gt; "SpriteRenderSystem";
+    public int RenderOrder =&gt; 100;
+
+    public SpriteRenderSystem(World world, IRenderer renderer)
+    {
+        _world = world;
+        _renderer = renderer;
+    }
+
+    public void Render(GameTime gameTime)
+    {
+        // Query entities
+        var entities = _world.QueryEntities()
+            .With&lt;TransformComponent&gt;()
+            .With&lt;SpriteComponent&gt;();
+
+        // Draw each entity
+        foreach (var entity in entities)
+        {
+            var transform = entity.GetComponent&lt;TransformComponent&gt;();
+            var sprite = entity.GetComponent&lt;SpriteComponent&gt;();
+
+            if (transform != null &amp;&amp; sprite != null &amp;&amp; sprite.Texture != null)
+            {
+                _renderer.DrawTexture(
+                    sprite.Texture,
+                    transform.Position.X,
+                    transform.Position.Y,
+                    sprite.Width,
+                    sprite.Height);
+            }
+        }
+    }
+}</code></pre>
+<hr />
+<h2 id="system-ordering">System Ordering<a class="headerlink" href="#system-ordering" title="Permanent link">&para;</a></h2>
+<h3 id="update-order">Update Order<a class="headerlink" href="#update-order" title="Permanent link">&para;</a></h3>
+<p>Systems run in order of <code>UpdateOrder</code> (lower runs first):</p>
+<pre class="mermaid"><code>graph LR
+    A[InputSystem&lt;br/&gt;Order: 10] --&gt; B[AISystem&lt;br/&gt;Order: 20]
+    B --&gt; C[PhysicsSystem&lt;br/&gt;Order: 50]
+    C --&gt; D[MovementSystem&lt;br/&gt;Order: 100]
+    D --&gt; E[CollisionSystem&lt;br/&gt;Order: 150]
+    E --&gt; F[CleanupSystem&lt;br/&gt;Order: 200]
+
+    style A fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style B fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style C fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style D fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style E fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
+    style F fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff</code></pre>
+<p><strong>Recommended ordering:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Order</th>
+<th>System</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0-20</td>
+<td>Input</td>
+<td>Process player input</td>
+</tr>
+<tr>
+<td>20-50</td>
+<td>AI</td>
+<td>Calculate AI decisions</td>
+</tr>
+<tr>
+<td>50-100</td>
+<td>Physics</td>
+<td>Apply forces, gravity</td>
+</tr>
+<tr>
+<td>100-150</td>
+<td>Movement</td>
+<td>Update positions</td>
+</tr>
+<tr>
+<td>150-200</td>
+<td>Collision</td>
+<td>Detect collisions</td>
+</tr>
+<tr>
+<td>200+</td>
+<td>Cleanup</td>
+<td>Remove dead entities</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Example:</strong></p>
+<pre class="highlight"><code class="language-csharp">public class InputSystem : IUpdateSystem
+{
+    public int UpdateOrder =&gt; 10; // First
+}
+
+public class AISystem : IUpdateSystem
+{
+    public int UpdateOrder =&gt; 20; // After input
+}
+
+public class PhysicsSystem : IUpdateSystem
+{
+    public int UpdateOrder =&gt; 50; // After AI
+}
+
+public class MovementSystem : IUpdateSystem
+{
+    public int UpdateOrder =&gt; 100; // After physics
+}
+
+public class CollisionSystem : IUpdateSystem
+{
+    public int UpdateOrder =&gt; 150; // After movement
+}</code></pre>
+<hr />
+<h3 id="render-order">Render Order<a class="headerlink" href="#render-order" title="Permanent link">&para;</a></h3>
+<p>Render systems also use ordering for layer control:</p>
+<pre class="highlight"><code class="language-csharp">public class BackgroundRenderSystem : IRenderSystem
+{
+    public int RenderOrder =&gt; 10; // Draw first (back)
+}
+
+public class SpriteRenderSystem : IRenderSystem
+{
+    public int RenderOrder =&gt; 100; // Draw middle
+}
+
+public class UIRenderSystem : IRenderSystem
+{
+    public int RenderOrder =&gt; 200; // Draw last (front)
+}
+
+public class DebugRenderSystem : IRenderSystem
+{
+    public int RenderOrder =&gt; 1000; // Draw on top of everything
+}</code></pre>
+<hr />
+<h2 id="common-system-patterns">Common System Patterns<a class="headerlink" href="#common-system-patterns" title="Permanent link">&para;</a></h2>
+<h3 id="physics-system">Physics System<a class="headerlink" href="#physics-system" title="Permanent link">&para;</a></h3>
+<p>Applies forces and gravity:</p>
+<pre class="highlight"><code class="language-csharp">public class PhysicsSystem : IUpdateSystem
+{
+    private readonly World _world;
+    private const float Gravity = 980f; // pixels/sec²
+
+    public string Name =&gt; "PhysicsSystem";
+    public int UpdateOrder =&gt; 50;
+
+    public PhysicsSystem(World world)
+    {
+        _world = world;
+    }
+
+    public void Update(GameTime gameTime)
+    {
+        var deltaTime = (float)gameTime.DeltaTime;
+
+        var entities = _world.QueryEntities()
+            .With&lt;RigidbodyComponent&gt;();
+
+        foreach (var entity in entities)
+        {
+            var rigidbody = entity.GetComponent&lt;RigidbodyComponent&gt;();
+
+            if (rigidbody != null)
+            {
+                // Apply gravity
+                if (rigidbody.UseGravity)
+                {
+                    rigidbody.Velocity.Y += Gravity * deltaTime;
+                }
+
+                // Apply drag
+                rigidbody.Velocity *= (1.0f - rigidbody.Drag * deltaTime);
+
+                // Clamp velocity
+                var maxSpeed = 1000f;
+                if (rigidbody.Velocity.Length() &gt; maxSpeed)
+                {
+                    rigidbody.Velocity = Vector2.Normalize(rigidbody.Velocity) * maxSpeed;
+                }
+            }
+        }
+    }
+}</code></pre>
+<hr />
+<h3 id="ai-system">AI System<a class="headerlink" href="#ai-system" title="Permanent link">&para;</a></h3>
+<p>Simple chase AI:</p>
+<pre class="highlight"><code class="language-csharp">public class ChaseAISystem : IUpdateSystem
+{
+    private readonly World _world;
+
+    public string Name =&gt; "ChaseAISystem";
+    public int UpdateOrder =&gt; 20;
+
+    public ChaseAISystem(World world)
+    {
+        _world = world;
+    }
+
+    public void Update(GameTime gameTime)
+    {
+        // Find player
+        var players = _world.QueryEntities().With&lt;PlayerComponent&gt;();
+        var playerPosition = Vector2.Zero;
+        var hasPlayer = false;
+
+        foreach (var player in players)
+        {
+            var transform = player.GetComponent&lt;TransformComponent&gt;();
+            if (transform != null)
+            {
+                playerPosition = transform.Position;
+                hasPlayer = true;
+                break;
+            }
+        }
+
+        if (!hasPlayer) return;
+
+        // Update enemies
+        var enemies = _world.QueryEntities()
+            .With&lt;EnemyComponent&gt;()
+            .With&lt;TransformComponent&gt;()
+            .With&lt;VelocityComponent&gt;();
+
+        foreach (var enemy in enemies)
+        {
+            var transform = enemy.GetComponent&lt;TransformComponent&gt;();
+            var velocity = enemy.GetComponent&lt;VelocityComponent&gt;();
+
+            if (transform != null &amp;&amp; velocity != null)
+            {
+                var direction = playerPosition - transform.Position;
+                var distance = direction.Length();
+
+                // Chase if far away
+                if (distance &gt; 100f)
+                {
+                    direction = Vector2.Normalize(direction);
+                    velocity.Velocity = direction * velocity.Speed;
+                }
+                // Stop if close
+                else if (distance &lt; 50f)
+                {
+                    velocity.Velocity = Vector2.Zero;
+                }
+            }
+        }
+    }
+}</code></pre>
+<hr />
+<h3 id="collision-system">Collision System<a class="headerlink" href="#collision-system" title="Permanent link">&para;</a></h3>
+<p>AABB collision detection:</p>
+<pre class="highlight"><code class="language-csharp">public class CollisionSystem : IUpdateSystem
+{
+    private readonly World _world;
+    private readonly EventBus _eventBus;
+
+    public string Name =&gt; "CollisionSystem";
+    public int UpdateOrder =&gt; 150;
+
+    public CollisionSystem(World world, EventBus eventBus)
+    {
+        _world = world;
+        _eventBus = eventBus;
+    }
+
+    public void Update(GameTime gameTime)
+    {
+        var entities = _world.QueryEntities()
+            .With&lt;TransformComponent&gt;()
+            .With&lt;ColliderComponent&gt;()
+            .ToList();
+
+        // Check all pairs
+        for (int i = 0; i &lt; entities.Count; i++)
+        {
+            for (int j = i + 1; j &lt; entities.Count; j++)
+            {
+                CheckCollision(entities[i], entities[j]);
+            }
+        }
+    }
+
+    private void CheckCollision(Entity a, Entity b)
+    {
+        var transformA = a.GetComponent&lt;TransformComponent&gt;();
+        var colliderA = a.GetComponent&lt;ColliderComponent&gt;();
+        var transformB = b.GetComponent&lt;TransformComponent&gt;();
+        var colliderB = b.GetComponent&lt;ColliderComponent&gt;();
+
+        if (transformA == null || colliderA == null ||
+            transformB == null || colliderB == null)
+        {
+            return;
+        }
+
+        // AABB collision
+        var rectA = new Rectangle(
+            transformA.Position.X + colliderA.Offset.X,
+            transformA.Position.Y + colliderA.Offset.Y,
+            colliderA.Size.X,
+            colliderA.Size.Y);
+
+        var rectB = new Rectangle(
+            transformB.Position.X + colliderB.Offset.X,
+            transformB.Position.Y + colliderB.Offset.Y,
+            colliderB.Size.X,
+            colliderB.Size.Y);
+
+        if (rectA.Intersects(rectB))
+        {
+            // Publish collision event
+            _eventBus.Publish(new CollisionEvent
+            {
+                EntityA = a,
+                EntityB = b
+            });
+        }
+    }
+}</code></pre>
+<hr />
+<h3 id="animation-system">Animation System<a class="headerlink" href="#animation-system" title="Permanent link">&para;</a></h3>
+<p>Sprite sheet animation:</p>
+<pre class="highlight"><code class="language-csharp">public class AnimationSystem : IUpdateSystem
+{
+    private readonly World _world;
+
+    public string Name =&gt; "AnimationSystem";
+    public int UpdateOrder =&gt; 90;
+
+    public AnimationSystem(World world)
+    {
+        _world = world;
+    }
+
+    public void Update(GameTime gameTime)
+    {
+        var deltaTime = (float)gameTime.DeltaTime;
+
+        var entities = _world.QueryEntities()
+            .With&lt;SpriteComponent&gt;()
+            .With&lt;AnimationComponent&gt;();
+
+        foreach (var entity in entities)
+        {
+            var sprite = entity.GetComponent&lt;SpriteComponent&gt;();
+            var animation = entity.GetComponent&lt;AnimationComponent&gt;();
+
+            if (sprite == null || animation == null) continue;
+
+            // Update animation timer
+            animation.CurrentTime += deltaTime;
+
+            // Check if frame should advance
+            if (animation.CurrentTime &gt;= animation.FrameDuration)
+            {
+                animation.CurrentTime -= animation.FrameDuration;
+                animation.CurrentFrame++;
+
+                // Loop animation
+                if (animation.CurrentFrame &gt;= animation.FrameCount)
+                {
+                    animation.CurrentFrame = animation.Loop ? 0 : animation.FrameCount - 1;
+                }
+
+                // Update sprite source rect
+                sprite.SourceRect = new Rectangle(
+                    animation.CurrentFrame * animation.FrameWidth,
+                    0,
+                    animation.FrameWidth,
+                    animation.FrameHeight);
+            }
+        }
+    }
+}</code></pre>
+<hr />
+<h3 id="health-system">Health System<a class="headerlink" href="#health-system" title="Permanent link">&para;</a></h3>
+<p>Manages entity health and death:</p>
+<pre class="highlight"><code class="language-csharp">public class HealthSystem : IUpdateSystem
+{
+    private readonly World _world;
+    private readonly EventBus _eventBus;
+
+    public string Name =&gt; "HealthSystem";
+    public int UpdateOrder =&gt; 180;
+
+    public HealthSystem(World world, EventBus eventBus)
+    {
+        _world = world;
+        _eventBus = eventBus;
+    }
+
+    public void Update(GameTime gameTime)
+    {
+        var entities = _world.QueryEntities()
+            .With&lt;HealthComponent&gt;();
+
+        var deadEntities = new List&lt;Entity&gt;();
+
+        foreach (var entity in entities)
+        {
+            var health = entity.GetComponent&lt;HealthComponent&gt;();
+
+            if (health == null) continue;
+
+            // Clamp health
+            health.Current = Math.Clamp(health.Current, 0, health.Max);
+
+            // Process regeneration
+            if (health.RegenerationRate &gt; 0)
+            {
+                health.Current = Math.Min(
+                    health.Current + (int)(health.RegenerationRate * (float)gameTime.DeltaTime),
+                    health.Max);
+            }
+
+            // Check death
+            if (health.IsDead)
+            {
+                deadEntities.Add(entity);
+            }
+        }
+
+        // Handle deaths
+        foreach (var entity in deadEntities)
+        {
+            _eventBus.Publish(new EntityDiedEvent { Entity = entity });
+            _world.DestroyEntity(entity);
+        }
+    }
+}</code></pre>
+<hr />
+<h3 id="particle-system">Particle System<a class="headerlink" href="#particle-system" title="Permanent link">&para;</a></h3>
+<p>Updates particle lifetime:</p>
+<pre class="highlight"><code class="language-csharp">public class ParticleSystem : IUpdateSystem
+{
+    private readonly World _world;
+
+    public string Name =&gt; "ParticleSystem";
+    public int UpdateOrder =&gt; 170;
+
+    public ParticleSystem(World world)
+    {
+        _world = world;
+    }
+
+    public void Update(GameTime gameTime)
+    {
+        var deltaTime = (float)gameTime.DeltaTime;
+
+        var particles = _world.QueryEntities()
+            .With&lt;ParticleComponent&gt;();
+
+        foreach (var particle in particles)
+        {
+            var particleComp = particle.GetComponent&lt;ParticleComponent&gt;();
+
+            if (particleComp == null) continue;
+
+            // Update lifetime
+            particleComp.Lifetime -= deltaTime;
+
+            // Remove dead particles
+            if (particleComp.Lifetime &lt;= 0)
+            {
+                _world.DestroyEntity(particle);
+                continue;
+            }
+
+            // Fade out based on lifetime
+            var sprite = particle.GetComponent&lt;SpriteComponent&gt;();
+            if (sprite != null)
+            {
+                var alpha = (byte)(255 * (particleComp.Lifetime / particleComp.MaxLifetime));
+                sprite.Color = new Color(
+                    sprite.Color.R,
+                    sprite.Color.G,
+                    sprite.Color.B,
+                    alpha);
+            }
+
+            // Scale down over time
+            var transform = particle.GetComponent&lt;TransformComponent&gt;();
+            if (transform != null)
+            {
+                var scale = particleComp.Lifetime / particleComp.MaxLifetime;
+                transform.Scale = new Vector2(scale, scale);
+            }
+        }
+    }
+}</code></pre>
+<hr />
+<h2 id="system-communication">System Communication<a class="headerlink" href="#system-communication" title="Permanent link">&para;</a></h2>
+<h3 id="event-based-communication">Event-Based Communication<a class="headerlink" href="#event-based-communication" title="Permanent link">&para;</a></h3>
+<p>Systems communicate via events:</p>
+<pre class="highlight"><code class="language-csharp">// Event definition
+public class CollisionEvent
+{
+    public Entity EntityA { get; set; }
+    public Entity EntityB { get; set; }
+}
+
+public class EntityDiedEvent
+{
+    public Entity Entity { get; set; }
+}
+
+// Event bus
+public class EventBus
+{
+    private readonly Dictionary&lt;Type, List&lt;Delegate&gt;&gt; _handlers = new();
+
+    public void Subscribe&lt;T&gt;(Action&lt;T&gt; handler)
+    {
+        var type = typeof(T);
+        if (!_handlers.ContainsKey(type))
+        {
+            _handlers[type] = new List&lt;Delegate&gt;();
+        }
+        _handlers[type].Add(handler);
+    }
+
+    public void Publish&lt;T&gt;(T evt)
+    {
+        var type = typeof(T);
+        if (_handlers.TryGetValue(type, out var handlers))
+        {
+            foreach (var handler in handlers)
+            {
+                ((Action&lt;T&gt;)handler)(evt);
+            }
+        }
+    }
+}
+
+// System subscribing to events
+public class ScoreSystem : IUpdateSystem
+{
+    private readonly EventBus _eventBus;
+    private int _score;
+
+    public string Name =&gt; "ScoreSystem";
+    public int UpdateOrder =&gt; 190;
+
+    public ScoreSystem(EventBus eventBus)
+    {
+        _eventBus = eventBus;
+
+        // Subscribe to entity death
+        _eventBus.Subscribe&lt;EntityDiedEvent&gt;(OnEntityDied);
+    }
+
+    private void OnEntityDied(EntityDiedEvent evt)
+    {
+        // Award points for enemy deaths
+        if (evt.Entity.HasComponent&lt;EnemyComponent&gt;())
+        {
+            _score += 10;
+        }
+    }
+
+    public void Update(GameTime gameTime)
+    {
+        // Score system logic
+    }
+}</code></pre>
+<hr />
+<h3 id="shared-components">Shared Components<a class="headerlink" href="#shared-components" title="Permanent link">&para;</a></h3>
+<p>Systems can share data via components:</p>
+<pre class="highlight"><code class="language-csharp">// Global game state component
+public class GameStateComponent : Component
+{
+    public int Score { get; set; }
+    public int Wave { get; set; }
+    public float TimeRemaining { get; set; }
+}
+
+// System A modifies score
+public class ScoreSystem : IUpdateSystem
+{
+    public void Update(GameTime gameTime)
+    {
+        var gameState = _world.GetSingleton&lt;GameStateComponent&gt;();
+        if (gameState != null)
+        {
+            gameState.Score += 10;
+        }
+    }
+}
+
+// System B reads score
+public class UISystem : IRenderSystem
+{
+    public void Render(GameTime gameTime)
+    {
+        var gameState = _world.GetSingleton&lt;GameStateComponent&gt;();
+        if (gameState != null)
+        {
+            _renderer.DrawText($"Score: {gameState.Score}", 10, 10, Color.White);
+        }
+    }
+}</code></pre>
+<hr />
+<h2 id="advanced-patterns">Advanced Patterns<a class="headerlink" href="#advanced-patterns" title="Permanent link">&para;</a></h2>
+<h3 id="system-groups">System Groups<a class="headerlink" href="#system-groups" title="Permanent link">&para;</a></h3>
+<p>Group related systems:</p>
+<pre class="highlight"><code class="language-csharp">public interface ISystemGroup
+{
+    void Initialize(World world);
+    void Update(GameTime gameTime);
+}
+
+public class PhysicsSystemGroup : ISystemGroup
+{
+    private readonly List&lt;IUpdateSystem&gt; _systems = new();
+
+    public void Initialize(World world)
+    {
+        _systems.Add(new GravitySystem(world));
+        _systems.Add(new VelocitySystem(world));
+        _systems.Add(new CollisionSystem(world));
+
+        foreach (var system in _systems)
+        {
+            world.AddUpdateSystem(system);
+        }
+    }
+
+    public void Update(GameTime gameTime)
+    {
+        foreach (var system in _systems)
+        {
+            system.Update(gameTime);
+        }
+    }
+}</code></pre>
+<hr />
+<h3 id="conditional-systems">Conditional Systems<a class="headerlink" href="#conditional-systems" title="Permanent link">&para;</a></h3>
+<p>Systems that can be enabled/disabled:</p>
+<pre class="highlight"><code class="language-csharp">public class ConditionalSystem : IUpdateSystem
+{
+    private readonly World _world;
+    private bool _enabled = true;
+
+    public string Name =&gt; "ConditionalSystem";
+    public int UpdateOrder =&gt; 100;
+    public bool Enabled { get =&gt; _enabled; set =&gt; _enabled = value; }
+
+    public ConditionalSystem(World world)
+    {
+        _world = world;
+    }
+
+    public void Update(GameTime gameTime)
+    {
+        if (!_enabled) return; // Skip if disabled
+
+        // System logic
+    }
+}
+
+// Usage
+var system = new ConditionalSystem(world);
+world.AddUpdateSystem(system);
+
+// Disable system
+system.Enabled = false; // System stops processing
+
+// Enable system
+system.Enabled = true; // System resumes</code></pre>
+<hr />
+<h3 id="parallel-systems">Parallel Systems<a class="headerlink" href="#parallel-systems" title="Permanent link">&para;</a></h3>
+<p>Systems that can run in parallel:</p>
+<pre class="highlight"><code class="language-csharp">public class ParallelMovementSystem : IUpdateSystem
+{
+    private readonly World _world;
+
+    public string Name =&gt; "ParallelMovementSystem";
+    public int UpdateOrder =&gt; 100;
+
+    public ParallelMovementSystem(World world)
+    {
+        _world = world;
+    }
+
+    public void Update(GameTime gameTime)
+    {
+        var deltaTime = (float)gameTime.DeltaTime;
+
+        var entities = _world.QueryEntities()
+            .With&lt;TransformComponent&gt;()
+            .With&lt;VelocityComponent&gt;()
+            .ToList();
+
+        // Process entities in parallel
+        Parallel.ForEach(entities, entity =&gt;
+        {
+            var transform = entity.GetComponent&lt;TransformComponent&gt;();
+            var velocity = entity.GetComponent&lt;VelocityComponent&gt;();
+
+            if (transform != null &amp;&amp; velocity != null)
+            {
+                // Note: Ensure thread-safety!
+                lock (transform)
+                {
+                    transform.Position += velocity.Velocity * deltaTime;
+                }
+            }
+        });
+    }
+}</code></pre>
+<p><strong>Warning:</strong> Use parallel processing carefully - ensure thread-safety!</p>
+<hr />
+<h2 id="performance-optimization">Performance Optimization<a class="headerlink" href="#performance-optimization" title="Permanent link">&para;</a></h2>
+<h3 id="cache-queries">Cache Queries<a class="headerlink" href="#cache-queries" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">// ❌ Bad - queries every frame
+public void Update(GameTime gameTime)
+{
+    for (int i = 0; i &lt; 100; i++)
+    {
+        var entities = _world.QueryEntities().With&lt;TransformComponent&gt;();
+        // Process...
+    }
+}
+
+// ✅ Good - query once
+public void Update(GameTime gameTime)
+{
+    var entities = _world.QueryEntities()
+        .With&lt;TransformComponent&gt;()
+        .ToList(); // Cache result
+
+    for (int i = 0; i &lt; 100; i++)
+    {
+        // Process cached list
+    }
+}</code></pre>
+<hr />
+<h3 id="early-exit">Early Exit<a class="headerlink" href="#early-exit" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">public void Update(GameTime gameTime)
+{
+    var entities = _world.QueryEntities()
+        .With&lt;TransformComponent&gt;();
+
+    // Early exit if no entities
+    if (!entities.Any()) return;
+
+    foreach (var entity in entities)
+    {
+        // Process...
+    }
+}</code></pre>
+<hr />
+<h3 id="spatial-partitioning">Spatial Partitioning<a class="headerlink" href="#spatial-partitioning" title="Permanent link">&para;</a></h3>
+<p>For collision systems:</p>
+<pre class="highlight"><code class="language-csharp">public class SpatialGrid
+{
+    private readonly Dictionary&lt;(int, int), List&lt;Entity&gt;&gt; _cells = new();
+    private readonly float _cellSize;
+
+    public SpatialGrid(float cellSize = 100f)
+    {
+        _cellSize = cellSize;
+    }
+
+    public void Clear()
+    {
+        _cells.Clear();
+    }
+
+    public void Add(Entity entity, Vector2 position)
+    {
+        var cell = GetCell(position);
+        if (!_cells.ContainsKey(cell))
+        {
+            _cells[cell] = new List&lt;Entity&gt;();
+        }
+        _cells[cell].Add(entity);
+    }
+
+    public IEnumerable&lt;Entity&gt; GetNearby(Vector2 position)
+    {
+        var cell = GetCell(position);
+
+        // Check surrounding cells
+        for (int x = -1; x &lt;= 1; x++)
+        {
+            for (int y = -1; y &lt;= 1; y++)
+            {
+                var checkCell = (cell.Item1 + x, cell.Item2 + y);
+                if (_cells.TryGetValue(checkCell, out var entities))
+                {
+                    foreach (var entity in entities)
+                    {
+                        yield return entity;
+                    }
+                }
+            }
+        }
+    }
+
+    private (int, int) GetCell(Vector2 position)
+    {
+        return (
+            (int)(position.X / _cellSize),
+            (int)(position.Y / _cellSize)
+        );
+    }
+}
+
+// Usage in collision system
+public class OptimizedCollisionSystem : IUpdateSystem
+{
+    private readonly World _world;
+    private readonly SpatialGrid _grid = new(100f);
+
+    public void Update(GameTime gameTime)
+    {
+        _grid.Clear();
+
+        // Add all entities to grid
+        var entities = _world.QueryEntities()
+            .With&lt;TransformComponent&gt;()
+            .With&lt;ColliderComponent&gt;()
+            .ToList();
+
+        foreach (var entity in entities)
+        {
+            var transform = entity.GetComponent&lt;TransformComponent&gt;();
+            if (transform != null)
+            {
+                _grid.Add(entity, transform.Position);
+            }
+        }
+
+        // Check collisions only against nearby entities
+        foreach (var entity in entities)
+        {
+            var transform = entity.GetComponent&lt;TransformComponent&gt;();
+            if (transform == null) continue;
+
+            foreach (var other in _grid.GetNearby(transform.Position))
+            {
+                if (entity != other)
+                {
+                    CheckCollision(entity, other);
+                }
+            }
+        }
+    }
+}</code></pre>
+<hr />
+<h2 id="debugging-systems">Debugging Systems<a class="headerlink" href="#debugging-systems" title="Permanent link">&para;</a></h2>
+<h3 id="system-profiling">System Profiling<a class="headerlink" href="#system-profiling" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">public class ProfiledSystem : IUpdateSystem
+{
+    private readonly IUpdateSystem _innerSystem;
+    private readonly ILogger _logger;
+    private readonly Stopwatch _stopwatch = new();
+
+    public string Name =&gt; _innerSystem.Name;
+    public int UpdateOrder =&gt; _innerSystem.UpdateOrder;
+
+    public ProfiledSystem(IUpdateSystem innerSystem, ILogger logger)
+    {
+        _innerSystem = innerSystem;
+        _logger = logger;
+    }
+
+    public void Update(GameTime gameTime)
+    {
+        _stopwatch.Restart();
+
+        _innerSystem.Update(gameTime);
+
+        _stopwatch.Stop();
+
+        if (_stopwatch.ElapsedMilliseconds &gt; 16) // &gt; 1 frame at 60 FPS
+        {
+            _logger.LogWarning(
+                "System {Name} took {Ms}ms (slow!)",
+                Name, _stopwatch.ElapsedMilliseconds);
+        }
+    }
+}</code></pre>
+<hr />
+<h3 id="debug-visualization-system">Debug Visualization System<a class="headerlink" href="#debug-visualization-system" title="Permanent link">&para;</a></h3>
+<pre class="highlight"><code class="language-csharp">public class DebugRenderSystem : IRenderSystem
+{
+    private readonly World _world;
+    private readonly IRenderer _renderer;
+    private bool _enabled = true;
+
+    public string Name =&gt; "DebugRenderSystem";
+    public int RenderOrder =&gt; 1000; // Draw on top
+    public bool Enabled { get =&gt; _enabled; set =&gt; _enabled = value; }
+
+    public DebugRenderSystem(World world, IRenderer renderer)
+    {
+        _world = world;
+        _renderer = renderer;
+    }
+
+    public void Render(GameTime gameTime)
+    {
+        if (!_enabled) return;
+
+        // Draw collider bounds
+        var entities = _world.QueryEntities()
+            .With&lt;TransformComponent&gt;()
+            .With&lt;ColliderComponent&gt;();
+
+        foreach (var entity in entities)
+        {
+            var transform = entity.GetComponent&lt;TransformComponent&gt;();
+            var collider = entity.GetComponent&lt;ColliderComponent&gt;();
+
+            if (transform != null &amp;&amp; collider != null)
+            {
+                _renderer.DrawRectangle(
+                    transform.Position.X + collider.Offset.X,
+                    transform.Position.Y + collider.Offset.Y,
+                    collider.Size.X,
+                    collider.Size.Y,
+                    Color.Green);
+            }
+        }
+
+        // Draw entity count
+        var count = _world.GetAllEntities().Count();
+        _renderer.DrawText($"Entities: {count}", 10, 50, Color.Yellow);
+    }
+}</code></pre>
+<hr />
+<h2 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h2>
+<h3 id="do">DO<a class="headerlink" href="#do" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Keep systems focused</strong>
+   <pre class="highlight"><code class="language-csharp">// ✅ Good - single responsibility
+public class MovementSystem : IUpdateSystem
+{
+    // Only handles movement
+}
+
+public class CollisionSystem : IUpdateSystem
+{
+    // Only handles collision
+}</code></pre></p>
+</li>
+<li>
+<p><strong>Use explicit ordering</strong>
+   <pre class="highlight"><code class="language-csharp">// ✅ Good - clear order
+public class InputSystem : IUpdateSystem
+{
+    public int UpdateOrder =&gt; 10;
+}
+
+public class MovementSystem : IUpdateSystem
+{
+    public int UpdateOrder =&gt; 100;
+}</code></pre></p>
+</li>
+<li>
+<p><strong>Cache query results</strong>
+   <pre class="highlight"><code class="language-csharp">// ✅ Good - query once
+var entities = _world.QueryEntities()
+    .With&lt;TransformComponent&gt;()
+    .ToList();
+
+foreach (var entity in entities)
+{
+    // Process
+}</code></pre></p>
+</li>
+<li>
+<p><strong>Use events for system communication</strong>
+   <pre class="highlight"><code class="language-csharp">// ✅ Good - loose coupling
+_eventBus.Publish(new EntityDiedEvent { Entity = entity });</code></pre></p>
+</li>
+<li>
+<p><strong>Make systems stateless when possible</strong>
+   <pre class="highlight"><code class="language-csharp">// ✅ Good - no state
+public class MovementSystem : IUpdateSystem
+{
+    private readonly World _world; // Dependency, not state
+
+    public void Update(GameTime gameTime)
+    {
+        // Process entities
+    }
+}</code></pre></p>
+</li>
+</ol>
+<h3 id="dont">DON'T<a class="headerlink" href="#dont" title="Permanent link">&para;</a></h3>
+<ol>
+<li>
+<p><strong>Don't store entity-specific state in systems</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Bad - state in system
+public class MovementSystem : IUpdateSystem
+{
+    private Vector2 _playerPosition; // Wrong!
+}
+
+// ✅ Good - state in component
+public class TransformComponent : Component
+{
+    public Vector2 Position { get; set; }
+}</code></pre></p>
+</li>
+<li>
+<p><strong>Don't query inside loops</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Bad - queries every iteration
+for (int i = 0; i &lt; 100; i++)
+{
+    var entities = _world.QueryEntities().With&lt;EnemyComponent&gt;();
+}
+
+// ✅ Good - query once
+var entities = _world.QueryEntities()
+    .With&lt;EnemyComponent&gt;()
+    .ToList();
+
+for (int i = 0; i &lt; 100; i++)
+{
+    // Use cached list
+}</code></pre></p>
+</li>
+<li>
+<p><strong>Don't create tight dependencies</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Bad - tight coupling
+public class SystemA : IUpdateSystem
+{
+    private readonly SystemB _systemB; // Coupled to another system!
+}
+
+// ✅ Good - use events
+public class SystemA : IUpdateSystem
+{
+    private readonly EventBus _eventBus; // Loose coupling
+}</code></pre></p>
+</li>
+<li>
+<p><strong>Don't forget deltaTime</strong>
+   <pre class="highlight"><code class="language-csharp">// ❌ Bad - frame-rate dependent
+transform.Position += velocity.Velocity;
+
+// ✅ Good - frame-rate independent
+transform.Position += velocity.Velocity * deltaTime;</code></pre></p>
+</li>
+</ol>
+<hr />
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<h3 id="problem-system-not-running">Problem: System not running<a class="headerlink" href="#problem-system-not-running" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> System's Update method never called.</p>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li>
+<p><strong>Check system is registered:</strong>
+   <pre class="highlight"><code class="language-csharp">_world.AddUpdateSystem(new MovementSystem(_world));</code></pre></p>
+</li>
+<li>
+<p><strong>Verify World.Update is called:</strong>
+   <pre class="highlight"><code class="language-csharp">protected override void OnUpdate(GameTime gameTime)
+{
+    _world.Update(gameTime); // Must call!
+}</code></pre></p>
+</li>
+<li>
+<p><strong>Check system order isn't causing early exit:</strong>
+   <pre class="highlight"><code class="language-csharp">// Make sure system order makes sense
+public int UpdateOrder =&gt; 100; // Not too high/low</code></pre></p>
+</li>
+</ol>
+<hr />
+<h3 id="problem-systems-run-in-wrong-order">Problem: Systems run in wrong order<a class="headerlink" href="#problem-systems-run-in-wrong-order" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> Collisions detect before movement, etc.</p>
+<p><strong>Solution:</strong> Set UpdateOrder correctly:</p>
+<pre class="highlight"><code class="language-csharp">// ✅ Correct ordering
+public class InputSystem : IUpdateSystem { public int UpdateOrder =&gt; 10; }
+public class MovementSystem : IUpdateSystem { public int UpdateOrder =&gt; 100; }
+public class CollisionSystem : IUpdateSystem { public int UpdateOrder =&gt; 150; }</code></pre>
+<hr />
+<h3 id="problem-performance-issues">Problem: Performance issues<a class="headerlink" href="#problem-performance-issues" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> Game runs slowly with many entities.</p>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li>
+<p><strong>Profile systems:</strong>
+   <pre class="highlight"><code class="language-csharp">var sw = Stopwatch.StartNew();
+system.Update(gameTime);
+sw.Stop();
+
+Logger.LogDebug("{System} took {Ms}ms", system.Name, sw.ElapsedMilliseconds);</code></pre></p>
+</li>
+<li>
+<p><strong>Cache queries:</strong>
+   <pre class="highlight"><code class="language-csharp">var entities = _world.QueryEntities()
+    .With&lt;TransformComponent&gt;()
+    .ToList(); // Cache</code></pre></p>
+</li>
+<li>
+<p><strong>Use spatial partitioning:</strong></p>
+</li>
+<li>Only check nearby entities</li>
+<li>Reduces O(n²) to ~O(n)</li>
+</ol>
+<hr />
+<h3 id="problem-systems-interfering-with-each-other">Problem: Systems interfering with each other<a class="headerlink" href="#problem-systems-interfering-with-each-other" title="Permanent link">&para;</a></h3>
+<p><strong>Symptom:</strong> System A's changes undone by System B.</p>
+<p><strong>Solution:</strong> Check system ordering:</p>
+<pre class="highlight"><code class="language-csharp">// ✅ Correct - CollisionSystem runs after MovementSystem
+public class MovementSystem : IUpdateSystem { public int UpdateOrder =&gt; 100; }
+public class CollisionSystem : IUpdateSystem { public int UpdateOrder =&gt; 150; }
+
+// ❌ Wrong - CollisionSystem runs before MovementSystem
+public class CollisionSystem : IUpdateSystem { public int UpdateOrder =&gt; 50; }
+public class MovementSystem : IUpdateSystem { public int UpdateOrder =&gt; 100; }</code></pre>
+<hr />
+<h2 id="summary">Summary<a class="headerlink" href="#summary" title="Permanent link">&para;</a></h2>
+<p><strong>System types:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Purpose</th>
+<th>Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>IUpdateSystem</strong></td>
+<td>Game logic</td>
+<td><code>Update(GameTime)</code></td>
+</tr>
+<tr>
+<td><strong>IRenderSystem</strong></td>
+<td>Drawing</td>
+<td><code>Render(GameTime)</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Common systems:</strong></p>
+<table>
+<thead>
+<tr>
+<th>System</th>
+<th>Purpose</th>
+<th>Typical Order</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>InputSystem</strong></td>
+<td>Process input</td>
+<td>10</td>
+</tr>
+<tr>
+<td><strong>AISystem</strong></td>
+<td>AI decisions</td>
+<td>20</td>
+</tr>
+<tr>
+<td><strong>PhysicsSystem</strong></td>
+<td>Forces, gravity</td>
+<td>50</td>
+</tr>
+<tr>
+<td><strong>MovementSystem</strong></td>
+<td>Update positions</td>
+<td>100</td>
+</tr>
+<tr>
+<td><strong>CollisionSystem</strong></td>
+<td>Detect collisions</td>
+<td>150</td>
+</tr>
+<tr>
+<td><strong>HealthSystem</strong></td>
+<td>Manage health</td>
+<td>180</td>
+</tr>
+<tr>
+<td><strong>CleanupSystem</strong></td>
+<td>Remove dead entities</td>
+<td>200</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Key principles:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Single Responsibility</strong></td>
+<td>One system, one job</td>
+</tr>
+<tr>
+<td><strong>Stateless</strong></td>
+<td>No entity-specific state</td>
+</tr>
+<tr>
+<td><strong>Ordered</strong></td>
+<td>Explicit update order</td>
+</tr>
+<tr>
+<td><strong>Event-Based</strong></td>
+<td>Communicate via events</td>
+</tr>
+<tr>
+<td><strong>Cached Queries</strong></td>
+<td>Query once, process many</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="next-steps">Next Steps<a class="headerlink" href="#next-steps" title="Permanent link">&para;</a></h2>
+<ul>
+<li><strong><a href="../components/">Components Guide</a></strong> - Deep dive into components</li>
+<li><strong><a href="../entities/">Entities Guide</a></strong> - Entity management</li>
+<li><strong><a href="../queries/">Queries Guide</a></strong> - Advanced querying</li>
+<li><strong><a href="../../concepts/entity-component-system.md">ECS Concepts</a></strong> - Architectural overview</li>
+<li><strong><a href="../getting-started/">Getting Started</a></strong> - Build your first ECS game</li>
+</ul>
+<hr />
+<h2 id="quick-reference">Quick Reference<a class="headerlink" href="#quick-reference" title="Permanent link">&para;</a></h2>
+<pre class="highlight"><code class="language-csharp">// Create update system
+public class MovementSystem : IUpdateSystem
+{
+    public string Name =&gt; "MovementSystem";
+    public int UpdateOrder =&gt; 100;
+
+    public void Update(GameTime gameTime)
+    {
+        var entities = _world.QueryEntities()
+            .With&lt;TransformComponent&gt;()
+            .With&lt;VelocityComponent&gt;();
+
+        foreach (var entity in entities)
+        {
+            // Process entity
+        }
+    }
+}
+
+// Create render system
+public class SpriteRenderSystem : IRenderSystem
+{
+    public string Name =&gt; "SpriteRenderSystem";
+    public int RenderOrder =&gt; 100;
+
+    public void Render(GameTime gameTime)
+    {
+        var entities = _world.QueryEntities()
+            .With&lt;TransformComponent&gt;()
+            .With&lt;SpriteComponent&gt;();
+
+        foreach (var entity in entities)
+        {
+            // Draw entity
+        }
+    }
+}
+
+// Register systems
+world.AddUpdateSystem(new MovementSystem(world));
+world.AddRenderSystem(new SpriteRenderSystem(world, renderer));
+
+// Run systems
+world.Update(gameTime);  // Runs all update systems
+world.Render(gameTime);  // Runs all render systems</code></pre>
+<hr />
+<p>Ready to learn about entity management? Check out <a href="../entities/">Entities Guide</a>!</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["content.code.copy", "content.code.select", "navigation.indexes", "navigation.top", "search.suggest", "search.highlight"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+      
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+      
+    
+  </body>
+</html>
