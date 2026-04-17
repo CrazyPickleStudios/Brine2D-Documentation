@@ -1,11 +1,11 @@
 ---
 title: Audio
-description: Sound effects, music, and spatial audio in Brine2D games
+description: Add sound effects, background music, and immersive spatial audio to your Brine2D games
 ---
 
 # Audio
 
-Learn how to add sound effects, background music, and immersive spatial audio to your Brine2D games.
+Add sound effects, background music, and immersive spatial audio to your Brine2D games.
 
 ---
 
@@ -16,35 +16,29 @@ using Brine2D.Audio;
 
 public class AudioScene : Scene
 {
-    private readonly IAudioService _audio;
+    private readonly ISoundLoader _soundLoader;
+    private readonly IMusicLoader _musicLoader;
     private ISoundEffect? _jumpSound;
     private IMusic? _backgroundMusic;
-    
-    // Inject IAudioService
-    public AudioScene(IAudioService audio)
+
+    public AudioScene(ISoundLoader soundLoader, IMusicLoader musicLoader)
     {
-        _audio = audio;
+        _soundLoader = soundLoader;
+        _musicLoader = musicLoader;
     }
-    
-    protected override async Task OnLoadAsync(CancellationToken ct)
+
+    protected override async Task OnLoadAsync(CancellationToken ct, IProgress<float>? progress = null)
     {
-        // Load sound effect
-        _jumpSound = await _audio.LoadSoundAsync("assets/jump.wav", ct);
-        
-        // Load music
-        _backgroundMusic = await _audio.LoadMusicAsync("assets/music.ogg", ct);
-        
-        // Play music (looping)
-        _audio.PlayMusic(_backgroundMusic, loops: -1);
+        _jumpSound = await _soundLoader.GetOrLoadSoundAsync("assets/jump.wav", ct);
+        _backgroundMusic = await _musicLoader.GetOrLoadMusicAsync("assets/music.ogg", ct);
+
+        Audio.PlayMusic(_backgroundMusic, loops: -1);
     }
-    
+
     protected override void OnUpdate(GameTime gameTime)
     {
-        if (_input.IsKeyPressed(Key.Space))
-        {
-            // Play sound effect
-            _audio.PlaySound(_jumpSound);
-        }
+        if (Input.IsKeyPressed(Key.Space))
+            Audio.PlaySound(_jumpSound!);
     }
 }
 ```
@@ -57,45 +51,48 @@ public class AudioScene : Scene
 
 | Guide | Description | Difficulty |
 |-------|-------------|------------|
-| **[Getting Started](getting-started.md)** | Audio basics and setup | ⭐ Beginner |
-| **[Sound Effects](sound-effects.md)** | Play sounds (jump, shoot, etc.) | ⭐ Beginner |
-| **[Music Playback](music.md)** | Background music and looping | ⭐ Beginner |
+| **[Getting Started](getting-started.md)** | Audio basics and setup | :star: Beginner |
+| **[Sound Effects](sound-effects.md)** | Play sounds (jump, shoot, etc.) | :star: Beginner |
+| **[Music Playback](music.md)** | Background music and looping | :star: Beginner |
 
 ### Advanced
 
 | Guide | Description | Difficulty |
 |-------|-------------|------------|
-| **[Spatial Audio](spatial-audio.md)** | 2D positional audio with distance/panning | ⭐⭐⭐ Advanced |
+| **[Spatial Audio](spatial-audio.md)** | 2D positional audio with distance/panning | :star::star::star: Advanced |
 
 ---
 
 ## Key Concepts
 
-### Track-Based Audio (v0.9.0+)
+### Track-Based Audio
 
-Brine2D uses a **track-based audio system** for precise control:
+Brine2D uses a **track-based audio system** for precise control. `PlaySound` always returns a track handle:
 
 ```csharp
 // Play sound and get track handle
-nint track = _audio.PlaySoundWithTrack(_shootSound, volume: 0.8f);
+nint track = Audio.PlaySound(_shootSound!, volume: 0.8f);
 
 // Control specific track
-_audio.UpdateTrackSpatialAudio(track, volume: 0.6f, pan: 0.5f);
-_audio.StopTrack(track);
+Audio.SetTrackVolume(track, 0.6f);
+Audio.SetTrackPan(track, 0.5f);
+Audio.SetTrackPitch(track, 1.2f);
+Audio.PauseTrack(track);
+Audio.ResumeTrack(track);
+Audio.StopTrack(track);
 
-// Track finished event
-_audio.OnTrackStopped += (stoppedTrack) =>
-{
-    Logger.LogInformation("Track {Track} finished", stoppedTrack);
-};
+// Check if track is still playing
+if (Audio.IsTrackAlive(track))
+    Logger.LogInformation("Track still playing");
 ```
 
-**Benefits:**
-- Precise control over individual sounds
-- Update volume/pan in real-time
-- Track lifecycle events
+**Features:**
 
-[:octicons-arrow-right-24: Migration from v0.8.0](../whats-new/v0.9.0-beta.md#audio-api-changes)
+- Precise control over individual sounds
+- Update volume, pan, and pitch in real-time
+- Pause and resume individual tracks
+- Priority-based eviction when tracks are full
+- Bus-based grouping for batch operations
 
 ---
 
@@ -103,30 +100,41 @@ _audio.OnTrackStopped += (stoppedTrack) =>
 
 ```mermaid
 graph TB
-    AS["IAudioService<br/>(Singleton)"]
-    
+    AS["IAudioService<br/>(ISoundLoader + IMusicLoader + IAudioPlayer)"]
+
     SE["Sound Effects<br/>(Short, frequent)"]
     M["Music<br/>(Long, looping)"]
-    SA["Spatial Audio<br/>(Position-based)"]
-    
+    SA["Spatial Audio<br/>(ECS components)"]
+
     AS --> SE
     AS --> M
     AS --> SA
-    
+
     SE --> T1["Track 1"]
     SE --> T2["Track 2"]
     SE --> T3["Track 3"]
-    
+
     M --> MT["Music Track"]
-    
-    SA --> ST1["Spatial Track 1"]
-    SA --> ST2["Spatial Track 2"]
-    
+
+    SA --> ST1["SoundEffectSourceComponent"]
+    SA --> ST2["MusicSourceComponent"]
+
     style AS fill:#2d5016,stroke:#4ec9b0,stroke-width:3px,color:#fff
     style SE fill:#1e3a5f,stroke:#569cd6,stroke-width:2px,color:#fff
     style M fill:#4a2d4a,stroke:#c586c0,stroke-width:2px,color:#fff
     style SA fill:#3d3d2a,stroke:#dcdcaa,stroke-width:2px,color:#fff
 ```
+
+**Narrow interfaces:** Depend on only what you need:
+
+| Interface | Purpose |
+|-----------|---------|
+| `ISoundLoader` | Load sound effects (`GetOrLoadSoundAsync`) |
+| `IMusicLoader` | Load music (`GetOrLoadMusicAsync`) |
+| `IAudioPlayer` | Playback, volume, track control |
+| `IAudioService` | All of the above (composite) |
+
+The `Audio` property on `Scene` is `IAudioService`.
 
 ---
 
@@ -135,23 +143,19 @@ graph TB
 ### Play Sound Effect
 
 ```csharp
-private readonly IAudioService _audio;
 private ISoundEffect? _explosionSound;
 
-protected override async Task OnLoadAsync(CancellationToken ct)
+protected override async Task OnLoadAsync(CancellationToken ct, IProgress<float>? progress = null)
 {
-    _explosionSound = await _audio.LoadSoundAsync("assets/explosion.wav", ct);
+    _explosionSound = await _soundLoader.GetOrLoadSoundAsync("assets/explosion.wav", ct);
 }
 
 protected override void OnUpdate(GameTime gameTime)
 {
     if (enemyKilled)
     {
-        // Simple playback
-        _audio.PlaySound(_explosionSound);
-        
-        // With volume control
-        _audio.PlaySound(_explosionSound, volume: 0.7f);
+        Audio.PlaySound(_explosionSound!);
+        Audio.PlaySound(_explosionSound!, volume: 0.7f, pan: -0.3f, pitch: 1.1f);
     }
 }
 ```
@@ -165,27 +169,20 @@ protected override void OnUpdate(GameTime gameTime)
 ```csharp
 private IMusic? _music;
 
-protected override async Task OnLoadAsync(CancellationToken ct)
+protected override async Task OnLoadAsync(CancellationToken ct, IProgress<float>? progress = null)
 {
-    _music = await _audio.LoadMusicAsync("assets/background.ogg", ct);
-    
-    // Play looping music
-    _audio.PlayMusic(_music, loops: -1);  // -1 = infinite loop
+    _music = await _musicLoader.GetOrLoadMusicAsync("assets/background.ogg", ct);
+    Audio.PlayMusic(_music, loops: -1);
 }
 
 protected override void OnUpdate(GameTime gameTime)
 {
-    // Pause/resume
-    if (_input.IsKeyPressed(Key.P))
+    if (Input.IsKeyPressed(Key.P))
     {
-        if (_audio.IsMusicPlaying())
-        {
-            _audio.PauseMusic();
-        }
+        if (Audio.IsMusicPaused)
+            Audio.ResumeMusic();
         else
-        {
-            _audio.ResumeMusic();
-        }
+            Audio.PauseMusic();
     }
 }
 ```
@@ -194,30 +191,28 @@ protected override void OnUpdate(GameTime gameTime)
 
 ---
 
-### Spatial Audio (2D Positional)
+### Spatial Audio (ECS Components)
 
 ```csharp
 // Create audio listener (player)
 var player = World.CreateEntity("Player");
-var listener = player.AddComponent<AudioListenerComponent>();
+player.AddComponent<TransformComponent>(t => t.Position = new Vector2(400, 300));
+player.AddComponent<AudioListenerComponent>();
 
 // Create spatial audio source (enemy)
 var enemy = World.CreateEntity("Enemy");
-var audioSource = enemy.AddComponent<AudioSourceComponent>();
-audioSource.SoundEffect = _enemySound;
-audioSource.EnableSpatialAudio = true;
-
-// Configure distance attenuation
-audioSource.MinDistance = 100f;  // Full volume within 100 pixels
-audioSource.MaxDistance = 500f;  // Silent beyond 500 pixels
-audioSource.RolloffFactor = 1.0f;  // Linear falloff
-
-// Configure stereo panning
-audioSource.SpatialBlend = 1.0f;  // Full stereo (0.0 = mono)
-
-// Play
-audioSource.Loop = true;
-audioSource.PlayOnEnable = true;
+enemy.AddComponent<TransformComponent>(t => t.Position = new Vector2(200, 300));
+enemy.AddComponent<SoundEffectSourceComponent>(src =>
+{
+    src.SoundEffect = _enemyGrowlSound;
+    src.EnableSpatialAudio = true;
+    src.MinDistance = 100f;
+    src.MaxDistance = 500f;
+    src.RolloffFactor = 1.0f;
+    src.SpatialBlend = 1.0f;
+    src.LoopCount = -1;
+    src.PlayOnEnable = true;
+});
 ```
 
 [:octicons-arrow-right-24: Full guide: Spatial Audio](spatial-audio.md)
@@ -228,20 +223,42 @@ audioSource.PlayOnEnable = true;
 
 ```csharp
 // Master volume (affects all audio)
-_audio.SetMasterVolume(0.8f);  // 80%
+Audio.MasterVolume = 0.8f;
 
 // Sound effects volume
-_audio.SetSoundVolume(0.6f);  // 60%
+Audio.SoundVolume = 0.6f;
 
 // Music volume
-_audio.SetMusicVolume(0.5f);  // 50%
+Audio.MusicVolume = 0.5f;
 
 // Per-sound volume
-_audio.PlaySound(_jumpSound, volume: 0.9f);
+Audio.PlaySound(_jumpSound!, volume: 0.9f);
 
-// Update track volume in real-time
-nint track = _audio.PlaySoundWithTrack(_engineSound);
-_audio.UpdateTrackSpatialAudio(track, volume: 0.7f, pan: 0.0f);
+// Update track volume/pan/pitch in real-time
+nint track = Audio.PlaySound(_engineSound!, loops: -1);
+Audio.SetTrackVolume(track, 0.7f);
+Audio.SetTrackPan(track, 0.3f);
+Audio.SetTrackPitch(track, 0.9f);
+```
+
+---
+
+### Bus-Based Audio Grouping
+
+```csharp
+// Play sounds on named buses
+nint track = Audio.PlaySound(_uiClick!, bus: "ui");
+
+// Tag existing tracks
+Audio.TagTrack(track, "ui");
+
+// Pause/resume/stop entire buses
+Audio.PauseBus("sfx");
+Audio.ResumeBus("sfx");
+Audio.StopBus("ui");
+
+// Set per-bus volume
+Audio.SetBusVolume("sfx", 0.5f);
 ```
 
 ---
@@ -250,121 +267,56 @@ _audio.UpdateTrackSpatialAudio(track, volume: 0.7f, pan: 0.0f);
 
 | Format | Sound Effects | Music | Recommended For |
 |--------|--------------|-------|-----------------|
-| **WAV** | ✅ Yes | ✅ Yes | Sound effects (uncompressed) |
-| **OGG** | ✅ Yes | ✅ Yes | Music (compressed, high quality) |
-| **MP3** | ✅ Yes | ✅ Yes | Music (compressed, smaller file) |
-| **FLAC** | ✅ Yes | ✅ Yes | Music (lossless) |
+| **WAV** | :white_check_mark: Yes | :white_check_mark: Yes | Sound effects (uncompressed) |
+| **OGG** | :white_check_mark: Yes | :white_check_mark: Yes | Music (compressed, high quality) |
+| **MP3** | :white_check_mark: Yes | :white_check_mark: Yes | Music (compressed, smaller file) |
+| **FLAC** | :white_check_mark: Yes | :white_check_mark: Yes | Music (lossless) |
 
 **Recommendations:**
+
 - **Sound effects:** WAV (fast loading, no decompression overhead)
-- **Music:** OGG (good compression, no licensing issues unlike MP3)
+- **Music:** OGG (good compression, no licensing issues)
 
 ---
 
 ## Best Practices
 
-### ✅ DO
+### :white_check_mark: DO
 
-1. **Load sounds in OnLoadAsync()** - Keep OnUpdate() fast
-2. **Use appropriate formats** - WAV for SFX, OGG for music
-3. **Control volume** - Don't max out everything
-4. **Unload sounds** - Free memory when scene ends
-5. **Use tracks for control** - Get track handle for precise control
+1. **Load sounds in OnLoadAsync** — Keep OnUpdate fast
+2. **Use appropriate formats** — WAV for SFX, OGG for music
+3. **Control volume** — Don't max out everything
+4. **Use track handles for looping sounds** — Stop them when done
+5. **Use buses for group control** — Pause all SFX during menus
 
 ```csharp
-// ✅ Good pattern
-protected override async Task OnLoadAsync(CancellationToken ct)
+protected override async Task OnLoadAsync(CancellationToken ct, IProgress<float>? progress = null)
 {
-    _sounds = await LoadSoundsAsync(ct);
-    _music = await _audio.LoadMusicAsync("music.ogg", ct);
+    _jumpSound = await _soundLoader.GetOrLoadSoundAsync("assets/jump.wav", ct);
+    _music = await _musicLoader.GetOrLoadMusicAsync("assets/music.ogg", ct);
 }
 
 protected override void OnUpdate(GameTime gameTime)
 {
-    // Quick playback
-    _audio.PlaySound(_jumpSound);
+    Audio.PlaySound(_jumpSound!);
 }
 
-protected override Task OnUnloadAsync(CancellationToken ct)
+protected override void OnExit()
 {
-    // Clean up
-    _audio.StopAllSounds();
-    _audio.StopMusic();
-    return Task.CompletedTask;
+    Audio.StopAllSounds();
+    Audio.StopMusic();
 }
 ```
 
 ---
 
-### ❌ DON'T
+### :x: DON'T
 
-1. **Don't load sounds in OnUpdate()** - Causes lag
-2. **Don't play too many sounds** - Overwhelms player
-3. **Don't forget to stop music** - Plays between scenes
-4. **Don't use MP3 for SFX** - Decoding overhead
-5. **Don't max out volume** - Causes clipping/distortion
-
-```csharp
-// ❌ Bad pattern
-protected override void OnUpdate(GameTime gameTime)
-{
-    // Don't load in update!
-    var sound = await _audio.LoadSoundAsync("jump.wav");  // NO!
-    _audio.PlaySound(sound);
-    
-    // Don't play too many at once
-    for (int i = 0; i < 100; i++)
-    {
-        _audio.PlaySound(_explosionSound);  // Overwhelming!
-    }
-}
-```
-
----
-
-## Performance Tips
-
-### Limit Concurrent Sounds
-
-```csharp
-private int _activeSoundCount = 0;
-private const int MaxConcurrentSounds = 16;
-
-protected override void OnUpdate(GameTime gameTime)
-{
-    if (shouldPlaySound && _activeSoundCount < MaxConcurrentSounds)
-    {
-        nint track = _audio.PlaySoundWithTrack(_sound);
-        _activeSoundCount++;
-        
-        _audio.OnTrackStopped += (stoppedTrack) =>
-        {
-            if (stoppedTrack == track)
-            {
-                _activeSoundCount--;
-            }
-        };
-    }
-}
-```
-
----
-
-### Preload Common Sounds
-
-```csharp
-// Load frequently used sounds at startup
-protected override async Task OnLoadAsync(CancellationToken ct)
-{
-    // Preload common sounds
-    _commonSounds = new Dictionary<string, ISoundEffect>
-    {
-        ["jump"] = await _audio.LoadSoundAsync("jump.wav", ct),
-        ["shoot"] = await _audio.LoadSoundAsync("shoot.wav", ct),
-        ["hit"] = await _audio.LoadSoundAsync("hit.wav", ct),
-    };
-}
-```
+1. **Don't load sounds in OnUpdate** — Causes lag
+2. **Don't play too many sounds** — Use `MaxConcurrentInstances` on `SoundEffectSourceComponent` or priority-based eviction
+3. **Don't forget to stop music** — It plays between scenes
+4. **Don't use MP3 for SFX** — Decoding overhead
+5. **Don't max out volume** — Causes clipping/distortion
 
 ---
 
@@ -372,77 +324,23 @@ protected override async Task OnLoadAsync(CancellationToken ct)
 
 ### No Sound Playing
 
-**Symptom:** Audio calls succeed but nothing plays
+1. **Check volume levels:**
+    ```csharp
+    Logger.LogDebug("Master: {M}, Music: {Mu}, Sound: {S}",
+        Audio.MasterVolume, Audio.MusicVolume, Audio.SoundVolume);
+    ```
 
-**Solutions:**
-
-1. **Check master volume:**
-
-```csharp
-_audio.SetMasterVolume(1.0f);  // Make sure not muted
-```
-
-2. **Verify sound loaded:**
-
-```csharp
-if (_jumpSound == null)
-{
-    Logger.LogWarning("Jump sound not loaded!");
-}
-```
-
-3. **Check file exists:**
-   - Verify path: `assets/jump.wav`
-   - Check file is copied to output
-
----
+2. **Verify sound loaded** — `GetOrLoadSoundAsync` returns null on failure
+3. **Check file exists** — Verify path and that assets are copied to output
 
 ### Music Continues Between Scenes
 
-**Symptom:** Music from previous scene still playing
-
-**Solution:** Stop music in OnUnloadAsync()
+Stop music in `OnExit`:
 
 ```csharp
-protected override Task OnUnloadAsync(CancellationToken ct)
+protected override void OnExit()
 {
-    _audio.StopMusic();
-    return Task.CompletedTask;
-}
-```
-
----
-
-### Spatial Audio Not Working
-
-**Symptom:** Spatial audio sounds like regular audio
-
-**Solutions:**
-
-1. **Check EnableSpatialAudio is true:**
-
-```csharp
-audioSource.EnableSpatialAudio = true;  // Must be true!
-```
-
-2. **Verify listener exists:**
-
-```csharp
-var listener = World.GetEntitiesWithComponent<AudioListenerComponent>();
-if (!listener.Any())
-{
-    Logger.LogWarning("No audio listener found!");
-}
-```
-
-3. **Check distances:**
-
-```csharp
-// Make sure source is within range
-float distance = Vector2.Distance(source.Position, listener.Position);
-if (distance > audioSource.MaxDistance)
-{
-    Logger.LogDebug("Source too far from listener");
+    Audio.StopMusic();
 }
 ```
 
@@ -450,11 +348,10 @@ if (distance > audioSource.MaxDistance)
 
 ## Related Topics
 
-- [Getting Started](getting-started.md) - Audio basics
-- [Sound Effects](sound-effects.md) - Play sounds
-- [Music Playback](music.md) - Background music
-- [Spatial Audio](spatial-audio.md) - Positional audio
-- [What's New v0.9.0](../whats-new/v0.9.0-beta.md#track-based-audio) - Track-based audio changes
+- [Getting Started](getting-started.md) — Audio basics
+- [Sound Effects](sound-effects.md) — Play sounds
+- [Music Playback](music.md) — Background music
+- [Spatial Audio](spatial-audio.md) — Positional audio
 
 ---
 
