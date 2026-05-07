@@ -1,4 +1,4 @@
-﻿---
+---
 title: Input Layers
 description: Priority-based input routing for UI and game input in Brine2D
 ---
@@ -9,7 +9,16 @@ Input layers let you control which part of your game receives input first. When 
 
 ---
 
-## Quick Start
+## Setup
+
+First, call `UseInputLayers()` during app startup so `InputLayerManager` is registered in DI:
+
+```csharp
+var builder = Brine2DApp.CreateBuilder(args);
+builder.UseInputLayers();
+```
+
+Then inject `InputLayerManager` into your scene:
 
 ```csharp
 public class GameScene : Scene
@@ -20,27 +29,90 @@ public class GameScene : Scene
     {
         _layerManager = layerManager;
     }
+}
+```
 
-    protected override void OnEnter()
+---
+
+## Implementing a Layer
+
+Create a class that implements `IInputLayer`:
+
+```csharp
+public class UiInputLayer : IInputLayer
+{
+    public int Priority => 1000; // Higher = processed first
+
+    public bool ProcessKeyboardInput(IInputContext input, bool consumed)
     {
-        var uiLayer = _layerManager.CreateLayer(""UI"", priority: 1000);
-        var gameLayer = _layerManager.CreateLayer(""Game"", priority: 0);
-    }
+        if (consumed) return false; // Already handled by a higher layer
 
-    protected override void OnUpdate(GameTime gameTime)
-    {
-        _layerManager.ProcessInput();
-
-        if (!_layerManager.KeyboardConsumed)
+        if (input.IsKeyPressed(Key.Escape))
         {
-            HandleGameKeyboard();
+            CloseMenu();
+            return true; // Consume -- game layer won't see this
         }
 
-        if (!_layerManager.MouseConsumed)
-        {
-            HandleGameMouse();
-        }
+        return false;
     }
+
+    public bool ProcessMouseInput(IInputContext input, bool consumed)
+    {
+        if (consumed) return false;
+
+        if (input.IsMouseButtonPressed(MouseButton.Left) && HitTestUi(input.MousePosition))
+        {
+            HandleUiClick(input.MousePosition);
+            return true; // Consume
+        }
+
+        return false;
+    }
+
+    // Override only when this layer needs to intercept gamepad input (e.g. modal dialogs)
+    public bool ProcessGamepadInput(IInputContext input, bool consumed) => false;
+}
+```
+
+---
+
+## Registering and Unregistering
+
+Register layers in `OnEnter` and unregister in `OnExit`:
+
+```csharp
+private readonly UiInputLayer _uiLayer = new();
+
+protected override void OnEnter()
+{
+    _layerManager.RegisterLayer(_uiLayer);
+}
+
+protected override void OnExit()
+{
+    _layerManager.UnregisterLayer(_uiLayer);
+}
+```
+
+---
+
+## Processing Input Each Frame
+
+Call `ProcessInput()` once at the top of `OnUpdate`, then check the consumed flags:
+
+```csharp
+protected override void OnUpdate(GameTime gameTime)
+{
+    _layerManager.ProcessInput(); // Always first
+
+    if (!_layerManager.KeyboardConsumed)
+        HandleGameKeyboard();
+
+    if (!_layerManager.MouseConsumed)
+        HandleGameMouse();
+
+    if (!_layerManager.GamepadConsumed)
+        HandleGameGamepad();
 }
 ```
 
@@ -48,11 +120,12 @@ public class GameScene : Scene
 
 ## How It Works
 
-1. **Layers are processed by priority** - highest first
-2. **A layer can consume input** - returning `true` blocks lower layers
-3. **Check consumption flags** - `KeyboardConsumed`, `MouseConsumed`
+1. **Layers are sorted by `Priority`** -- highest processes first.
+2. **Every layer is always called** -- the `consumed` parameter tells a layer whether a higher-priority layer already claimed that category. Layers receiving `consumed: true` should skip gameplay logic but may still perform cleanup (e.g. cancel a drag, reset hover state).
+3. **Return `true` to consume** -- prevents lower-priority layers from acting on that input category.
+4. **Check `KeyboardConsumed` / `MouseConsumed` / `GamepadConsumed`** in your scene to skip raw polling when a layer already handled it.
 
-**Typical priorities:**
+**Typical priority values:**
 
 | Layer | Priority | Purpose |
 |-------|----------|---------|
@@ -65,27 +138,16 @@ public class GameScene : Scene
 
 ## Best Practices
 
-1. **Always call `ProcessInput()` first** in `OnUpdate`
-2. **Check consumption flags** before handling game input
-3. **Return `true`** from layer handlers to consume input
-4. **Unregister layers** in `OnExit` or `OnUnloadAsync`
-
-```csharp
-protected override void OnUpdate(GameTime gameTime)
-{
-    _layerManager.ProcessInput(); // Always first!
-
-    if (!_layerManager.KeyboardConsumed && Input.IsKeyDown(Key.W))
-    {
-        MovePlayer();
-    }
-}
-```
+1. **Call `UseInputLayers()` at startup** before building the app
+2. **Always call `ProcessInput()` first** in `OnUpdate`
+3. **Check consumption flags** before raw polling in the scene
+4. **Return `true` only when your layer truly handled the input**
+5. **Unregister layers in `OnExit`** to avoid stale handlers
 
 ---
 
 ## Next Steps
 
-- **[Keyboard Input](keyboard.md)** - Keyboard input handling
-- **[Mouse Input](mouse.md)** - Mouse and cursor control
-- **[UI](../ui/index.md)** - Build interactive UI
+- **[Keyboard Input](keyboard.md)**
+- **[Mouse Input](mouse.md)**
+- **[UI](../ui/index.md)**

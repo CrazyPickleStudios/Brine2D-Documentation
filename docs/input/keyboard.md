@@ -1,11 +1,11 @@
 ---
 title: Keyboard Input
-description: Handle keyboard input in Brine2D - key states, movement, and common patterns
+description: Handle keyboard input in Brine2D games
 ---
 
 # Keyboard Input
 
-Handle keyboard input using the `Input` framework property (`IInputContext`).
+Handle keyboard input using the `Input` framework property (`IInputContext`) available in every scene.
 
 ---
 
@@ -16,53 +16,58 @@ protected override void OnUpdate(GameTime gameTime)
 {
     var deltaTime = (float)gameTime.DeltaTime;
 
-    // WASD movement
+    // Continuous movement (held)
     if (Input.IsKeyDown(Key.W)) _position.Y -= _speed * deltaTime;
     if (Input.IsKeyDown(Key.S)) _position.Y += _speed * deltaTime;
     if (Input.IsKeyDown(Key.A)) _position.X -= _speed * deltaTime;
     if (Input.IsKeyDown(Key.D)) _position.X += _speed * deltaTime;
 
-    // One-shot actions
+    // One-shot action (just pressed this frame)
     if (Input.IsKeyPressed(Key.Space)) Jump();
-    if (Input.IsKeyPressed(Key.Escape)) PauseGame();
+
+    // Release action
+    if (Input.IsKeyReleased(Key.E)) ReleaseChargedAttack();
 }
 ```
 
 ---
 
-## Key States
+## The Three Methods
 
-### IsKeyDown - Held This Frame
+### `IsKeyDown` -- Key Currently Held
 
-Returns `true` every frame the key is held down. Use for continuous actions like movement.
+Returns `true` every frame while the key is held. Use for continuous actions like movement.
 
 ```csharp
 if (Input.IsKeyDown(Key.W))
-{
-    _position.Y -= speed * deltaTime;
-}
+    _position.Y -= _speed * deltaTime;
 ```
 
-### IsKeyPressed - Just Pressed This Frame
+### `IsKeyPressed` -- Just Pressed This Frame
 
 Returns `true` only on the **first frame** the key is pressed. Use for one-shot actions.
 
 ```csharp
 if (Input.IsKeyPressed(Key.Space))
-{
-    Jump(); // Once per press, not 60 times per second
-}
+    Jump(); // Called once per press, not every frame
 ```
 
-### IsKeyReleased - Just Released This Frame
+### `IsKeyReleased` -- Just Released This Frame
 
-Returns `true` only on the frame the key is released. Use for charge-release mechanics.
+Returns `true` only on the frame the key is released.
 
 ```csharp
 if (Input.IsKeyReleased(Key.E))
-{
     ReleaseChargedAttack();
-}
+```
+
+### `IsAnyKeyPressed` -- Any Key This Frame
+
+Returns `true` if any key was pressed this frame. Useful for "press any key to continue" screens.
+
+```csharp
+if (Input.IsAnyKeyPressed())
+    StartGame();
 ```
 
 ---
@@ -80,11 +85,8 @@ protected override void OnUpdate(GameTime gameTime)
     if (Input.IsKeyDown(Key.A)) direction.X -= 1;
     if (Input.IsKeyDown(Key.D)) direction.X += 1;
 
-    // Normalize prevents diagonal from being 41% faster
     if (direction != Vector2.Zero)
-    {
         direction = Vector2.Normalize(direction);
-    }
 
     _position += direction * _speed * (float)gameTime.DeltaTime;
 }
@@ -101,128 +103,121 @@ _position += direction * speed * deltaTime;
 
 ```csharp
 if (Input.IsKeyDown(Key.LeftControl) && Input.IsKeyPressed(Key.S))
-{
     SaveGame();
-}
 ```
 
 ### Menu Navigation
 
 ```csharp
-if (Input.IsKeyPressed(Key.Up))    _selectedIndex--;
-if (Input.IsKeyPressed(Key.Down))  _selectedIndex++;
-if (Input.IsKeyPressed(Key.Return)) SelectMenuItem(_selectedIndex);
+if (Input.IsKeyPressed(Key.Up))     _selectedIndex--;
+if (Input.IsKeyPressed(Key.Down))   _selectedIndex++;
+if (Input.IsKeyPressed(Key.Enter))  SelectMenuItem(_selectedIndex);
 ```
 
 ---
 
-## The Key Enum
-
-Brine2D uses the `Key` enum (not `Keys`):
+## The `Key` Enum
 
 ```csharp
 using Brine2D.Input;
 
-Key.A through Key.Z       // Letters
-Key.D0 through Key.D9     // Number row
-Key.F1 through Key.F12    // Function keys
-Key.Space                 // Spacebar
-Key.Return                // Enter
-Key.Escape                // Escape
+Key.A through Key.Z           // Letters
+Key.D0 through Key.D9         // Number row
+Key.F1 through Key.F24        // Function keys
+Key.Space                     // Spacebar
+Key.Enter                     // Enter/Return
+Key.Escape                    // Escape
 Key.LeftShift, Key.RightShift
 Key.LeftControl, Key.RightControl
 Key.LeftAlt, Key.RightAlt
-Key.Up, Key.Down, Key.Left, Key.Right  // Arrow keys
+Key.Up, Key.Down, Key.Left, Key.Right   // Arrow keys
 Key.Tab, Key.Backspace, Key.Delete
+Key.LeftSuper, Key.RightSuper           // Windows/Command key
+Key.CapsLock
 ```
 
 ---
 
 ## Text Input
 
-For text fields and chat input, use the dedicated text input API:
+For text fields and chat boxes, use the dedicated text input API instead of polling individual keys. This correctly handles Unicode, IME, and keyboard layouts:
 
 ```csharp
-// Enable text input mode
 Input.StartTextInput();
 
 protected override void OnUpdate(GameTime gameTime)
 {
-    if (Input.IsTextInputActive)
+    if (!Input.IsTextInputActive) return;
+
+    var text = Input.GetTextInput();
+    if (!string.IsNullOrEmpty(text))
+        _textBuffer += text;
+
+    if (Input.IsBackspacePressed() && _textBuffer.Length > 0)
+        _textBuffer = _textBuffer[..^1];
+
+    if (Input.IsDeletePressed())
+        // Handle forward delete
+
+    if (Input.IsReturnPressed())
     {
-        var text = Input.GetTextInput();
-        if (!string.IsNullOrEmpty(text))
-        {
-            _textBuffer += text;
-        }
-
-        if (Input.IsBackspacePressed() && _textBuffer.Length > 0)
-        {
-            _textBuffer = _textBuffer[..^1];
-        }
-
-        if (Input.IsReturnPressed())
-        {
-            SubmitText(_textBuffer);
-            Input.StopTextInput();
-        }
+        SubmitText(_textBuffer);
+        Input.StopTextInput();
     }
 }
 ```
+
+!!! note
+    `IsBackspacePressed()`, `IsReturnPressed()`, and `IsDeletePressed()` fire on key-repeat
+    (held key) for expected text-editing behavior. They work regardless of whether text input
+    mode is active.
 
 ---
 
 ## Troubleshooting
 
-### Keys not responding
+### Keys Not Responding
 
-1. **Check you're in OnUpdate**, not OnRender
-2. **Check window has focus** - click the game window
-3. **Check spelling** - it's `Key.Space`, not `Key.Space`
+1. **Check you are in `OnUpdate`**, not `OnRender`
+2. **Click the game window** -- input only works when focused
 
-### Action repeats unexpectedly
+### Action Repeats Unexpectedly
 
 Use `IsKeyPressed`, not `IsKeyDown`:
 
 ```csharp
-// ❌ Wrong - repeats every frame
-if (Input.IsKeyDown(Key.Space))
-{
-    Jump(); // Jumps 60 times per second!
-}
+// Wrong -- fires every frame while held
+if (Input.IsKeyDown(Key.Space)) Jump();
 
-// ✅ Correct - once per press
-if (Input.IsKeyPressed(Key.Space))
-{
-    Jump();
-}
+// Correct -- fires once per press
+if (Input.IsKeyPressed(Key.Space)) Jump();
 ```
 
-### Diagonal movement is faster
+### Diagonal Movement Is Faster
 
 Normalize the direction vector:
 
 ```csharp
 if (direction != Vector2.Zero)
-{
     direction = Vector2.Normalize(direction);
-}
 ```
 
 ---
 
 ## Summary
 
-| Method | Usage | Example |
-|--------|-------|---------|
-| `IsKeyDown()` | Key currently held | Movement, sprint |
-| `IsKeyPressed()` | Key just pressed | Jump, shoot, toggle |
-| `IsKeyReleased()` | Key just released | Charge attacks |
+| Method | Usage |
+|--------|-------|
+| `IsKeyDown(key)` | Key currently held -- movement, sprint |
+| `IsKeyPressed(key)` | Key just pressed -- jump, shoot, toggle |
+| `IsKeyReleased(key)` | Key just released -- charge attacks |
+| `IsAnyKeyPressed()` | Any key pressed -- attract screens |
 
 ---
 
 ## Next Steps
 
-- **[Mouse Input](mouse.md)** - Handle mouse input
-- **[Gamepad Input](gamepad.md)** - Controller support
-- **[Input Layers](layers.md)** - Priority-based input
+- **[Mouse Input](mouse.md)**
+- **[Gamepad Input](gamepad.md)**
+- **[Input Actions](actions.md)** -- Rebindable logical actions
+- **[Input Layers](layers.md)**

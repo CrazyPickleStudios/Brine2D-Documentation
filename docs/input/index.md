@@ -28,15 +28,11 @@ public class GameScene : Scene
 
         // Mouse
         if (Input.IsMouseButtonPressed(MouseButton.Left))
-        {
             Logger.LogInformation("Clicked at {Pos}", Input.MousePosition);
-        }
 
         // Gamepad
-        if (Input.IsGamepadButtonDown(GamepadButton.A))
-        {
+        if (Input.IsGamepadButtonPressed(GamepadButton.A))
             Logger.LogInformation("Gamepad A pressed");
-        }
     }
 }
 ```
@@ -57,76 +53,37 @@ public class GameScene : Scene
 | Guide | Description | Difficulty |
 |-------|-------------|------------|
 | **[Gamepad Support](gamepad.md)** | Controller/gamepad input | :star::star: Intermediate |
-| **[Input Layers](layers.md)** | Priority-based input routing (for UI) | :star::star::star: Advanced |
+| **[Input Actions](actions.md)** | Rebindable logical actions with multiple bindings | :star::star: Intermediate |
+| **[Input Layers](layers.md)** | Priority-based input routing for UI | :star::star::star: Advanced |
 
 ---
 
 ## Key Concepts
 
-### Framework Property
+### The `Input` Framework Property
 
-`Input` is a framework property on every scene, available from `OnLoadAsync` onwards:
+`Input` is an `IInputContext` available on every `Scene` from `OnLoadAsync` onwards -- no constructor injection needed:
 
 ```csharp
 public class GameScene : Scene
 {
     protected override void OnUpdate(GameTime gameTime)
     {
-        // Use Input directly - no constructor injection needed
         if (Input.IsKeyDown(Key.W))
-        {
             _position.Y -= 200f * (float)gameTime.DeltaTime;
-        }
     }
 }
 ```
-
-If you need input in a service or behavior, inject `IInputContext` via constructor:
-
-```csharp
-public class PlayerMovementBehavior : Behavior
-{
-    private readonly IInputContext _input;
-
-    public PlayerMovementBehavior(IInputContext input)
-    {
-        _input = input;
-    }
-
-    protected override void Update(GameTime gameTime)
-    {
-        if (_input.IsKeyDown(Key.W))
-        {
-            var transform = Entity.GetRequiredComponent<TransformComponent>();
-            transform.Position += new Vector2(0, -200f * (float)gameTime.DeltaTime);
-        }
-    }
-}
-```
-
----
-
-### Input State
-
-Understanding input state polling:
-
-| Method | When True | Use Case |
-|--------|-----------|----------|
-| `IsKeyDown()` | Key is currently held | Continuous movement |
-| `IsKeyPressed()` | Key was **just** pressed this frame | One-time actions (jump, shoot) |
-| `IsKeyReleased()` | Key was **just** released this frame | Charge attacks, key-up events |
 
 ---
 
 ### Keyboard
 
 ```csharp
-// Continuous input (movement)
-if (Input.IsKeyDown(Key.W)) _position.Y -= speed;
-
-// One-shot input (actions)
-if (Input.IsKeyPressed(Key.Space)) Jump();
-if (Input.IsKeyReleased(Key.E)) ReleaseCharge();
+if (Input.IsKeyDown(Key.W))      MoveUp();          // Held (continuous)
+if (Input.IsKeyPressed(Key.Space)) Jump();           // Just pressed (one-shot)
+if (Input.IsKeyReleased(Key.E))  ReleaseCharge();   // Just released
+if (Input.IsAnyKeyPressed())     StartGame();        // Any key this frame
 ```
 
 [:octicons-arrow-right-24: Full guide: Keyboard](keyboard.md)
@@ -136,20 +93,16 @@ if (Input.IsKeyReleased(Key.E)) ReleaseCharge();
 ### Mouse
 
 ```csharp
-// Position (Vector2 in screen coordinates)
-var pos = Input.MousePosition;
+var pos    = Input.MousePosition;        // Vector2, screen coordinates
+var delta  = Input.MouseDelta;           // Frame-to-frame movement
+var scroll = Input.ScrollWheelDelta;     // float, positive = up
+var hscroll = Input.ScrollWheelDeltaX;  // float, horizontal scroll
 
-// Movement delta since last frame
-var delta = Input.MouseDelta;
-
-// Scroll wheel (float - positive = up)
-var scroll = Input.ScrollWheelDelta;
-
-// Buttons
 if (Input.IsMouseButtonPressed(MouseButton.Left))
-{
     SpawnAt(pos);
-}
+
+Input.IsCursorVisible   = false;  // Hide OS cursor
+Input.IsRelativeMouseMode = true; // Capture mouse for FPS cameras
 ```
 
 [:octicons-arrow-right-24: Full guide: Mouse](mouse.md)
@@ -161,18 +114,15 @@ if (Input.IsMouseButtonPressed(MouseButton.Left))
 ```csharp
 if (Input.IsGamepadConnected())
 {
-    // Buttons (Xbox-style layout)
     if (Input.IsGamepadButtonPressed(GamepadButton.A)) Jump();
 
-    // Analog sticks (Vector2, -1 to 1)
-    var leftStick = Input.GetGamepadLeftStick();
-    if (leftStick.Length() > 0.15f)
-    {
-        _position += leftStick * speed * deltaTime;
-    }
+    // Sticks return Vector2 with radial deadzone already applied (default 0.15)
+    var stick = Input.GetGamepadLeftStick();
+    _position += stick * speed * deltaTime;
 
-    // Triggers via axis API (0.0 to 1.0)
-    var rightTrigger = Input.GetGamepadAxis(GamepadAxis.RightTrigger);
+    var trigger = Input.GetGamepadTrigger(GamepadAxis.RightTrigger);
+
+    Input.RumbleGamepad(0.5f, 0.8f, TimeSpan.FromMilliseconds(200));
 }
 ```
 
@@ -180,20 +130,33 @@ if (Input.IsGamepadConnected())
 
 ---
 
+### Input Actions (Rebindable)
+
+```csharp
+var jumpAction = new InputAction("Jump",
+    new KeyBinding(Key.Space),
+    new GamepadButtonBinding(GamepadButton.A));
+
+if (jumpAction.IsPressed(Input)) Jump();
+```
+
+[:octicons-arrow-right-24: Full guide: Input Actions](actions.md)
+
+---
+
 ### Input Layers (UI Priority)
 
 ```csharp
-// Create input layer for UI (higher priority)
-var uiLayer = _inputLayerManager.CreateLayer("UI", priority: 100);
-uiLayer.OnKeyPressed += (key) =>
+_inputLayerManager.RegisterLayer(myUiLayer);
+
+protected override void OnUpdate(GameTime gameTime)
 {
-    if (key == Key.Escape)
-    {
-        CloseMenu();
-        return true;  // Consume input (don't pass to game)
-    }
-    return false;
-};
+    _inputLayerManager.ProcessInput();
+
+    if (!_inputLayerManager.KeyboardConsumed) HandleGameKeyboard();
+    if (!_inputLayerManager.MouseConsumed)    HandleGameMouse();
+    if (!_inputLayerManager.GamepadConsumed)  HandleGameGamepad();
+}
 ```
 
 [:octicons-arrow-right-24: Full guide: Input Layers](layers.md)
@@ -205,27 +168,19 @@ uiLayer.OnKeyPressed += (key) =>
 ### :white_check_mark: DO
 
 1. **Use the `Input` framework property** in scenes
-2. **Poll input in OnUpdate()** only
-3. **Use deltaTime for movement** - frame-rate independent
-4. **Check IsKeyPressed() for actions** - jump, shoot, etc.
-5. **Use IsKeyDown() for continuous** - movement
+2. **Poll input in `OnUpdate()`** only
+3. **Use `deltaTime` for movement** -- frame-rate independent
+4. **Use `IsKeyPressed()` for one-shot actions** -- jump, shoot, toggle
+5. **Use `IsKeyDown()` for continuous actions** -- movement, sprint
 
 ```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
-    var deltaTime = (float)gameTime.DeltaTime;
-
-    // Continuous movement
     if (Input.IsKeyDown(Key.W))
-    {
-        _position.Y -= _speed * deltaTime;
-    }
+        _position.Y -= _speed * (float)gameTime.DeltaTime;
 
-    // One-time action
     if (Input.IsKeyPressed(Key.Space))
-    {
         Jump();
-    }
 }
 ```
 
@@ -233,19 +188,16 @@ protected override void OnUpdate(GameTime gameTime)
 
 ### :x: DON'T
 
-1. **Don't poll input in OnRender()** - wrong lifecycle method
-2. **Don't forget deltaTime** - movement will be FPS-dependent
-3. **Don't use IsKeyPressed() for movement** - will be choppy
+1. **Don't poll input in `OnRender()`** -- wrong lifecycle method
+2. **Don't forget `deltaTime`** -- movement will be FPS-dependent
+3. **Don't use `IsKeyPressed()` for movement** -- will be choppy
 
 ```csharp
-// ❌ Bad pattern
+// Bad pattern
 protected override void OnRender(GameTime gameTime)
 {
-    // Wrong - input in render!
     if (Input.IsKeyDown(Key.W))
-    {
-        _position.Y -= _speed;  // Also wrong - no deltaTime!
-    }
+        _position.Y -= _speed; // No deltaTime and wrong lifecycle!
 }
 ```
 
@@ -255,49 +207,20 @@ protected override void OnRender(GameTime gameTime)
 
 ### Input Not Responding
 
-**Symptom:** Keys/mouse don't do anything
+1. **Check you are in `OnUpdate`**, not `OnRender`
+2. **Click the game window** -- input only works when focused
 
-**Solutions:**
-
-1. **Check polling in OnUpdate:**
-
-```csharp
-// ✅ Correct
-protected override void OnUpdate(GameTime gameTime)
-{
-    if (Input.IsKeyDown(Key.W)) { ... }
-}
-```
-
-2. **Check window has focus:**
-   - Click on the game window
-   - Input only works when the window is focused
-
----
-
-### Movement Too Fast/Slow
-
-**Solution:** Always use deltaTime
+### Movement Too Fast or Slow
 
 ```csharp
-// ❌ Wrong - FPS dependent
-if (Input.IsKeyDown(Key.W))
-{
-    _position.Y -= 5;  // Moves 5 pixels per frame (300px/sec at 60fps!)
-}
+// Wrong -- FPS dependent
+_position.Y -= 5;
 
-// ✅ Correct - consistent speed
-if (Input.IsKeyDown(Key.W))
-{
-    _position.Y -= 200 * (float)gameTime.DeltaTime;  // 200 pixels per second
-}
+// Correct -- 200 pixels per second regardless of frame rate
+_position.Y -= 200f * (float)gameTime.DeltaTime;
 ```
-
----
 
 ### Gamepad Not Detected
-
-**Solution:** Check connection before reading input
 
 ```csharp
 if (!Input.IsGamepadConnected())
@@ -311,12 +234,8 @@ if (!Input.IsGamepadConnected())
 
 ## Related Topics
 
-- [Keyboard](keyboard.md) - Complete keyboard guide
-- [Mouse](mouse.md) - Mouse input details
-- [Gamepad Support](gamepad.md) - Controller integration
-- [Input Layers](layers.md) - Advanced input routing
-- [Quick Start](../getting-started/quickstart.md) - Basic input example
-
----
-
-**Ready to handle input?** Start with [Keyboard](keyboard.md)!
+- [Keyboard](keyboard.md)
+- [Mouse](mouse.md)
+- [Gamepad Support](gamepad.md)
+- [Input Actions](actions.md)
+- [Input Layers](layers.md)

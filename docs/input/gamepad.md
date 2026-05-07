@@ -1,12 +1,11 @@
-﻿---
-title: Gamepad Input
-description: Handle controller/gamepad input in Brine2D - buttons, sticks, triggers
+---
+title: Gamepad Support
+description: Controller and gamepad input in Brine2D
 ---
 
-# Gamepad Input
+# Gamepad Support
 
-Handle gamepad/controller input using the `Input` framework property (`IInputContext`).
-Brine2D uses **Xbox-style layout** via SDL3 - all controllers (PlayStation, Nintendo, etc.) are mapped to this layout automatically.
+Handle gamepad input using the `Input` framework property (`IInputContext`) available in every scene.
 
 ---
 
@@ -17,51 +16,28 @@ protected override void OnUpdate(GameTime gameTime)
 {
     if (!Input.IsGamepadConnected()) return;
 
-    var deltaTime = (float)gameTime.DeltaTime;
-
-    // Buttons
     if (Input.IsGamepadButtonPressed(GamepadButton.A)) Jump();
-    if (Input.IsGamepadButtonDown(GamepadButton.X)) Attack();
 
-    // Left stick for movement
-    var leftStick = Input.GetGamepadLeftStick();
-    if (leftStick.Length() > 0.15f)  // Dead zone
-    {
-        _position += leftStick * _speed * deltaTime;
-    }
-
-    // Right stick for aiming
-    var rightStick = Input.GetGamepadRightStick();
-    if (rightStick.Length() > 0.15f)
-    {
-        _aimDirection = Vector2.Normalize(rightStick);
-    }
-
-    // Triggers via axis API
-    var rightTrigger = Input.GetGamepadAxis(GamepadAxis.RightTrigger);
-    if (rightTrigger > 0.5f)
-    {
-        Fire();
-    }
+    var leftStick = Input.GetGamepadLeftStick(); // Radial deadzone applied automatically
+    _position += leftStick * _speed * (float)gameTime.DeltaTime;
 }
 ```
 
 ---
 
-## Connection Check
+## Connection
 
 ```csharp
-// Default gamepad (index 0)
+// Check default gamepad (index 0)
 if (Input.IsGamepadConnected())
-{
     HandleGamepadInput();
-}
 
-// Specific gamepad index
+// Specific slot
 if (Input.IsGamepadConnected(gamepadIndex: 1))
-{
-    HandlePlayer2Input();
-}
+    HandlePlayer2();
+
+// How many gamepads are currently connected
+int count = Input.ConnectedGamepadCount;
 ```
 
 ---
@@ -77,6 +53,13 @@ if (Input.IsGamepadButtonDown(GamepadButton.RightShoulder)) Sprint();
 
 // Just released
 if (Input.IsGamepadButtonReleased(GamepadButton.X)) ReleaseCharge();
+
+// Any button pressed on a specific gamepad
+if (Input.IsAnyGamepadButtonPressed(gamepadIndex: 0)) ConfirmSelection();
+
+// Any button on any gamepad (multiplayer join)
+if (Input.IsAnyGamepadButtonPressedOnAny(out int joinedIndex))
+    RegisterPlayer(joinedIndex);
 ```
 
 **Available buttons:**
@@ -99,65 +82,104 @@ if (Input.IsGamepadButtonReleased(GamepadButton.X)) ReleaseCharge();
 
 ## Analog Sticks
 
-```csharp
-// Left stick - typically movement
-var leftStick = Input.GetGamepadLeftStick();  // Vector2, -1 to 1
+`GetGamepadLeftStick()` and `GetGamepadRightStick()` return a `Vector2` in the range -1 to 1 with a **radial deadzone already applied** (default 0.15). Values inside the deadzone are reported as `Vector2.Zero`; the remaining range is rescaled smoothly to 0--1.
 
-// Right stick - typically camera/aim
-var rightStick = Input.GetGamepadRightStick();  // Vector2, -1 to 1
+```csharp
+var leftStick  = Input.GetGamepadLeftStick();   // Movement
+var rightStick = Input.GetGamepadRightStick();  // Camera/aim
+
+_position += leftStick * _speed * deltaTime;
 ```
 
-### Dead Zone
-
-Always apply a dead zone to prevent stick drift:
+### Adjusting the Deadzone
 
 ```csharp
-var stick = Input.GetGamepadLeftStick();
-if (stick.Length() > 0.15f)
-{
-    _position += stick * speed * deltaTime;
-}
+Input.GamepadDeadzone = 0.20f; // Default is 0.15
 ```
 
 ---
 
-## Triggers and Axes
-
-Use `GetGamepadAxis` for triggers and raw axis values:
+## Triggers
 
 ```csharp
-// Triggers (0.0 to 1.0)
-var leftTrigger = Input.GetGamepadAxis(GamepadAxis.LeftTrigger);
-var rightTrigger = Input.GetGamepadAxis(GamepadAxis.RightTrigger);
+// 0.0 (not pressed) to 1.0 (fully pressed)
+var leftTrigger  = Input.GetGamepadTrigger(GamepadAxis.LeftTrigger);
+var rightTrigger = Input.GetGamepadTrigger(GamepadAxis.RightTrigger);
 
-// Raw stick axes (-1.0 to 1.0)
-var leftX = Input.GetGamepadAxis(GamepadAxis.LeftX);
-var leftY = Input.GetGamepadAxis(GamepadAxis.LeftY);
+// One-shot: trigger just crossed the deadzone threshold this frame
+if (Input.IsGamepadTriggerPressed(GamepadAxis.RightTrigger)) Fire();
+
+// One-shot: trigger just dropped below the deadzone threshold
+if (Input.IsGamepadTriggerReleased(GamepadAxis.RightTrigger)) StopFire();
 ```
 
+---
+
+## Raw Axes
+
+Use `GetGamepadAxis` for raw access to any axis without the stick helpers' radial deadzone:
+
+```csharp
+var leftX  = Input.GetGamepadAxis(GamepadAxis.LeftX);
+var leftY  = Input.GetGamepadAxis(GamepadAxis.LeftY);
+
+// Edge detection on raw axes
+if (Input.IsGamepadAxisPressed(GamepadAxis.LeftX))  StartMoving();
+if (Input.IsGamepadAxisReleased(GamepadAxis.LeftX)) StopMoving();
+```
+
+!!! note
+    `GetGamepadAxis` returns the raw hardware value without rescaling. For consistent 2D
+    directional input prefer `GetGamepadLeftStick()` / `GetGamepadRightStick()`.
+
 **Available axes:** `LeftX`, `LeftY`, `RightX`, `RightY`, `LeftTrigger`, `RightTrigger`
+
+---
+
+## Rumble / Haptic Feedback
+
+```csharp
+// Low-frequency (left, thud) and high-frequency (right, buzz) motors
+// Intensity: 0.0 (off) -- 1.0 (max)
+Input.RumbleGamepad(lowFrequency: 0.5f, highFrequency: 0.8f,
+    duration: TimeSpan.FromMilliseconds(200));
+
+// Stop rumble immediately
+Input.RumbleGamepad(0f, 0f, TimeSpan.Zero);
+
+// Trigger motors (Xbox impulse triggers)
+Input.RumbleGamepadTriggers(leftTrigger: 0.3f, rightTrigger: 1.0f,
+    duration: TimeSpan.FromMilliseconds(100));
+```
+
+Rumble is enabled by default. Configure it at startup via `InputOptions`:
+
+```csharp
+services.Configure<InputOptions>(opts =>
+{
+    opts.EnableRumble = false; // Disable globally
+    opts.MaxGamepads  = 4;     // Default
+});
+```
 
 ---
 
 ## Multiple Gamepads
 
 ```csharp
-for (int i = 0; i < 4; i++)
+for (int i = 0; i < Input.ConnectedGamepadCount; i++)
 {
-    if (Input.IsGamepadConnected(i))
-    {
-        var stick = Input.GetGamepadLeftStick(i);
-        if (Input.IsGamepadButtonPressed(GamepadButton.A, i))
-        {
-            PlayerJump(i);
-        }
-    }
+    if (!Input.IsGamepadConnected(i)) continue;
+
+    var stick = Input.GetGamepadLeftStick(i);
+    if (Input.IsGamepadButtonPressed(GamepadButton.A, i))
+        PlayerJump(i);
 }
 ```
 
 ---
 
-## Combined Input (Keyboard + Gamepad)
+## Combined Keyboard + Gamepad
 
 ```csharp
 protected override void OnUpdate(GameTime gameTime)
@@ -170,20 +192,12 @@ protected override void OnUpdate(GameTime gameTime)
     if (Input.IsKeyDown(Key.A)) direction.X -= 1;
     if (Input.IsKeyDown(Key.D)) direction.X += 1;
 
-    // Gamepad (add to keyboard - player can use either)
+    // Gamepad (add to keyboard so either works)
     if (Input.IsGamepadConnected())
-    {
-        var stick = Input.GetGamepadLeftStick();
-        if (stick.Length() > 0.15f)
-        {
-            direction += stick;
-        }
-    }
+        direction += Input.GetGamepadLeftStick();
 
     if (direction != Vector2.Zero)
-    {
         direction = Vector2.Normalize(direction);
-    }
 
     _position += direction * _speed * (float)gameTime.DeltaTime;
 }
@@ -193,35 +207,38 @@ protected override void OnUpdate(GameTime gameTime)
 
 ## Troubleshooting
 
-### Gamepad not detected
+### Gamepad Not Detected
 
-1. Verify the controller is connected and recognized by your OS
-2. Check `Input.IsGamepadConnected()` returns `true`
-3. Test with keyboard first to verify game logic works
+1. Verify the controller is connected and recognized by your OS.
+2. Check `Input.IsGamepadConnected()` returns `true`.
+3. Test with keyboard first to verify game logic works.
 
-### Stick drift
+### Stick Drift
 
-Apply a dead zone - 0.15 (15%) is recommended:
+The built-in radial deadzone handles this. If drift is still noticeable, increase it slightly:
 
 ```csharp
-if (stick.Length() > 0.15f) { /* use stick */ }
+Input.GamepadDeadzone = 0.20f;
 ```
 
 ---
 
 ## Summary
 
-| Component | API | Range |
+| Component | API | Notes |
 |-----------|-----|-------|
-| **Left Stick** | `GetGamepadLeftStick()` | -1.0 to 1.0 (X, Y) |
-| **Right Stick** | `GetGamepadRightStick()` | -1.0 to 1.0 (X, Y) |
-| **Triggers** | `GetGamepadAxis(GamepadAxis.LeftTrigger)` | 0.0 to 1.0 |
-| **Buttons** | `IsGamepadButton___()` | bool |
+| **Left Stick** | `GetGamepadLeftStick()` | -1 to 1, radial deadzone applied |
+| **Right Stick** | `GetGamepadRightStick()` | -1 to 1, radial deadzone applied |
+| **Triggers** | `GetGamepadTrigger(axis)` | 0 to 1 |
+| **Buttons** | `IsGamepadButton{Down/Pressed/Released}()` | bool |
+| **Rumble** | `RumbleGamepad()` | 0.0--1.0 intensity |
+| **Deadzone** | `GamepadDeadzone` | Default 0.15 |
 
 ---
 
 ## Next Steps
 
-- **[Keyboard Input](keyboard.md)** - Keyboard input handling
-- **[Mouse Input](mouse.md)** - Mouse and cursor control
-- **[Input Layers](layers.md)** - Priority-based input
+- **[Keyboard Input](keyboard.md)**
+- **[Mouse Input](mouse.md)**
+- **[Input Actions](actions.md)** -- Rebindable logical actions
+- **[Input Layers](layers.md)**

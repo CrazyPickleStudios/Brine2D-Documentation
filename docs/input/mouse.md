@@ -1,11 +1,11 @@
-﻿---
+---
 title: Mouse Input
-description: Handle mouse position, clicks, scroll wheel, and drag in Brine2D
+description: Handle mouse position, clicks, scroll wheel, cursor, and relative mode in Brine2D
 ---
 
 # Mouse Input
 
-Handle mouse input using the `Input` framework property (`IInputContext`).
+Handle mouse input using the `Input` framework property (`IInputContext`) available in every scene.
 
 ---
 
@@ -14,20 +14,13 @@ Handle mouse input using the `Input` framework property (`IInputContext`).
 ```csharp
 protected override void OnUpdate(GameTime gameTime)
 {
-    // Position (Vector2 in screen coordinates)
     var mousePos = Input.MousePosition;
 
-    // Click detection
     if (Input.IsMouseButtonPressed(MouseButton.Left))
-    {
         SpawnAt(mousePos);
-    }
 
-    // Scroll wheel (float - positive = up)
     if (Input.ScrollWheelDelta != 0)
-    {
         _zoom += Input.ScrollWheelDelta * 0.1f;
-    }
 }
 ```
 
@@ -36,12 +29,11 @@ protected override void OnUpdate(GameTime gameTime)
 ## Mouse Position
 
 ```csharp
-// Absolute position in screen coordinates
-var pos = Input.MousePosition;  // Vector2
-Logger.LogDebug(""Mouse at {X}, {Y}"", pos.X, pos.Y);
+// Absolute position in screen coordinates (top-left origin)
+var pos = Input.MousePosition; // Vector2
 
-// Movement delta since last frame (for camera/look control)
-var delta = Input.MouseDelta;  // Vector2
+// Movement delta since last frame (useful for camera/look control)
+var delta = Input.MouseDelta; // Vector2
 _cameraAngle += delta.X * _sensitivity;
 ```
 
@@ -52,21 +44,19 @@ _cameraAngle += delta.X * _sensitivity;
 ```csharp
 // Button held down
 if (Input.IsMouseButtonDown(MouseButton.Left))
-{
     DrawBrush(Input.MousePosition);
-}
 
 // Button just clicked this frame
 if (Input.IsMouseButtonPressed(MouseButton.Left))
-{
     SelectUnit(Input.MousePosition);
-}
 
 // Button just released
 if (Input.IsMouseButtonReleased(MouseButton.Left))
-{
     DropItem();
-}
+
+// Any mouse button pressed (attract/lobby screens)
+if (Input.IsAnyMouseButtonPressed())
+    StartGame();
 ```
 
 **Available buttons:** `Left`, `Right`, `Middle`, `X1`, `X2`
@@ -76,9 +66,48 @@ if (Input.IsMouseButtonReleased(MouseButton.Left))
 ## Scroll Wheel
 
 ```csharp
-var scroll = Input.ScrollWheelDelta;  // float
+// Vertical scroll (positive = up, negative = down)
+var scroll = Input.ScrollWheelDelta; // float
 if (scroll > 0) ZoomIn();
 if (scroll < 0) ZoomOut();
+
+// Horizontal scroll (trackpads, horizontal scroll wheels)
+var hScroll = Input.ScrollWheelDeltaX; // float
+```
+
+---
+
+## Cursor Visibility
+
+```csharp
+// Hide the cursor (e.g. custom cursor or in-game reticle)
+Input.IsCursorVisible = false;
+
+// Show it again
+Input.IsCursorVisible = true;
+```
+
+---
+
+## Relative Mouse Mode
+
+When enabled the cursor is hidden, captured to the window, and `MouseDelta` reports frame-to-frame motion. `MousePosition` is not updated in this mode. Use it for first-person cameras and drag operations where you want unlimited movement range.
+
+```csharp
+// Enable for FPS-style look
+Input.IsRelativeMouseMode = true;
+
+protected override void OnUpdate(GameTime gameTime)
+{
+    if (Input.IsRelativeMouseMode)
+    {
+        _cameraYaw   += Input.MouseDelta.X * _sensitivity;
+        _cameraPitch += Input.MouseDelta.Y * _sensitivity;
+    }
+}
+
+// Disable when returning to a menu
+Input.IsRelativeMouseMode = false;
 ```
 
 ---
@@ -109,25 +138,17 @@ if (Input.IsMouseButtonPressed(MouseButton.Left))
 }
 
 if (_isDragging)
-{
-    var current = Input.MousePosition;
-    _dragOffset = current - _dragStart;
-}
+    _dragOffset = Input.MousePosition - _dragStart;
 
 if (Input.IsMouseButtonReleased(MouseButton.Left))
-{
     _isDragging = false;
-}
 ```
 
 ### Camera Pan with Middle Mouse
 
 ```csharp
 if (Input.IsMouseButtonDown(MouseButton.Middle))
-{
-    var delta = Input.MouseDelta;
-    _cameraPosition -= delta;
-}
+    _cameraPosition -= Input.MouseDelta;
 ```
 
 ### Zoom with Scroll Wheel
@@ -135,48 +156,50 @@ if (Input.IsMouseButtonDown(MouseButton.Middle))
 ```csharp
 var scroll = Input.ScrollWheelDelta;
 if (scroll != 0)
-{
     _zoom = Math.Clamp(_zoom + scroll * 0.1f, 0.5f, 3.0f);
-}
 ```
 
 ---
 
 ## Troubleshooting
 
-### Mouse position seems wrong
+### Mouse Position Seems Wrong
 
-- `MousePosition` returns screen coordinates (top-left origin)
-- If using a camera, convert with `camera.ScreenToWorld(pos)`
+- `MousePosition` is in screen coordinates (top-left origin).
+- If using a camera, convert with `camera.ScreenToWorld(pos)`.
 
-### Scroll wheel not working
+### Scroll Wheel Not Working
 
-- `ScrollWheelDelta` is a `float`, not a `Vector2`
-- Check in `OnUpdate`, not `OnRender`
-- Value resets each frame - check `!= 0`, don't accumulate
+- `ScrollWheelDelta` is a `float`, check `!= 0`.
+- Poll in `OnUpdate`, not `OnRender`.
+- The value resets each frame -- do not accumulate it.
 
-### Mouse delta always zero
+### `MouseDelta` Always Zero
 
-- `MouseDelta` reports frame-to-frame movement
-- Verify the mouse is actually moving over the window
+- The mouse must actually be moving over the window.
+- In relative mode, `MouseDelta` reports the captured motion even when the cursor is at the window edge.
 
 ---
 
 ## Summary
 
-| Property/Method | Returns | Usage |
-|-----------------|---------|-------|
+| Property / Method | Returns | Usage |
+|-------------------|---------|-------|
 | `MousePosition` | `Vector2` | Absolute screen position |
 | `MouseDelta` | `Vector2` | Frame-to-frame movement |
-| `ScrollWheelDelta` | `float` | Scroll amount (positive = up) |
+| `ScrollWheelDelta` | `float` | Vertical scroll (positive = up) |
+| `ScrollWheelDeltaX` | `float` | Horizontal scroll |
 | `IsMouseButtonDown()` | `bool` | Button held |
 | `IsMouseButtonPressed()` | `bool` | Button just clicked |
 | `IsMouseButtonReleased()` | `bool` | Button just released |
+| `IsAnyMouseButtonPressed()` | `bool` | Any button pressed this frame |
+| `IsCursorVisible` | `bool` | Show / hide OS cursor |
+| `IsRelativeMouseMode` | `bool` | Capture mouse for unlimited movement |
 
 ---
 
 ## Next Steps
 
-- **[Keyboard Input](keyboard.md)** - Keyboard input handling
-- **[Gamepad Input](gamepad.md)** - Controller support
-- **[Input Layers](layers.md)** - Priority-based input
+- **[Keyboard Input](keyboard.md)**
+- **[Gamepad Input](gamepad.md)**
+- **[Input Layers](layers.md)**
